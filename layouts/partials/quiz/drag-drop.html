@@ -1,0 +1,13 @@
+<div class="drag-drop-container">
+  <div class="drag-drop-instructions">
+    {{ .instruction | default "Drag items to arrange them in the correct order" | markdownify }}
+  </div>
+  <div class="drag-drop-list" data-correct-order="{{ delimit .correctOrder "," }}">
+    {{- range $index, $item := .items -}}
+    <div class="drag-item" draggable="true" data-item-id="{{ $index }}">
+      <span class="drag-handle">⋮⋮</span>
+      <span class="drag-item-content">{{ $item | markdownify }}</span>
+    </div>
+    {{- end -}}
+  </div>
+</div>

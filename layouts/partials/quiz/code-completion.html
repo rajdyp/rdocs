@@ -1,0 +1,15 @@
+<div class="code-completion-container">
+  <div class="code-completion-instructions">
+    {{ .instruction | default "Fill in the missing code" | markdownify }}
+  </div>
+  <div class="code-block-editable">
+    <pre><code class="language-{{ .language | default "python" }}">{{ .codeTemplate }}</code></pre>
+  </div>
+  <div class="code-input-container">
+    <label for="code-answer">Your answer:</label>
+    <input type="text" class="code-completion-input" placeholder="Type the missing code..." data-answer="{{ .answer }}" {{- if .caseSensitive -}} data-case-sensitive="true" {{- end -}}>
+    {{- if .acceptedAnswers -}}
+    <input type="hidden" class="accepted-answers" value="{{ delimit .acceptedAnswers "|" }}">
+    {{- end -}}
+  </div>
+</div>

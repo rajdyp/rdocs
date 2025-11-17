@@ -1,0 +1,1389 @@
+---
+title: OpenTelemetry
+linkTitle: OpenTelemetry
+type: docs
+weight: 1
+prev: /observability
+---
+
+## What is OpenTelemetry?
+
+OpenTelemetry (OTel) is an open-source observability framework that provides a standardized way to collect, process, and export telemetry data (traces, metrics, and logs) from your applications and infrastructure.
+
+**Key Benefits:**
+
+* **Vendor-agnostic**: No lock-in to specific observability platforms
+* Standardized instrumentation across languages and frameworks
+* Unified telemetry collection and processing
+* Strong community support and industry adoption
+
+## Core Concepts
+
+```
+┌─────────────────────────────────────────────────────────────────┐  
+│                        Your Application                         │  
+│                                                                 │  
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐       │  
+│  │   Traces     │    │   Metrics    │    │     Logs     │       │  
+│  └──────┬───────┘    └───────┬──────┘    └────────┬─────┘       │  
+│         │                    │                    │             │  
+└─────────┼────────────────────┼────────────────────┼─────────────┘  
+          │                    │                    │  
+          └────────────────────┼────────────────────┘  
+                               │  
+                               ▼  
+                    ┌──────────────────────┐  
+                    │  OTLP (Protocol)     │  
+                    └──────────┬───────────┘  
+                               │  
+                               ▼  
+                    ┌──────────────────────┐  
+                    │  OTel Collector      │  
+                    └──────────┬───────────┘  
+                               │  
+                               ▼  
+                    ┌──────────────────────┐  
+                    │  Observability       │  
+                    │  Backend             │  
+                    │  (Datadog, Dynatrace,│  
+                    │   Grafana, etc.)     │  
+                    └──────────────────────┘
+```
+
+## Signals
+
+OpenTelemetry supports four types of telemetry signals:
+
+### 1. Traces
+
+Distributed traces track requests as they flow through distributed systems.
+
+```
+Request Flow:  
+┌──────────┐      ┌──────────┐      ┌──────────┐      ┌──────────┐  
+│  User    │─────▶│  API GW  │─────▶│ Service  │─────▶│ Database │  
+└──────────┘      └────┬─────┘      └─────┬────┘      └──────┬───┘  
+                       │                  │                  │  
+                  [Span A]           [Span B]           [Span C]  
+                       │                  │                  │  
+                       └──────────────────┴──────────────────┘  
+                                    │  
+                              [Complete Trace]
+```
+
+**Use cases:**
+
+* Request latency analysis
+* Service dependency mapping
+* Root cause analysis for failures
+
+### 2. Metrics
+
+Numerical measurements of system behavior over time.
+
+**Types:**
+
+* **Counter**: Cumulative value that only increases (e.g., total requests, total errors)
+* **Gauge**: Point-in-time value that can go up or down (e.g., CPU usage, memory consumption, queue depth)
+* **Histogram**: Distribution of values with configurable buckets (e.g., request durations, response sizes)
+    * Server-side quantile calculation
+    * Efficient for aggregation across dimensions
+* **Summary**: Pre-calculated quantiles (e.g., p50, p90, p99)
+    * Client-side quantile calculation
+    * Cannot be aggregated across dimensions
+    * Common in Prometheus ecosystem
+
+**Use cases:**
+
+* Performance monitoring
+* Alerting and SLOs
+* Capacity planning
+
+### 3. Logs
+
+Timestamped text records of discrete events.
+
+**Use cases:**
+
+* Debugging and troubleshooting
+* Audit trails
+* Event analysis
+
+### 4. Baggage
+
+Key-value pairs propagated across service boundaries.
+
+**Use cases:**
+
+* Passing metadata through distributed systems
+* Feature flags
+* User context (tenant ID, user ID)
+
+```False
+Service A                Service B                Service C  
+┌─────────┐             ┌─────────┐             ┌─────────┐  
+│ user_id │────────────▶│ user_id │────────────▶│ user_id │  
+│ tenant  │  (Baggage)  │ tenant  │  (Baggage)  │ tenant  │  
+└─────────┘             └─────────┘             └─────────┘
+```
+
+## Instrumentation Approaches
+
+### 1. Zero-Code Instrumentation
+
+Automatic instrumentation without modifying application code.
+
+**Method**: Attach an agent at runtime
+
+```bash
+# Java example  
+java -javaagent:path/to/opentelemetry-javaagent.jar \  
+     -Dotel.service.name=my-service \  
+     -jar myapp.jar
+```
+
+**Pros:**
+
+* No code changes required
+* Quick to implement
+* Covers common frameworks automatically
+
+**Cons:**
+
+* Limited customization
+* May not capture business-specific metrics
+
+### 2. Code-Based Instrumentation
+
+Manual instrumentation using OpenTelemetry SDKs.
+
+**Example** (Python):
+
+```python
+from opentelemetry import trace  
+  
+tracer = trace.get_tracer(__name__)  
+  
+with tracer.start_as_current_span("process_order"):  
+    # Your business logic  
+    process_payment()  
+    update_inventory()
+```
+
+**Pros:**
+
+* Full control over what's instrumented
+* Custom attributes and metrics
+* Business-specific observability
+
+**Cons:**
+
+* Requires code changes
+* More development effort
+
+### 3. Library Instrumentation
+
+Pre-instrumented libraries for popular frameworks.
+
+**Examples:**
+
+* `opentelemetry-instrumentation-flask` (Python)
+* `@opentelemetry/instrumentation-express` (Node.js)
+* Framework-specific auto-instrumentation
+
+## OpenTelemetry Protocol (OTLP)
+
+OTLP is the native protocol for OpenTelemetry, designed for efficient telemetry data transmission.
+
+**Key Features:**
+
+* Binary format using Protocol Buffers (efficient)
+* HTTP/1.1, HTTP/2, and gRPC transport
+* Supports all signal types (traces, metrics, logs)
+
+**Endpoints:**
+
+* `http://collector:4317` - gRPC
+* `http://collector:4318` - HTTP
+
+## OpenTelemetry Collector
+
+The Collector is a vendor-agnostic proxy that receives, processes, and exports telemetry data.
+
+```
+┌────────────────────────────────────────────────────────────────┐  
+│                     OpenTelemetry Collector                    │  
+│                                                                │  
+│  ┌──────────────────────────────────────────────────────────┐  │  
+│  │                       RECEIVERS                          │  │  
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌─────────┐   │  │  
+│  │  │   OTLP   │  │Prometheus│  │  Jaeger  │  │  Zipkin │   │  │  
+│  │  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬────┘   │  │  
+│  └───────┼─────────────┼─────────────┼─────────────┼────────┘  │  
+│          │             │             │             │           │  
+│          └─────────────┴─────────────┴─────────────┘           │  
+│                            │                                   │  
+│  ┌─────────────────────────▼──────────────────────────────┐    │  
+│  │                     PROCESSORS                         │    │  
+│  │  ┌──────────┐  ┌──────────┐  ┌────────────────────┐    │    │  
+│  │  │ Batch    │  │ Filter   │  │ Attribute          │    │    │  
+│  │  │          │  │          │  │ Enrichment         │    │    │  
+│  │  └────┬─────┘  └────┬─────┘  └────────┬───────────┘    │    │  
+│  └───────┼─────────────┼─────────────────┼────────────────┘    │  
+│          │             │                 │                     │  
+│          └─────────────┴─────────────────┘                     │  
+│                            │                                   │  
+│  ┌─────────────────────────▼──────────────────────────────┐    │  
+│  │                      EXPORTERS                         │    │  
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐              │    │  
+│  │  │   OTLP   │  │ Datadog  │  │Dynatrace │              │    │  
+│  │  └────┬─────┘  └────┬─────┘  └────┬─────┘              │    │  
+│  └───────┼─────────────┼─────────────┼────────────────────┘    │  
+└──────────┼─────────────┼─────────────┼─────────────────────────┘  
+           │             │             │  
+           ▼             ▼             ▼  
+    ┌──────────┐  ┌──────────┐  ┌──────────┐  
+    │ Backend  │  │ Backend  │  │ Backend  │  
+    │    A     │  │    B     │  │    C     │  
+    └──────────┘  └──────────┘  └──────────┘
+```
+
+**Why Use a Collector?**
+
+* Decouples telemetry generation from export
+* Centralized processing and transformation
+* Reduces load on applications
+* Enables multi-backend export
+* Data buffering and retry logic
+
+## Collector Components Deep Dive
+
+### Receivers
+
+Ingest telemetry data from various sources.
+
+**Common Receivers:**
+
+* `otlp`: Native OpenTelemetry protocol
+* `prometheus`: Scrapes Prometheus metrics
+* `jaeger`: Receives Jaeger traces
+* `zipkin`: Receives Zipkin traces
+* `hostmetrics`: Collects host-level metrics
+
+### Processors
+
+Transform, filter, and enrich telemetry data.
+
+**Common Processors:**
+
+* `batch`: Batches telemetry for efficient export
+* `memory_limiter`: Prevents memory overload
+* `attributes`: Add/remove/modify attributes
+* `filter`: Filter out unwanted telemetry
+* `resource`: Modify resource attributes
+* `transform`: Advanced data transformation
+
+#### Attributes Processor
+
+Add, modify, or remove attributes from spans, metrics, or logs.
+
+**Configuration Example:**
+
+```yaml
+processors:  
+  attributes:  
+    actions:  
+      # Add a new attribute  
+      - key: environment  
+        value: production  
+        action: insert  
+  
+      # Update existing attribute  
+      - key: http.url  
+        action: update  
+        value: redacted  
+  
+      # Remove sensitive attributes  
+      - key: credit_card  
+        action: delete  
+  
+      # Hash PII data  
+      - key: user_email  
+        action: hash  
+  
+      # Extract value from existing attribute  
+      - key: http.url  
+        pattern: ^https?://([^/]+).*  
+        action: extract
+```
+
+**Use Cases:**
+
+* Adding deployment/environment metadata
+* Removing PII or sensitive data
+* Normalizing attribute names
+* Enriching telemetry with context
+
+#### Filter Processor
+
+Filter out entire spans, metrics, or logs based on conditions.
+
+**Configuration Example:**
+
+```yaml
+processors:  
+  filter:  
+    # Filter traces  
+    traces:  
+      span:  
+        # Exclude health check endpoints  
+        - 'attributes["http.url"] == "/health"'  
+        - 'attributes["http.url"] == "/ready"'  
+  
+        # Exclude successful requests from specific services  
+        - 'resource.attributes["service.name"] == "frontend" and attributes["http.status_code"] < 400'  
+  
+    # Filter metrics  
+    metrics:  
+      metric:  
+        # Exclude specific metrics  
+        - 'name == "system.cpu.time"'  
+        - 'type == METRIC_DATA_TYPE_HISTOGRAM and name matches "test.*"'  
+  
+    # Filter logs  
+    logs:  
+      log_record:  
+        # Exclude debug logs in production  
+        - 'severity_text == "DEBUG" and resource.attributes["environment"] == "production"'  
+        - 'body matches ".*noise.*"'
+```
+
+**Use Cases:**
+
+* Reducing data volume by filtering health checks
+* Excluding noisy or low-value telemetry
+* Filtering test data from production pipelines
+* Compliance: excluding entire data points containing sensitive information
+
+#### Transform Processor
+
+Advanced data transformation using OpenTelemetry Transformation Language (OTTL).
+
+**Configuration Example:**
+
+```yaml
+processors:  
+  transform:  
+    # Transform traces  
+    trace_statements:  
+      - context: span  
+        statements:  
+          # Redact sensitive data with regex  
+          - replace_pattern(attributes["http.url"], "/user/\\d+", "/user/{id}")  
+          - replace_pattern(attributes["http.url"], "/account/[^/]+", "/account/{id}")  
+  
+          # Remove password parameters from URLs  
+          - replace_pattern(attributes["http.url"], "password=[^&]*", "password=***")  
+  
+          # Mask credit card numbers  
+          - replace_pattern(attributes["request.body"], "\\d{4}-\\d{4}-\\d{4}-\\d{4}", "****-****-****-****")  
+  
+          # Delete sensitive attributes  
+          - delete_key(attributes, "authorization")  
+          - delete_key(attributes, "api_key")  
+          - delete_key(attributes, "session_token")  
+  
+          # Truncate long values  
+          - truncate_all(attributes, 4096)  
+  
+          # Set default values  
+          - set(attributes["environment"], "production") where attributes["environment"] == nil  
+  
+          # Normalize HTTP methods to uppercase  
+          - set(attributes["http.method"], Uppercase(attributes["http.method"]))  
+  
+    # Transform metrics  
+    metric_statements:  
+      - context: metric  
+        statements:  
+          # Rename metrics  
+          - set(name, "new.metric.name") where name == "old.metric.name"  
+  
+          # Add labels/attributes  
+          - set(attributes["cluster"], "us-west-2")  
+  
+    # Transform logs  
+    log_statements:  
+      - context: log  
+        statements:  
+          # Redact email addresses  
+          - replace_pattern(body, "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", "***@***.***")  
+  
+          # Redact IP addresses  
+          - replace_pattern(body, "\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b", "***.***.***.**")  
+  
+          # Remove sensitive fields from JSON logs  
+          - delete_key(attributes, "password")  
+          - delete_key(attributes, "ssn")
+```
+
+**Use Cases:**
+
+* **PII Redaction**: Remove or mask personally identifiable information
+* **Credential Scrubbing**: Remove passwords, API keys, tokens
+* **URL Sanitization**: Replace dynamic path segments with placeholders
+* **Data Normalization**: Standardize formats, casing, units
+* **Attribute Management**: Rename, restructure, or enrich attributes
+
+#### Redaction Processor (via Transform)
+
+While there's no separate "redaction processor" in the standard OTel distribution, redaction is achieved using the **transform processor** with allowlist patterns.
+
+**Allowlist Pattern Example:**
+
+```yaml
+processors:  
+  transform:  
+    trace_statements:  
+      - context: span  
+        statements:  
+          # Define allowed attributes  
+          - keep_keys(attributes, ["http.method", "http.status_code", "service.name", "environment"])  
+  
+          # Everything else is automatically dropped
+```
+
+**Blocklist Pattern Example:**
+
+```yaml
+processors:  
+  transform:  
+    trace_statements:  
+      - context: span  
+        statements:  
+          # Delete specific sensitive attributes  
+          - delete_matching_keys(attributes, ".*password.*")  
+          - delete_matching_keys(attributes, ".*token.*")  
+          - delete_matching_keys(attributes, ".*secret.*")  
+          - delete_matching_keys(attributes, ".*api[_-]?key.*")  
+          - delete_matching_keys(attributes, ".*credit[_-]?card.*")
+```
+
+**Use Cases:**
+
+* GDPR/CCPA compliance
+* Security: preventing credential leaks
+* Cost optimization: keeping only essential attributes
+
+### Connectors
+
+Bridge different pipelines, enabling signal transformation.
+
+**Example: Spanmetrics Connector**
+
+```False
+Trace Pipeline                Metrics Pipeline  
+┌────────────┐               ┌────────────┐  
+│   Traces   │──────────────▶│  Metrics   │  
+│            │  Connector    │            │  
+└────────────┘               └────────────┘  
+    │                             │  
+    ▼                             ▼  
+[Export to       [Export metrics with  
+ trace backend]   exemplars to metrics backend]
+```
+
+**Use Case**: Generate RED metrics (Rate, Errors, Duration) from traces.
+
+### Exporters
+
+Send processed telemetry to backends.
+
+**Common Exporters:**
+
+* `otlp`: Export to OTLP-compatible backends
+* `prometheus`: Expose Prometheus metrics endpoint
+* `logging`: Debug output to console
+* `datadog`: Export to Datadog
+* `jaeger`: Export to Jaeger
+
+### Service Pipelines
+
+Define the complete data flow for each signal type.
+
+**Example Configuration:**
+
+```yaml
+service:  
+  pipelines:  
+    traces:  
+      receivers: [otlp, jaeger]  
+      processors: [batch, memory_limiter]  
+      exporters: [otlp, jaeger]  
+  
+    metrics:  
+      receivers: [otlp, prometheus]  
+      processors: [batch, attributes]  
+      exporters: [prometheus, datadog]  
+  
+    traces/2:  
+      receivers: [otlp]  
+      processors: [batch]  
+      exporters: [spanmetrics]  
+  
+    metrics/spanmetrics:  
+      receivers: [spanmetrics]  
+      processors: [batch]  
+      exporters: [prometheus]
+```
+
+## Span Batch Processing Configuration
+
+The Batch Span Processor batches spans before exporting to improve efficiency.
+
+### Key Configuration Parameters
+
+#### `otel.bsp.max.export.batch.size`
+
+Maximum number of spans to export in a single batch.
+
+* **Default**: 512
+* **Recommended**: 512-2048 (depends on span size)
+* **Configuration Methods**:
+* Environment variable: `OTEL_BSP_MAX_EXPORT_BATCH_SIZE=1024`
+* JVM option: `-Dotel.bsp.max.export.batch.size=1024`
+
+#### `otel.bsp.max.queue.size`
+
+Maximum queue size for buffering spans before batching.
+
+* **Default**: 2048
+* **Important**: Should be ≥ `max.export.batch.size`
+
+* If `max.export.batch.size` is larger than the queue size, it won't be able to form a batch of that size.
+
+**Relationship Diagram:**
+
+```
+Span Generation  
+      │  
+      ▼  
+┌─────────────────────────────┐  
+│    Queue (max: 2048)        │  
+│  ┌───┐┌───┐┌───┐┌───┐       │  
+│  │ S ││ S ││ S ││ S │...    │  
+│  └───┘└───┘└───┘└───┘       │  
+└─────────────┬───────────────┘  
+              │ Batch (max: 512)  
+              ▼  
+┌─────────────────────────────┐  
+│      Exporter               │  
+└─────────────────────────────┘
+```
+
+#### `otel.bsp.schedule.delay`
+
+Maximum time to wait before exporting a partial batch.
+
+* **Default**: 5000ms
+* **Use**: Ensures timely export even with low traffic
+
+**Best Practices:**
+
+* Set `max.export.batch.size` < `max.queue.size`
+* Monitor queue saturation and dropped spans
+* Tune based on span size and throughput
+
+## Spanmetrics and Exemplars
+
+### Spanmetrics Connector
+
+Generates metrics from trace spans (replaces deprecated spanmetrics processor).
+
+**Flow:**
+
+```
+Trace Ingestion  
+         │  
+         ▼  
+┌──────────────────────┐  
+│  Trace Pipeline      │  
+│                      │  
+│  Span: /api/checkout │  
+│    duration: 245ms   │  
+│    status: OK        │  
+│    service: web      │  
+└────────┬─────────────┘  
+         │  
+         ▼  
+┌──────────────────────┐  
+│ Spanmetrics          │  
+│ Connector            │  
+└────────┬─────────────┘  
+         │  
+         ▼  
+┌──────────────────────┐  
+│  Metrics Pipeline    │  
+│                      │  
+│  duration_sum        │  
+│  duration_count      │  
+│  calls_total         │  
+│  + exemplars         │  
+└──────────────────────┘
+```
+
+**Generated Metrics:**
+
+* `duration_milliseconds_sum`: Total duration
+* `duration_milliseconds_count`: Number of calls
+* `calls_total`: Total call count
+* Dimensions: service, operation, status\_code
+
+### Exemplars
+
+Link specific trace examples to aggregated metrics.
+
+**Value Proposition:**
+
+```
+Metric Alert: High latency on /api/checkout  
+      │  
+      ▼  
+┌─────────────────────────────────────┐  
+│  Metric: avg(duration) = 2.3s       │  
+│  Exemplar: trace_id=abc123          │<─── Click to jump  
+└─────────────────────────────────────┘  
+      │  
+      ▼  
+┌─────────────────────────────────────┐  
+│  Trace abc123                       │  
+│  Shows exact slow request           │  
+│  with all spans and context         │  
+└─────────────────────────────────────┘
+```
+
+**Enables:**
+
+* Direct navigation from metrics to traces
+* Faster root cause analysis
+* Context-rich debugging
+
+## OpenTelemetry Operator
+
+Kubernetes operator for managing OpenTelemetry Collectors.
+
+### Architecture
+
+```
+┌────────────────────────────────────────────────────────┐  
+│                  Kubernetes Cluster                    │  
+│                                                        │  
+│  ┌──────────────────────────────────────────────────┐  │  
+│  │         OpenTelemetry Operator                   │  │  
+│  │                                                  │  │  
+│  │  • Manages Collector lifecycle                   │  │  
+│  │  • Auto-instrumentation injection                │  │  
+│  │  • Configuration management                      │  │  
+│  └─────────────────────┬────────────────────────────┘  │  
+│                        │                               │  
+│                        │ Creates/Manages               │  
+│                        ▼                               │  
+│  ┌──────────────────────────────────────────────────┐  │  
+│  │      OpenTelemetry Collector (CRD)               │  │  
+│  │                                                  │  │  
+│  │  ┌───────────────────────────────────────────┐   │  │  
+│  │  │  Target Allocator (optional)              │   │  │  
+│  │  │  • Distributes scrape targets             │   │  │  
+│  │  │  • ServiceMonitor discovery               │   │  │  
+│  │  │  • Dynamic target allocation              │   │  │  
+│  │  └───────────────┬───────────────────────────┘   │  │  
+│  │                  │                               │  │  
+│  │                  ▼                               │  │  
+│  │  ┌──────────────────────────────────────────┐    │  │  
+│  │  │  Collector Instances                     │    │  │  
+│  │  │  (Deployment/DaemonSet/StatefulSet)      │    │  │  
+│  │  └──────────────────────────────────────────┘    │  │  
+│  └──────────────────────────────────────────────────┘  │  
+└────────────────────────────────────────────────────────┘
+```
+
+### Target Allocator
+
+Distributes Prometheus scrape targets across multiple collector instances.
+
+**Benefits:**
+
+* Even load distribution
+* Automatic target discovery
+* Scales with collector instances
+
+**How It Works:**
+
+```
+Target Allocator  
+      │  
+      ├─── Discovers targets (ServiceMonitors, PodMonitors)  
+      │  
+      ├─── Assigns targets to collectors  
+      │         │  
+      │         ├─── Collector 1: [target-a, target-b]  
+      │         ├─── Collector 2: [target-c, target-d]  
+      │         └─── Collector 3: [target-e, target-f]  
+      │  
+      └─── Reassigns on collector scale events
+```
+
+Metric collection with [Target Allocator](https://github.com/open-telemetry/opentelemetry-operator/tree/main/cmd/otel-allocator#target-allocator)
+
+## Sampling Strategies
+
+Sampling reduces data volume while maintaining observability.
+
+### Types of Sampling
+
+#### 1. Head-Based Sampling
+
+Decision made at trace start (root span).
+
+**Strategies:**
+
+* **Always On**: Sample everything (100%)
+* **Always Off**: Sample nothing (0%)
+* **Trace ID Ratio**: Sample X% based on trace ID hash
+* **Rate Limiting**: Sample N traces per second
+
+**Pros:** Simple, predictable data volume
+
+**Cons:** May miss important traces
+
+```
+┌──────────────┐  
+│  Root Span   │──▶ Sample? (Random 10%)  
+└──────┬───────┘  
+       │  
+       ├─────▶ Span A  │  
+       ├─────▶ Span B  │──▶ All kept or all dropped  
+       └─────▶ Span C  │
+```
+
+#### 2. Tail-Based Sampling
+
+Decision made after trace completion.
+
+**Criteria:**
+
+* Error status
+* Latency threshold
+* Specific attributes (e.g., user\_id)
+
+**Pros:** Captures important traces (errors, slow requests)
+
+**Cons:** Requires buffering, more complex
+
+```
+Complete Trace  
+      │  
+      ▼  
+┌─────────────────┐  
+│  Evaluation     │  
+│  • Duration >5s │──▶ Keep  
+│  • Has errors   │──▶ Keep  
+│  • Random 1%    │──▶ Maybe keep  
+└─────────────────┘
+```
+
+#### 3. Probabilistic Sampling
+
+Each span independently sampled based on probability.
+
+**Use Case**: High-throughput systems where tail-based sampling is impractical.
+
+### Sampling Configuration Example
+
+```yaml
+processors:  
+  probabilistic_sampler:  
+    sampling_percentage: 10  
+  
+  tail_sampling:  
+    policies:  
+      - name: errors  
+        type: status_code  
+        status_code: {status_codes: [ERROR]}  
+      - name: slow  
+        type: latency  
+        latency: {threshold_ms: 5000}  
+      - name: random  
+        type: probabilistic  
+        probabilistic: {sampling_percentage: 1}
+```
+
+## Deployment Patterns
+
+### 1. Agent Pattern
+
+Collector runs alongside application (sidecar or DaemonSet).
+
+```
+┌─────────────────────────────┐  
+│         Node/Pod            │  
+│                             │  
+│  ┌──────────┐               │  
+│  │   App    │               │  
+│  └────┬─────┘               │  
+│       │ localhost:4317      │  
+│       ▼                     │  
+│  ┌──────────┐               │  
+│  │Collector │               │  
+│  │ (Agent)  │               │  
+│  └────┬─────┘               │  
+└───────┼─────────────────────┘  
+        │  
+        ▼  
+   Backend
+```
+
+**Pros:**
+
+* Low latency
+* Simplified application configuration
+* Resource isolation
+
+**Cons:**
+
+* Resource overhead per node/pod
+* Harder to centralize configuration
+
+### 2. Gateway Pattern
+
+Centralized collector cluster.
+
+```
+┌───────┐  ┌───────┐  ┌───────┐  
+│ App 1 │  │ App 2 │  │ App 3 │  
+└───┬───┘  └───┬───┘  └───┬───┘  
+    │          │          │  
+    └──────────┼──────────┘  
+               │  
+               ▼  
+    ┌──────────────────┐  
+    │   Collector      │  
+    │   Gateway        │  
+    │   (Cluster)      │  
+    └──────────┬───────┘  
+               │  
+               ▼  
+            Backend
+```
+
+**Pros:**
+
+* Centralized processing and configuration
+* Reduced resource usage per application
+* Easy to scale independently
+
+**Cons:**
+
+* Additional network hop
+* Single point of failure (mitigated by clustering)
+
+### 3. Hybrid Pattern
+
+Combines agent and gateway patterns.
+
+```
+┌─────────────────┐  
+│  App + Agent    │  
+└────────┬────────┘  
+         │ (lightweight)  
+         ▼  
+┌─────────────────┐  
+│   Gateway       │  
+│   (heavy        │  
+│   processing)   │  
+└────────┬────────┘  
+         │  
+         ▼  
+      Backend
+```
+
+**Use Case:**
+
+* Agents handle basic batching
+* Gateway performs expensive processing (tail sampling, enrichment)
+
+## Context Propagation
+
+Context propagation is the mechanism that allows trace information to flow across service boundaries, enabling distributed tracing in microservices architectures.
+
+### The Problem: Tracking Requests Across Services
+
+Imagine a user request that flows through multiple services:
+
+```False
+User Request: "Get Order #12345"  
+    │  
+    ├──▶ API Gateway (generates span)  
+    │       │  
+    │       └──▶ Order Service (generates span)  
+    │               │  
+    │               ├──▶ Payment Service (generates span)  
+    │               └──▶ Inventory Service (generates span)
+```
+
+**Without context propagation:**
+
+* Each service creates independent, disconnected spans
+* You can't connect spans together to see the full request flow
+* No way to know which spans belong to the same user request
+
+**With context propagation:**
+
+* All spans are linked by a common `trace_id`
+* You can reconstruct the entire request journey
+* End-to-end visibility across all services
+
+### What is Trace Context?
+
+**Trace Context** is metadata that gets passed between services to maintain tracing continuity. It contains:
+
+* **trace\_id**: Unique identifier for the entire request (stays the same across all services)
+* **span\_id**: Unique identifier for the current operation (changes at each service)
+* **trace\_flags**: Sampling decisions and other flags
+
+Think of it like a package delivery:
+
+* **trace\_id** = Tracking number (same for the entire journey)
+* **span\_id** = Each checkpoint's receipt ID (different at each location)
+* The tracking number connects all checkpoints together
+
+### How It Works: Step by Step
+
+```
+1. User makes request  
+   ↓  
+2. Service A (API Gateway)  
+   • Creates NEW trace_id: "abc123"  
+   • Creates span_id: "span-001"  
+   • Processes request  
+   • Calls Service B  
+   • Attaches trace_id + span_id to HTTP request  
+   ↓  
+3. Service B (Order Service) receives request  
+   • Extracts trace_id: "abc123" (keeps the same!)  
+   • Extracts parent_span_id: "span-001" (for linking)  
+   • Creates NEW span_id: "span-002"  
+   • Processes request  
+   • Calls Service C  
+   • Attaches trace_id + NEW span_id to HTTP request  
+   ↓  
+4. Service C (Payment Service) receives request  
+   • Extracts trace_id: "abc123" (still the same!)  
+   • Extracts parent_span_id: "span-002"  
+   • Creates NEW span_id: "span-003"  
+   • Processes request
+```
+
+**Result:** All spans share `trace_id: "abc123"` and can be visualized as a connected trace:
+
+```
+Trace: abc123  
+│  
+├─ Span: span-001 (API Gateway)    [200ms]  
+│  │  
+│  ├─ Span: span-002 (Order Service)    [150ms]  
+│  │  │  
+│  │  ├─ Span: span-003 (Payment Service)    [80ms]  
+│  │  └─ Span: span-004 (Inventory Service)  [40ms]
+```
+
+### How is Context Transmitted?
+
+Context is transmitted via **HTTP headers** (or equivalent for other protocols like gRPC, message queues).
+
+**Example HTTP Request:**
+
+```
+GET /api/orders/12345 HTTP/1.1  
+Host: order-service.example.com  
+traceparent: 00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01  
+tracestate: vendor1=value1,vendor2=value2
+```
+
+The receiving service reads these headers, extracts the trace context, and creates its own span within the same trace.
+
+### W3C Trace Context Standard
+
+W3C Trace Context is the **standardized format** for transmitting trace context across services. It defines exactly how trace information should be encoded in HTTP headers.
+
+#### The `traceparent` Header
+
+This is the **required header** that contains core trace context.
+
+**Format:**
+
+```
+traceparent: VERSION-TRACE_ID-PARENT_SPAN_ID-TRACE_FLAGS
+```
+
+**Real Example:**
+
+```
+traceparent: 00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01
+```
+
+**Breaking it down piece by piece:**
+
+```
+00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01  
+│   │                                │                │  
+│   │                                │                └─── [4] Trace Flags  
+│   │                                └──────────────────── [3] Parent Span ID  
+│   └───────────────────────────────────────────────────── [2] Trace ID  
+└───────────────────────────────────────────────────────── [1] Version
+```
+
+**Component Details:**
+
+* **Version** (`00`):
+
+    * Format version of W3C Trace Context
+    * Currently `00` (version 0)
+
+* **Trace ID** (`0af7651916cd43dd8448eb211c80319c`):
+
+    * 32 hex characters = 128 bits
+    * Uniquely identifies the entire trace across all services
+    * **Never changes** as the request flows through services
+    * Generated once by the first service
+
+* **Parent Span ID** (`b7ad6b7169203331`):
+
+    * 16 hex characters = 64 bits
+    * Identifies the span that made this request (the parent)
+    * **Changes** at each service hop
+    * Used to build the parent-child relationship in the trace tree
+
+* **Trace Flags** (`01`):
+
+    * 2 hex characters = 8 bits
+    * Bit flags for sampling decisions
+    * `01` = sampled (trace is being recorded)
+    * `00` = not sampled (trace is ignored)
+
+#### Visual Example of Header Propagation
+
+```
+┌─────────────────────────────────────────────────────────────────┐  
+│                     Service A (API Gateway)                     │  
+│                                                                 │  
+│  1. Receives request with NO traceparent header                 │  
+│  2. Creates NEW trace:                                          │  
+│     • trace_id = abc123...                                      │  
+│     • span_id  = 111111...                                      │  
+│  3. Makes HTTP call to Service B with header:                   │  
+│                                                                 │  
+│     traceparent: 00-abc123...-111111...-01                      │  
+│                      │         │         │                      │  
+│                      │         │         └─ Sampled             │  
+│                      │         └─────────── Parent span         │  
+│                      └─────────────────── Same trace ID         │  
+└─────────────────────────────────────────────────────────────────┘  
+                               │  
+                               ▼  
+┌─────────────────────────────────────────────────────────────────┐  
+│                     Service B (Order Service)                   │  
+│                                                                 │  
+│  1. Receives header:                                            │  
+│     traceparent: 00-abc123...-111111...-01                      │  
+│                                                                 │  
+│  2. Extracts context:                                           │  
+│     • trace_id = abc123... (KEEP THIS!)                         │  
+│     • parent_span_id = 111111... (for linking)                  │  
+│                                                                 │  
+│  3. Creates NEW span_id = 222222...                             │  
+│                                                                 │  
+│  4. Makes HTTP call to Service C with header:                   │  
+│     traceparent: 00-abc123...-222222...-01                      │  
+│                      │         │         │                      │  
+│                      │         │         └─ Sampled             │  
+│                      │         └─────────── NEW parent span     │  
+│                      └─────────────────── SAME trace ID         │  
+└─────────────────────────────────────────────────────────────────┘  
+                               │  
+                               ▼  
+┌─────────────────────────────────────────────────────────────────┐  
+│                   Service C (Payment Service)                   │  
+│                                                                 │  
+│  1. Receives header:                                            │  
+│     traceparent: 00-abc123...-222222...-01                      │  
+│                                                                 │  
+│  2. Extracts context:                                           │  
+│     • trace_id = abc123... (SAME trace!)                        │  
+│     • parent_span_id = 222222...                                │  
+│                                                                 │  
+│  3. Creates NEW span_id = 333333...                             │  
+│                                                                 │  
+│  4. Processes payment (no further calls)                        │  
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Key Insight:**
+
+* `trace_id` **never changes** → All spans belong to the same trace
+* `span_id` **changes at each hop** → Creates parent-child relationships
+
+#### The `tracestate` Header (Optional)
+
+The `tracestate` header allows vendors to add their own proprietary information without breaking the standard.
+
+**Format:**
+
+```
+tracestate: key1=value1,key2=value2
+```
+
+**Example:**
+
+```
+tracestate: datadog=s:2;o:rum,congo=t61rcWkgMzE
+```
+
+**Use Cases:**
+
+* Vendor-specific sampling decisions
+* Additional vendor context
+* A/B testing flags
+* Regional routing information
+
+### Real-World Example
+
+Let's trace an actual user request with real headers:
+
+**User Action:** Order a pizza
+
+**1. Frontend (Browser) → API Gateway**
+
+```
+POST /api/orders HTTP/1.1  
+Host: api.pizza.com  
+Content-Type: application/json  
+  
+{"pizza": "Margherita", "size": "Large"}
+```
+
+API Gateway generates:
+
+```
+trace_id: 4bf92f3577b34da6a3ce929d0e0e4736  
+span_id:  00f067aa0ba902b7
+```
+
+**2. API Gateway → Order Service**
+
+```
+POST /orders HTTP/1.1  
+Host: order-service.internal  
+traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01  
+  
+{"pizza": "Margherita", "size": "Large"}
+```
+
+Order Service extracts `trace_id: 4bf92f3577b34da6a3ce929d0e0e4736`
+
+Order Service creates `span_id: 1234567890abcdef`
+
+**3. Order Service → Payment Service**
+
+```
+POST /payments HTTP/1.1  
+Host: payment-service.internal  
+traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-1234567890abcdef-01  
+  
+{"amount": 12.99, "order_id": "789"}
+```
+
+Payment Service extracts `trace_id: 4bf92f3577b34da6a3ce929d0e0e4736`
+
+Payment Service creates `span_id: fedcba0987654321`
+
+**4. Result in Observability Backend:**
+
+```
+Trace: 4bf92f3577b34da6a3ce929d0e0e4736  
+│  
+├─ [API Gateway]     span_id: 00f067aa0ba902b7    Duration: 523ms  
+│  │  
+│  └─ [Order Service]  span_id: 1234567890abcdef  Duration: 450ms  
+│     │  
+│     └─ [Payment Service] span_id: fedcba0987654321 Duration: 230ms
+```
+
+### Why This Matters
+
+**Without W3C Trace Context:**
+
+* Every vendor had their own format (X-B3-TraceId, X-Trace-Id, etc.)
+* Services instrumented with different vendors couldn't propagate traces
+* Breaking compatibility when switching observability tools
+
+**With W3C Trace Context:**
+
+* Standardized format everyone implements
+* Works across vendors (Datadog, Dynatrace, Jaeger, etc.)
+* Future-proof as you switch tools
+* Interoperability in polyglot architectures
+
+**Summary:**
+
+* **Trace Context** = Metadata identifying which trace a span belongs to
+* **Context Propagation** = Passing that metadata between services
+* **W3C Trace Context** = The standardized format (via `traceparent` header)
+* **Purpose** = Connect all spans in a distributed request into a single cohesive trace
+
+## Testing and Telemetry Generation
+
+### Manual Trace Generation with telemetrygen
+
+```bash
+# Generate traces with mTLS  
+telemetrygen traces \  
+  --otlp-endpoint "collector.example.com:4317" \  
+  --service "test-service" \  
+  --duration 1m \  
+  --rate 1 \  
+  --client-cert "client.chain.pem" \  
+  --client-key "client-key.pem" \  
+  --ca-cert "trusted-root.pem" \  
+  --mtls  
+  
+# Generate metrics  
+telemetrygen metrics \  
+  --otlp-endpoint "localhost:4317" \  
+  --duration 30s \  
+  --rate 10  
+  
+# Generate logs  
+telemetrygen logs \  
+  --otlp-endpoint "localhost:4317" \  
+  --duration 1m \  
+  --rate 5
+```
+
+**Use Cases:**
+
+* Collector testing
+* Load testing observability pipelines
+* Validating configurations
+* Demo and training
+
+## Additional Important Concepts
+
+### Data Transformation
+
+Transform telemetry data in-flight using processors.
+
+**Examples:**
+
+* Redacting sensitive data (PII, credentials)
+* Adding resource attributes (cluster, region)
+* Normalizing attribute names
+* Converting units
+
+**Transform Processor Example:**
+
+```yaml
+processors:  
+  transform:  
+    trace_statements:  
+      - context: span  
+        statements:  
+          - set(attributes["environment"], "production")  
+          - delete_key(attributes, "password")  
+          - replace_pattern(name, "/user/\\d+", "/user/{id}")
+```
+
+### Resource Detection
+
+Automatically detect and add resource attributes.
+
+**Detectors:**
+
+* `env`: From environment variables
+* `ec2`: AWS EC2 metadata
+* `gcp`: Google Cloud metadata
+* `kubernetes`: Kubernetes pod/node info
+* `docker`: Docker container info
+
+**Example:**
+
+```yaml
+processors:  
+  resourcedetection:  
+    detectors: [env, kubernetes, gcp]  
+    timeout: 5s
+```
+
+### High Availability
+
+**Strategies:**
+
+* Run multiple collector instances
+* Use load balancers
+* Implement health checks
+* Configure retry logic
+* Set up persistent queues
+
+### Scrape Jobs
+
+| Scrape Job | Source Component | Metrics Focus | Deployed As | One Per | Scraped From |
+| --- | --- | --- | --- | --- | --- |
+| kube-state-metrics | Kubernetes API via exporter | Cluster object states                    | Deployment | Cluster | `kube-state-metrics.kube-system.svc:8080` |
+| kubelet            | Kubelet on each node        | Node (k8s-specific) & pod resource usage | Built-in   | Node    | `https://:10250/metrics` |
+| cadvisor           | Embedded in Kubelet         | Container-level resource usage           | Embedded   | Node    | `https://:10250/metrics/cadvisor` |
+| node\_exporter     | Node-level agent            | Generic host OS metrics                  | DaemonSet  | Node    | `http://:9100/metrics` |
+| envoy-stats        | Envoy proxy sidecar         | Service mesh traffic stats               | Sidecar    | Pod     | `127.0.0.1:15000/stats/prometheus` (in pod) |
+| istiod             | Istio control plane         | Mesh config & control plane              | Deployment | Cluster | `istiod.istio-system.svc/metrics` |
+| istio-ingress      | Istio ingress gateway       | External traffic observability           | Deployment | Cluster | `:15090/stats/prometheus` (on ingress pod) |
+
+### To set up Zipkin traces in the OpenTelemetry Collector (OTel Collector)
+
+* Add the Zipkin receiver in the OTEL Collector config
+
+```yaml
+receivers:  
+  zipkin:  
+    endpoint: 0.0.0.0:9411
+```
+
+* Expose the Zipkin port (usually 9411) in the OTEL Collector (agent)
+    * If running as a container: expose `9411/tcp`
+    * If running in Kubernetes: expose port `9411` in the `Service` and `containerPort` in the `Pod`
+
+* Point your application to send traces to the OTEL Collector Zipkin endpoint
+
+```
+ZIPKIN_ENDPOINT=http://<otel-agent-service>:9411/api/v2/spans
+```
+
+* Ensure that your app is using a Zipkin-compatible exporter.
+
+## Best Practices Summary
+
+* **Start with auto-instrumentation**, add manual instrumentation for business logic
+* **Use the Collector** for production deployments
+* **Implement sampling** for high-throughput systems
+* **Enable exemplars** to bridge metrics and traces
+* **Propagate context** correctly across all services
+* **Monitor the Collector** itself (meta-monitoring)
+* **Use semantic conventions** for attribute naming
+* **Tune batch processing** based on throughput
+* **Secure OTLP endpoints** with mTLS in production
+* **Test configurations** with telemetrygen before deploying
+
+## References
+
+* [OpenTelemetry Official Documentation](https://opentelemetry.io/docs/)
+* [Collector Configuration Reference](https://opentelemetry.io/docs/collector/configuration/)
+* [Semantic Conventions](https://opentelemetry.io/docs/specs/semconv/)
+* [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator)

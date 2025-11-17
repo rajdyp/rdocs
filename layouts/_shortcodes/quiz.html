@@ -1,0 +1,22 @@
+{{- /*
+A shortcode to create interactive quizzes.
+
+@param {string} id The unique ID for the quiz.
+
+@example
+{{< quiz id="my-quiz" >}}
+{
+  "title": "My Quiz",
+  "questions": [...]
+}
+{{< /quiz >}}
+*/ -}}
+
+{{- $quizId := .Get "id" | default (printf "quiz-%d" now.Unix) -}}
+{{- $quizData := .Inner | transform.Unmarshal -}}
+
+{{- partial "shortcodes/quiz.html" (dict
+  "quizId" $quizId
+  "quizData" $quizData
+  )
+-}}

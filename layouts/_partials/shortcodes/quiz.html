@@ -1,0 +1,85 @@
+{{- $quizId := .quizId -}}
+{{- $quizData := .quizData -}}
+
+<div class="quiz-container" id="{{ $quizId }}" data-quiz-id="{{ $quizId }}">
+  <div class="quiz-header">
+    <h3>{{ $quizData.title | default "Quiz" }}</h3>
+    {{- if $quizData.description -}}
+    <p class="quiz-description">{{ $quizData.description }}</p>
+    {{- end -}}
+  </div>
+
+  <div class="quiz-content">
+    {{- range $qIndex, $question := $quizData.questions -}}
+    <div class="quiz-question" data-question-index="{{ $qIndex }}" data-question-type="{{ $question.type }}">
+      <div class="question-header">
+        <span class="question-number">Question {{ add $qIndex 1 }}</span>
+      </div>
+
+      <div class="question-text">{{ $question.question | markdownify }}</div>
+
+      {{- if eq $question.type "mcq" -}}
+        {{- partial "quiz/mcq.html" $question -}}
+      {{- else if eq $question.type "multiple-select" -}}
+        {{- partial "quiz/multiple-select.html" $question -}}
+      {{- else if eq $question.type "true-false" -}}
+        {{- partial "quiz/true-false.html" $question -}}
+      {{- else if eq $question.type "fill-blank" -}}
+        {{- partial "quiz/fill-blank.html" $question -}}
+      {{- else if eq $question.type "code-output" -}}
+        {{- partial "quiz/code-output.html" $question -}}
+      {{- else if eq $question.type "flashcard" -}}
+        {{- partial "quiz/flashcard.html" $question -}}
+      {{- else if eq $question.type "drag-drop" -}}
+        {{- partial "quiz/drag-drop.html" $question -}}
+      {{- else if eq $question.type "code-completion" -}}
+        {{- partial "quiz/code-completion.html" $question -}}
+      {{- end -}}
+
+      <div class="question-feedback" style="display: none;">
+        <div class="feedback-correct" style="display: none;">
+          <span class="feedback-icon">✓</span>
+          <span class="feedback-text">Correct!</span>
+          {{- if $question.explanation -}}
+          <p class="explanation">{{ $question.explanation | markdownify }}</p>
+          {{- end -}}
+        </div>
+        <div class="feedback-incorrect" style="display: none;">
+          <span class="feedback-icon">✗</span>
+          <span class="feedback-text">Incorrect</span>
+          {{- if $question.explanation -}}
+          <p class="explanation">{{ $question.explanation | markdownify }}</p>
+          {{- end -}}
+        </div>
+      </div>
+
+      {{- if $question.hint -}}
+      <button class="hint-button" type="button">💡 Show Hint</button>
+      <div class="hint-content" style="display: none;">{{ $question.hint | markdownify }}</div>
+      {{- end -}}
+    </div>
+    {{- end -}}
+  </div>
+
+  <div class="quiz-footer">
+    <button class="quiz-submit-btn" type="button">Submit Quiz</button>
+    <button class="quiz-reset-btn" type="button" style="display: none;">Reset Quiz</button>
+  </div>
+
+  <div class="quiz-results" style="display: none;">
+    <h4>Quiz Results</h4>
+    <div class="results-summary">
+      <div class="score-display">
+        <span class="score-label">Score:</span>
+        <span class="score-value">0%</span>
+      </div>
+      <div class="results-details">
+        <span class="correct-count">0</span> correct out of <span class="total-count">0</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" class="quiz-data" data-for="{{ $quizId }}">
+{{- $quizData | jsonify -}}
+</script>

@@ -1,0 +1,10 @@
+<div class="quiz-options true-false-options">
+  <label class="quiz-option">
+    <input type="radio" name="q-{{ .question }}" value="true" data-correct="{{ if eq .answer true }}true{{ else }}false{{ end }}">
+    <span class="option-label">True</span>
+  </label>
+  <label class="quiz-option">
+    <input type="radio" name="q-{{ .question }}" value="false" data-correct="{{ if eq .answer false }}true{{ else }}false{{ end }}">
+    <span class="option-label">False</span>
+  </label>
+</div>
