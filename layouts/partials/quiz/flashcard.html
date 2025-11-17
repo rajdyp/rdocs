@@ -1,0 +1,19 @@
+<div class="flashcard-container">
+  <div class="flashcard">
+    <div class="flashcard-inner">
+      <div class="flashcard-front">
+        <div class="flashcard-content">{{ .question | markdownify }}</div>
+        <button class="flashcard-flip-btn" type="button">Show Answer</button>
+      </div>
+      <div class="flashcard-back">
+        <div class="flashcard-content">{{ .answer | markdownify }}</div>
+        <button class="flashcard-flip-btn" type="button">Show Question</button>
+        <div class="flashcard-self-check">
+          <p>Did you get it right?</p>
+          <button class="self-check-btn correct" type="button" data-correct="true">Yes ✓</button>
+          <button class="self-check-btn incorrect" type="button" data-correct="false">No ✗</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

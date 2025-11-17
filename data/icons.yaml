@@ -1,0 +1,32 @@
+kubernetes: >
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2.8l7 3.7v7.9l-7 3.8-7-3.8V6.5z"/>
+    <circle cx="12" cy="11.2" r="2.4"/>
+    <path d="M12 6.8v1.4M16.2 8.4l-1 1.1M17 12.5h-1.4M15.2 16.1l-1.1-1M8.8 16.1l1.1-1M6.8 12.5h1.4M7.8 9.5l1-1.1"/>
+  </svg>
+
+cloud-aws: >
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7.5 18.2h8.8a4.2 4.2 0 0 0 0-8.4h-.1A5.6 5.6 0 0 0 6.4 7.3 4.4 4.4 0 0 0 7.5 18.2z"/>
+  </svg>
+
+python: >
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12.5 5.2h-3.7A3.8 3.8 0 0 0 5 9v2.8h5.4v1.4H8.4a3.7 3.7 0 0 0-3.7 3.7v.6a4.3 4.3 0 0 0 4.3 4.3h3.5a3.7 3.7 0 0 0 3.7-3.7v-2.8H11v-1.4h2.1a3.7 3.7 0 0 0 3.7-3.7v-.7a4.3 4.3 0 0 0-4.3-4.3z"/>
+    <circle cx="9.2" cy="7.9" r=".6" fill="currentColor"/>
+    <circle cx="14.9" cy="16.1" r=".6" fill="currentColor"/>
+  </svg>
+
+terraform: >
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 4.8l6 3.5v6.9l-6-3.5zM12 8.3l6-3.5v6.9l-6 3.5zM12 15.2l6-3.4v6.9l-6 3.5z"/>
+  </svg>
+
+gitops: >
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 9.5l7-7 7 7-7 7z"/>
+    <path d="M12 16.5v4"/>
+    <circle cx="12" cy="21" r=".8" fill="currentColor"/>
+    <circle cx="12" cy="9.5" r=".8" fill="currentColor"/>
+    <path d="M12 9.5v4.2"/>
+  </svg>

@@ -1,0 +1,84 @@
+baseURL: https://rajdyp.github.io/notebook/
+languageCode: en-us
+title: rDocs
+theme: hextra
+
+enableRobotsTXT: true
+enableGitInfo: true
+enableEmoji: true
+hasCJKLanguage: false
+
+services:
+  googleAnalytics:
+    ID: ""
+
+outputs:
+  home: [HTML]
+  page: [HTML]
+  section: [HTML, RSS]
+
+defaultContentLanguage: en
+languages:
+  en:
+    languageName: English
+    weight: 1
+    title: rDocs
+
+module:
+  hugoVersion:
+    extended: true
+    min: "0.112.0"
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    noClasses: false
+    style: monokai
+
+menu:
+  main:
+    - name: Search
+      weight: 1
+      params:
+        type: search
+    - name: GitHub
+      weight: 2
+      url: "https://github.com/rajdyp/notebook"
+
+params:
+  description: Personal study notes on DevOps, Cloud, and Development topics
+
+  navbar:
+    displayTitle: true
+    displayLogo: false
+    logo:
+      path: ""
+      dark: ""
+      link: /
+      width: 40
+      height: 20
+
+  page:
+    width: wide
+
+  theme:
+    default: auto
+    displayToggle: true
+
+  footer:
+    displayCopyright: true
+    displayPoweredBy: true
+    width: normal
+
+  displayUpdatedDate: true
+  dateFormat: "January 2, 2006"
+
+  search:
+    enable: true
+    type: flexsearch
+
+  editURL:
+    enable: true
+    base: "https://github.com/rajdyp/notebook/edit/main"

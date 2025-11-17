@@ -1,0 +1,10 @@
+{{- $questionData := . -}}
+<div class="quiz-options multiple-select-options">
+  {{- range $oIndex, $option := .options -}}
+  <label class="quiz-option">
+    <input type="checkbox" name="q-{{ $questionData.question }}" value="{{ $oIndex }}" data-correct="{{ if in $questionData.answers $oIndex }}true{{ else }}false{{ end }}">
+    <span class="option-label">{{ $option | markdownify }}</span>
+  </label>
+  {{- end -}}
+</div>
+<input type="hidden" class="correct-answers" value="{{ delimit $questionData.answers "," }}">

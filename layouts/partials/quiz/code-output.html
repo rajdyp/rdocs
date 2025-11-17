@@ -1,0 +1,18 @@
+{{- $questionData := . -}}
+{{- $correctAnswer := $questionData.answer | int -}}
+<div class="code-output-container">
+  {{- if .code -}}
+  <div class="code-block">
+    <pre><code class="language-{{ .language | default "python" }}">{{ .code }}</code></pre>
+  </div>
+  {{- end -}}
+  <div class="output-question">What will this code output?</div>
+  <div class="quiz-options code-output-options">
+    {{- range $oIndex, $option := .options -}}
+    <label class="quiz-option">
+      <input type="radio" name="q-{{ $questionData.question }}" value="{{ $oIndex }}" data-correct="{{ if eq $oIndex $correctAnswer }}true{{ else }}false{{ end }}">
+      <span class="option-label"><code>{{ $option }}</code></span>
+    </label>
+    {{- end -}}
+  </div>
+</div>

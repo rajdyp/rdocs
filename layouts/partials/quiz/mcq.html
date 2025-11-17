@@ -1,0 +1,10 @@
+{{- $questionData := . -}}
+{{- $correctAnswer := $questionData.answer | int -}}
+<div class="quiz-options mcq-options">
+  {{- range $oIndex, $option := .options -}}
+  <label class="quiz-option">
+    <input type="radio" name="q-{{ $questionData.question }}" value="{{ $oIndex }}" data-correct="{{ if eq $oIndex $correctAnswer }}true{{ else }}false{{ end }}">
+    <span class="option-label">{{ $option | markdownify }}</span>
+  </label>
+  {{- end -}}
+</div>
