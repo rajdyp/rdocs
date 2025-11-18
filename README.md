@@ -24,8 +24,8 @@ A comprehensive collection of technical study notes built with Hugo and the Hext
 
 ```bash
 # Clone the repository
-git clone https://github.com/rajdyp/notebook.git
-cd notebook
+git clone https://github.com/rajdyp/rdocs.git
+cd rdocs
 
 # Initialize theme submodule
 git submodule update --init --recursive
@@ -37,7 +37,7 @@ hugo server -D
 hugo
 ```
 
-The site will be available at `http://localhost:1313/notebook/`
+The site will be available at `http://localhost:1313/rdocs/`
 
 ## Deployment
 
