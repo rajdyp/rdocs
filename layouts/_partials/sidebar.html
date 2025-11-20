@@ -9,6 +9,32 @@
     {{- $sectionRoot = $context -}}
   {{- end -}}
 {{- end -}}
+
+{{- /* Special handling for quiz sections to isolate each topic */ -}}
+{{- if $sectionRoot -}}
+  {{- $sectionPath := $sectionRoot.RelPermalink -}}
+  {{- if or (hasPrefix $sectionPath "/quiz/") (hasPrefix $sectionPath "/rdocs/quiz/") -}}
+    {{- /* If we're in /quiz/something/, use that as the section root instead of /quiz/ */ -}}
+    {{- $contextPath := $context.RelPermalink -}}
+    {{- $cleanPath := $contextPath -}}
+    {{- if hasPrefix $contextPath "/rdocs/" -}}
+      {{- $cleanPath = strings.TrimPrefix "/rdocs" $contextPath -}}
+    {{- end -}}
+    {{- if hasPrefix $cleanPath "/quiz/" -}}
+      {{- $pathParts := split (strings.TrimPrefix "/quiz/" $cleanPath) "/" -}}
+      {{- if gt (len $pathParts) 0 -}}
+        {{- $quizTopic := index $pathParts 0 -}}
+        {{- if ne $quizTopic "" -}}
+          {{- $quizTopicPath := printf "quiz/%s" $quizTopic -}}
+          {{- with site.GetPage $quizTopicPath -}}
+            {{- $sectionRoot = . -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
 {{- $navContext := site.Home -}}
 {{- $sectionFilter := "" -}}
 {{- if and (ne $context.Kind "home") $sectionRoot -}}

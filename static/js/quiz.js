@@ -8,6 +8,8 @@
       this.quizId = container.dataset.quizId;
       this.data = this.loadQuizData();
       this.userAnswers = new Map();
+      this.submittedQuestions = new Set();
+      this.currentQuestionIndex = 0;
       this.results = {
         total: 0,
         correct: 0,
@@ -31,16 +33,26 @@
     }
 
     bindEvents() {
-      const submitBtn = this.container.querySelector('.quiz-submit-btn');
+      const prevBtn = this.container.querySelector('.quiz-prev-btn');
+      const nextBtn = this.container.querySelector('.quiz-next-btn');
       const resetBtn = this.container.querySelector('.quiz-reset-btn');
 
-      if (submitBtn) {
-        submitBtn.addEventListener('click', () => this.submitQuiz());
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => this.previousQuestion());
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => this.nextQuestion());
       }
 
       if (resetBtn) {
         resetBtn.addEventListener('click', () => this.resetQuiz());
       }
+
+      // Submit answer buttons for each question
+      this.container.querySelectorAll('.submit-answer-btn').forEach((btn, index) => {
+        btn.addEventListener('click', () => this.submitAnswer(index));
+      });
 
       // Hint buttons
       this.container.querySelectorAll('.hint-button').forEach(btn => {
@@ -50,6 +62,17 @@
             hintContent.style.display = hintContent.style.display === 'none' ? 'block' : 'none';
           }
         });
+      });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', (e) => {
+        if (this.container.contains(document.activeElement)) {
+          if (e.key === 'ArrowLeft' && !prevBtn.disabled) {
+            this.previousQuestion();
+          } else if (e.key === 'ArrowRight' && !nextBtn.disabled) {
+            this.nextQuestion();
+          }
+        }
       });
     }
 
@@ -135,6 +158,133 @@
           return closest;
         }
       }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    showQuestion(index) {
+      const questions = this.container.querySelectorAll('.quiz-question');
+      questions.forEach((q, i) => {
+        q.style.display = i === index ? 'block' : 'none';
+      });
+      this.currentQuestionIndex = index;
+      this.updateNavigation();
+      this.updateProgress();
+    }
+
+    nextQuestion() {
+      const questions = this.container.querySelectorAll('.quiz-question');
+      if (this.currentQuestionIndex < questions.length - 1) {
+        this.showQuestion(this.currentQuestionIndex + 1);
+      }
+    }
+
+    previousQuestion() {
+      if (this.currentQuestionIndex > 0) {
+        this.showQuestion(this.currentQuestionIndex - 1);
+      }
+    }
+
+    updateNavigation() {
+      const prevBtn = this.container.querySelector('.quiz-prev-btn');
+      const nextBtn = this.container.querySelector('.quiz-next-btn');
+      const questions = this.container.querySelectorAll('.quiz-question');
+
+      // Update Previous button
+      if (prevBtn) {
+        prevBtn.disabled = this.currentQuestionIndex === 0;
+      }
+
+      // Update Next button
+      if (nextBtn) {
+        const isLastQuestion = this.currentQuestionIndex === questions.length - 1;
+        const allAnswered = this.submittedQuestions.size === questions.length;
+
+        if (isLastQuestion && allAnswered) {
+          nextBtn.textContent = 'View Results';
+          nextBtn.onclick = () => this.showFinalResults();
+        } else {
+          nextBtn.textContent = 'Next →';
+          nextBtn.onclick = () => this.nextQuestion();
+        }
+      }
+    }
+
+    updateProgress() {
+      const currentQuestionEl = this.container.querySelector('.current-question');
+      const answeredNumberEl = this.container.querySelector('.answered-number');
+
+      if (currentQuestionEl) {
+        currentQuestionEl.textContent = this.currentQuestionIndex + 1;
+      }
+
+      if (answeredNumberEl) {
+        answeredNumberEl.textContent = this.submittedQuestions.size;
+      }
+    }
+
+    submitAnswer(index) {
+      const question = this.container.querySelectorAll('.quiz-question')[index];
+      const type = question.dataset.questionType;
+      let isCorrect = false;
+
+      // Check if already submitted
+      if (this.submittedQuestions.has(index)) {
+        return;
+      }
+
+      switch(type) {
+        case 'mcq':
+          isCorrect = this.checkMCQ(question, index);
+          break;
+        case 'multiple-select':
+          isCorrect = this.checkMultipleSelect(question, index);
+          break;
+        case 'true-false':
+          isCorrect = this.checkTrueFalse(question, index);
+          break;
+        case 'fill-blank':
+          isCorrect = this.checkFillBlank(question, index);
+          break;
+        case 'code-output':
+          isCorrect = this.checkCodeOutput(question, index);
+          break;
+        case 'code-completion':
+          isCorrect = this.checkCodeCompletion(question, index);
+          break;
+        case 'flashcard':
+          isCorrect = this.checkFlashcard(question, index);
+          break;
+        case 'drag-drop':
+          isCorrect = this.checkDragDrop(question, index);
+          break;
+      }
+
+      this.showFeedback(question, isCorrect);
+      this.submittedQuestions.add(index);
+      this.lockQuestion(question);
+
+      // Update submit button to show it's answered
+      const submitBtn = question.querySelector('.submit-answer-btn');
+      if (submitBtn) {
+        submitBtn.textContent = '✓ Answered';
+        submitBtn.disabled = true;
+        submitBtn.classList.add('answered');
+      }
+
+      this.updateProgress();
+      this.updateNavigation();
+    }
+
+    lockQuestion(question) {
+      // Disable all inputs in the question
+      question.querySelectorAll('input, .flashcard-flip-btn, .self-check-btn, .drag-item').forEach(el => {
+        el.disabled = true;
+        if (el.classList.contains('drag-item')) {
+          el.draggable = false;
+          el.style.cursor = 'not-allowed';
+        }
+      });
+
+      question.classList.add('locked');
     }
 
     submitQuiz() {
@@ -324,13 +474,28 @@
       }
     }
 
-    showResults() {
+    showFinalResults() {
+      const questions = this.container.querySelectorAll('.quiz-question');
+      let correct = 0;
+      let incorrect = 0;
+
+      questions.forEach((question, index) => {
+        if (question.classList.contains('answered-correct')) {
+          correct++;
+        } else if (question.classList.contains('answered-incorrect')) {
+          incorrect++;
+        }
+      });
+
+      this.results = { total: questions.length, correct, incorrect };
+
       const resultsDiv = this.container.querySelector('.quiz-results');
       const scoreValue = this.container.querySelector('.score-value');
       const correctCount = this.container.querySelector('.correct-count');
       const totalCount = this.container.querySelector('.total-count');
-      const submitBtn = this.container.querySelector('.quiz-submit-btn');
       const resetBtn = this.container.querySelector('.quiz-reset-btn');
+      const navDiv = this.container.querySelector('.quiz-navigation');
+      const progressDiv = this.container.querySelector('.quiz-progress');
 
       const percentage = Math.round((this.results.correct / this.results.total) * 100);
 
@@ -350,29 +515,39 @@
         totalCount.textContent = this.results.total;
       }
 
-      if (submitBtn) {
-        submitBtn.style.display = 'none';
-      }
-
       if (resetBtn) {
         resetBtn.style.display = 'inline-block';
       }
 
-      // Disable all inputs
-      this.container.querySelectorAll('input, button.flashcard-flip-btn, button.self-check-btn').forEach(el => {
-        if (!el.classList.contains('quiz-reset-btn')) {
-          el.disabled = true;
-        }
+      // Hide navigation and progress
+      if (navDiv) {
+        navDiv.style.display = 'none';
+      }
+
+      if (progressDiv) {
+        progressDiv.style.display = 'none';
+      }
+
+      // Hide all questions
+      questions.forEach(q => {
+        q.style.display = 'none';
       });
 
       // Scroll to results
-      resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    showResults() {
+      // Legacy method - now redirects to showFinalResults
+      this.showFinalResults();
     }
 
     resetQuiz() {
-      // Reset results
+      // Reset results and state
       this.results = { total: 0, correct: 0, incorrect: 0 };
       this.userAnswers.clear();
+      this.submittedQuestions.clear();
+      this.currentQuestionIndex = 0;
 
       // Hide results
       const resultsDiv = this.container.querySelector('.quiz-results');
@@ -380,9 +555,21 @@
         resultsDiv.style.display = 'none';
       }
 
+      // Show navigation and progress
+      const navDiv = this.container.querySelector('.quiz-navigation');
+      const progressDiv = this.container.querySelector('.quiz-progress');
+
+      if (navDiv) {
+        navDiv.style.display = 'flex';
+      }
+
+      if (progressDiv) {
+        progressDiv.style.display = 'block';
+      }
+
       // Reset all questions
-      this.container.querySelectorAll('.quiz-question').forEach(question => {
-        question.classList.remove('answered-correct', 'answered-incorrect');
+      this.container.querySelectorAll('.quiz-question').forEach((question, index) => {
+        question.classList.remove('answered-correct', 'answered-incorrect', 'locked');
 
         // Reset feedback
         const feedback = question.querySelector('.question-feedback');
@@ -429,25 +616,32 @@
         // Reset drag-drop items
         question.querySelectorAll('.drag-item').forEach(item => {
           item.style.borderColor = '';
+          item.draggable = true;
+          item.style.cursor = 'move';
         });
 
         // Reset hints
         question.querySelectorAll('.hint-content').forEach(hint => {
           hint.style.display = 'none';
         });
+
+        // Reset submit button
+        const submitBtn = question.querySelector('.submit-answer-btn');
+        if (submitBtn) {
+          submitBtn.textContent = 'Submit Answer';
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('answered');
+        }
       });
 
-      // Show submit button, hide reset button
-      const submitBtn = this.container.querySelector('.quiz-submit-btn');
+      // Hide reset button
       const resetBtn = this.container.querySelector('.quiz-reset-btn');
-
-      if (submitBtn) {
-        submitBtn.style.display = 'inline-block';
-      }
-
       if (resetBtn) {
         resetBtn.style.display = 'none';
       }
+
+      // Show first question
+      this.showQuestion(0);
 
       // Scroll to top of quiz
       this.container.scrollIntoView({ behavior: 'smooth', block: 'start' });
