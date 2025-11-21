@@ -42,7 +42,13 @@
       }
 
       if (nextBtn) {
-        nextBtn.addEventListener('click', () => this.nextQuestion());
+        nextBtn.addEventListener('click', () => {
+          if (nextBtn.dataset.action === 'show-results') {
+            this.showFinalResults();
+          } else {
+            this.nextQuestion();
+          }
+        });
       }
 
       if (resetBtn) {
@@ -196,14 +202,15 @@
       // Update Next button
       if (nextBtn) {
         const isLastQuestion = this.currentQuestionIndex === questions.length - 1;
-        const allAnswered = this.submittedQuestions.size === questions.length;
 
-        if (isLastQuestion && allAnswered) {
+        if (isLastQuestion) {
           nextBtn.textContent = 'View Results';
-          nextBtn.onclick = () => this.showFinalResults();
+          nextBtn.dataset.action = 'show-results';
+          nextBtn.disabled = false;
         } else {
           nextBtn.textContent = 'Next →';
-          nextBtn.onclick = () => this.nextQuestion();
+          nextBtn.dataset.action = 'next';
+          nextBtn.disabled = false;
         }
       }
     }
@@ -478,26 +485,36 @@
       const questions = this.container.querySelectorAll('.quiz-question');
       let correct = 0;
       let incorrect = 0;
+      let skipped = 0;
 
       questions.forEach((question, index) => {
         if (question.classList.contains('answered-correct')) {
           correct++;
         } else if (question.classList.contains('answered-incorrect')) {
           incorrect++;
+        } else {
+          skipped++;
         }
       });
 
-      this.results = { total: questions.length, correct, incorrect };
+      this.results = { total: questions.length, correct, incorrect, skipped };
 
       const resultsDiv = this.container.querySelector('.quiz-results');
       const scoreValue = this.container.querySelector('.score-value');
       const correctCount = this.container.querySelector('.correct-count');
+      const wrongCount = this.container.querySelector('.wrong-count');
+      const skippedCount = this.container.querySelector('.skipped-count');
+      const rightCount = this.container.querySelector('.right-count');
       const totalCount = this.container.querySelector('.total-count');
       const resetBtn = this.container.querySelector('.quiz-reset-btn');
       const navDiv = this.container.querySelector('.quiz-navigation');
       const progressDiv = this.container.querySelector('.quiz-progress');
 
-      const percentage = Math.round((this.results.correct / this.results.total) * 100);
+      // Calculate accuracy based on answered questions only
+      const answeredQuestions = correct + incorrect;
+      const percentage = answeredQuestions > 0
+        ? Math.round((correct / answeredQuestions) * 100)
+        : 0;
 
       if (resultsDiv) {
         resultsDiv.style.display = 'block';
@@ -508,7 +525,19 @@
       }
 
       if (correctCount) {
-        correctCount.textContent = this.results.correct;
+        correctCount.textContent = correct;
+      }
+
+      if (wrongCount) {
+        wrongCount.textContent = incorrect;
+      }
+
+      if (skippedCount) {
+        skippedCount.textContent = skipped;
+      }
+
+      if (rightCount) {
+        rightCount.textContent = correct;
       }
 
       if (totalCount) {

@@ -1,5 +1,5 @@
 ---
-title: Custom Resources & CRDs
+title: CRDs & Custom Resources
 linkTitle: CRDs
 type: docs
 weight: 2

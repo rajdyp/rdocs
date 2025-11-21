@@ -1,18 +1,18 @@
 ---
-title: Custom Resources & CRDs Quiz
-linkTitle: Custom Resources & CRDs
+title: CRDs & Custom Resources Quiz
+linkTitle: CRDs & Custom Resources
 type: docs
 weight: 2
 prev: /quiz/kubernetes-add-ons/kso
 ---
 
-## Custom Resources & CRDs Quiz
+## CRDs & Custom Resources Quiz
 
 Test your understanding of extending Kubernetes API with Custom Resource Definitions.
 
 {{< quiz id="kubernetes-crd-quiz" >}}
 {
-  "title": "Custom Resources & CRDs Quiz",
+  "title": "CRDs & Custom Resources Quiz",
   "description": "Test your knowledge of Custom Resource Definitions",
   "questions": []
 }

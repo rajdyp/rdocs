@@ -4,12 +4,8 @@ description: "Complete quiz example with all 8 question types"
 weight: 3
 ---
 
-This page demonstrates all 8 question types in action.
-
 {{< quiz id="python-complete-quiz" >}}
 {
-  "title": "Python Fundamentals Quiz",
-  "description": "Test your Python knowledge with various question types",
   "questions": [
     {
       "type": "mcq",
