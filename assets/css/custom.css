@@ -932,7 +932,9 @@
 
 .quiz-results h4 {
   margin-top: 0;
+  margin-bottom: 1.5rem;
   color: var(--text-primary, #111827);
+  text-align: center;
 }
 
 .dark .quiz-results h4 {
@@ -941,37 +943,83 @@
 
 .results-summary {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 1rem;
-  align-items: center;
+  align-items: stretch;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.score-display {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #3b82f6;
+.results-card {
+  flex: 1;
+  min-width: 150px;
+  max-width: 200px;
+  padding: 1.5rem;
+  background-color: var(--card-bg, #ffffff);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
 }
 
-.score-label {
-  font-size: 1.25rem;
-  margin-right: 0.5rem;
+.dark .results-card {
+  --card-bg: #1f2937;
+}
+
+.result-label {
+  font-size: 0.875rem;
+  color: var(--label-color, #6b7280);
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.dark .result-label {
+  --label-color: #9ca3af;
+}
+
+.result-label:first-child {
+  margin-top: 0;
+}
+
+.result-value {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary, #111827);
+}
+
+.dark .result-value {
+  --text-primary: #f9fafb;
+}
+
+.score-fraction {
+  color: #111827;
+}
+
+.dark .score-fraction {
+  color: #f9fafb;
 }
 
 .score-value {
+  color: #3b82f6 !important;
   font-size: 2.5rem;
 }
 
-.results-details {
-  font-size: 1.1rem;
-  color: var(--text-secondary, #6b7280);
+.right-count {
+  color: #10b981 !important;
 }
 
-.dark .results-details {
-  --text-secondary: #9ca3af;
+.wrong-count {
+  color: #ef4444 !important;
+}
+
+.skipped-count {
+  color: #f59e0b !important;
 }
 
 .correct-count {
-  font-weight: 600;
+  font-weight: 700;
   color: #10b981;
 }
 
@@ -993,12 +1041,21 @@
     font-size: 1.1rem;
   }
 
-  .score-display {
-    font-size: 1.5rem;
+  .results-summary {
+    flex-direction: column;
+  }
+
+  .results-card {
+    max-width: 100%;
+    min-width: 100%;
   }
 
   .score-value {
     font-size: 2rem;
+  }
+
+  .result-value {
+    font-size: 1.5rem;
   }
 
   .quiz-progress {

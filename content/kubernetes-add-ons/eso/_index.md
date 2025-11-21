@@ -1,5 +1,5 @@
 ---
-title: Kubernetes External Secrets Operator
+title: External Secrets Operator
 linkTitle: Secrets Operator
 type: docs
 weight: 1
