@@ -12,7 +12,7 @@ next: /quiz/kubernetes/01-introduction/
 Test your knowledge of Kubernetes architecture, concepts, and how to deploy and manage containerized applications at scale.
 
 {{< cards >}}
-  {{< card link="01-introduction" title="Introduction" subtitle="What is Kubernetes and why use it" >}}
+  {{< card link="01-introduction" title="Introduction to k8s" subtitle="What is Kubernetes and why use it" >}}
   {{< card link="02-cluster-architecture" title="Architecture" subtitle="Control plane, worker nodes, and namespaces" >}}
   {{< card link="03-control-plane" title="Control Plane Components" subtitle="API server, scheduler, controller manager, and etcd" >}}
   {{< card link="04-worker-nodes" title="Worker Node Components" subtitle="kubelet, kube-proxy, and container runtime" >}}
