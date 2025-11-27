@@ -2,7 +2,7 @@
 title: Log Analysis
 linkTitle: Log Analysis
 type: docs
-weight: 2
+weight: 10
 prev: /python/basics
 next: /python/log-analysis/reference-guide
 ---
