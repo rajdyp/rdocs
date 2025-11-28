@@ -16,6 +16,15 @@ A comprehensive reference for log analysis patterns, techniques, and decision-ma
 **When to use**: Simple, predictable log formats with clear delimiters
 
 **Example**: Parsing Apache/Nginx logs
+
+**Sample log format**:
+```
+192.168.1.10 - - [15/Jan/2025:10:23:45 +0000] "GET /api/checkout HTTP/1.1" 200 1523 2.45
+192.168.1.25 - - [15/Jan/2025:10:24:12 +0000] "POST /api/orders HTTP/1.1" 201 847 1.82
+192.168.1.10 - - [15/Jan/2025:10:25:03 +0000] "GET /api/products HTTP/1.1" 500 0 0.15
+```
+
+**Parsing code**:
 ```python
 data = line.strip().split()
 ip = data[0]
@@ -44,6 +53,15 @@ endpoint = request[1]
 **When to use**: Complex patterns, need validation, multiple formats
 
 **Example**: Robust log parsing with named groups
+
+**Sample log format** (same as above):
+```
+192.168.1.10 - - [15/Jan/2025:10:23:45 +0000] "GET /api/checkout HTTP/1.1" 200 1523 2.45
+192.168.1.25 - - [15/Jan/2025:10:24:12 +0000] "POST /api/orders HTTP/1.1" 201 847 1.82
+192.168.1.10 - - [15/Jan/2025:10:25:03 +0000] "GET /api/products HTTP/1.1" 500 0 0.15
+```
+
+**Parsing code with validation**:
 ```python
 import re
 
@@ -76,6 +94,15 @@ with open('file.txt', 'r') as f:
 **When to use**: Structured logs (JSON lines format - one JSON object per line)
 
 **Example**: Kubernetes events, structured application logs
+
+**Sample log format** (each line is a separate JSON object):
+```json
+{"type": "Normal", "reason": "Scheduled", "involvedObject": {"kind": "Pod", "name": "nginx-abc123", "namespace": "default"}, "timestamp": "2025-01-15T10:23:45Z"}
+{"type": "Warning", "reason": "BackOff", "involvedObject": {"kind": "Pod", "name": "api-xyz789", "namespace": "production"}, "timestamp": "2025-01-15T10:24:12Z"}
+{"type": "Warning", "reason": "FailedMount", "involvedObject": {"kind": "Pod", "name": "db-pod-001", "namespace": "default"}, "timestamp": "2025-01-15T10:25:03Z"}
+```
+
+**Parsing code**:
 ```python
 import json
 
@@ -103,9 +130,9 @@ with open("events.json", "r") as f:
 **Pros**: Handles complex nested data, type-safe, widely supported
 **Cons**: Requires valid JSON, memory overhead for large objects
 
-### 4. Colon-Separated Values (CSV-like formats)
+### 4. Delimited Values (CSV-like formats)
 
-**When to use**: /etc/passwd, simple delimited configs
+**When to use**: /etc/passwd, CSV files, simple delimited configs
 
 **Example**: Parse /etc/passwd
 ```python
@@ -126,8 +153,7 @@ with open("passwd.txt", "r") as f:
 
 **Best practices**:
 - Always strip whitespace before checking for empty lines
-- Handle comments early
-- Document field positions with comments
+- Handle comments early (skip lines starting with `#`)
 
 ## Data Structures
 
@@ -172,6 +198,8 @@ for item in items:
 - `.setdefault()`: Useful when setting complex defaults
 
 #### Tracking First Occurrence Only
+
+**Parsing code**:
 ```python
 # Pattern: Session tracking, first event timestamp
 active_sessions = {}
@@ -214,17 +242,21 @@ for event in events:
 
 **Comparison**:
 ```python
-# Without defaultdict
-groups = {}
-for item in items:
-    if key not in groups:
-        groups[key] = []
-    groups[key].append(item)
+# Counting without defaultdict
+ip_counts = {}
+for log in logs:
+    ip = log['ip']
+    if ip not in ip_counts:
+        ip_counts[ip] = 0
+    ip_counts[ip] += 1
 
-# With defaultdict
-groups = defaultdict(list)
-for item in items:
-    groups[key].append(item)  # Much cleaner!
+# Grouping without defaultdict
+events_by_pod = {}
+for event in events:
+    pod_name = event['pod']
+    if pod_name not in events_by_pod:
+        events_by_pod[pod_name] = []
+    events_by_pod[pod_name].append(event)
 ```
 
 **Pros**: Cleaner code, no initialization boilerplate
@@ -237,16 +269,16 @@ for item in items:
 ```python
 from collections import Counter
 
-# Method 1: Direct initialization
+# Direct initialization
 word_counts = Counter(word_list)
 
-# Method 2: Incremental updates
+# Incremental updates
 log_levels = Counter()
 for line in logs:
     level = extract_level(line)
     log_levels[level] += 1
 
-# Method 3: Update with iterable
+# Update with iterable
 reasons = []
 for event in events:
     if event['type'] == "Warning":
@@ -255,6 +287,34 @@ reason_counts = Counter(reasons)
 
 # Get top N
 for reason, count in reason_counts.most_common(3):
+    print(f"{reason}: {count}")
+```
+
+**Comparison**:
+```python
+# Direct initialization - manual counting from list
+word_counts = {}
+for word in word_list:
+    word_counts[word] = word_counts.get(word, 0) + 1
+
+# Incremental updates - manual counting
+log_levels = {}
+for line in logs:
+    level = extract_level(line)
+    log_levels[level] = log_levels.get(level, 0) + 1
+
+# Get top N - manual sorting
+reasons = []
+for event in events:
+    if event['type'] == "Warning":
+        reasons.append(event['reason'])
+
+reason_counts = {}
+for reason in reasons:
+    reason_counts[reason] = reason_counts.get(reason, 0) + 1
+
+sorted_reasons = sorted(reason_counts.items(), key=lambda x: x[1], reverse=True)
+for reason, count in sorted_reasons[:3]:
     print(f"{reason}: {count}")
 ```
 
@@ -417,7 +477,7 @@ slowest_error = max(
 
 #### Multi-condition Filtering
 ```python
-# Find pods with warnings in default namespace
+# Method 1: Chain conditions with 'and'
 pods_with_warnings = set()
 
 for event in events:
@@ -429,9 +489,30 @@ for event in events:
     if kind == "Pod" and event_type == "Warning" and namespace == "default":
         pod_name = f"{namespace}/{obj.get('name')}"
         pods_with_warnings.add(pod_name)
+
+# Method 2: Early continue for readability
+pods_with_warnings = set()
+
+for event in events:
+    obj = event.get("involvedObject", {})
+
+    # Skip non-Pod events early
+    if obj.get("kind") != "Pod":
+        continue
+
+    # Skip non-Warning events
+    if event.get("type") != "Warning":
+        continue
+
+    # Skip non-default namespace
+    if obj.get("namespace") != "default":
+        continue
+
+    pod_name = f"{obj.get('namespace')}/{obj.get('name')}"
+    pods_with_warnings.add(pod_name)
 ```
 
-**Pattern**: Chain conditions with `and`, use early `continue` for readability
+**Pattern**: Chain conditions with `and` for compact code, or use early `continue` for better readability with many conditions
 
 #### Grouping by Key
 ```python
@@ -597,9 +678,23 @@ if pod_count > 0:
     print(f"Average pod lifecycle: {average_lifecycle}")
 ```
 
-**Key insight**:
-- `timedelta` objects can be added together
+**Key insights**:
+- `timedelta` objects (durations) can be added together
+- `datetime` objects (points in time) **cannot** be added together
+- Subtracting two `datetime` objects produces a `timedelta`: `dt2 - dt1 = timedelta`
+- Adding a `timedelta` to a `datetime` produces a new `datetime`: `dt + timedelta = new_dt`
 - Division by integer gives average `timedelta`
+
+**Operations summary**:
+```python
+# ✅ Valid operations
+duration1 + duration2           # timedelta + timedelta = timedelta
+datetime2 - datetime1           # datetime - datetime = timedelta
+datetime1 + timedelta(hours=5)  # datetime + timedelta = datetime
+
+# ❌ Invalid operation
+datetime1 + datetime2           # datetime + datetime = TypeError (conceptually meaningless)
+```
 
 ### 4. Sorting by Timestamp (Pre-processing)
 
@@ -720,7 +815,7 @@ for item in my_list:
 filtered_list = [item for item in my_list if not condition]
 
 # GOOD - Iterate over copy
-for item in my_list[:]:
+for item in my_list[:]:       # List slicing [:] creates a copy
     if condition:
         my_list.remove(item)
 ```
@@ -763,7 +858,10 @@ words = re.findall(r'\b\w+\b', text.lower())
 ```
 Is the format simple and consistent with clear delimiters?
 └─ YES → String manipulation (split, find, slice)
-└─ NO → Does it need validation or handle variations?
+└─ NO → Do you need to:
+    - Validate format (e.g., check if IP address is valid)?
+    - Handle variations (e.g., optional fields, different formats)?
+    - Extract complex patterns (e.g., email addresses, URLs)?
     └─ YES → Regular expressions
     └─ NO → Is it JSON?
         └─ YES → json.loads()
@@ -793,11 +891,14 @@ Already using Counter?
 ### "Should I process line-by-line or load all into memory?"
 
 ```
-Do I need to sort by timestamp or reference later entries?
+Do I need to:
+- Sort by timestamp or other field?
+- Match entries across the file (e.g., pair login with logout)?
+- Look ahead/back to other lines (e.g., find max before processing)?
 └─ YES → Load all into memory (list), then sort/process
-└─ NO → Can I calculate on single pass?
+└─ NO → Can I calculate everything in a single pass?
     └─ YES → Process line-by-line (memory efficient)
-    └─ NO → Need two passes?
+    └─ NO → Need two passes (e.g., identify issues, then fix them)?
         └─ YES → Load into memory or read file twice
 ```
 
@@ -822,13 +923,13 @@ Do I need to:
 ## Common Imports Cheatsheet
 
 ```python
-import json                          # JSON parsing
-import re                            # Regular expressions
-import numpy as np                   # Percentile calculations
-from datetime import datetime, timedelta  # Time handling
+import json                                   # JSON parsing
+import re                                     # Regular expressions
+import numpy as np                            # Percentile calculations
+from datetime import datetime, timedelta      # Time handling
 from collections import defaultdict, Counter  # Advanced dicts
-import string                        # string.punctuation
-import pprint                        # Pretty printing (debugging)
+import string                                 # string.punctuation
+import pprint                                 # Pretty printing (debugging)
 ```
 
 ## Debugging Tips
