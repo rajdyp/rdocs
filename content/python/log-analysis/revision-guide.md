@@ -799,9 +799,9 @@ logs = sorted(logs, key=lambda x: datetime.fromisoformat(x['timestamp']))
 
 ---
 
-## ✅ Revision Checklist
+## ✅ Review Checklist
 
-Use this for quick 5-minute reviews:
+Use this for quick reviews:
 
 **Parsing:**
 - [ ] Do I strip before checking empty lines?

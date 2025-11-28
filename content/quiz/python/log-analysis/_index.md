@@ -3,21 +3,522 @@ title: Log Analysis Quiz
 linkTitle: Log Analysis
 type: docs
 weight: 2
-prev: /quiz/python/basics
+prev: /quiz/python/08-working-with-data
 ---
 
-## Log Analysis Quiz
-
-Test your understanding of parsing and exploring log data with Python tools.
-
-{{< quiz id="python-log-analysis-quiz" >}}
+{{< quiz id="python-log-analysis-comprehensive" >}}
 {
-  "title": "Python Log Analysis Quiz",
-  "description": "Test your knowledge of log analysis with Python",
-  "questions": []
+  "questions": [
+    {
+      "type": "mcq",
+      "question": "When should you use string manipulation (split, find, slice) over regular expressions for log parsing?",
+      "options": [
+        "When you need to validate the log format",
+        "When the log format is simple, predictable, and has clear delimiters",
+        "When you need to handle multiple varying formats",
+        "When you need to extract complex patterns like email addresses"
+      ],
+      "answer": 1,
+      "explanation": "String manipulation is ideal for simple, predictable log formats with clear delimiters. It's fast, has no dependencies, and is easy to understand. Use regex when you need validation, handle variations, or extract complex patterns.",
+      "hint": "Think about when you need the simplest, fastest approach without validation."
+    },
+    {
+      "type": "multiple-select",
+      "question": "Which of the following are advantages of using regular expressions with named groups for log parsing?",
+      "options": [
+        "Validation is built into the pattern matching",
+        "Faster performance than string methods",
+        "Self-documenting code with descriptive group names",
+        "Handles format variations gracefully",
+        "No regex knowledge required"
+      ],
+      "answers": [0, 2, 3],
+      "explanation": "Regular expressions provide built-in validation, are self-documenting with named groups, and handle variations well. However, they are slower than string methods and do require regex knowledge.",
+      "hint": "Consider what regex offers beyond simple string splitting."
+    },
+    {
+      "type": "code-output",
+      "question": "What will be printed?",
+      "code": "import json\nevent = json.loads('{\"type\": \"Warning\", \"obj\": {\"name\": \"pod1\"}}')\nresult = event.get(\"obj\", {}).get(\"namespace\", \"default\")\nprint(result)",
+      "language": "python",
+      "options": [
+        "None",
+        "default",
+        "Error",
+        "{}"
+      ],
+      "answer": 1,
+      "explanation": "The 'namespace' key doesn't exist in the 'obj' dictionary, so .get('namespace', 'default') returns the default value 'default'. This is the safe way to handle missing nested JSON fields.",
+      "hint": "Think about what .get() returns when a key is missing and a default is provided."
+    },
+    {
+      "type": "fill-blank",
+      "question": "What method should you use to safely access nested JSON fields that might not exist?",
+      "answer": ".get()",
+      "caseSensitive": false,
+      "explanation": "The .get() method returns None (or a specified default) if the key doesn't exist, preventing KeyError exceptions. Always use chained .get() calls for nested structures: event.get('obj', {}).get('kind')",
+      "hint": "It's a dictionary method that accepts a default value parameter."
+    },
+    {
+      "type": "mcq",
+      "question": "Which data structure is best for counting the frequency of log levels (INFO, WARN, ERROR) when you also need to find the top 3 most common levels?",
+      "options": [
+        "Regular dictionary with .get()",
+        "defaultdict(int)",
+        "Counter",
+        "set"
+      ],
+      "answer": 2,
+      "explanation": "Counter is ideal when you need .most_common() functionality. While dict.get() and defaultdict(int) can count, Counter provides built-in .most_common(N) which is perfect for finding top N items.",
+      "hint": "Which structure has a built-in method for getting the most common items?"
+    },
+    {
+      "type": "true-false",
+      "question": "defaultdict(int) automatically initializes missing keys to 0, eliminating the need for .get() or existence checks when counting.",
+      "answer": true,
+      "explanation": "This is true. defaultdict(int) auto-initializes missing keys to 0, making code cleaner: ip_counts[ip] += 1 works without checking if ip exists first.",
+      "hint": "Think about what 'default' means in defaultdict."
+    },
+    {
+      "type": "drag-drop",
+      "question": "Arrange these data structure choices from most appropriate to least appropriate for tracking unique pod names:",
+      "instruction": "Drag to arrange from most to least appropriate",
+      "items": [
+        "set",
+        "Counter",
+        "list",
+        "defaultdict(int)"
+      ],
+      "correctOrder": [0, 1, 3, 2],
+      "explanation": "For uniqueness: set is ideal (O(1) lookup, auto-deduplication). Counter works but is overkill. defaultdict(int) can work but adds complexity. list is worst (O(n) lookup, no auto-deduplication)."
+    },
+    {
+      "type": "code-completion",
+      "question": "Complete the code to safely handle division by zero when calculating average latency:",
+      "instruction": "Fill in the condition",
+      "codeTemplate": "total_latency = sum(latencies)\ncount = len(latencies)\n_____:\n    avg_latency = total_latency / count\nelse:\n    avg_latency = 0",
+      "answer": "if count > 0",
+      "caseSensitive": false,
+      "acceptedAnswers": ["if count > 0", "if len(latencies) > 0"],
+      "explanation": "Always check that the divisor is greater than 0 before dividing to avoid ZeroDivisionError. This is a critical best practice in log analysis."
+    },
+    {
+      "type": "mcq",
+      "question": "What is the result of subtracting two datetime objects?",
+      "options": [
+        "A new datetime object",
+        "A timedelta object representing the duration",
+        "An integer representing seconds",
+        "TypeError - this operation is invalid"
+      ],
+      "answer": 1,
+      "explanation": "datetime2 - datetime1 = timedelta. You cannot add two datetime objects (meaningless), but subtracting them gives you a duration (timedelta) between them.",
+      "hint": "Think about what represents a duration or time difference."
+    },
+    {
+      "type": "code-output",
+      "question": "What will be the output?",
+      "code": "from datetime import timedelta\ntd1 = timedelta(hours=2)\ntd2 = timedelta(hours=3)\navg = (td1 + td2) / 2\nprint(type(avg).__name__)",
+      "language": "python",
+      "options": [
+        "int",
+        "float",
+        "timedelta",
+        "datetime"
+      ],
+      "answer": 2,
+      "explanation": "Adding timedelta objects produces another timedelta. Dividing a timedelta by an integer also produces a timedelta. This is how you calculate average durations.",
+      "hint": "Think about what type represents a duration."
+    },
+    {
+      "type": "multiple-select",
+      "question": "Which operations are valid in Python's datetime module?",
+      "options": [
+        "datetime + datetime",
+        "datetime - datetime",
+        "timedelta + timedelta",
+        "datetime + timedelta",
+        "timedelta / integer"
+      ],
+      "answers": [1, 2, 3, 4],
+      "explanation": "Valid: datetime - datetime = timedelta, timedelta + timedelta = timedelta, datetime + timedelta = datetime, timedelta / int = timedelta. Invalid: datetime + datetime (conceptually meaningless - you can't add two points in time).",
+      "hint": "You can add durations together or to points in time, but not points in time to each other."
+    },
+    {
+      "type": "flashcard",
+      "question": "What is the two-pass processing pattern and when should you use it?",
+      "answer": "**Two-Pass Processing Pattern:**\n\n**Pass 1:** Analyze data and identify what needs fixing (e.g., find duplicate UIDs, build correction mapping)\n\n**Pass 2:** Apply corrections based on the analysis\n\n**When to use:** When you need to process data and then fix/correct it based on patterns discovered in the first pass. Example: finding duplicate UIDs and reassigning them to available unique values."
+    },
+    {
+      "type": "mcq",
+      "question": "When parsing log files, what should you ALWAYS do before checking if a line is empty?",
+      "options": [
+        "Convert to lowercase",
+        "Strip whitespace with .strip()",
+        "Split by delimiters",
+        "Check if it starts with '#'"
+      ],
+      "answer": 1,
+      "explanation": "Always strip whitespace BEFORE checking emptiness. Whitespace-only lines won't be caught by 'if not line' but will be caught by 'if not line.strip()'. The pattern is: cleaned_line = line.strip(); if not cleaned_line or cleaned_line.startswith('#'): continue",
+      "hint": "What handles lines that contain only spaces or tabs?"
+    },
+    {
+      "type": "true-false",
+      "question": "When using find() to locate substrings, it returns -1 if the substring is not found, which can cause slice errors if not handled properly.",
+      "answer": true,
+      "explanation": "True. find() returns -1 if not found, which can cause issues with slicing: line[start+1:end] becomes line[0:end] if start is -1. Use index() instead (raises ValueError) or check if find() returned -1.",
+      "hint": "What happens when you use -1 as a slice index?"
+    },
+    {
+      "type": "code-output",
+      "question": "What will this code print?",
+      "code": "count = {}\nfor item in ['a', 'b', 'a', 'c', 'a']:\n    count[item] = count.get(item, 0) + 1\nprint(count['a'])",
+      "language": "python",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "Error"
+      ],
+      "answer": 2,
+      "explanation": "The .get() pattern safely counts occurrences. 'a' appears 3 times in the list, so count['a'] = 3. This is the most Pythonic way to count with regular dictionaries.",
+      "hint": "Count how many times 'a' appears in the list."
+    },
+    {
+      "type": "mcq",
+      "question": "Which approach is better for finding the top 3 most frequent error codes from parsed logs?",
+      "options": [
+        "Manual sorting: sorted(error_counts.items(), key=lambda x: x[1], reverse=True)[:3]",
+        "Using Counter: error_counts.most_common(3)",
+        "Using max() three times with removal",
+        "Both A and B are equally good"
+      ],
+      "answer": 3,
+      "explanation": "Both approaches work well. sorted() with lambda is versatile for any sorting need. Counter.most_common() is more concise and readable when you're already using Counter. Choose based on whether you need other Counter features.",
+      "hint": "Consider readability and whether you're already using the Counter data structure."
+    },
+    {
+      "type": "fill-blank",
+      "question": "What regex pattern matches an IP address in log parsing?",
+      "answer": "\\d+\\.\\d+\\.\\d+\\.\\d+",
+      "caseSensitive": false,
+      "explanation": "The pattern \\d+\\.\\d+\\.\\d+\\.\\d+ matches IP addresses like 192.168.1.10. \\d+ matches one or more digits, \\. matches a literal dot (escaped because . is a special regex character).",
+      "hint": "Remember that dots need to be escaped in regex."
+    },
+    {
+      "type": "mcq",
+      "question": "When should you load an entire log file into memory before processing?",
+      "options": [
+        "Always - it's faster",
+        "Never - it wastes memory",
+        "When you need to sort by timestamp or match entries across the file",
+        "Only for JSON files"
+      ],
+      "answer": 2,
+      "explanation": "Load into memory when you need to: sort by timestamp, match entries across the file (e.g., pair login/logout), or look ahead/back. Otherwise, process line-by-line for memory efficiency.",
+      "hint": "Think about when you need to see all data before you can process it correctly."
+    },
+    {
+      "type": "code-completion",
+      "question": "Complete the code to track only the first login timestamp for each user:",
+      "instruction": "Fill in the missing condition",
+      "codeTemplate": "active_sessions = {}\nfor event in events:\n    user_id = event['user_id']\n    if event['action'] == 'login' and _____:\n        active_sessions[user_id] = event['timestamp']",
+      "answer": "user_id not in active_sessions",
+      "caseSensitive": false,
+      "acceptedAnswers": ["user_id not in active_sessions"],
+      "explanation": "Check 'user_id not in active_sessions' to ensure you only record the first occurrence. This pattern is crucial for tracking first-only events.",
+      "hint": "You want to add the user only if they haven't been added yet."
+    },
+    {
+      "type": "multiple-select",
+      "question": "Which statements about defaultdict and Counter are correct?",
+      "options": [
+        "defaultdict(list) auto-initializes missing keys to empty lists",
+        "Counter can combine counts using arithmetic: count1 + count2",
+        "defaultdict is always faster than regular dictionaries",
+        "Counter.most_common() returns items sorted by count in descending order",
+        "defaultdict creates keys on access, even for lookups"
+      ],
+      "answers": [0, 1, 3, 4],
+      "explanation": "All are true except C. defaultdict(list) creates empty lists for missing keys. Counter supports arithmetic operations. most_common() sorts by count descending. defaultdict does create keys on access (a potential gotcha). defaultdict isn't always faster - just more convenient.",
+      "hint": "Think about the trade-offs and special features of each structure."
+    },
+    {
+      "type": "flashcard",
+      "question": "What is the difference between find() and index() when searching for substrings?",
+      "answer": "**find()**\n- Returns -1 if substring not found\n- Silent failure - can cause subtle bugs with slicing\n- Use when you want to check and handle missing substrings with conditionals\n\n**index()**\n- Raises ValueError if substring not found\n- Explicit error handling with try/except\n- Clearer for error cases\n\n**Best practice:** Use index() with try/except for clearer error handling in log parsing."
+    },
+    {
+      "type": "code-output",
+      "question": "What will this code print?",
+      "code": "import re\npattern = r'\\[(?P<LEVEL>\\w+)\\]'\nline = '[ERROR] Connection failed'\nmatch = re.search(pattern, line)\nprint(match.groupdict()['LEVEL'])",
+      "language": "python",
+      "options": [
+        "ERROR",
+        "[ERROR]",
+        "LEVEL",
+        "Error"
+      ],
+      "answer": 0,
+      "explanation": "Named groups (?P<name>pattern) capture matching text without the surrounding characters. The pattern captures just the word inside brackets. match.groupdict()['LEVEL'] returns 'ERROR'.",
+      "hint": "Named groups capture what's inside the parentheses, not the surrounding brackets."
+    },
+    {
+      "type": "mcq",
+      "question": "What is the main disadvantage of using regular expressions compared to simple string manipulation for log parsing?",
+      "options": [
+        "Regular expressions cannot handle complex patterns",
+        "Regular expressions are slower and require regex knowledge",
+        "Regular expressions don't support named groups",
+        "Regular expressions cannot validate input"
+      ],
+      "answer": 1,
+      "explanation": "The main cons of regex are: slower performance than string methods and requires regex knowledge. However, regex excels at validation, complex patterns, and handling variations - which string methods cannot do well.",
+      "hint": "Think about the trade-offs mentioned in the 'Cons' section."
+    },
+    {
+      "type": "true-false",
+      "question": "For line-delimited JSON logs (one JSON object per line), you should use json.loads() on each line individually rather than loading the entire file as one JSON array.",
+      "answer": true,
+      "explanation": "True. Line-delimited JSON has one JSON object per line, not a JSON array. Process each line with json.loads(line) individually. This is common in Kubernetes events and structured application logs.",
+      "hint": "Think about whether each line is a complete JSON object or part of a larger structure."
+    },
+    {
+      "type": "mcq",
+      "question": "Why should you compile regex patterns outside of loops?",
+      "options": [
+        "It makes the code more readable",
+        "It's required by Python's re module",
+        "It improves performance by avoiding repeated compilation",
+        "It allows you to use named groups"
+      ],
+      "answer": 2,
+      "explanation": "Compiling regex patterns outside loops (pattern = re.compile(r'...')) improves performance by avoiding repeated compilation on every iteration. This is a key performance optimization for log parsing.",
+      "hint": "Think about what happens when you compile the same pattern thousands of times."
+    },
+    {
+      "type": "code-completion",
+      "question": "Complete the pattern to match quoted content in a log line:",
+      "instruction": "Fill in the regex pattern",
+      "codeTemplate": "import re\npattern = r'_____'\nline = '\"GET /api/users HTTP/1.1\"'\nmatch = re.search(pattern, line)\nrequest = match.group(1)",
+      "answer": "\"(.*?)\"",
+      "caseSensitive": false,
+      "acceptedAnswers": ["\"(.*?)\"", "\\\"(.*?)\\\""],
+      "explanation": "The pattern \"(.*?)\" or \\\"(.*?)\\\" matches quoted content. .*? is non-greedy (stops at first closing quote). Parentheses create a capture group accessible via .group(1).",
+      "hint": "Use .*? for non-greedy matching between quotes."
+    },
+    {
+      "type": "flashcard",
+      "question": "Explain the Decision Matrix for choosing a data structure for log analysis. When should you use dict, set, list, Counter, or defaultdict?",
+      "answer": "**Data Structure Decision Matrix:**\n\n- **dict with .get()**: Count occurrences (simple case)\n- **set**: Track unique items, membership testing (O(1))\n- **list**: Maintain order, collect values for later processing\n- **defaultdict(list)**: Group items by key\n- **defaultdict(int)**: Multiple counters, cleaner counting\n- **Counter**: Top N items, combining counts, multiple count operations\n\n**Key insight**: Choose based on what you need to do, not just what works."
+    },
+    {
+      "type": "multiple-select",
+      "question": "Which of these are valid reasons to use the two-pass processing pattern?",
+      "options": [
+        "Finding duplicate UIDs before reassigning them",
+        "Counting word frequencies in a single pass",
+        "Identifying all issues before fixing them in a configuration file",
+        "Processing logs that are already sorted",
+        "Building a correction mapping based on entire file analysis"
+      ],
+      "answers": [0, 2, 4],
+      "explanation": "Two-pass is needed when you must analyze the entire dataset before making corrections (duplicates, issues, correction mappings). Single-pass works for counting and processing sorted data.",
+      "hint": "When do you need to see everything before you can fix anything?"
+    },
+    {
+      "type": "code-output",
+      "question": "What will be printed?",
+      "code": "from collections import Counter\nwords = Counter(['apple', 'banana', 'apple', 'cherry', 'banana', 'apple'])\nresult = words.most_common(2)\nprint(len(result))",
+      "language": "python",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "6"
+      ],
+      "answer": 1,
+      "explanation": "most_common(2) returns a list of the 2 most common items as tuples: [('apple', 3), ('banana', 2)]. len(result) = 2.",
+      "hint": "How many items did you ask for with most_common()?"
+    },
+    {
+      "type": "mcq",
+      "question": "What is the best practice for handling punctuation when analyzing word frequencies in log messages?",
+      "options": [
+        "Ignore it - punctuation doesn't affect word counts",
+        "Remove punctuation before splitting into words",
+        "Count words with punctuation as different from words without",
+        "Use case-insensitive matching instead"
+      ],
+      "answer": 1,
+      "explanation": "Remove punctuation before counting to avoid treating 'error,' and 'error' as different words. Use string.punctuation with replace() or regex \\b\\w+\\b to extract clean words.",
+      "hint": "Should 'error,' and 'error' be counted as the same word or different words?"
+    },
+    {
+      "type": "true-false",
+      "question": "Sets in Python provide O(1) membership testing, making them ideal for checking if an item has been seen before.",
+      "answer": true,
+      "explanation": "True. Sets use hash tables internally, providing O(1) average-case lookup. This makes 'if item in seen_items' very fast compared to lists (O(n)).",
+      "hint": "Think about the performance characteristics of sets versus lists."
+    },
+    {
+      "type": "drag-drop",
+      "question": "Arrange these steps for parsing logs with regular expressions in the correct order:",
+      "instruction": "Drag to arrange in logical order",
+      "items": [
+        "Compile regex pattern with named groups",
+        "Read each log line",
+        "Match pattern against line",
+        "Extract data using groupdict()",
+        "Handle non-matching lines"
+      ],
+      "correctOrder": [0, 1, 2, 3, 4],
+      "explanation": "Correct flow: 1) Compile pattern once (performance), 2) Read lines, 3) Match pattern, 4) Extract with groupdict() if matched, 5) Handle/skip non-matching lines."
+    },
+    {
+      "type": "code-completion",
+      "question": "Complete the code to safely find the slowest request from a filtered list:",
+      "instruction": "Fill in the parameter to avoid errors on empty lists",
+      "codeTemplate": "error_requests = [log for log in logs if log['status'] >= 400]\nslowest = max(error_requests, key=lambda x: x['latency'], _____)",
+      "answer": "default=None",
+      "caseSensitive": false,
+      "acceptedAnswers": ["default=None"],
+      "explanation": "Use default=None with max()/min() on filtered lists to avoid ValueError when the list is empty. Always consider edge cases in log analysis.",
+      "hint": "What parameter prevents max() from crashing on an empty sequence?"
+    },
+    {
+      "type": "flashcard",
+      "question": "What are the key differences between parsing delimited files (like /etc/passwd) versus JSON logs?",
+      "answer": "**Delimited Files (CSV-like):**\n- Use split(':') or split(',')\n- Fixed column positions\n- Flat structure\n- Must handle comments (#) and empty lines manually\n- Simple index-based access: data[2]\n\n**JSON Logs:**\n- Use json.loads() per line\n- Named fields with .get()\n- Nested structures\n- Type-safe (booleans, numbers preserved)\n- Safer with .get() defaults: event.get('field', {})\n\n**Key insight**: JSON is self-describing and handles nesting; delimited is simpler but requires knowing column positions."
+    },
+    {
+      "type": "mcq",
+      "question": "Which datetime parsing method should you use for ISO 8601 formatted timestamps like '2025-01-15T10:23:45+00:00'?",
+      "options": [
+        "datetime.strptime(ts, '%Y-%m-%dT%H:%M:%S%z')",
+        "datetime.fromisoformat(ts)",
+        "datetime.parse(ts)",
+        "datetime.fromtimestamp(ts)"
+      ],
+      "answer": 1,
+      "explanation": "datetime.fromisoformat() is the built-in method for parsing ISO 8601 timestamps. It's simpler than strptime() for standard ISO formats. Use strptime() for custom formats like '15/Jan/2025:10:23:45 +0000'.",
+      "hint": "There's a specific method for ISO format in the datetime module."
+    },
+    {
+      "type": "multiple-select",
+      "question": "Which are valid performance optimization tips for log analysis?",
+      "options": [
+        "Process line-by-line for memory efficiency",
+        "Always load entire files into memory for speed",
+        "Use sets for membership testing instead of lists",
+        "Compile regex patterns inside loops for accuracy",
+        "Use list comprehensions instead of for-loops with append"
+      ],
+      "answers": [0, 2, 4],
+      "explanation": "Good practices: line-by-line processing (memory), sets for membership (O(1)), list comprehensions (faster). Bad: loading all files (memory waste), compiling regex in loops (slow).",
+      "hint": "Think about memory efficiency and algorithmic complexity."
+    },
+    {
+      "type": "code-output",
+      "question": "What will this code output?",
+      "code": "text = 'ERROR: failed'\nfor punc in '!@#$%^&*(),.:':\n    text = text.replace(punc, ' ')\nwords = text.split()\nprint(len(words))",
+      "language": "python",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "answer": 1,
+      "explanation": "After removing punctuation, text becomes 'ERROR  failed' (colon replaced with space). split() handles multiple spaces and returns ['ERROR', 'failed'], so len = 2.",
+      "hint": "Count the words after punctuation removal and splitting."
+    },
+    {
+      "type": "true-false",
+      "question": "When grouping events by pod name using defaultdict(list), you must initialize the list for each pod before appending to it.",
+      "answer": false,
+      "explanation": "False. That's the whole point of defaultdict(list) - it automatically initializes missing keys to empty lists. You can directly do: pod_events[pod_name].append(event) without checking or initializing.",
+      "hint": "What does 'default' in defaultdict mean?"
+    },
+    {
+      "type": "mcq",
+      "question": "What is the primary benefit of using named groups in regular expressions like (?P<IP>\\d+\\.\\d+\\.\\d+\\.\\d+)?",
+      "options": [
+        "Faster pattern matching",
+        "Self-documenting code with descriptive names accessible via groupdict()",
+        "Required for validation",
+        "Allows reuse of the same pattern"
+      ],
+      "answer": 1,
+      "explanation": "Named groups make code self-documenting and allow accessing matched data by name: match.groupdict()['IP'] instead of match.group(1). This improves readability and maintainability.",
+      "hint": "Think about code clarity and how you access the matched data."
+    },
+    {
+      "type": "code-completion",
+      "question": "Complete the code to handle case-insensitive matching when parsing log levels:",
+      "instruction": "Fill in the normalization step",
+      "codeTemplate": "log_levels = ['INFO', 'error', 'WARNING', 'info']\ncounts = {}\nfor level in log_levels:\n    normalized = _____\n    counts[normalized] = counts.get(normalized, 0) + 1",
+      "answer": "level.upper()",
+      "caseSensitive": false,
+      "acceptedAnswers": ["level.upper()", "level.lower()"],
+      "explanation": "Use .upper() or .lower() to normalize case before counting. This ensures 'ERROR', 'error', and 'Error' are counted together. Choose one and be consistent.",
+      "hint": "You need to normalize all strings to the same case."
+    },
+    {
+      "type": "flashcard",
+      "question": "Why should you use early 'continue' statements when filtering with multiple conditions?",
+      "answer": "**Early Continue Pattern:**\n```python\nfor event in events:\n    if obj.get('kind') != 'Pod':\n        continue\n    if event.get('type') != 'Warning':\n        continue\n    # Process filtered event\n```\n\n**Benefits:**\n- Improves readability with many conditions\n- Reduces nesting levels\n- Makes filtering logic explicit\n- Each condition is independent and clear\n\n**Alternative:** Chain with 'and' for compact code with few conditions\n\n**Best practice:** Use early continue when you have 3+ filtering conditions."
+    },
+    {
+      "type": "mcq",
+      "question": "When should you use Counter.update() instead of counting manually?",
+      "options": [
+        "When adding new items from an iterable to existing counts",
+        "When you need to reset all counts to zero",
+        "When you only need to count one specific item",
+        "When you need to sort by frequency"
+      ],
+      "answer": 0,
+      "explanation": "Counter.update(iterable) adds counts from an iterable to existing counts. It's cleaner than manually looping and incrementing. Example: count1.update(count2) combines two counters.",
+      "hint": "Think about combining or adding to existing counts."
+    },
+    {
+      "type": "code-output",
+      "question": "What is the output?",
+      "code": "line = '192.168.1.1 - [ERROR] message'\nstart = line.find('[')\nend = line.find(']')\nresult = line[start+1:end]\nprint(result)",
+      "language": "python",
+      "options": [
+        "ERROR",
+        "[ERROR]",
+        "ERROR] message",
+        "192.168.1.1 - [ERROR"
+      ],
+      "answer": 0,
+      "explanation": "find('[') returns 12, find(']') returns 18. Slice [13:18] extracts 'ERROR' (between the brackets, not including them).",
+      "hint": "Slicing from start+1 to end excludes the opening bracket and includes up to but not including the closing bracket."
+    },
+    {
+      "type": "multiple-select",
+      "question": "Which scenarios require loading the entire log file into memory before processing?",
+      "options": [
+        "Sorting logs by timestamp before processing chronologically",
+        "Counting error frequencies",
+        "Pairing login events with logout events for session tracking",
+        "Finding the maximum latency value",
+        "Calculating percentiles (P95, P99) for response times"
+      ],
+      "answers": [0, 2, 4],
+      "explanation": "Need memory: sorting (must see all), pairing across file, percentiles (require sorted data). Don't need: counting (running total), finding max (track as you go).",
+      "hint": "When do you need to see all data before you can process correctly?"
+    },
+    {
+      "type": "true-false",
+      "question": "List comprehensions in Python are generally faster than for-loops with append() for building lists.",
+      "answer": true,
+      "explanation": "True. List comprehensions are optimized internally and typically faster than equivalent for-loops with append(). They're also more Pythonic and readable for simple transformations.",
+      "hint": "Python optimizes list comprehensions at the interpreter level."
+    }
+  ]
 }
 {{< /quiz >}}
 
----
-
-**Quiz content will be added soon.**

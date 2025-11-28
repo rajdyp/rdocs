@@ -1,6 +1,6 @@
 ---
 title: Introduction Quiz
-linkTitle: Introduction
+linkTitle: Introduction to k8s
 type: docs
 weight: 1
 prev: /quiz/kubernetes
