@@ -120,7 +120,7 @@ next: /quiz/python/02-building-blocks
     },
     {
       "type": "mcq",
-      "question": "What is the time complexity of this code?",
+      "question": "What is the time complexity of this code?\n\n```python\nfor i in range(n):\n    for j in range(n):\n        print(i, j)\n```",
       "options": [
         "O(1)",
         "O(n)",
