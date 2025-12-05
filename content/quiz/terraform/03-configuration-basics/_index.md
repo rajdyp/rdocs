@@ -1,0 +1,310 @@
+---
+title: "Configuration Basics Quiz"
+linkTitle: Configuration Basics
+type: docs
+weight: 3
+prev: /quiz/terraform/02-workflow-and-cli
+next: /quiz/terraform/04-resources-and-meta-arguments
+---
+
+{{< quiz id="terraform-configuration-basics-quiz" >}}
+{
+  "questions": [
+    {
+      "type": "mcq",
+      "question": "What is the correct basic syntax structure for an HCL block?",
+      "options": [
+        "`<BLOCK_TYPE> <BLOCK_LABEL> { <IDENTIFIER> = <EXPRESSION> }`",
+        "`<BLOCK_TYPE> \"<BLOCK_LABEL>\" { <IDENTIFIER> = <EXPRESSION> }`",
+        "`<BLOCK_TYPE>(<BLOCK_LABEL>) { <IDENTIFIER> = <EXPRESSION> }`",
+        "`<BLOCK_TYPE> [<BLOCK_LABEL>] { <IDENTIFIER> = <EXPRESSION> }`"
+      ],
+      "answer": 1,
+      "explanation": "HCL uses double quotes around block labels. The correct syntax is `<BLOCK_TYPE> \"<BLOCK_LABEL>\" \"<BLOCK_LABEL>\" { ... }`",
+      "hint": "Think about how resource blocks are defined in Terraform."
+    },
+    {
+      "type": "fill-blank",
+      "question": "What operator is used for pessimistic version constraints in Terraform?",
+      "answer": "~>",
+      "caseSensitive": false,
+      "explanation": "The `~>` operator allows incremental updates to the rightmost specified version component. For example, `~> 1.2.0` allows 1.2.x but not 1.3.0.",
+      "hint": "It's a two-character operator combining a tilde and greater-than symbol."
+    },
+    {
+      "type": "code-completion",
+      "question": "Complete the terraform block to require version 1.2.0 or later:",
+      "instruction": "Fill in the missing configuration",
+      "codeTemplate": "terraform {\n  _____ = \">= 1.2.0\"\n}",
+      "answer": "required_version",
+      "caseSensitive": true,
+      "acceptedAnswers": ["required_version"],
+      "explanation": "The `required_version` argument in the terraform block specifies which versions of Terraform can be used with this configuration."
+    },
+    {
+      "type": "true-false",
+      "question": "Backend configuration in Terraform supports variables and expressions for dynamic configuration.",
+      "answer": false,
+      "explanation": "Backend configuration does NOT support variables or expressions because the backend is processed before Terraform loads variables. Use `-backend-config` flag or a separate config file instead.",
+      "hint": "Think about when the backend needs to be initialized in the Terraform workflow."
+    },
+    {
+      "type": "multiple-select",
+      "question": "Which of the following are valid components of the `terraform` block?",
+      "options": [
+        "required_version",
+        "required_providers",
+        "backend",
+        "provider",
+        "cloud"
+      ],
+      "answers": [0, 1, 2, 4],
+      "explanation": "`terraform` block contains: `required_version`, `required_providers`, `backend`, and `cloud`. The `provider` is a separate top-level block type, not part of the `terraform` block.",
+      "hint": "The provider configuration uses its own block type."
+    },
+    {
+      "type": "mcq",
+      "question": "What does the version constraint `~> 1.2.0` allow?",
+      "options": [
+        "Any version from 1.2.0 to 2.0.0",
+        "Any version from 1.2.0 to 1.2.9",
+        "Any version from 1.2.0 to 1.9.9",
+        "Only version 1.2.0 exactly"
+      ],
+      "answer": 1,
+      "explanation": "The `~>` operator with three version components (1.2.0) allows only patch version updates within that minor version. So `~> 1.2.0` allows 1.2.0, 1.2.1, 1.2.9 but blocks 1.3.0.",
+      "hint": "More specific version constraints create tighter restrictions."
+    },
+    {
+      "type": "code-completion",
+      "question": "Complete the provider alias configuration for a disaster recovery region:",
+      "instruction": "Fill in the missing keyword",
+      "codeTemplate": "provider \"aws\" {\n  _____ = \"west\"\n  region = \"us-west-2\"\n}",
+      "answer": "alias",
+      "caseSensitive": true,
+      "acceptedAnswers": ["alias"],
+      "explanation": "The `alias` argument creates an alternative provider configuration that can be referenced in resources using `provider = aws.west`."
+    },
+    {
+      "type": "mcq",
+      "question": "How do you reference an aliased provider in a resource?",
+      "options": [
+        "`provider = \"aws.west\"`",
+        "`provider = aws.west`",
+        "`alias = \"west\"`",
+        "`provider_alias = \"west\"`"
+      ],
+      "answer": 1,
+      "explanation": "Use `provider = aws.west` without quotes. The format is `provider_type.alias_name`.",
+      "hint": "It's a reference, not a string literal."
+    },
+    {
+      "type": "multiple-select",
+      "question": "Which attributes are typically computed (not provided by you) for an `aws_instance` resource?",
+      "options": [
+        "ami",
+        "id",
+        "instance_type",
+        "public_ip",
+        "arn"
+      ],
+      "answers": [1, 3, 4],
+      "explanation": "Computed attributes are generated by AWS after the instance is created: `id`, `public_ip`, `arn`, etc. Input attributes like `ami` and `instance_type` are provided by you.",
+      "hint": "Computed attributes are values only known after the resource is created."
+    },
+    {
+      "type": "drag-drop",
+      "question": "Arrange the resource dependency chain in the correct creation order:",
+      "instruction": "Drag to arrange from first to last",
+      "items": [
+        "aws_vpc",
+        "aws_subnet",
+        "aws_instance"
+      ],
+      "correctOrder": [0, 1, 2],
+      "explanation": "VPC must be created first, then subnet (which depends on VPC), then instance (which depends on subnet). Destruction happens in reverse order."
+    },
+    {
+      "type": "true-false",
+      "question": "When using references like `aws_vpc.main.id`, Terraform automatically creates implicit dependencies.",
+      "answer": true,
+      "explanation": "Terraform automatically detects dependencies when you reference one resource's attributes in another resource. This creates an implicit dependency graph.",
+      "hint": "Terraform analyzes your configuration to understand resource relationships."
+    },
+    {
+      "type": "fill-blank",
+      "question": "What is the resource address for a resource defined as `resource \"aws_instance\" \"web_server\"`?",
+      "answer": "aws_instance.web_server",
+      "caseSensitive": true,
+      "explanation": "Resource addresses combine the resource type and name with a dot: `resource_type.resource_name`.",
+      "hint": "Combine the two quoted strings with a dot separator."
+    },
+    {
+      "type": "mcq",
+      "question": "In a standard Terraform project structure, where should provider configurations be placed?",
+      "options": [
+        "main.tf",
+        "providers.tf",
+        "versions.tf",
+        "terraform.tfvars"
+      ],
+      "answer": 1,
+      "explanation": "Provider configurations should be in `providers.tf` following standard conventions. This separates concerns and improves organization.",
+      "hint": "The file name typically matches what it contains."
+    },
+    {
+      "type": "flashcard",
+      "question": "What is the difference between a Map and an Object in Terraform?",
+      "answer": "**Map**: Flexible keys, all values must be the same type. Used for tags, labels, dynamic data.\n\n**Object**: Fixed keys (schema), values can be different types. Used for structured configuration.\n\n**Example:**\n- Map: `map(string)` - all values are strings\n- Object: `object({ name = string, count = number })` - mixed types"
+    },
+    {
+      "type": "code-output",
+      "question": "Given this configuration, which region will `aws_instance.app` be created in?",
+      "code": "provider \"aws\" {\n  region = \"us-east-1\"\n}\n\nprovider \"aws\" {\n  alias  = \"west\"\n  region = \"us-west-2\"\n}\n\nresource \"aws_instance\" \"app\" {\n  ami           = \"ami-123\"\n  instance_type = \"t2.micro\"\n}",
+      "language": "hcl",
+      "options": [
+        "us-east-1",
+        "us-west-2",
+        "Error: provider not specified",
+        "Both regions"
+      ],
+      "answer": 0,
+      "explanation": "The resource uses the default provider (without alias), which is `us-east-1`. To use the aliased provider, you'd need to add `provider = aws.west` to the resource.",
+      "hint": "Resources without explicit provider argument use the default provider."
+    },
+    {
+      "type": "multiple-select",
+      "question": "Which of the following are correct workarounds for the limitation that backends cannot use variables?",
+      "options": [
+        "Use `-backend-config` flag with key-value pairs",
+        "Use a separate `backend.hcl` file with `-backend-config=backend.hcl`",
+        "Define the backend as empty `{}` and provide config via CLI",
+        "Use environment variables directly in the backend block",
+        "Use string interpolation in the backend block"
+      ],
+      "answers": [0, 1, 2],
+      "explanation": "Valid workarounds: (1) `-backend-config` flag, (2) separate config file, (3) partial configuration. Environment variables and string interpolation are NOT supported in backend blocks.",
+      "hint": "The backend configuration must be static, but can be provided externally."
+    },
+    {
+      "type": "mcq",
+      "question": "What does `terraform fmt` do?",
+      "options": [
+        "Validates Terraform configuration syntax",
+        "Formats Terraform code to canonical style",
+        "Initializes the Terraform working directory",
+        "Displays the execution plan"
+      ],
+      "answer": 1,
+      "explanation": "`terraform fmt` automatically formats Terraform configuration files to a canonical style and format, making code consistent and readable.",
+      "hint": "Think about code formatting and style consistency."
+    },
+    {
+      "type": "true-false",
+      "question": "Nested blocks inside resources use the equals sign (`=`) just like arguments.",
+      "answer": false,
+      "explanation": "Nested blocks do NOT use `=`. For example: `ingress { ... }` not `ingress = { ... }`. Arguments use `=`, nested blocks don't.",
+      "hint": "Look at how security group ingress rules are defined."
+    },
+    {
+      "type": "code-completion",
+      "question": "Complete the required_providers block for AWS provider version 5.x:",
+      "instruction": "Fill in the version constraint",
+      "codeTemplate": "terraform {\n  required_providers {\n    aws = {\n      source  = \"hashicorp/aws\"\n      version = \"_____\"\n    }\n  }\n}",
+      "answer": "~> 5.0",
+      "caseSensitive": false,
+      "acceptedAnswers": ["~> 5.0", "~>5.0"],
+      "explanation": "The `~> 5.0` constraint allows any 5.x version but blocks 6.0 and above. This is the standard way to lock to a major version."
+    },
+    {
+      "type": "mcq",
+      "question": "In which order does Terraform destroy resources with dependencies?",
+      "options": [
+        "Same order as creation (VPC → Subnet → Instance)",
+        "Reverse order of creation (Instance → Subnet → VPC)",
+        "Random order",
+        "Alphabetical by resource name"
+      ],
+      "answer": 1,
+      "explanation": "Terraform destroys resources in reverse dependency order. If Instance depends on Subnet, and Subnet depends on VPC, destruction is: Instance → Subnet → VPC.",
+      "hint": "You need to delete dependent resources before their dependencies."
+    },
+    {
+      "type": "multiple-select",
+      "question": "Which statements about HCL comments are true?",
+      "options": [
+        "Single-line comments can start with `#`",
+        "Single-line comments can start with `//`",
+        "Multi-line comments use `/* */`",
+        "Comments can be nested",
+        "Inline comments are supported"
+      ],
+      "answers": [0, 1, 2, 4],
+      "explanation": "HCL supports `#` and `//` for single-line comments, `/* */` for multi-line comments, and inline comments. Comment nesting is not supported.",
+      "hint": "HCL comment syntax is similar to many other languages."
+    },
+    {
+      "type": "flashcard",
+      "question": "Why are provider aliases necessary?",
+      "answer": "**Provider aliases enable multiple configurations of the same provider type.**\n\n**Common use cases:**\n- Multi-region deployments (deploy to multiple AWS regions)\n- Multi-account setups (manage resources across different accounts)\n- Disaster recovery (replicate infrastructure in backup regions)\n- Cross-region dependencies (e.g., CloudFront + S3 in different regions)\n\n**Without aliases**, you could only have one configuration per provider type."
+    },
+    {
+      "type": "code-output",
+      "question": "What will happen when you run `terraform apply` with this configuration?",
+      "code": "terraform {\n  backend \"s3\" {\n    bucket = var.state_bucket\n    key    = \"terraform.tfstate\"\n    region = \"us-east-1\"\n  }\n}\n\nvariable \"state_bucket\" {\n  default = \"my-state-bucket\"\n}",
+      "language": "hcl",
+      "options": [
+        "Successfully configures S3 backend with the bucket name",
+        "Error: Variables not allowed in backend configuration",
+        "Warning: Variable will be ignored",
+        "Prompts for bucket name interactively"
+      ],
+      "answer": 1,
+      "explanation": "Backend configuration does NOT support variables. This will produce an error. Use `-backend-config` flag or a separate config file instead.",
+      "hint": "Think about when the backend is initialized versus when variables are loaded."
+    },
+    {
+      "type": "mcq",
+      "question": "What is the purpose of the `.terraform.lock.hcl` file?",
+      "options": [
+        "Locks Terraform state to prevent concurrent modifications",
+        "Stores provider version locks and checksums",
+        "Prevents multiple users from running Terraform simultaneously",
+        "Locks resources to prevent accidental deletion"
+      ],
+      "answer": 1,
+      "explanation": "The `.terraform.lock.hcl` file records the exact provider versions and checksums used, ensuring consistent provider versions across team members and CI/CD runs.",
+      "hint": "It's created after `terraform init` and relates to providers."
+    },
+    {
+      "type": "true-false",
+      "question": "You can have multiple default providers (without alias) of the same type in a Terraform configuration.",
+      "answer": false,
+      "explanation": "You can only have ONE default provider (without alias) per provider type. Additional configurations of the same provider type must use aliases.",
+      "hint": "Think about how Terraform decides which provider to use by default."
+    }
+  ]
+}
+{{< /quiz >}}
+
+## Topics Covered
+
+This quiz comprehensively tests your understanding of:
+
+1. **HCL Syntax** - Block structure, arguments, expressions
+2. **Terraform Block** - Version constraints, required providers, backend configuration
+3. **Version Constraints** - Pessimistic operator (~>), comparison operators
+4. **Backend Configuration** - Limitations, workarounds, partial configuration
+5. **Providers** - Configuration, aliases, multi-region setups
+6. **Resources** - Syntax, addressing, dependencies, attributes
+7. **File Organization** - Standard structure, best practices
+8. **Configuration Syntax** - Maps, objects, nested blocks
+9. **Code Style** - Formatting, comments, conventions
+
+## Study Tips
+
+- Pay attention to **why** certain limitations exist (e.g., backend variables)
+- Understand **implicit vs explicit dependencies** in resource graphs
+- Practice **version constraint operators** and their effects
+- Review the **difference between input and computed attributes**
+- Remember the **standard file organization** patterns
