@@ -340,19 +340,3 @@ next: /quiz/terraform/02-workflow-and-cli
 }
 {{< /quiz >}}
 
-## Quiz Coverage
-
-This comprehensive quiz tests your understanding of:
-
-1. **Fundamental Concepts** - What Terraform is and its core principles
-2. **Infrastructure as Code** - Benefits and comparison with traditional approaches
-3. **Terraform Workflow** - Write, plan, apply, manage lifecycle
-4. **Architecture** - Components, layers, and how they interact
-5. **Key Terminology** - Provider, resource, module, state, workspace, backend
-6. **Execution Flow** - How Terraform initializes, plans, and applies changes
-7. **State Management** - State files, state drift, and state locking
-8. **Practical Knowledge** - Commands, file structure, version control practices
-9. **Comparisons** - Terraform vs CloudFormation, Ansible, and when to use each
-10. **Best Practices** - When Terraform is appropriate and when other tools are better
-
-Use this quiz to reinforce your learning and identify areas that need further review!

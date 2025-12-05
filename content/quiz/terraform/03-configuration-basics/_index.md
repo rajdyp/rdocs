@@ -287,24 +287,3 @@ next: /quiz/terraform/04-resources-and-meta-arguments
 }
 {{< /quiz >}}
 
-## Topics Covered
-
-This quiz comprehensively tests your understanding of:
-
-1. **HCL Syntax** - Block structure, arguments, expressions
-2. **Terraform Block** - Version constraints, required providers, backend configuration
-3. **Version Constraints** - Pessimistic operator (~>), comparison operators
-4. **Backend Configuration** - Limitations, workarounds, partial configuration
-5. **Providers** - Configuration, aliases, multi-region setups
-6. **Resources** - Syntax, addressing, dependencies, attributes
-7. **File Organization** - Standard structure, best practices
-8. **Configuration Syntax** - Maps, objects, nested blocks
-9. **Code Style** - Formatting, comments, conventions
-
-## Study Tips
-
-- Pay attention to **why** certain limitations exist (e.g., backend variables)
-- Understand **implicit vs explicit dependencies** in resource graphs
-- Practice **version constraint operators** and their effects
-- Review the **difference between input and computed attributes**
-- Remember the **standard file organization** patterns

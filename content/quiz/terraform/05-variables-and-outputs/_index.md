@@ -306,19 +306,3 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
 }
 {{< /quiz >}}
 
-## Quiz Coverage
-
-This comprehensive quiz tests your understanding of:
-
-1. **Variable Fundamentals** - Purpose, benefits, and use cases
-2. **Type System** - Primitive types, collection types, and complex types
-3. **Variable Precedence** - Understanding the order of value loading
-4. **Validation** - Custom validation rules and functions
-5. **Outputs** - Purpose, usage, and module integration
-6. **Sensitive Data** - Security best practices and limitations
-7. **Complex Types** - Maps vs objects, lists vs sets, nested structures
-8. **Best Practices** - File organization, naming conventions, type specifications
-9. **Advanced Patterns** - for_each vs count, map of objects, list of objects
-10. **Real-world Scenarios** - Practical application of concepts
-
-The quiz includes all 8 question types to engage different learning styles and test various depths of understanding.

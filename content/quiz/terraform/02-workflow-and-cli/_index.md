@@ -501,23 +501,3 @@ next: /quiz/terraform/03-configuration-basics
 }
 {{< /quiz >}}
 
-## Quiz Coverage
-
-This comprehensive quiz tests your mastery of:
-
-1. **Core Workflow** - Write, Init, Plan, Apply sequence and when each step is used
-2. **terraform init** - Purpose, process, when to run, and what it creates
-3. **terraform plan** - How it works, output symbols, drift detection, and options
-4. **terraform apply** - Execution process, state locking, and safety features
-5. **State Files** - Purpose, structure, sensitive data concerns, and management
-6. **State Drift** - Causes, detection process, limitations, and best practices
-7. **State Management Commands** - list, show, mv, rm, import, and their effects
-8. **CLI Commands** - fmt, validate, output, workspace, and other essential commands
-9. **Lock Files** - Purpose, why they matter, and version consistency
-10. **File Structure** - What to commit vs. ignore in version control
-11. **Troubleshooting** - Common issues like state locks and provider errors
-12. **Practical Knowledge** - Flags, options, and real-world usage patterns
-
-The quiz uses various question types to test different cognitive levels—from basic recall of commands to deep understanding of how Terraform's state management works and when to use specific features.
-
-Use this quiz to solidify your understanding of the Terraform workflow and CLI operations!
