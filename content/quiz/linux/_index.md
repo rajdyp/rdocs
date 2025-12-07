@@ -6,14 +6,11 @@ layout: docs
 cascade:
   type: docs
 prev: /quiz
+next: /quiz/linux/01-core-concepts/
 ---
 
 Test your knowledge of Linux system administration, command-line tools, and essential concepts.
 
-## Overview
-
-Assess your understanding of Linux fundamentals, system administration, shell scripting, and advanced topics for DevOps and cloud engineers.
-
----
-
-**Quiz content will be added soon.**
+{{< cards >}}
+  {{< card link="01-core-concepts" title="Core Concepts" subtitle="Architecture, filesystem, permissions, processes, services, package management, and networking" >}}
+{{< /cards >}}
