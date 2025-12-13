@@ -121,7 +121,7 @@ next: /quiz/python/03-functions-deep-dive
         "List comprehensions always create new lists in memory"
       ],
       "answers": [0, 1, 2, 4],
-      "explanation": "All are true except the last. List comprehensions work with any iterable (not just lists), and they do create new lists in memory. They're faster than loops, support filtering with `if`, and can be nested.",
+      "explanation": "Options 0, 1, 2, and 4 are true. The false statement is option 3: list comprehensions work with **any iterable** (not just lists). They are faster than loops, support filtering with `if`, can be nested, and always create new lists in memory.",
       "hint": "Think about what 'comprehension' means and what iterables are."
     },
     {
