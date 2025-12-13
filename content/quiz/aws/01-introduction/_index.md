@@ -42,11 +42,11 @@ next: /quiz/aws/02-global-infrastructure
       "question": "Arrange the cloud service models from most customer control to least customer control:",
       "instruction": "Drag to arrange in the correct order (most control → least control)",
       "items": [
-        "IaaS (Infrastructure as a Service)",
         "PaaS (Platform as a Service)",
+        "IaaS (Infrastructure as a Service)",
         "SaaS (Software as a Service)"
       ],
-      "correctOrder": [0, 1, 2],
+      "correctOrder": [1, 0, 2],
       "explanation": "IaaS gives customers the most control (managing applications, data, runtime, middleware, OS), PaaS provides intermediate control (managing only applications and data), and SaaS offers the least control (provider manages everything)."
     },
     {

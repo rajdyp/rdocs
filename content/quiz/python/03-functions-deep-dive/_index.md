@@ -11,8 +11,10 @@ next: /quiz/python/04-error-handling
 {
   "questions": [
     {
-      "type": "mcq",
+      "type": "code-output",
       "question": "What is the output of the following code?",
+      "code": "def get_user():\n    return 'Alice', 30, 'alice@example.com'\n\nprint(get_user())",
+      "language": "python",
       "options": [
         "`('Alice', 30, 'alice@example.com')`",
         "`Alice 30 alice@example.com`",
@@ -87,11 +89,11 @@ next: /quiz/python/04-error-handling
       "instruction": "Drag to arrange in the correct order",
       "items": [
         "Positional parameters",
-        "*args",
+        "**kwargs",
         "Keyword parameters with defaults",
-        "**kwargs"
+        "*args"
       ],
-      "correctOrder": [0, 1, 2, 3],
+      "correctOrder": [0, 3, 2, 1],
       "explanation": "Python requires this specific order: positional → *args → keyword → **kwargs. For example: `def func(a, b, *args, x=10, y=20, **kwargs)`"
     },
     {
@@ -401,11 +403,11 @@ next: /quiz/python/04-error-handling
       "instruction": "Drag to arrange in the order Python executes them",
       "items": [
         "try block (attempt code)",
-        "except block (handle errors if they occur)",
         "else block (runs if no exception)",
+        "except block (handle errors if they occur)",
         "finally block (always runs)"
       ],
-      "correctOrder": [0, 1, 2, 3],
+      "correctOrder": [0, 2, 1, 3],
       "explanation": "Python executes: try → except (if error) → else (if no error) → finally (always). The finally block always runs regardless of whether an exception occurred."
     },
     {

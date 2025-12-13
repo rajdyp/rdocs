@@ -293,6 +293,7 @@ print(counter())            # 2 - same count variable, remembered between calls
 
 - **What it is:** When an inner function uses a variable from its outer function, it becomes a closure (happens automatically)
 - **When to use:** Pre-configure functions or maintain state without classes
+- **Prime example:** Decorators (functions that wrap other functions)
 
 ```python
 # Reading outer variable - no nonlocal needed

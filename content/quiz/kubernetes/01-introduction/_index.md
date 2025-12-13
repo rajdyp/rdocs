@@ -57,12 +57,12 @@ next: /quiz/kubernetes/02-cluster-architecture
       "question": "Arrange the steps in the Kubernetes reconciliation loop in the correct order:",
       "instruction": "Drag to arrange in the correct order",
       "items": [
-        "Define desired state (spec)",
         "Observe actual state (status)",
+        "Define desired state (spec)",
         "Compare desired vs actual state",
         "Take action if different"
       ],
-      "correctOrder": [0, 1, 2, 3],
+      "correctOrder": [1, 0, 2, 3],
       "explanation": "The reconciliation loop: 1) You define desired state in spec, 2) Kubernetes observes actual state, 3) Compares them, 4) Takes action if they differ. This runs continuously (~every 30 seconds)."
     },
     {
