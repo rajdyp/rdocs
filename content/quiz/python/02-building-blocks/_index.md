@@ -121,7 +121,7 @@ next: /quiz/python/03-functions-deep-dive
         "List comprehensions always create new lists in memory"
       ],
       "answers": [0, 1, 2, 4],
-      "explanation": "Options 0, 1, 2, and 4 are true. The false statement is option 3: list comprehensions work with **any iterable** (not just lists). They are faster than loops, support filtering with `if`, can be nested, and always create new lists in memory.",
+      "explanation": "Options 1, 2, 3, and 5 are true. The false statement is option 4: list comprehensions work with **any iterable** (not just lists). They are faster than loops, support filtering with `if`, can be nested, and always create new lists in memory.",
       "hint": "Think about what 'comprehension' means and what iterables are."
     },
     {
@@ -170,7 +170,7 @@ next: /quiz/python/03-functions-deep-dive
     {
       "type": "flashcard",
       "question": "Why can tuples be used as dictionary keys but lists cannot?",
-      "answer": "**Dictionary keys must be hashable (immutable)**.\n\n**Tuples are immutable** → can be hashed → valid as keys\n**Lists are mutable** → cannot be hashed → TypeError if used as keys\n\nExample:\n```python\n# Valid\nlocations = {(0, 0): \"Origin\", (1, 2): \"Point A\"}\n\n# Invalid - TypeError\n# bad_dict = {[0, 0]: \"Origin\"}\n```\n\nHashability ensures the key's hash value never changes, which is critical for dictionary lookup performance."
+      "answer": "**Dictionary keys must be hashable (immutable)**.\n\n**Tuples are immutable** → can be hashed → valid as keys\n\n**Lists are mutable** → cannot be hashed → TypeError if used as keys\n\nExample:\n```python\n# Valid\nlocations = {(0, 0): \"Origin\", (1, 2): \"Point A\"}\n\n# Invalid - TypeError\n# bad_dict = {[0, 0]: \"Origin\"}\n```\n\nHashability ensures the key's hash value never changes, which is critical for dictionary lookup performance."
     },
     {
       "type": "code-completion",

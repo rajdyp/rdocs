@@ -321,6 +321,32 @@ matrix = [[j for j in range(3)] for i in range(3)]
 #   [0, 1, 2]    # i = 2
 ```
 
+**Converting loops to list comprehension - Mental process:**
+
+1. **Identify what you're appending**: The expression being added to the list
+2. **Pick the outer loop**: The first `for` statement
+3. **Pick the inner loop** (if nested): The second `for` statement
+4. **Arrange in order**: `[expression outer_loop inner_loop]`
+
+```python
+# Example: Converting nested loops
+# Loop version
+pairs = []
+for i in range(3):
+    for j in range(2):
+        pairs.append((i, j))
+
+# Mental process:
+# 1. What are we appending? (i, j)
+# 2. Outer loop: for i in range(3)
+# 3. Inner loop: for j in range(2)
+# 4. Put together in same order
+
+# List comprehension version
+pairs = [(i, j) for i in range(3) for j in range(2)]
+# [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1)]
+```
+
 ### Common Patterns
 
 **Finding min/max:**
