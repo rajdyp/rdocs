@@ -53,11 +53,11 @@ prev: /quiz/python/08-working-with-data
     },
     {
       "type": "fill-blank",
-      "question": "What method should you use to safely access nested JSON fields that might not exist?",
-      "answer": ".get()",
+      "question": "What dictionary method should you use to safely access nested JSON fields that might not exist?",
+      "answer": "get",
       "caseSensitive": false,
-      "explanation": "The .get() method returns None (or a specified default) if the key doesn't exist, preventing KeyError exceptions. Always use chained .get() calls for nested structures: event.get('obj', {}).get('kind')",
-      "hint": "It's a dictionary method that accepts a default value parameter."
+      "explanation": "The dict.get() method returns None (or a specified default) if the key doesn't exist, preventing KeyError exceptions. For nested structures, use chained get calls: event.get('obj', {}).get('kind')",
+      "hint": "It returns a default value instead of raising an exception."
     },
     {
       "type": "mcq",
@@ -188,8 +188,8 @@ prev: /quiz/python/08-working-with-data
       "type": "mcq",
       "question": "Which approach is better for finding the top 3 most frequent error codes from parsed logs?",
       "options": [
-        "Manual sorting: sorted(error_counts.items(), key=lambda x: x[1], reverse=True)[:3]",
-        "Using Counter: error_counts.most_common(3)",
+        "Manual sorting: `sorted(err_counts.items(), key=lambda x: x[1], reverse=True)[:3]`",
+        "Using Counter: `err_counts.most_common(3)`",
         "Using max() three times with removal",
         "Both A and B are equally good"
       ],
@@ -202,7 +202,7 @@ prev: /quiz/python/08-working-with-data
       "question": "What regex pattern matches an IP address in log parsing?",
       "answer": "\\d+\\.\\d+\\.\\d+\\.\\d+",
       "caseSensitive": false,
-      "explanation": "The pattern \\d+\\.\\d+\\.\\d+\\.\\d+ matches IP addresses like 192.168.1.10. \\d+ matches one or more digits, \\. matches a literal dot (escaped because . is a special regex character).",
+      "explanation": "The pattern \\\\d+\\\\.\\\\d+\\\\.\\\\d+\\\\.\\\\d+ matches IP addresses like 192.168.1.10. \\\\d+ matches one or more digits, \\\\. matches a literal dot (escaped because . is a special regex character).",
       "hint": "Remember that dots need to be escaped in regex."
     },
     {
@@ -233,10 +233,10 @@ prev: /quiz/python/08-working-with-data
       "type": "multiple-select",
       "question": "Which statements about defaultdict and Counter are correct?",
       "options": [
-        "defaultdict(list) auto-initializes missing keys to empty lists",
-        "Counter can combine counts using arithmetic: count1 + count2",
+        "`defaultdict(list)` auto-initializes missing keys to empty lists",
+        "Counter can combine counts using arithmetic: `count1 + count2`",
         "defaultdict is always faster than regular dictionaries",
-        "Counter.most_common() returns items sorted by count in descending order",
+        "`Counter.most_common()` returns items sorted by count in descending order",
         "defaultdict creates keys on access, even for lookups"
       ],
       "answers": [0, 1, 3, 4],
@@ -260,7 +260,7 @@ prev: /quiz/python/08-working-with-data
         "Error"
       ],
       "answer": 0,
-      "explanation": "Named groups (?P<name>pattern) capture matching text without the surrounding characters. The pattern captures just the word inside brackets. match.groupdict()['LEVEL'] returns 'ERROR'.",
+      "explanation": "Named groups (?P&lt;name&gt;pattern) capture matching text without the surrounding characters. The pattern captures just the word inside brackets. match.groupdict()['LEVEL'] returns 'ERROR'.",
       "hint": "Named groups capture what's inside the parentheses, not the surrounding brackets."
     },
     {
@@ -304,8 +304,8 @@ prev: /quiz/python/08-working-with-data
       "answer": "\"(.*?)\"",
       "caseSensitive": false,
       "acceptedAnswers": ["\"(.*?)\"", "\\\"(.*?)\\\""],
-      "explanation": "The pattern \"(.*?)\" or \\\"(.*?)\\\" matches quoted content. .*? is non-greedy (stops at first closing quote). Parentheses create a capture group accessible via .group(1).",
-      "hint": "Use .*? for non-greedy matching between quotes."
+      "explanation": "The pattern \"(.\\*?)\" or \\\\\"(.\\*?)\\\\\" matches quoted content. .\\*? is non-greedy quantifier (stops at first closing quote). Parentheses create a capture group accessible via .group(1).",
+      "hint": "Use .\\*? for non-greedy matching between quotes."
     },
     {
       "type": "flashcard",
@@ -351,7 +351,7 @@ prev: /quiz/python/08-working-with-data
         "Use case-insensitive matching instead"
       ],
       "answer": 1,
-      "explanation": "Remove punctuation before counting to avoid treating 'error,' and 'error' as different words. Use string.punctuation with replace() or regex \\b\\w+\\b to extract clean words.",
+      "explanation": "Remove punctuation before counting to avoid treating 'error,' and 'error' as different words. Use string.punctuation with replace() or regex \\\\b\\\\w+\\\\b to extract clean words.",
       "hint": "Should 'error,' and 'error' be counted as the same word or different words?"
     },
     {
@@ -442,7 +442,7 @@ prev: /quiz/python/08-working-with-data
     },
     {
       "type": "mcq",
-      "question": "What is the primary benefit of using named groups in regular expressions like (?P<IP>\\d+\\.\\d+\\.\\d+\\.\\d+)?",
+      "question": "What is the primary benefit of using named groups in regular expressions like (?P<IP>\\\\d+\\\\.\\\\d+\\\\.\\\\d+\\\\.\\\\d+)?",
       "options": [
         "Faster pattern matching",
         "Self-documenting code with descriptive names accessible via groupdict()",

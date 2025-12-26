@@ -109,13 +109,13 @@ next: /quiz/python/02-building-blocks
       "instruction": "Drag to arrange in order of increasing runtime (fastest to slowest)",
       "items": [
         "O(1)",
-        "O(log n)",
         "O(n)",
+        "O(log n)",
         "O(n log n)",
         "O(n²)",
         "O(2ⁿ)"
       ],
-      "correctOrder": [0, 1, 2, 3, 4, 5],
+      "correctOrder": [0, 2, 1, 3, 4, 5],
       "explanation": "The order from fastest to slowest is: O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(2ⁿ). Constant time is fastest, exponential is slowest."
     },
     {

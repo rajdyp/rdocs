@@ -292,7 +292,7 @@ next: /quiz/python/04-error-handling
       "code": "def func(a, b, *args, x=10, **kwargs):\n    return len(args) + len(kwargs)\n\nprint(func(1, 2, 3, 4, x=100, y=200, z=300))",
       "language": "python",
       "options": [
-        "`2`",
+        "`7`",
         "`3`",
         "`4`",
         "`5`"
