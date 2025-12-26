@@ -127,8 +127,11 @@
       const items = dragList.querySelectorAll('.drag-item');
 
       let draggedItem = null;
+      let touchStartY = 0;
+      let currentTouchY = 0;
 
       items.forEach(item => {
+        // Desktop drag events
         item.addEventListener('dragstart', (e) => {
           draggedItem = item;
           item.classList.add('dragging');
@@ -146,6 +149,37 @@
             dragList.appendChild(draggedItem);
           } else {
             dragList.insertBefore(draggedItem, afterElement);
+          }
+        });
+
+        // Mobile touch events
+        item.addEventListener('touchstart', (e) => {
+          draggedItem = item;
+          touchStartY = e.touches[0].clientY;
+          item.classList.add('dragging');
+          item.style.opacity = '0.5';
+        }, { passive: true });
+
+        item.addEventListener('touchmove', (e) => {
+          if (!draggedItem) return;
+
+          e.preventDefault();
+          currentTouchY = e.touches[0].clientY;
+
+          // Reorder based on touch position
+          const afterElement = this.getDragAfterElement(dragList, currentTouchY);
+          if (afterElement == null) {
+            dragList.appendChild(draggedItem);
+          } else {
+            dragList.insertBefore(draggedItem, afterElement);
+          }
+        }, { passive: false });
+
+        item.addEventListener('touchend', () => {
+          if (draggedItem) {
+            draggedItem.classList.remove('dragging');
+            draggedItem.style.opacity = '1';
+            draggedItem = null;
           }
         });
       });
