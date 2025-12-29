@@ -34,7 +34,7 @@ next: /quiz/aws/03-networking-fundamentals
         "The number of Availability Zones"
       ],
       "answers": [0, 1, 2, 3],
-      "explanation": "The five key factors for choosing a Region are: latency/user proximity, data sovereignty/compliance, service availability, cost, and disaster recovery requirements. While the number of AZs matters for architecture, it's not a primary Region selection criterion mentioned in the content.",
+      "explanation": "The five key factors for choosing a Region are: latency/user proximity, data sovereignty/compliance, service availability, cost, and disaster recovery requirements. While the number of AZs matters for architecture, it's not a primary Region selection criterion.",
       "hint": "The content lists five specific factors to consider when selecting a Region."
     },
     {
@@ -72,6 +72,7 @@ next: /quiz/aws/03-networking-fundamentals
       "question": "What is the typical inter-AZ latency within a Region (in milliseconds)?",
       "answer": "single-digit",
       "caseSensitive": false,
+      "acceptedAnswers": ["single-digit", "single digit"],
       "explanation": "Typical inter-AZ latency within a Region is single-digit milliseconds. This low latency enables synchronous replication for databases and storage systems.",
       "hint": "Think about the order of magnitude—less than 10ms."
     },
@@ -99,12 +100,12 @@ next: /quiz/aws/03-networking-fundamentals
       "question": "Arrange these AWS Global Infrastructure components from largest to smallest scope:",
       "instruction": "Drag to arrange in order from broadest to most specific",
       "items": [
-        "AWS Global Infrastructure",
         "AWS Region",
         "Availability Zone",
-        "Data Center"
+        "Data Center",
+        "AWS Global Infrastructure"
       ],
-      "correctOrder": [0, 1, 2, 3],
+      "correctOrder": [3, 0, 1, 2],
       "explanation": "The hierarchy is: AWS Global Infrastructure (worldwide) → Region (geographic location) → Availability Zone (isolated location within Region) → Data Center (physical facility)."
     },
     {
@@ -232,11 +233,11 @@ next: /quiz/aws/03-networking-fundamentals
       "question": "Arrange these deployment patterns from least resilient to most resilient:",
       "instruction": "Drag to order by increasing fault tolerance",
       "items": [
-        "Single Region, Single AZ",
+        "Multi-Region with replication",
         "Single Region, Multi-AZ",
-        "Multi-Region with replication"
+        "Single Region, Single AZ"
       ],
-      "correctOrder": [0, 1, 2],
+      "correctOrder": [2, 1, 0],
       "explanation": "Resilience increases with geographic distribution: Single AZ (single point of failure) → Multi-AZ (protects against AZ failures) → Multi-Region (protects against region-wide failures and provides global redundancy)."
     },
     {

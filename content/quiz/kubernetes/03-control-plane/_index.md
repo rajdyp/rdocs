@@ -79,18 +79,18 @@ next: /quiz/kubernetes/04-worker-nodes
       "items": [
         "Authentication",
         "Authorization",
-        "Admission Controllers",
         "Validation",
+        "Admission Controllers",
         "Persistence to etcd"
       ],
-      "correctOrder": [0, 1, 2, 3, 4],
+      "correctOrder": [0, 1, 3, 2, 4],
       "explanation": "The correct pipeline is: 1) Authentication (Who are you?), 2) Authorization (What can you do?), 3) Admission Control (Should we allow this?), 4) Validation (Is this valid?), 5) Persistence to etcd. Each step must pass before proceeding to the next."
     },
     {
       "type": "code-completion",
       "question": "Complete the kubectl command to taint a node so that no pods will schedule on it:",
       "instruction": "Fill in the missing taint effect",
-      "codeTemplate": "kubectl taint nodes node1 key=value:_____",
+      "codeTemplate": "kubectl taint nodes node1 maintenance=true:_____",
       "answer": "NoSchedule",
       "caseSensitive": false,
       "acceptedAnswers": ["NoSchedule", "noschedule"],
@@ -222,8 +222,9 @@ next: /quiz/kubernetes/04-worker-nodes
     {
       "type": "fill-blank",
       "question": "All control plane components communicate through the _______, which serves as the central hub for the cluster.",
-      "answer": "API server",
+      "answer": "kube-api-server",
       "caseSensitive": false,
+      "acceptedAnswers": ["kube-api-server", "api server", "api-server", "kube api server"],
       "explanation": "All control plane components communicate through the kube-api-server, which acts as the central hub. No component directly communicates with another—everything goes through the API server. This design simplifies security, consistency, and monitoring.",
       "hint": "What component is described as the 'front door' of Kubernetes?"
     },
@@ -360,11 +361,11 @@ next: /quiz/kubernetes/04-worker-nodes
         "Schedule pods to nodes",
         "Create and manage cloud load balancers",
         "Store cluster state in etcd",
-        "Set up routes for pod-to-pod communication",
+        "Remove failed nodes from the cluster",
         "Manage persistent cloud volumes"
       ],
       "answers": [0, 2, 4, 5],
-      "explanation": "The cloud-controller-manager handles cloud-specific operations: updating node addresses, creating load balancers, setting up routes, and managing cloud volumes. It does NOT schedule pods (that's the scheduler) or directly interact with etcd (only API server does that).",
+      "explanation": "The cloud-controller-manager handles cloud-specific operations: updating node addresses, creating load balancers for LoadBalancer-type services, removing failed nodes, and managing cloud volumes (attach/detach). It does NOT schedule pods (that's the scheduler) or directly interact with etcd (only API server does that).",
       "hint": "Focus on responsibilities that are specific to cloud infrastructure."
     }
   ]

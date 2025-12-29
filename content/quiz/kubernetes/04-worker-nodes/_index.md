@@ -73,12 +73,12 @@ next: /quiz/kubernetes/05-networking
       "instruction": "Drag to arrange in the correct order",
       "items": [
         "Scheduler assigns Pod to Worker Node",
-        "kubelet calls CNI plugin to setup networking",
         "kubelet calls Container Runtime to pull image and start container",
-        "kubelet starts health probes",
-        "kube-proxy updates iptables/IPVS rules"
+        "kubelet calls CNI plugin to setup networking",
+        "kube-proxy updates iptables/IPVS rules",
+        "kubelet starts health probes"
       ],
-      "correctOrder": [0, 1, 2, 3, 4],
+      "correctOrder": [0, 2, 1, 4, 3],
       "explanation": "The sequence is: 1) Scheduler assigns pod → 2) kubelet detects assignment → 3) CNI creates network namespace and assigns IP → 4) Runtime pulls image and starts container → 5) kubelet starts health probes → 6) Status reported to API server → 7) Endpoints updated → 8) kube-proxy updates rules."
     },
     {
@@ -237,12 +237,12 @@ next: /quiz/kubernetes/05-networking
       "instruction": "Order from first to last in the routing process",
       "items": [
         "Client sends packet to Service ClusterIP",
-        "Node network stack receives packet",
         "Kernel netfilter intercepts packet",
+        "Node network stack receives packet",
         "iptables/IPVS rules rewrite destination (DNAT)",
         "CNI routes packet to destination pod"
       ],
-      "correctOrder": [0, 1, 2, 3, 4],
+      "correctOrder": [0, 2, 1, 3, 4],
       "explanation": "Traffic flow: Client sends to ClusterIP → Node network stack → Kernel netfilter intercepts → iptables/IPVS performs DNAT → CNI routes to pod. The Service object is never in this flow—it's just configuration."
     },
     {
@@ -310,7 +310,7 @@ next: /quiz/kubernetes/05-networking
     {
       "type": "flashcard",
       "question": "What happens at each step when kubelet enforces resource limits on a container?",
-      "answer": "**Resource Limit Enforcement**\n\n**Setup**: kubelet reads resource requests/limits from pod spec.\n\n**Enforcement via cgroups**: kubelet configures Linux cgroups to limit container resources.\n\n**CPU**: When limit reached → container is *throttled* (slowed down) but continues running.\n\n**Memory**: When limit exceeded → container is *killed* with OOMKilled status.\n\n**Requests vs Limits**: Requests used for scheduling (guarantees), limits enforced by kubelet (maximums)."
+      "answer": "**Resource Limit Enforcement**\n\n**Setup**: kubelet reads resource requests/limits from pod spec.\n\n**Enforcement via cgroups**: kubelet configures Linux cgroups to limit container resources.\n\n**CPU**: When limit reached → container is *throttled* (slowed down) but continues running.\n\n**Memory**: When limit exceeded → container is *killed* with OOMKilled status.\n\n**Requests vs Limits**: Requests (guarantee) used for scheduling, limits (just promise) enforced by kubelet."
     },
     {
       "type": "multiple-select",

@@ -50,11 +50,11 @@ next: /quiz/python/05-oop-fundamentals
       "instruction": "Drag to arrange in the order Python executes them",
       "items": [
         "try block",
-        "except block (if exception occurs)",
         "else block (if no exception)",
+        "except block (if exception occurs)",
         "finally block"
       ],
-      "correctOrder": [0, 1, 2, 3],
+      "correctOrder": [0, 2, 1, 3],
       "explanation": "Python executes: try → except (if exception) → else (if no exception) → finally (always). The finally block runs last, regardless of what happened before."
     },
     {
@@ -124,11 +124,6 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Consider what separates the setup and teardown phases."
     },
     {
-      "type": "flashcard",
-      "question": "What is the key question to ask when deciding if you need a custom context manager?",
-      "answer": "**\"If I do X, must I always undo/cleanup Y — no matter what?\"**\n\nIf the answer is yes, create a context manager. Context managers are for **paired setup and teardown operations** that must always run together, even if an exception occurs."
-    },
-    {
       "type": "mcq",
       "question": "When should you use `raise` without arguments in an except block?",
       "options": [
@@ -195,13 +190,14 @@ next: /quiz/python/05-oop-fundamentals
       "question": "When writing libraries or functions, you should _____ exceptions to signal problems. When calling that code, you should use try/except to _____ those exceptions.",
       "answer": "raise, catch",
       "caseSensitive": false,
+      "acceptedAnswers": ["raise, catch", "raise catch"],
       "explanation": "Functions should **raise** exceptions when they detect invalid states (fail fast). Application code should **catch** those exceptions and decide how to handle them based on context.",
       "hint": "Think about the separation of concerns - detecting vs. handling errors."
     },
     {
       "type": "flashcard",
       "question": "What is the mental model for when to create a custom context manager?",
-      "answer": "**Paired setup and teardown operations that must always run together**\n\nCreate a context manager when you have operations that require cleanup — even if an exception occurs. Common scenarios:\n- Temporary state changes (then restore)\n- Resource acquisition/release\n- Transaction-like operations (commit/rollback)\n- Timing/monitoring (start/end)\n- Testing utilities (setup/cleanup)"
+      "answer": "**\"If I do X, must I always undo/cleanup Y — no matter what?\"**\n\nIf yes, create a context manager. The core pattern is **pairing setup with teardown operations that must always run together** — even if an exception occurs.\n\n**Common scenarios:**\n- Temporary state changes (then restore)\n- Resource acquisition/release (files, connections, locks)\n- Transaction-like operations (commit/rollback)\n- Timing/monitoring (start/end)\n- Testing utilities (setup/cleanup)"
     },
     {
       "type": "mcq",
@@ -278,7 +274,7 @@ next: /quiz/python/05-oop-fundamentals
     {
       "type": "flashcard",
       "question": "What is the guideline for deciding where to raise vs. where to catch exceptions?",
-      "answer": "**Detect errors where they occur (raise), handle them where you know what to do (try/except)**\n\nFunctions/libraries should detect invalid states and raise exceptions — they shouldn't decide how to handle the error.\n\nApplication code that calls functions should catch and handle exceptions based on the context and business requirements."
+      "answer": "**Raise where errors occur, catch where you can handle them**\n\nFunctions/libraries should detect invalid states and raise exceptions — they shouldn't decide how to handle the error.\n\nApplication code that calls functions should catch and handle exceptions based on the context and business requirements."
     },
     {
       "type": "mcq",

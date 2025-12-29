@@ -136,6 +136,24 @@ s.replace("World", "Python")    # "Hello Python"
 s.replace("l", "L", 1)          # "HeLlo World" (replace first occurrence)
 ```
 
+**Translation (character mapping):**
+```python
+import string
+
+# Create translation table to remove punctuation
+translator = str.maketrans('', '', string.punctuation)
+text = "Hello, World! How are you?"
+clean = text.translate(translator)        # "Hello World How are you"
+
+# Replace characters (substitute)
+translator = str.maketrans('aeiou', '12345')
+"hello".translate(translator)             # "h2ll4"
+
+# Replace and remove
+translator = str.maketrans('aeiou', '12345', 'xyz')
+"hello xyz".translate(translator)         # "h2ll4  " (replaced vowels, removed xyz)
+```
+
 **Checking:**
 ```python
 "123".isdigit()             # True

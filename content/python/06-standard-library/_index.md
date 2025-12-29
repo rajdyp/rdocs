@@ -814,10 +814,10 @@ dt_from_ts = datetime.fromtimestamp(timestamp)  # timestamp → datetime
 
 1. Import `re` module
 2. Choose the right function:
-    - `search()` (find anywhere)
-    - `match()` (from start)
-    - `findall()` (all matches)
-    - `sub()` (replace)
+    - `search()` - Find first match, return match object
+    - `match()` - Match only at start, return match object
+    - `findall()` - Find all matches, return data
+    - `sub()` - Replace all matches, return new string
 3. Use raw strings `r'...'` for patterns (avoids backslash escaping issues)
 4. Check `if match` exists before accessing groups to avoid `AttributeError`
 5. Compile patterns with `re.compile()` if reusing multiple times
