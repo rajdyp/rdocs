@@ -144,11 +144,11 @@ next: /quiz/kubernetes/03-control-plane
         "User submits deployment manifest",
         "kubectl sends to API Server",
         "API Server validates & stores in etcd",
-        "Deployment Controller creates ReplicaSet",
         "Scheduler assigns Pods to Nodes",
+        "Deployment Controller creates ReplicaSet",
         "kubelet starts containers"
       ],
-      "correctOrder": [0, 1, 2, 3, 4, 5],
+      "correctOrder": [0, 1, 2, 4, 3, 5],
       "explanation": "The correct workflow is: User submits → kubectl sends to API Server → API Server validates & stores in etcd → Deployment Controller creates ReplicaSet → Scheduler assigns Pods to Nodes → kubelet starts containers."
     },
     {
@@ -268,12 +268,12 @@ next: /quiz/kubernetes/03-control-plane
       "instruction": "Drag to arrange in the correct order",
       "items": [
         "kubectl authenticates with API Server",
+        "API Server sends response to kubectl",
         "API Server queries etcd",
         "etcd returns pod data",
-        "API Server sends response to kubectl",
         "User sees pod list"
       ],
-      "correctOrder": [0, 1, 2, 3, 4],
+      "correctOrder": [0, 2, 3, 1, 4],
       "explanation": "The flow is: kubectl authenticates → API Server queries etcd → etcd returns data → API Server responds → User sees results. All cluster operations flow through the API Server."
     },
     {

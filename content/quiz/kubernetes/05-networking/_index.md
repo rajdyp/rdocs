@@ -52,12 +52,12 @@ next: /quiz/kubernetes/06-pods
         "Pod scheduled to node",
         "kubelet calls CNI plugin",
         "CNI creates network namespace for pod",
-        "CNI assigns IP from node's pod CIDR",
         "CNI creates veth pair",
+        "CNI assigns IP from node's pod CIDR",
         "CNI configures routes",
         "Returns pod IP to kubelet"
       ],
-      "correctOrder": [0, 1, 2, 3, 4, 5, 6],
+      "correctOrder": [0, 1, 2, 4, 3, 5, 6],
       "explanation": "The CNI workflow follows this exact sequence: scheduling triggers kubelet, which calls the CNI plugin. The plugin then creates the network namespace, assigns an IP, creates the veth pair (virtual ethernet cable), configures routing, and finally returns the pod IP to kubelet."
     },
     {
@@ -70,18 +70,18 @@ next: /quiz/kubernetes/06-pods
     },
     {
       "type": "code-output",
-      "question": "A pod with IP 10.244.1.5 on Node 1 wants to communicate with another pod (10.244.1.6) on the same node. What component handles this routing?",
+      "question": "A pod with IP 10.244.1.5 on Node 1 wants to communicate with another pod (10.244.1.6) on the same node. Which statement is MOST accurate?",
       "code": "Node 1\n├─ Pod CIDR: 10.244.1.0/24\n├─ Pod A: 10.244.1.5\n└─ Pod B: 10.244.1.6\n\nPod A → Pod B",
       "language": "text",
       "options": [
-        "CNI overlay network (VXLAN)",
-        "cni0 bridge",
-        "kube-proxy iptables rules",
-        "Direct node routing"
+        "Traffic must go through the CNI overlay network (VXLAN)",
+        "Traffic is handled locally within the node by the CNI plugin",
+        "kube-proxy iptables rules handle same-node pod communication",
+        "Traffic requires cross-node routing to complete"
       ],
       "answer": 1,
-      "explanation": "When pods are on the same node, the cni0 bridge handles the routing. The traffic goes from Pod A's network namespace through the veth pair to the cni0 bridge, which then forwards it through another veth pair to Pod B. Cross-node communication would use the CNI overlay, but same-node traffic stays local via the bridge.",
-      "hint": "Think about the Pod Network Architecture diagram showing connections within a single node."
+      "explanation": "Same-node pod-to-pod communication is handled locally within the node by the CNI plugin. The exact mechanism depends on the CNI implementation: bridge-based CNIs (like Flannel) use a bridge (e.g., cni0), while others like Calico use IP routing, and Cilium uses eBPF. Regardless of the implementation, same-node traffic doesn't need to leave the node or use overlay networks.",
+      "hint": "Consider whether traffic between pods on the same node needs to leave that node."
     },
     {
       "type": "mcq",
@@ -133,13 +133,13 @@ next: /quiz/kubernetes/06-pods
       "items": [
         "Client DNS lookup resolves to LoadBalancer IP",
         "Cloud LoadBalancer routes to NodePort",
-        "kube-proxy intercepts NodePort traffic",
         "First DNAT: NodePort → Service ClusterIP",
+        "kube-proxy intercepts NodePort traffic",
         "Second DNAT: ClusterIP → Pod IP",
         "CNI routes packet to destination pod",
         "Application in pod receives request"
       ],
-      "correctOrder": [0, 1, 2, 3, 4, 5, 6],
+      "correctOrder": [0, 1, 3, 2, 4, 5, 6],
       "explanation": "External traffic follows this exact path: DNS resolution → LoadBalancer → NodePort on any node → kube-proxy intercepts → DNAT to ClusterIP → DNAT to actual pod IP → CNI routing → pod receives request. The return path follows the reverse with SNAT."
     },
     {
@@ -182,7 +182,7 @@ next: /quiz/kubernetes/06-pods
         "The pod IP is outside its node's Pod CIDR range"
       ],
       "answer": 1,
-      "explanation": "This configuration is correct! The CIDRs are properly non-overlapping: Pod CIDR (10.244.0.0/16), Service CIDR (10.96.0.0/12), and Node CIDR (192.168.0.0/24) don't overlap. The node IP (192.168.0.10) is in the node range, pod IP (10.244.1.5) is correctly in its node's pod CIDR (10.244.1.0/24), and service IP (10.96.100.50) is within the service range.",
+      "explanation": "This configuration is correct! The CIDRs are properly non-overlapping: Pod CIDR (10.244.0.0/16), Service CIDR (10.96.0.0/12), and Node CIDR (192.168.0.0/24) don't overlap. The node IP (192.168.0.10) is in the node range, pod IP (10.244.1.5) is correctly in its node's pod CIDR (10.244.1.0/24), and service IP (10.96.100.50) is within the service range. CIDR quick reference: /24 -> only last octet varies, /16 -> last two octets vary, /8 -> last three octets vary.",
       "hint": "Check each CIDR range and verify that none of the IP addresses fall outside their designated ranges."
     },
     {
@@ -201,11 +201,11 @@ next: /quiz/kubernetes/06-pods
     {
       "type": "flashcard",
       "question": "What is a veth pair and how does it work in Kubernetes pod networking?",
-      "answer": "**A veth (virtual ethernet) pair is like a virtual ethernet cable with two ends.**\n\n**In Kubernetes:**\n- One end is placed in the pod's network namespace (appears as `eth0`)\n- The other end is in the host namespace (appears as `vethXXXX`)\n- Traffic sent to one end emerges from the other\n\n**Purpose:**\n- Connects isolated pod network namespace to host network\n- Enables communication between pod and the rest of the cluster\n- The host end typically connects to the cni0 bridge\n\n**Analogy:** Like a network cable connecting two separate computers, except both 'computers' are on the same physical machine."
+      "answer": "**A veth (virtual ethernet) pair is like a virtual ethernet cable with two ends. Traffic sent into one end appears on the other.**\n\n**In Kubernetes:**\n- One end is placed in the pod's network namespace (appears as `eth0`)\n- The other end is in the host namespace (appears as `vethXXXX`)\n\n**Purpose:**\n- Connects isolated pod network namespace to host network\n- Allows pods to send and receive traffic via the node\n- Serves as the basic building block for pod networking\n- The host end is managed by the CNI plugin (via a bridge, IP routing, or eBPF depending on the implementation).\n\n**Analogy:** Like a network cable connecting two separate computers, except both 'computers' are on the same physical machine."
     },
     {
       "type": "multiple-select",
-      "question": "A NetworkPolicy with the configuration shown in the documentation will apply to which traffic?",
+      "question": "A NetworkPolicy with the configuration shown will apply to which traffic?\n\n```yaml\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: backend-policy\nspec:\n  podSelector:\n    matchLabels:\n      app: backend\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - protocol: TCP\n      port: 8080\n```",
       "options": [
         "Ingress traffic to pods with label app=backend",
         "Egress traffic from pods with label app=backend",
@@ -221,7 +221,7 @@ next: /quiz/kubernetes/06-pods
       "type": "true-false",
       "question": "When a pod on Node 1 (10.244.1.0/24) needs to communicate with a pod on Node 2 (10.244.2.0/24), the CNI plugin must handle cross-node routing.",
       "answer": true,
-      "explanation": "Correct. Cross-node pod communication requires the CNI plugin to route traffic between nodes. The packet travels from the source pod → cni0 bridge → node's eth0 → (CNI overlay using VXLAN/BGP/etc.) → destination node's eth0 → cni0 bridge → destination pod. Different CNI plugins use different mechanisms (VXLAN overlay, BGP routing, direct routing) to achieve this.",
+      "explanation": "Correct. Cross-node pod communication requires the CNI plugin to route traffic between nodes. The packet travels from the source pod through the source node's networking stack, across the network to the destination node, and then to the destination pod. Different CNI plugins use different mechanisms: overlay networks (VXLAN), BGP routing, or direct routing, depending on the implementation.",
       "hint": "Review the 'Pod-to-Pod (Different Nodes)' section."
     },
     {
@@ -279,14 +279,14 @@ next: /quiz/kubernetes/06-pods
       "instruction": "Arrange from innermost (pod) to outermost (external)",
       "items": [
         "Pod network namespace (eth0)",
-        "veth pair connection",
         "Host namespace (vethXXXX)",
-        "cni0 bridge",
+        "veth pair connection",
+        "CNI routing layer (cni0 bridge, IP routing, or eBPF depending on implementation)",
         "Host eth0 interface",
         "External network / Other nodes"
       ],
-      "correctOrder": [0, 1, 2, 3, 4, 5],
-      "explanation": "Network traffic flows outward from the pod: starts in the pod's isolated network namespace (eth0) → through veth pair → emerges in host namespace (vethXXXX) → connects to cni0 bridge → routes through host's eth0 interface → reaches external network or other nodes. This architecture allows pods to be isolated yet connected.",
+      "correctOrder": [0, 2, 1, 3, 4, 5],
+      "explanation": "Network traffic flows outward from the pod: starts in the pod's isolated network namespace (eth0) → through veth pair → emerges in host namespace (vethXXXX) → processed by the CNI routing layer (cni0 bridge for bridge-based CNIs, IP routing for Calico, or eBPF for Cilium) → routes through host's eth0 interface → reaches external network or other nodes. This architecture allows pods to be isolated yet connected.",
       "hint": "Follow the Pod Network Architecture diagram from inside a pod to outside the node."
     }
   ]

@@ -187,6 +187,18 @@ CNI plugins handle:
                                     External Network / Other Nodes
 ```
 
+> **Note on CNI Implementations:** The diagram above shows a bridge-based CNI architecture (like Flannel). The Linux routing table sits between the bridge and eth0, making forwarding decisions. Different CNI plugins use different approaches:
+>
+> - **Bridge-based CNIs (Flannel)**: Use cni0 bridge for local pod switching, Linux routing table for inter-node routing
+> - **Calico**: Uses Linux routing table directly (no bridge) - veth pairs connect to routing table, BGP distributes routes between nodes
+> - **Cilium**: Can operate in multiple modes:
+>   - Direct routing: Uses Linux routing table (like Calico)
+>   - eBPF host routing: eBPF programs bypass routing table for performance
+>   - Tunnel mode: Uses VXLAN overlays
+> - **AWS VPC CNI**: Uses native VPC routing, pods get IPs directly from VPC subnets
+>
+> While the routing mechanism differs, all CNIs use veth pairs to connect pod network namespaces to the host, and all must satisfy the Kubernetes network model requirements.
+
 ## CoreDNS - Service Discovery
 
 ### Purpose
@@ -359,6 +371,15 @@ Node 1 (10.244.1.0/24)           Node 2 (10.244.2.0/24)
         └────────────────────────────────┘
                3. Cross-node routing
 ```
+
+> **Note:** The traffic flows above show bridge-based CNI routing (cni0 bridge). The Linux routing table determines where packets go after leaving the bridge. With other CNI implementations:
+>
+> - **Calico**: Traffic goes from pod → veth → routing table (no bridge) → node eth0
+> - **Cilium (direct routing)**: Uses routing table like Calico
+> - **Cilium (eBPF mode)**: Traffic is processed by eBPF programs that can bypass the routing table
+> - **AWS VPC CNI**: Pods get ENI IPs, traffic routes directly through VPC networking
+>
+> The core concepts remain the same: same-node traffic stays local, cross-node traffic traverses the network infrastructure.
 
 ### 4. Pod-to-Service
 

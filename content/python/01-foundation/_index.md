@@ -235,6 +235,69 @@ else:
     grade = 'F'
 ```
 
+### match-case Statements
+
+**Python 3.10+** introduced `match-case` for pattern matching—a cleaner alternative to long if-elif-else chains.
+
+**Basic syntax:**
+```python
+# match-case
+command = "start"
+
+match command:
+    case "start":
+        print("Starting...")
+    case "stop":
+        print("Stopping...")
+    case "pause":
+        print("Pausing...")
+    case _:                         # Wildcard (like 'else')
+        print("Unknown command")
+
+# Equivalent if-elif-else version
+if command == "start":
+    print("Starting...")
+elif command == "stop":
+    print("Stopping...")
+elif command == "pause":
+    print("Pausing...")
+else:
+    print("Unknown command")
+```
+
+**Multiple patterns with |:**
+```python
+match status_code:
+    case 200 | 201 | 204:
+        print("Success")
+    case 400 | 401 | 403:
+        print("Client error")
+    case 500 | 502 | 503:
+        print("Server error")
+    case _:
+        print("Unknown status")
+```
+
+**Guard clauses (conditions):**
+```python
+match score:
+    case x if x >= 90:
+        grade = 'A'
+    case x if x >= 80:
+        grade = 'B'
+    case x if x >= 70:
+        grade = 'C'
+    case _:
+        grade = 'F'
+```
+
+**When to use match-case:**
+- ✅ Multiple specific value checks (like status codes, commands, menu options)
+- ✅ When you have many elif branches checking the same variable
+- ❌ Simple 2-3 conditions (if-else is clearer)
+- ❌ Range checks like `x >= 90` (if-elif is more readable)
+- ❌ Python versions below 3.10 (not available)
+
 ### for Loops
 
 **Iterating sequences:**
