@@ -78,12 +78,12 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "instruction": "Drag to arrange from first to last",
       "items": [
         "Init Container 1 starts",
-        "Init Container 1 completes",
         "Init Container 2 starts",
+        "Init Container 1 completes",
         "Init Container 2 completes",
         "Application containers start"
       ],
-      "correctOrder": [0, 1, 2, 3, 4],
+      "correctOrder": [0, 2, 1, 3, 4],
       "explanation": "Init containers run sequentially (serially) before application containers. Each init container must complete successfully before the next one starts. Only after all init containers complete do the application containers start in parallel."
     },
     {
@@ -154,7 +154,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
     {
       "type": "flashcard",
       "question": "What is the Adapter Pattern in multi-container Pods?",
-      "answer": "**Adapter Pattern**\n\nA multi-container pattern where a sidecar container standardizes or normalizes the output/interface of the main container.\n\n**Example Use Case:**\nAn application produces custom metrics format → Adapter container converts to Prometheus format → Monitoring system scrapes standardized metrics\n\n**Why Use It:** Allows legacy or third-party applications to integrate with standardized systems without modifying the original application."
+      "answer": "**Adapter Pattern** (translates)\n\nA multi-container pattern where a sidecar container standardizes or normalizes the output/interface of the main container.\n\n**Example Use Case:**\nAn application produces custom metrics format → Adapter container converts to Prometheus format → Monitoring system scrapes standardized metrics\n\n**Why Use It:** Allows legacy or third-party applications to integrate with standardized systems without modifying the original application."
     },
     {
       "type": "code-output",
@@ -205,24 +205,29 @@ next: /quiz/kubernetes/07-pod-lifecycle
     },
     {
       "type": "code-completion",
-      "question": "Complete the init container configuration to wait for a database service before starting the application:",
+      "question": "Complete the init container configuration to wait for the database service `db-service` on port `5432` to be ready before starting the application:",
       "instruction": "Fill in the missing command",
-      "codeTemplate": "spec:\n  initContainers:\n  - name: wait-for-db\n    image: busybox\n    command: ['sh', '-c', '_____']\n  \n  containers:\n  - name: app\n    image: myapp",
-      "answer": "until nslookup db-service; do sleep 2; done",
+      "codeTemplate": "spec:\n  initContainers:\n  - name: wait-for-db\n    image: busybox:1.36\n    command: ['sh', '-c', '_____']\n  \n  containers:\n  - name: app\n    image: myapp",
+      "answer": "until nc -z db-service 5432; do sleep 2; done",
       "caseSensitive": false,
       "acceptedAnswers": [
-        "until nslookup db-service; do sleep 2; done",
-        "until nslookup db-service; do sleep 2; done;",
-        "until nslookup db-service ; do sleep 2 ; done"
+        "until nc -z db-service 5432; do sleep 2; done",
+        "until nc -z db-service 5432; do sleep 2; done;",
+        "until nc -z db-service 5432;do sleep 2;done"
       ],
-      "explanation": "This command uses `nslookup` in a loop to check if the `db-service` DNS name resolves. It keeps trying every 2 seconds until successful, ensuring the database service is available before the application starts. This is a common init container pattern for dependency management.",
-      "hint": "Think about DNS lookup commands and shell loops."
+      "explanation": "This command uses `nc -z` (netcat) to check if port 5432 on db-service is accepting connections. The `-z` flag performs a zero-I/O scan (just checks if port is open). This is more reliable than DNS checks like `nslookup` because it verifies the database port is actually ready to accept connections, not just that the service name resolves.",
+      "hint": "Think about network connectivity testing commands that check if a specific port is open."
     },
     {
       "type": "fill-blank",
       "question": "What field distinguishes a sidecar container from a regular init container in Kubernetes 1.28+?",
       "answer": "restartPolicy",
       "caseSensitive": false,
+      "acceptedAnswers": [
+        "restartPolicy",
+        "restartPolicy: Always",
+        "restartPolicy:Always"
+      ],
       "explanation": "In Kubernetes 1.28+, native sidecar containers are defined in the `initContainers` section with `restartPolicy: Always`. This tells Kubernetes to keep the container running alongside application containers, unlike regular init containers which terminate after completion.",
       "hint": "It's about how the container behaves after starting."
     },
@@ -256,7 +261,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
     {
       "type": "flashcard",
       "question": "Why can't containers within a Pod be split across different nodes?",
-      "answer": "**Pods are Atomic Units**\n\nPods cannot be split across nodes because:\n\n1. **Shared Resources:** Containers share network namespace, volumes, and IPC—which requires same-host execution\n2. **Localhost Communication:** Containers communicate via localhost, which only works on the same machine\n3. **Co-location Guarantee:** Kubernetes schedules the entire Pod as one unit to maintain tight coupling\n\n**Result:** All containers in a Pod always run on the same node, ensuring low-latency communication and resource sharing."
+      "answer": "**Pods are Atomic Units**\n\nPods are the smallest schedulable unit in Kubernetes. All containers in a Pod must run on the same node because:\n\n1. **Shared namespaces and resources:** Containers share network namespace and local volumes, requiring co-location on a single node\n2. **Localhost communication:** Containers communicate over localhost using a shared IP address (only works within same node)\n3. **Scheduling semantics:** Kubernetes schedules Pods—not individual containers—ensuring tightly coupled containers are co-located\n\n**Result:** All containers in a Pod always run on the same node, enabling low-latency communication and shared resource access."
     },
     {
       "type": "true-false",
