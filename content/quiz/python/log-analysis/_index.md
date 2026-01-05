@@ -147,7 +147,7 @@ prev: /quiz/python/08-working-with-data
     {
       "type": "flashcard",
       "question": "What is the two-pass processing pattern and when should you use it?",
-      "answer": "**Two-Pass Processing Pattern:**\n\n**Pass 1:** Analyze data and identify what needs fixing (e.g., find duplicate UIDs, build correction mapping)\n\n**Pass 2:** Apply corrections based on the analysis\n\n**When to use:** When you need to process data and then fix/correct it based on patterns discovered in the first pass. Example: finding duplicate UIDs and reassigning them to available unique values."
+      "answer": "**Two-Pass Processing Pattern:**\n\nA two-pass processing pattern separates analysis from mutation by processing the dataset twice.\n\n**Pass 1:** Analyze (read-only)\n\n- Scan the data to detect patterns or conflicts and build the required state\n(e.g., find duplicate UIDs and create a reassignment map).\n\n**Pass 2:** Apply (write/action)\n\n- Apply corrections using only the results from Pass 1, without making new decisions.\n\n**When to use:**\nUse this pattern when fixes depend on global knowledge of the data, and modifying records safely requires seeing the full dataset first. Example: Finding duplicate UIDs and reassigning them to available unique values."
     },
     {
       "type": "mcq",
@@ -240,7 +240,7 @@ prev: /quiz/python/08-working-with-data
         "defaultdict creates keys on access, even for lookups"
       ],
       "answers": [0, 1, 3, 4],
-      "explanation": "All are true except C. defaultdict(list) creates empty lists for missing keys. Counter supports arithmetic operations. most_common() sorts by count descending. defaultdict does create keys on access (a potential gotcha). defaultdict isn't always faster - just more convenient.",
+      "explanation": "All statements are correct except the third one. defaultdict(list) creates empty lists for missing keys. Counter supports arithmetic operations. most_common() sorts by count descending. defaultdict does create keys on access (a potential gotcha). defaultdict isn't always faster - just more convenient.",
       "hint": "Think about the trade-offs and special features of each structure."
     },
     {
@@ -309,8 +309,23 @@ prev: /quiz/python/08-working-with-data
     },
     {
       "type": "flashcard",
-      "question": "Explain the Decision Matrix for choosing a data structure for log analysis. When should you use dict, set, list, Counter, or defaultdict?",
-      "answer": "**Data Structure Decision Matrix:**\n\n- **dict with .get()**: Count occurrences (simple case)\n- **set**: Track unique items, membership testing (O(1))\n- **list**: Maintain order, collect values for later processing\n- **defaultdict(list)**: Group items by key\n- **defaultdict(int)**: Multiple counters, cleaner counting\n- **Counter**: Top N items, combining counts, multiple count operations\n\n**Key insight**: Choose based on what you need to do, not just what works."
+      "question": "What data structure should you use for counting occurrences in log analysis?",
+      "answer": "**Three options with trade-offs:**\n\n**dict with .get()** - Simple counting, minimal overhead\n```python\ncount[item] = count.get(item, 0) + 1\n```\n\n**defaultdict(int)** - Cleaner code, no .get() needed\n```python\ncount[item] += 1\n```\n\n**Counter** - When you need .most_common() or count arithmetic\n\n**Choose based on needs:** Start simple (dict), use defaultdict for cleaner code, use Counter when you need its special features."
+    },
+    {
+      "type": "flashcard",
+      "question": "What data structure should you use for tracking unique items in log analysis?",
+      "answer": "**set** - Ideal for uniqueness tracking\n\n**Benefits:**\n- O(1) membership testing: `if item in seen_set`\n- Automatic deduplication\n- Memory efficient for large unique sets\n\n**Example use cases:** Track unique IP addresses, pod names, user IDs\n\n**Alternative:** dict keys work but are overkill unless you need associated values."
+    },
+    {
+      "type": "flashcard",
+      "question": "What data structure should you use for grouping log entries by a key (e.g., events by pod name)?",
+      "answer": "**defaultdict(list)** - Purpose-built for grouping\n\n**Why it's ideal:**\n- Auto-initializes missing keys to empty lists\n- No existence checks needed: `pod_events[pod_name].append(event)`\n- Clean, readable code\n\n**Manual alternative:**\n```python\ndict.setdefault(key, []).append(value)  # More verbose\n```"
+    },
+    {
+      "type": "flashcard",
+      "question": "When should you use Counter instead of a regular dict for counting in log analysis?",
+      "answer": "**Use Counter when you need:**\n- **.most_common(N)**: Find top N frequent items\n- **Count arithmetic**: Combine counts from multiple sources (`count1 + count2`)\n- **Multiple count operations**: Subtract, intersect, union\n\n**Use dict/defaultdict when:**\n- Simple counting without special operations\n- Want minimal overhead\n- Don't need Counter's features\n\n**Key insight:** Counter is a specialized tool - use it when you need its features, not just for basic counting."
     },
     {
       "type": "multiple-select",
@@ -442,7 +457,7 @@ prev: /quiz/python/08-working-with-data
     },
     {
       "type": "mcq",
-      "question": "What is the primary benefit of using named groups in regular expressions like (?P<IP>\\\\d+\\\\.\\\\d+\\\\.\\\\d+\\\\.\\\\d+)?",
+      "question": "What is the primary benefit of using named groups in regular expressions like (?P&lt;IP&gt;\\\\d+\\\\.\\\\d+\\\\.\\\\d+\\\\.\\\\d+)?",
       "options": [
         "Faster pattern matching",
         "Self-documenting code with descriptive names accessible via groupdict()",
@@ -457,7 +472,7 @@ prev: /quiz/python/08-working-with-data
       "type": "code-completion",
       "question": "Complete the code to handle case-insensitive matching when parsing log levels:",
       "instruction": "Fill in the normalization step",
-      "codeTemplate": "log_levels = ['INFO', 'error', 'WARNING', 'info']\ncounts = {}\nfor level in log_levels:\n    normalized = _____\n    counts[normalized] = counts.get(normalized, 0) + 1",
+      "codeTemplate": "log_levels = {'INFO', 'error', 'WARNING', 'info'}\ncounts = {}\nfor level in log_levels:\n    normalized = _____\n    counts[normalized] = counts.get(normalized, 0) + 1",
       "answer": "level.upper()",
       "caseSensitive": false,
       "acceptedAnswers": ["level.upper()", "level.lower()"],
@@ -467,7 +482,7 @@ prev: /quiz/python/08-working-with-data
     {
       "type": "flashcard",
       "question": "Why should you use early 'continue' statements when filtering with multiple conditions?",
-      "answer": "**Early Continue Pattern:**\n```python\nfor event in events:\n    if obj.get('kind') != 'Pod':\n        continue\n    if event.get('type') != 'Warning':\n        continue\n    # Process filtered event\n```\n\n**Benefits:**\n- Improves readability with many conditions\n- Reduces nesting levels\n- Makes filtering logic explicit\n- Each condition is independent and clear\n\n**Alternative:** Chain with 'and' for compact code with few conditions\n\n**Best practice:** Use early continue when you have 3+ filtering conditions."
+      "answer": "**Early Continue Pattern:**\n\nEarly continue enables fail-fast logic, keeping the main logic flat, readable, and focused on valid cases.\n```python\nfor event in events:\n    if obj.get('kind') != 'Pod':\n        continue\n    if event.get('type') != 'Warning':\n        continue\n    # Process filtered event\n```\n\n**Benefits:**\n- Improves readability with many conditions\n- Reduces nesting levels\n- Makes filtering logic explicit\n- Each condition is independent and clear\n\n**Alternative:** Chain with 'and' for compact code with few conditions\n\n**Best practice:** Use early continue when you have 3+ filtering conditions."
     },
     {
       "type": "mcq",

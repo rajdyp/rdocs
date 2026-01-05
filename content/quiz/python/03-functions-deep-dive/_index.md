@@ -12,6 +12,21 @@ next: /quiz/python/04-error-handling
   "questions": [
     {
       "type": "code-output",
+      "question": "What are `name` and `'Alice'` called in this code?",
+      "code": "def greet(name):     # Function definition\n    return f\"Hello {name}\"\n\ngreet('Alice')       # Function call",
+      "language": "python",
+      "options": [
+        "`name` is a parameter, `'Alice'` is an argument",
+        "`name` is an argument, `'Alice'` is a parameter",
+        "Both are parameters",
+        "Both are arguments"
+      ],
+      "answer": 0,
+      "explanation": "**Parameters** are variables in the function definition (`name`). **Arguments** are the actual values passed when calling the function (`'Alice'`).",
+      "hint": "Think about which one is in the definition and which one is passed when calling."
+    },
+    {
+      "type": "code-output",
       "question": "What is the output of the following code?",
       "code": "def get_user():\n    return 'Alice', 30, 'alice@example.com'\n\nprint(get_user())",
       "language": "python",
@@ -38,7 +53,7 @@ next: /quiz/python/04-error-handling
       ],
       "answer": 1,
       "explanation": "The function has a default parameter `greeting=\"Hello\"`, but when we pass `\"Hi\"` as the second positional argument, it overrides the default value.",
-      "hint": "Default arguments can be overridden by passing explicit values."
+      "hint": "Default parameters can be overridden by passing explicit values."
     },
     {
       "type": "multiple-select",
@@ -214,7 +229,7 @@ next: /quiz/python/04-error-handling
     },
     {
       "type": "mcq",
-      "question": "Why should you avoid mutable default arguments like `def append_to(item, lst=[])`?",
+      "question": "Why should you avoid mutable default parameters like `def append_to(item, lst=[])`?",
       "options": [
         "It causes a syntax error",
         "The default list is created once and shared across all function calls",

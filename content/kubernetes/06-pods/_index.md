@@ -118,7 +118,28 @@ spec:
 
 ### Multi-Container Patterns
 
-#### 1. Sidecar Pattern
+**The Sidecar Pattern** is the foundational multi-container design pattern where auxiliary containers run alongside the primary container to enhance its functionality. **Ambassador** and **Adapter** are specialized implementations of the Sidecar pattern, each serving distinct purposes.
+
+#### Pattern Hierarchy
+
+```
+Sidecar Pattern (General)
+├── Ambassador Pattern → Proxying connections (networking focus)
+├── Adapter Pattern → Transforming outputs/interfaces (standardization focus)
+└── General Sidecar → Log collection, monitoring, config reload, etc.
+```
+
+**All share the same characteristics:**
+- Run in the same pod as the main application
+- Share network namespace, volumes, and lifecycle
+- Enhance or extend the primary container's capabilities
+
+**They differ in their specific purpose:**
+- **Sidecar (General)**: Any auxiliary functionality (logging, monitoring, config)
+- **Ambassador**: Specifically for proxying/networking
+- **Adapter**: Specifically for transforming/standardizing output
+
+#### 1. Sidecar Pattern (General)
 
 **Purpose**: Enhance primary container with auxiliary functionality.
 
@@ -151,13 +172,14 @@ spec:
 **Common uses**:
 
 * Log aggregation (Fluentd, Filebeat)
-* Service mesh proxies (Envoy, Istio)
 * Configuration reloaders
 * Monitoring agents
 
-#### 2. Ambassador Pattern
+#### 2. Ambassador Pattern (Sidecar Sub-type)
 
 **Purpose**: Proxy connections to/from main container
+
+**Relationship to Sidecar**: Ambassador is a specialized sidecar focused on networking - it proxies, routes, or manages connections between the main container and external services.
 
 ```
 ┌─────────────── Pod ──────────────┐
@@ -221,9 +243,11 @@ image: gcr.io/cloudsql-docker/gce-proxy
 
 **Why?** App doesn't need cloud SDK, credentials handled by proxy
 
-#### 3. Adapter Pattern
+#### 3. Adapter Pattern (Sidecar Sub-type)
 
 **Purpose**: Standardize output/interface
+
+**Relationship to Sidecar**: Adapter is a specialized sidecar focused on transformation - it converts the main container's output or interface into a format expected by downstream systems.
 
 ```
 ┌─────────────── Pod ──────────────┐
@@ -235,6 +259,42 @@ image: gcr.io/cloudsql-docker/gce-proxy
 │  └──────────┘                    │
 └──────────────────────────────────┘
 ```
+
+**Common Use Cases:**
+
+* **Metrics Format Conversion**
+
+```yaml
+# Legacy app outputs custom metrics format
+# Adapter converts to Prometheus format
+containers:
+- name: legacy-app
+  image: old-monitoring-app
+  # Outputs metrics in proprietary format
+
+- name: prometheus-adapter
+  image: metrics-converter
+  # Reads custom format, exposes Prometheus /metrics endpoint
+```
+
+**Why?** App doesn't need changes, monitoring systems get standard format
+
+* **Log Standardization**
+
+```yaml
+# App writes logs in custom format
+# Adapter normalizes to JSON for centralized logging
+containers:
+- name: app
+  image: custom-app
+  # Writes logs: "[TIMESTAMP] LEVEL: message"
+
+- name: log-adapter
+  image: log-normalizer
+  # Converts to: {"time": "...", "level": "...", "msg": "..."}
+```
+
+**Why?** Centralized logging systems (ELK, Splunk) expect standard formats
 
 ## Init Containers
 
@@ -500,10 +560,10 @@ kubectl delete -f pod.yaml
 
 **Key patterns:**
 
-* **Sidecar**: Enhance main container
-* **Ambassador**: Proxy connections
-* **Adapter**: Normalize interfaces
-* **Init containers**: Pre-flight tasks
+* **Sidecar** (foundational pattern): Enhance main container with auxiliary functionality
+  * **Ambassador** (sub-type): Proxy connections and manage networking
+  * **Adapter** (sub-type): Normalize/transform interfaces and outputs
+* **Init containers**: Pre-flight tasks (run before app containers)
 
 ---
 

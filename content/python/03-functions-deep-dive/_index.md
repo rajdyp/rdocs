@@ -72,9 +72,13 @@ greet(123, "thirty")  # Works, but wrong types
 # $ mypy script.py
 ```
 
-## Arguments
+## Parameters
 
-### Positional vs Optional Arguments
+**Terminology:**
+- **Parameters** are the variables in the function definition
+- **Arguments** are the actual values passed when calling the function
+
+### Positional vs Default Parameters
 
 ```python
 # Positional (required)
@@ -83,7 +87,7 @@ def greet(name):
 
 greet("Alice")  # Required
 
-# Default arguments (optional)
+# Default parameters (optional)
 def greet(name, greeting="Hello"):
     return f"{greeting} {name}"
 
@@ -104,13 +108,13 @@ describe_pet("dog", "Buddy")                # dog named Buddy, age 1
 describe_pet(name="Buddy", animal="dog")    # dog named Buddy, age 1
 
 # Mixed (positional + keyword)
-describe_pet("dog", name="Buddy", age=3)    # dog named Buddy, age 1
+describe_pet("dog", name="Buddy", age=3)    # dog named Buddy, age 3
 
 # ❌ SyntaxError
 describe_pet(name="Buddy", "dog")           # Positional must come first
 ```
 
-### *args - Variable Positional Arguments
+### *args - Variable Positional Parameters
 
 ```python
 def sum_all(*args):
@@ -129,7 +133,7 @@ def print_args(*args):
 print_args(1, 2, 3)
 ```
 
-### **kwargs - Variable Keyword Arguments
+### **kwargs - Variable Keyword Parameters
 
 ```python
 def print_info(**kwargs):
@@ -150,7 +154,7 @@ def print_kwargs(**kwargs):
 print_kwargs(x=1, y=2)      # {'x': 1, 'y': 2}
 ```
 
-### Combining All Argument Types
+### Combining All Parameter Types
 
 **Order matters:** positional → *args → keyword → **kwargs
 
@@ -916,7 +920,7 @@ def add(a, b):
 2. Create a function that returns the nth Fibonacci number
 3. Write a function to reverse a string
 
-### Arguments
+### Parameters
 1. Create a function that accepts any number of numbers and returns their average
 2. Write a function with both *args and **kwargs that prints all arguments
 3. Create a calculator function that accepts operation as keyword argument

@@ -246,7 +246,7 @@ next: /quiz/kubernetes/04-worker-nodes
     {
       "type": "flashcard",
       "question": "What are Node Affinity and Pod Affinity/Anti-Affinity?",
-      "answer": "**Node Affinity** defines rules for scheduling pods onto nodes based on node labels.\n- `requiredDuringScheduling`: Hard requirement (must match)\n- `preferredDuringScheduling`: Soft preference (best effort)\n\n**Pod Affinity/Anti-Affinity** defines rules based on other pods.\n- **Affinity**: Schedule near certain pods (e.g., same zone)\n- **Anti-Affinity**: Schedule away from certain pods (e.g., spread replicas)\n\n**Use cases:**\n- Affinity: Co-locate related services for low latency\n- Anti-Affinity: Spread replicas for high availability"
+      "answer": "**Node Affinity** places pods based on node labels.\n- `requiredDuringSchedulingIgnoredDuringExecution`: Hard requirement (must match)\n- `preferredDuringSchedulingIgnoredDuringExecution`: Soft preference (best effort)\n\n**Pod Affinity/Anti-Affinity** places pods based on other pods’ labels and where those pods are running.\n- **Affinity**: Schedule near certain pods (e.g., same zone)\n- **Anti-Affinity**: Schedule away from certain pods (e.g., spread replicas)\n\n**Use cases:**\n- Affinity: Co-locate related services for low latency\n- Anti-Affinity: Spread replicas for high availability"
     },
     {
       "type": "mcq",
@@ -277,7 +277,7 @@ next: /quiz/kubernetes/04-worker-nodes
     },
     {
       "type": "true-false",
-      "question": "The API server uses a 'watch' mechanism that allows components to receive real-time updates when resources change, rather than constantly polling.",
+      "question": "The API server provides a 'watch' mechanism that allows components to subscribe to real-time updates when resources change, rather than constantly polling.",
       "answer": true,
       "explanation": "True. The kube-api-server provides a watch mechanism that allows components (scheduler, controllers, kubelet) to subscribe to resource changes. When a resource is created, modified, or deleted, watchers are immediately notified. This event-driven architecture is more efficient than polling.",
       "hint": "Think about how components stay in sync without overwhelming the API server."
