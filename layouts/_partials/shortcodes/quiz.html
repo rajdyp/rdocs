@@ -10,13 +10,16 @@
   </div>
 
   <div class="quiz-progress">
-    <span class="progress-text">Question <span class="current-question">1</span> of <span class="total-questions">{{ len $quizData.questions }}</span></span>
-    <span class="answered-count">(<span class="answered-number">0</span> answered)</span>
+    <div class="quiz-progress-main">
+      <span class="progress-text">Question <span class="current-question">1</span> of <span class="total-questions">{{ len $quizData.questions }}</span></span>
+      <span class="answered-count">(<span class="answered-number">0</span> answered)</span>
+    </div>
+    <button class="quiz-review-past-btn" type="button">Review Past Incorrect</button>
   </div>
 
   <div class="quiz-content">
     {{- range $qIndex, $question := $quizData.questions -}}
-    <div class="quiz-question" data-question-index="{{ $qIndex }}" data-question-type="{{ $question.type }}" style="display: {{ if eq $qIndex 0 }}block{{ else }}none{{ end }};">
+    <div class="quiz-question" data-question-index="{{ $qIndex }}" data-question-id="{{ $question.id | default (printf "%s-%d" $quizId $qIndex) }}" data-question-type="{{ $question.type }}" style="display: {{ if eq $qIndex 0 }}block{{ else }}none{{ end }};">
       <div class="question-header">
         <span class="question-number">Question {{ add $qIndex 1 }}</span>
       </div>
@@ -99,6 +102,7 @@
         <div class="result-value skipped-count">0</div>
       </div>
     </div>
+    <button class="quiz-review-incorrect-btn" type="button" style="display: none;">Review Incorrect Questions</button>
   </div>
 </div>
 
