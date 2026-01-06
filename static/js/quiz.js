@@ -2,6 +2,86 @@
 (function() {
   'use strict';
 
+  class PerformanceStore {
+    constructor() {
+      this.storageKey = 'rdocs.quiz.performance.v1';
+      this.data = { questions: {} };
+      this.available = this.checkAvailability();
+      this.load();
+    }
+
+    checkAvailability() {
+      try {
+        const testKey = '__quiz_storage_test__';
+        localStorage.setItem(testKey, '1');
+        localStorage.removeItem(testKey);
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    load() {
+      if (!this.available) return;
+      try {
+        const raw = localStorage.getItem(this.storageKey);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') {
+            this.data = parsed;
+          }
+        }
+      } catch (err) {
+        this.data = { questions: {} };
+      }
+    }
+
+    save() {
+      if (!this.available) return;
+      try {
+        localStorage.setItem(this.storageKey, JSON.stringify(this.data));
+      } catch (err) {
+        // Ignore storage write failures.
+      }
+    }
+
+    get(questionId) {
+      return this.data.questions[questionId];
+    }
+
+    record(questionId, isCorrect) {
+      const now = new Date().toISOString();
+      const entry = this.data.questions[questionId] || {
+        attempts: 0,
+        correct: 0,
+        incorrect: 0,
+        streak: 0
+      };
+
+      entry.attempts += 1;
+      if (isCorrect) {
+        entry.correct += 1;
+        entry.streak = entry.streak > 0 ? entry.streak + 1 : 1;
+        entry.lastResult = 'correct';
+      } else {
+        entry.incorrect += 1;
+        entry.streak = entry.streak < 0 ? entry.streak - 1 : -1;
+        entry.lastResult = 'incorrect';
+      }
+      entry.lastAttemptAt = now;
+
+      this.data.questions[questionId] = entry;
+      this.save();
+    }
+
+    isWeak(questionId) {
+      const entry = this.data.questions[questionId];
+      if (!entry || entry.attempts < 2) return false;
+      const accuracy = entry.correct / entry.attempts;
+      return accuracy < 0.5 || entry.streak <= -2;
+    }
+  }
+
   class Quiz {
     constructor(container) {
       this.container = container;
@@ -10,6 +90,14 @@
       this.userAnswers = new Map();
       this.submittedQuestions = new Set();
       this.currentQuestionIndex = 0;
+      this.currentVisibleIndex = 0;
+      this.visibleQuestionIndices = [];
+      this.reviewMode = 'all';
+      this.resultsScope = 'all';
+      this.resultsIndices = [];
+      this.totalQuestions = 0;
+      this.lastIncorrectIndices = [];
+      this.performanceStore = new PerformanceStore();
       this.results = {
         total: 0,
         correct: 0,
@@ -28,14 +116,20 @@
     }
 
     init() {
+      this.totalQuestions = this.container.querySelectorAll('.quiz-question').length;
       this.bindEvents();
       this.initQuestionHandlers();
+      this.refreshWeakIndicators();
+      this.updatePastReviewButton();
+      this.applyReviewFilter('all', { skipAlert: true });
     }
 
     bindEvents() {
       const prevBtn = this.container.querySelector('.quiz-prev-btn');
       const nextBtn = this.container.querySelector('.quiz-next-btn');
       const resetBtn = this.container.querySelector('.quiz-reset-btn');
+      const reviewIncorrectBtn = this.container.querySelector('.quiz-review-incorrect-btn');
+      const reviewPastBtn = this.container.querySelector('.quiz-review-past-btn');
 
       if (prevBtn) {
         prevBtn.addEventListener('click', () => this.previousQuestion());
@@ -53,6 +147,37 @@
 
       if (resetBtn) {
         resetBtn.addEventListener('click', () => this.resetQuiz());
+      }
+
+      if (reviewIncorrectBtn) {
+        reviewIncorrectBtn.addEventListener('click', () => {
+          if (!this.lastIncorrectIndices.length) return;
+          this.resetQuestionsForRetry(this.lastIncorrectIndices);
+          this.hideResults();
+          this.applyReviewFilter(this.lastIncorrectIndices, { skipAlert: true });
+        });
+      }
+
+      if (reviewPastBtn) {
+        reviewPastBtn.addEventListener('click', () => {
+          if (this.reviewMode === 'past-incorrect') {
+            this.reviewMode = 'all';
+            this.applyReviewFilter('all', { skipAlert: true });
+            this.updatePastReviewButton();
+            return;
+          }
+
+          const indices = this.getPastIncorrectIndices();
+          if (!indices.length) {
+            this.updatePastReviewButton();
+            return;
+          }
+
+          this.reviewMode = 'past-incorrect';
+          this.resetQuestionsForRetry(indices);
+          this.applyReviewFilter(indices, { skipAlert: true });
+          this.updatePastReviewButton();
+        });
       }
 
       // Submit answer buttons for each question
@@ -200,61 +325,249 @@
       }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
+    getQuestionElements() {
+      return Array.from(this.container.querySelectorAll('.quiz-question'));
+    }
+
+    getAllQuestionIndices() {
+      return this.getQuestionElements().map((_, index) => index);
+    }
+
+    getQuestionId(question, index) {
+      return question.dataset.questionId || `${this.quizId}-${index}`;
+    }
+
+    refreshWeakIndicators() {
+      const questions = this.getQuestionElements();
+      questions.forEach((question, index) => {
+        const questionId = this.getQuestionId(question, index);
+        if (this.performanceStore.isWeak(questionId)) {
+          question.classList.add('weak-question');
+        } else {
+          question.classList.remove('weak-question');
+        }
+      });
+    }
+
+    resetQuestionsForRetry(indices) {
+      indices.forEach((index) => {
+        const question = this.getQuestionElements()[index];
+        if (!question) return;
+        this.resetQuestionState(question, index);
+      });
+      this.updateProgress();
+    }
+
+    resetQuestionState(question, index) {
+      question.classList.remove('answered-correct', 'answered-incorrect', 'locked');
+
+      const feedback = question.querySelector('.question-feedback');
+      if (feedback) {
+        feedback.style.display = 'none';
+        const correctFeedback = feedback.querySelector('.feedback-correct');
+        const incorrectFeedback = feedback.querySelector('.feedback-incorrect');
+        if (correctFeedback) correctFeedback.style.display = 'none';
+        if (incorrectFeedback) incorrectFeedback.style.display = 'none';
+      }
+
+      question.querySelectorAll('.quiz-option').forEach(opt => {
+        opt.classList.remove('correct', 'incorrect');
+      });
+
+      question.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+        input.checked = false;
+        input.disabled = false;
+      });
+
+      question.querySelectorAll('.fill-blank-input, .code-completion-input').forEach(input => {
+        input.value = '';
+        input.classList.remove('correct', 'incorrect');
+        input.disabled = false;
+      });
+
+      const flashcard = question.querySelector('.flashcard');
+      if (flashcard) {
+        flashcard.classList.remove('flipped');
+      }
+
+      question.querySelectorAll('.self-check-btn').forEach(btn => {
+        btn.style.opacity = '1';
+        btn.disabled = false;
+      });
+
+      question.querySelectorAll('.flashcard-flip-btn').forEach(btn => {
+        btn.disabled = false;
+      });
+
+      question.querySelectorAll('.drag-item').forEach(item => {
+        item.style.borderColor = '';
+        item.draggable = true;
+        item.style.cursor = 'move';
+      });
+
+      question.querySelectorAll('.hint-content').forEach(hint => {
+        hint.style.display = 'none';
+      });
+
+      const submitBtn = question.querySelector('.submit-answer-btn');
+      if (submitBtn) {
+        submitBtn.textContent = 'Submit Answer';
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('answered');
+      }
+
+      this.submittedQuestions.delete(index);
+      this.userAnswers.delete(index);
+    }
+
+    getPastIncorrectIndices() {
+      const questions = this.getQuestionElements();
+      const incorrectIndices = [];
+      questions.forEach((question, index) => {
+        const questionId = this.getQuestionId(question, index);
+        const entry = this.performanceStore.get(questionId);
+        if (entry && entry.lastResult === 'incorrect') {
+          incorrectIndices.push(index);
+        }
+      });
+      return incorrectIndices;
+    }
+
+    updatePastReviewButton() {
+      const reviewPastBtn = this.container.querySelector('.quiz-review-past-btn');
+      if (!reviewPastBtn) return;
+      const indices = this.getPastIncorrectIndices();
+      const hasIncorrect = indices.length > 0;
+
+      if (this.reviewMode === 'past-incorrect') {
+        reviewPastBtn.textContent = 'Show All Questions';
+        reviewPastBtn.disabled = false;
+      } else {
+        reviewPastBtn.textContent = hasIncorrect
+          ? `Review Past Incorrect (${indices.length})`
+          : 'Review Past Incorrect';
+        reviewPastBtn.disabled = !hasIncorrect;
+      }
+    }
+
+    applyReviewFilter(filter, options = {}) {
+      const questions = this.getQuestionElements();
+      let indices = [];
+
+      if (filter === 'all') {
+        indices = this.getAllQuestionIndices();
+      } else if (Array.isArray(filter)) {
+        indices = filter.slice();
+        if (!indices.length) {
+          if (!options.skipAlert) {
+            window.alert('No questions available for review.');
+          }
+          return;
+        }
+      }
+
+      this.visibleQuestionIndices = indices;
+      this.currentVisibleIndex = 0;
+      if (filter === 'all') {
+        this.resultsScope = 'all';
+        this.resultsIndices = [];
+      } else {
+        this.resultsScope = 'subset';
+        this.resultsIndices = indices.slice();
+      }
+
+      questions.forEach(q => {
+        q.style.display = 'none';
+      });
+
+      if (this.visibleQuestionIndices.length) {
+        this.showQuestionByVisibleIndex(0);
+      }
+    }
+
+    showQuestionByVisibleIndex(visibleIndex) {
+      const questions = this.getQuestionElements();
+      const baseIndex = this.visibleQuestionIndices[visibleIndex];
+      if (baseIndex === undefined) return;
+
+      questions.forEach((q, i) => {
+        q.style.display = i === baseIndex ? 'block' : 'none';
+      });
+
+      this.currentQuestionIndex = baseIndex;
+      this.currentVisibleIndex = visibleIndex;
+      this.updateNavigation();
+      this.updateProgress();
+    }
+
     showQuestion(index) {
-      const questions = this.container.querySelectorAll('.quiz-question');
+      const questions = this.getQuestionElements();
       questions.forEach((q, i) => {
         q.style.display = i === index ? 'block' : 'none';
       });
       this.currentQuestionIndex = index;
+      this.currentVisibleIndex = this.visibleQuestionIndices.indexOf(index);
       this.updateNavigation();
       this.updateProgress();
     }
 
     nextQuestion() {
-      const questions = this.container.querySelectorAll('.quiz-question');
-      if (this.currentQuestionIndex < questions.length - 1) {
-        this.showQuestion(this.currentQuestionIndex + 1);
+      if (this.currentVisibleIndex < this.visibleQuestionIndices.length - 1) {
+        this.showQuestionByVisibleIndex(this.currentVisibleIndex + 1);
       }
     }
 
     previousQuestion() {
-      if (this.currentQuestionIndex > 0) {
-        this.showQuestion(this.currentQuestionIndex - 1);
+      if (this.currentVisibleIndex > 0) {
+        this.showQuestionByVisibleIndex(this.currentVisibleIndex - 1);
       }
     }
 
     updateNavigation() {
       const prevBtn = this.container.querySelector('.quiz-prev-btn');
       const nextBtn = this.container.querySelector('.quiz-next-btn');
-      const questions = this.container.querySelectorAll('.quiz-question');
+      const visibleTotal = this.visibleQuestionIndices.length;
 
       // Update Previous button
       if (prevBtn) {
-        prevBtn.disabled = this.currentQuestionIndex === 0;
+        prevBtn.disabled = this.currentVisibleIndex === 0 || visibleTotal === 0;
       }
 
       // Update Next button
       if (nextBtn) {
-        const isLastQuestion = this.currentQuestionIndex === questions.length - 1;
+        if (visibleTotal === 0) {
+          nextBtn.textContent = 'Next →';
+          nextBtn.dataset.action = 'next';
+          nextBtn.disabled = true;
+          return;
+        }
+
+        const isLastQuestion = this.currentVisibleIndex === visibleTotal - 1;
 
         if (isLastQuestion) {
           nextBtn.textContent = 'View Results';
           nextBtn.dataset.action = 'show-results';
-          nextBtn.disabled = false;
+          nextBtn.disabled = visibleTotal === 0;
         } else {
           nextBtn.textContent = 'Next →';
           nextBtn.dataset.action = 'next';
-          nextBtn.disabled = false;
+          nextBtn.disabled = visibleTotal === 0;
         }
       }
     }
 
     updateProgress() {
       const currentQuestionEl = this.container.querySelector('.current-question');
+      const totalQuestionsEl = this.container.querySelector('.total-questions');
       const answeredNumberEl = this.container.querySelector('.answered-number');
+      const visibleTotal = this.visibleQuestionIndices.length;
 
       if (currentQuestionEl) {
-        currentQuestionEl.textContent = this.currentQuestionIndex + 1;
+        currentQuestionEl.textContent = visibleTotal ? this.currentVisibleIndex + 1 : 0;
+      }
+
+      if (totalQuestionsEl) {
+        totalQuestionsEl.textContent = visibleTotal || this.totalQuestions;
       }
 
       if (answeredNumberEl) {
@@ -298,6 +611,11 @@
           isCorrect = this.checkDragDrop(question, index);
           break;
       }
+
+      const questionId = this.getQuestionId(question, index);
+      this.performanceStore.record(questionId, isCorrect);
+      this.refreshWeakIndicators();
+      this.updatePastReviewButton();
 
       this.showFeedback(question, isCorrect);
       this.submittedQuestions.add(index);
@@ -517,21 +835,28 @@
 
     showFinalResults() {
       const questions = this.container.querySelectorAll('.quiz-question');
+      const indices = this.resultsScope === 'subset'
+        ? this.resultsIndices
+        : this.getAllQuestionIndices();
       let correct = 0;
       let incorrect = 0;
       let skipped = 0;
+      const incorrectIndices = [];
 
-      questions.forEach((question, index) => {
+      indices.forEach((index) => {
+        const question = questions[index];
         if (question.classList.contains('answered-correct')) {
           correct++;
         } else if (question.classList.contains('answered-incorrect')) {
           incorrect++;
+          incorrectIndices.push(index);
         } else {
           skipped++;
         }
       });
 
-      this.results = { total: questions.length, correct, incorrect, skipped };
+      this.results = { total: indices.length, correct, incorrect, skipped };
+      this.lastIncorrectIndices = incorrectIndices;
 
       const resultsDiv = this.container.querySelector('.quiz-results');
       const scoreValue = this.container.querySelector('.score-value');
@@ -543,6 +868,7 @@
       const resetBtn = this.container.querySelector('.quiz-reset-btn');
       const navDiv = this.container.querySelector('.quiz-navigation');
       const progressDiv = this.container.querySelector('.quiz-progress');
+      const reviewIncorrectBtn = this.container.querySelector('.quiz-review-incorrect-btn');
 
       // Calculate accuracy based on answered questions only
       const answeredQuestions = correct + incorrect;
@@ -582,6 +908,10 @@
         resetBtn.style.display = 'inline-block';
       }
 
+      if (reviewIncorrectBtn) {
+        reviewIncorrectBtn.style.display = incorrectIndices.length ? 'inline-block' : 'none';
+      }
+
       // Hide navigation and progress
       if (navDiv) {
         navDiv.style.display = 'none';
@@ -611,6 +941,8 @@
       this.userAnswers.clear();
       this.submittedQuestions.clear();
       this.currentQuestionIndex = 0;
+      this.currentVisibleIndex = 0;
+      this.reviewMode = 'all';
 
       // Hide results
       const resultsDiv = this.container.querySelector('.quiz-results');
@@ -627,7 +959,17 @@
       }
 
       if (progressDiv) {
-        progressDiv.style.display = 'block';
+        progressDiv.style.display = 'flex';
+      }
+
+      const resetBtn = this.container.querySelector('.quiz-reset-btn');
+      if (resetBtn) {
+        resetBtn.style.display = 'none';
+      }
+
+      const reviewIncorrectBtn = this.container.querySelector('.quiz-review-incorrect-btn');
+      if (reviewIncorrectBtn) {
+        reviewIncorrectBtn.style.display = 'none';
       }
 
       // Reset all questions
@@ -697,17 +1039,30 @@
         }
       });
 
-      // Hide reset button
-      const resetBtn = this.container.querySelector('.quiz-reset-btn');
-      if (resetBtn) {
-        resetBtn.style.display = 'none';
-      }
-
-      // Show first question
-      this.showQuestion(0);
+      this.refreshWeakIndicators();
+      this.updatePastReviewButton();
+      this.applyReviewFilter('all', { skipAlert: true });
 
       // Scroll to top of quiz
       this.container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    hideResults() {
+      const resultsDiv = this.container.querySelector('.quiz-results');
+      if (resultsDiv) {
+        resultsDiv.style.display = 'none';
+      }
+
+      const navDiv = this.container.querySelector('.quiz-navigation');
+      const progressDiv = this.container.querySelector('.quiz-progress');
+
+      if (navDiv) {
+        navDiv.style.display = 'flex';
+      }
+
+      if (progressDiv) {
+        progressDiv.style.display = 'flex';
+      }
     }
   }
 
