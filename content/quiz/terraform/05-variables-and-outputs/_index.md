@@ -10,6 +10,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
 {
   "questions": [
     {
+      "id": "terraform-variables-outputs-quiz-01",
       "type": "mcq",
       "question": "What is the PRIMARY benefit of using variables in Terraform instead of hardcoded values?",
       "options": [
@@ -23,6 +24,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Think about deploying the same infrastructure to different environments."
     },
     {
+      "id": "terraform-variables-outputs-quiz-02",
       "type": "multiple-select",
       "question": "Which of the following are primitive types in Terraform?",
       "options": [
@@ -37,6 +39,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Primitive types are the simplest, most basic data types."
     },
     {
+      "id": "terraform-variables-outputs-quiz-03",
       "type": "true-false",
       "question": "A variable without a default value is optional and can be omitted when running Terraform.",
       "answer": false,
@@ -44,6 +47,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Consider what happens when Terraform doesn't know what value to use."
     },
     {
+      "id": "terraform-variables-outputs-quiz-04",
       "type": "fill-blank",
       "question": "To reference a variable named 'region' in your Terraform configuration, you would use: _____",
       "answer": "var.region",
@@ -52,6 +56,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "All variable references start with a three-letter prefix."
     },
     {
+      "id": "terraform-variables-outputs-quiz-05",
       "type": "code-output",
       "question": "What will be the final value of `instance_type` given this precedence chain?",
       "code": "# variables.tf: default = \"t2.micro\"\n# TF_VAR_instance_type = \"t2.small\"\n# terraform.tfvars: instance_type = \"t2.medium\"\n# Command: terraform apply -var=\"instance_type=t2.large\"",
@@ -67,11 +72,13 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Command-line flags win over all other variable sources."
     },
     {
+      "id": "terraform-variables-outputs-quiz-06",
       "type": "flashcard",
       "question": "What is the difference between a Map and an Object in Terraform?",
       "answer": "**Map:** Flexible key-value pairs where all values must be the same type. Keys can be any string, and you can add/remove keys dynamically.\n\n**Object:** Fixed structure with predefined keys where each field can have a different type. Schema enforces required fields.\n\n**Example:**\n- Map: `map(string)` - any keys, all string values\n- Object: `object({name=string, age=number})` - fixed keys, mixed types"
     },
     {
+      "id": "terraform-variables-outputs-quiz-07",
       "type": "drag-drop",
       "question": "Arrange these variable value sources from LOWEST to HIGHEST precedence:",
       "instruction": "Drag to arrange in the correct order (lowest precedence first)",
@@ -85,6 +92,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "explanation": "Correct precedence order: 1) Default values (lowest), 2) Environment variables, 3) .tfvars files, 4) -var command-line flags (highest)."
     },
     {
+      "id": "terraform-variables-outputs-quiz-08",
       "type": "code-completion",
       "question": "Complete the variable declaration to accept a list of strings:",
       "instruction": "Fill in the missing type constraint",
@@ -95,6 +103,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "explanation": "For a list containing strings, the type constraint is `list(string)`. This ensures the variable only accepts a list where all elements are strings."
     },
     {
+      "id": "terraform-variables-outputs-quiz-09",
       "type": "mcq",
       "question": "When using `for_each` with a set variable to create multiple S3 buckets, what advantage does this provide over using `count` with a list?",
       "options": [
@@ -108,6 +117,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Think about what happens when you remove the middle element from a list vs a set."
     },
     {
+      "id": "terraform-variables-outputs-quiz-10",
       "type": "multiple-select",
       "question": "Which validation functions can be used in variable validation blocks?",
       "options": [
@@ -122,6 +132,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Validation blocks support a wide range of Terraform functions."
     },
     {
+      "id": "terraform-variables-outputs-quiz-11",
       "type": "true-false",
       "question": "Setting `sensitive = true` on a variable encrypts the value in the state file.",
       "answer": false,
@@ -129,6 +140,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Think about where Terraform actually stores resource data."
     },
     {
+      "id": "terraform-variables-outputs-quiz-12",
       "type": "fill-blank",
       "question": "To mark a variable as sensitive and hide its value in Terraform output, set _____ = true",
       "answer": "sensitive",
@@ -137,6 +149,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "The attribute name describes what kind of data it protects."
     },
     {
+      "id": "terraform-variables-outputs-quiz-13",
       "type": "code-output",
       "question": "Given this configuration, how many subnets will be created?",
       "code": "variable \"availability_zones\" {\n  default = [\"us-east-1a\", \"us-east-1b\", \"us-east-1c\"]\n}\n\nresource \"aws_subnet\" \"public\" {\n  count = length(var.availability_zones)\n  availability_zone = var.availability_zones[count.index]\n  cidr_block = \"10.0.${count.index}.0/24\"\n}",
@@ -152,6 +165,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Count the number of items in the availability_zones list."
     },
     {
+      "id": "terraform-variables-outputs-quiz-14",
       "type": "mcq",
       "question": "What is the correct way to access a module's output value in the root module?",
       "options": [
@@ -165,11 +179,13 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "The syntax starts with the keyword 'module'."
     },
     {
+      "id": "terraform-variables-outputs-quiz-15",
       "type": "flashcard",
       "question": "What is the purpose of output values in Terraform?",
       "answer": "**Output values serve four main purposes:**\n\n1. **Display information** after `terraform apply` (e.g., IP addresses, URLs)\n2. **Share data** between root and child modules\n3. **Query infrastructure** state using `terraform output`\n4. **Provide values** to external systems (via `-json` flag)\n\n**Example:**\n```hcl\noutput \"instance_ip\" {\n  value = aws_instance.web.public_ip\n}\n```\n\nQuery with: `terraform output instance_ip`"
     },
     {
+      "id": "terraform-variables-outputs-quiz-16",
       "type": "code-completion",
       "question": "Complete the validation block to ensure the environment is one of: dev, staging, or prod",
       "instruction": "Fill in the missing condition",
@@ -180,6 +196,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "explanation": "The `contains()` function checks if a value exists in a list. Syntax: `contains(list, value)`. This validates that `var.environment` is one of the allowed values."
     },
     {
+      "id": "terraform-variables-outputs-quiz-17",
       "type": "multiple-select",
       "question": "Which statements about complex types are TRUE?",
       "options": [
@@ -194,6 +211,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Complex types build on the rules of their component types."
     },
     {
+      "id": "terraform-variables-outputs-quiz-18",
       "type": "true-false",
       "question": "When using *.auto.tfvars files, Terraform loads them automatically in alphabetical order without needing the -var-file flag.",
       "answer": true,
@@ -201,6 +219,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "The '.auto.' in the filename is a hint about its behavior."
     },
     {
+      "id": "terraform-variables-outputs-quiz-19",
       "type": "mcq",
       "question": "Which approach is BEST PRACTICE for storing database passwords in Terraform?",
       "options": [
@@ -214,6 +233,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Think about where secrets should actually be stored and managed."
     },
     {
+      "id": "terraform-variables-outputs-quiz-20",
       "type": "code-output",
       "question": "What will happen when you run terraform apply with this configuration?",
       "code": "variable \"project_name\" {\n  type = string\n  # No default value\n}\n\nresource \"aws_vpc\" \"main\" {\n  cidr_block = \"10.0.0.0/16\"\n  tags = {\n    Name = var.project_name\n  }\n}",
@@ -229,6 +249,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Required variables must be provided somehow."
     },
     {
+      "id": "terraform-variables-outputs-quiz-21",
       "type": "fill-blank",
       "question": "To set a Terraform variable via environment variable, use the prefix _____",
       "answer": "TF_VAR_",
@@ -237,11 +258,13 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "The prefix is three characters followed by an underscore."
     },
     {
+      "id": "terraform-variables-outputs-quiz-22",
       "type": "flashcard",
       "question": "Explain the difference between `count` and `for_each` when creating multiple resources.",
       "answer": "**count:**\n- Creates resources indexed by number: `[0]`, `[1]`, `[2]`\n- Order matters; removing middle item shifts indexes\n- Can cause unintended resource destruction/recreation\n- Use for: simple, fixed-count resources\n\n**for_each:**\n- Creates resources keyed by value: `[\"web\"]`, `[\"app\"]`\n- No index shifting; remove by name\n- Safer for dynamic resource sets\n- Works with: sets and maps\n- Use for: resources that change dynamically\n\n**Example impact:**\nWith `count`, removing `[1]` makes `[2]` become `[1]` → destroys & recreates.\nWith `for_each`, removing `[\"app\"]` only removes that one resource."
     },
     {
+      "id": "terraform-variables-outputs-quiz-23",
       "type": "mcq",
       "question": "In a map of objects variable, what does `each.key` represent when used with `for_each`?",
       "options": [
@@ -255,6 +278,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Think about the structure: map has keys and values."
     },
     {
+      "id": "terraform-variables-outputs-quiz-24",
       "type": "code-completion",
       "question": "Complete the object type definition for an instance configuration:",
       "instruction": "Fill in the missing type structure",
@@ -269,6 +293,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "explanation": "An object type requires defining the schema with field names and their types: `object({instance_type = string, ami = string, monitoring = bool})`. Field order doesn't matter, but all fields must be defined."
     },
     {
+      "id": "terraform-variables-outputs-quiz-25",
       "type": "multiple-select",
       "question": "Which are valid ways to provide variable values to Terraform? (Select all that apply)",
       "options": [
@@ -283,6 +308,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Terraform provides multiple ways to set variables for flexibility."
     },
     {
+      "id": "terraform-variables-outputs-quiz-26",
       "type": "true-false",
       "question": "The 'any' type should be preferred over specific types like 'string' or 'number' because it provides more flexibility.",
       "answer": false,
@@ -290,6 +316,7 @@ prev: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Consider the trade-off between flexibility and safety/clarity."
     },
     {
+      "id": "terraform-variables-outputs-quiz-27",
       "type": "drag-drop",
       "question": "Arrange these file organization elements in the recommended structure:",
       "instruction": "Drag to arrange in logical order for a Terraform project",

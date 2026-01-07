@@ -11,6 +11,7 @@ next: /quiz/aws/07-identity-and-access-management
 {
   "questions": [
     {
+      "id": "aws-load-balancing-scaling-quiz-01",
       "type": "mcq",
       "question": "Which load balancer type would be MOST appropriate for a gaming application requiring ultra-low latency and static IP addresses for player connections?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Consider which load balancer operates at Layer 4 and supports static IP addresses."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-02",
       "type": "multiple-select",
       "question": "Which of the following are valid target types for an Application Load Balancer?",
       "options": [
@@ -38,6 +40,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Think about what compute resources can handle HTTP/HTTPS requests."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-03",
       "type": "code-output",
       "question": "An ALB listener has the following rules configured. A request comes in for `https://api.example.com/users`. Which target group receives the request?",
       "code": "Priority   Condition              Action\n-----------------------------------------------\n1          Path: /api/*           → API-TG\n10         Host: admin.*          → Admin-TG\n100        Header: X-User: admin  → Admin-TG\nDefault    (No match)             → Default-TG",
@@ -53,6 +56,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Evaluate each rule condition carefully and remember that rules are evaluated by priority."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-04",
       "type": "true-false",
       "question": "In a Network Load Balancer, client IP addresses are preserved and visible to the target instances without requiring X-Forwarded-For headers.",
       "answer": true,
@@ -60,6 +64,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Consider the difference between Layer 4 and Layer 7 load balancing."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-05",
       "type": "fill-blank",
       "question": "The __________ period allows in-flight requests to complete before fully de-registering a target from a load balancer.",
       "answer": "deregistration delay",
@@ -68,6 +73,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "This feature is also called 'connection draining' in some contexts."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-06",
       "type": "mcq",
       "question": "A target in an ALB target group is failing health checks. What happens to traffic routing?",
       "options": [
@@ -81,6 +87,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Health checks determine which targets receive traffic."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-07",
       "type": "drag-drop",
       "question": "Arrange these steps in the correct order for how an ALB processes an incoming request:",
       "instruction": "Drag to arrange in the correct order",
@@ -94,6 +101,7 @@ next: /quiz/aws/07-identity-and-access-management
       "explanation": "The ALB workflow: (1) Listener receives the request on configured protocol/port, (2) Listener rules are evaluated based on conditions, (3) Request is routed to the matching target group, (4) Load balancer performs health check validation and sends to a healthy target."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-08",
       "type": "multiple-select",
       "question": "Which routing conditions can be used in ALB listener rules?",
       "options": [
@@ -108,6 +116,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Think about HTTP request attributes that ALB can inspect."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-09",
       "type": "code-completion",
       "question": "Complete the health check configuration for a target group:",
       "instruction": "Fill in the missing protocol",
@@ -118,6 +127,7 @@ next: /quiz/aws/07-identity-and-access-management
       "explanation": "Health checks for ALB target groups typically use HTTP or HTTPS protocol to check an endpoint path (like /health). The protocol should match the application's requirements."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-10",
       "type": "mcq",
       "question": "What is the PRIMARY purpose of a Launch Template in Auto Scaling?",
       "options": [
@@ -131,6 +141,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Think about what information is needed to create a new EC2 instance."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-11",
       "type": "true-false",
       "question": "Launch Configurations support versioning and can be modified after creation, making them the recommended choice over Launch Templates.",
       "answer": false,
@@ -138,6 +149,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Consider which option is marked as 'Legacy' in the content."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-12",
       "type": "mcq",
       "question": "An Auto Scaling Group is configured with Min: 2, Desired: 4, Max: 10. Due to a traffic spike, the ASG scales to 8 instances. When traffic returns to normal, what is the MINIMUM number of instances the ASG will maintain?",
       "options": [
@@ -151,11 +163,13 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "The 'Min' setting represents the absolute minimum number of instances."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-13",
       "type": "flashcard",
       "question": "What is Target Tracking Scaling?",
       "answer": "**Target Tracking Scaling** is an Auto Scaling policy that automatically adjusts capacity to maintain a specific metric at a target value.\n\n**Example:** Keep average CPU utilization at 50%\n\n**How it works:**\n- If CPU exceeds 50%, ASG adds instances\n- If CPU falls below 50%, ASG removes instances\n- Continuously monitors and adjusts to maintain the target\n\n**Benefits:** Easiest to configure, automatically calculates scaling adjustments, no need to define step scaling rules."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-14",
       "type": "multiple-select",
       "question": "Which scaling policy types are available for EC2 Auto Scaling?",
       "options": [
@@ -170,6 +184,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Think about different ways to determine when and how to scale capacity."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-15",
       "type": "code-output",
       "question": "An Auto Scaling Group has Step Scaling configured as follows. Current CPU is at 68%. How many instances will be added?",
       "code": "Step Scaling Policy:\n• CPU 50-60%: Add 1 instance\n• CPU 60-70%: Add 2 instances\n• CPU >70%:   Add 3 instances\n\nCurrent State:\n• CPU Utilization: 68%\n• Current Instances: 5",
@@ -185,6 +200,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Find which CPU range 68% falls into."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-16",
       "type": "fill-blank",
       "question": "The __________ period prevents rapid, successive scaling actions by temporarily ignoring new scaling requests after a scaling action completes.",
       "answer": "cooldown",
@@ -193,6 +209,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "This period helps instances 'cool down' before evaluating scaling again."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-17",
       "type": "mcq",
       "question": "Which Auto Scaling policy type would be BEST for an e-commerce application that experiences predictable traffic spikes every day at 8 AM and 6 PM?",
       "options": [
@@ -206,6 +223,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "The traffic pattern is predictable (same time daily), so one policy can handle the scheduled aspect."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-18",
       "type": "true-false",
       "question": "When using Target Tracking Scaling, you need to manually configure cooldown periods for scale-in and scale-out actions.",
       "answer": false,
@@ -213,6 +231,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Target Tracking is designed to be the easiest Auto Scaling policy to configure."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-19",
       "type": "mcq",
       "question": "An Auto Scaling Group is deployed across 3 Availability Zones with 'Balanced Best Effort' distribution strategy. The desired capacity is 6 instances, but AZ-A becomes unavailable. What happens?",
       "options": [
@@ -226,11 +245,13 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "The key word is 'Best Effort'—it tries to balance but prioritizes capacity."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-20",
       "type": "flashcard",
       "question": "What is the difference between ALB and NLB?",
       "answer": "**Application Load Balancer (ALB) - Layer 7**\n- Protocol: HTTP, HTTPS, gRPC\n- Routing: Path, host, header, query string based\n- Use case: Web apps, microservices, APIs\n- Features: Content-based routing, WebSocket, HTTP/2\n\n**Network Load Balancer (NLB) - Layer 4**\n- Protocol: TCP, UDP, TLS\n- Performance: Ultra-low latency (~100 μs), millions of req/sec\n- Static IP: One per AZ, Elastic IP support\n- Use case: Extreme performance, gaming, IoT, TCP/UDP apps\n- Preserves client IP without X-Forwarded-For"
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-21",
       "type": "multiple-select",
       "question": "What are valid listener actions in an Application Load Balancer?",
       "options": [
@@ -245,6 +266,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Think about what actions can be performed on HTTP/HTTPS requests at the load balancer level."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-22",
       "type": "mcq",
       "question": "What is the purpose of the 'health check grace period' in an Auto Scaling Group integrated with a load balancer?",
       "options": [
@@ -258,6 +280,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Think about what happens immediately after a new instance is launched."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-23",
       "type": "code-completion",
       "question": "Complete the target group attribute configuration:",
       "instruction": "Fill in the missing load balancing algorithm option",
@@ -269,6 +292,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "There are two common algorithms: one that distributes evenly, and one that considers target load."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-24",
       "type": "true-false",
       "question": "Gateway Load Balancer (GWLB) operates at Layer 3 and is primarily used for deploying and managing third-party virtual appliances like firewalls and intrusion detection systems.",
       "answer": true,
@@ -276,6 +300,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Think about which load balancer is designed for network security appliances."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-25",
       "type": "mcq",
       "question": "A web application uses an ALB with session stickiness enabled. What happens when a target instance becomes unhealthy?",
       "options": [
@@ -289,11 +314,13 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "High availability is a key benefit of load balancers."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-26",
       "type": "flashcard",
       "question": "What is Predictive Scaling?",
       "answer": "**Predictive Scaling** is an ML-based Auto Scaling feature that proactively scales capacity before demand increases.\n\n**How it works:**\n- Analyzes historical CloudWatch metric data\n- Uses machine learning to forecast future traffic patterns\n- Automatically scales capacity ahead of predicted demand\n- Works alongside dynamic scaling policies\n\n**Best for:** Applications with recurring patterns (daily, weekly traffic cycles)\n\n**Example:** An online learning platform that sees traffic spike every weekday at 9 AM when classes start—Predictive Scaling can add capacity at 8:50 AM proactively."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-27",
       "type": "drag-drop",
       "question": "Arrange these Auto Scaling capacity values in the correct order from smallest to largest:",
       "instruction": "Drag to arrange from smallest to largest",
@@ -306,6 +333,7 @@ next: /quiz/aws/07-identity-and-access-management
       "explanation": "The capacity hierarchy is: Minimum ≤ Desired ≤ Maximum. The ASG will never go below minimum, tries to maintain desired capacity, and will not exceed maximum even under extreme load."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-28",
       "type": "multiple-select",
       "question": "Which benefits does Elastic Load Balancing provide?",
       "options": [
@@ -320,6 +348,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Focus on traffic distribution, health, security, and monitoring features."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-29",
       "type": "mcq",
       "question": "Which scenario would benefit MOST from using 'Slow Start Mode' in an ALB target group?",
       "options": [
@@ -333,6 +362,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Think about applications that perform better after an initial warm-up period."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-30",
       "type": "code-output",
       "question": "An Auto Scaling Group has the following configuration. A scaling action is triggered at T+0 to add 2 instances. At T+1 minute, another alarm triggers. What happens?",
       "code": "Auto Scaling Group Configuration:\n├─ Default cooldown: 300 seconds\n├─ Scaling policy: Simple Scaling\n└─ Action: Add 2 instances when CPU > 70%\n\nTimeline:\nT+0:   CPU = 75%, scaling action triggered (Add 2)\nT+1m:  CPU = 80%, alarm triggers again\nT+5m:  Cooldown period ends",
@@ -348,6 +378,7 @@ next: /quiz/aws/07-identity-and-access-management
       "hint": "Cooldown prevents scaling actions during the specified period after a scaling event."
     },
     {
+      "id": "aws-load-balancing-scaling-quiz-31",
       "type": "fill-blank",
       "question": "In ALB, the __________ threshold determines how many consecutive successful health checks are required before a target is marked as healthy.",
       "answer": "healthy",

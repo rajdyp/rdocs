@@ -11,6 +11,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
 {
   "questions": [
     {
+      "id": "aws-compute-services-quiz-01",
       "type": "mcq",
       "question": "What is the core capability that Amazon EC2 provides?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Think about what 'Elastic Compute Cloud' literally means."
     },
     {
+      "id": "aws-compute-services-quiz-02",
       "type": "multiple-select",
       "question": "Which components are essential parts of an EC2 instance configuration?",
       "options": [
@@ -38,6 +40,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Lambda is a different AWS service, not part of EC2 configuration."
     },
     {
+      "id": "aws-compute-services-quiz-03",
       "type": "true-false",
       "question": "When an EC2 instance is in the 'Stopped' state, you are still charged for compute resources.",
       "answer": false,
@@ -45,6 +48,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Think about what 'stopped' means—is the compute running?"
     },
     {
+      "id": "aws-compute-services-quiz-04",
       "type": "mcq",
       "question": "In the instance type naming 'm5.2xlarge', what does the 'm' represent?",
       "options": [
@@ -58,6 +62,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "General purpose instances are balanced—think about what letter might represent 'middle ground'."
     },
     {
+      "id": "aws-compute-services-quiz-05",
       "type": "fill-blank",
       "question": "What instance family letter designation is used for compute optimized instances that are ideal for high-performance processors?",
       "answer": "C",
@@ -66,6 +71,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "It's a single letter that might stand for 'Compute'."
     },
     {
+      "id": "aws-compute-services-quiz-06",
       "type": "mcq",
       "question": "Which instance attribute suffix indicates that the instance includes AWS Graviton processors?",
       "options": [
@@ -79,6 +85,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Think about what letter 'Graviton' starts with."
     },
     {
+      "id": "aws-compute-services-quiz-07",
       "type": "multiple-select",
       "question": "Which instance families are specifically designed for workloads requiring large amounts of RAM?",
       "options": [
@@ -93,6 +100,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Look for families specifically mentioned as 'Memory Optimized'."
     },
     {
+      "id": "aws-compute-services-quiz-08",
       "type": "drag-drop",
       "question": "Arrange these steps in the correct order for selecting an EC2 instance type:",
       "instruction": "Drag to arrange in the correct order",
@@ -106,6 +114,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "explanation": "The correct workflow is: 1) Identify what the application needs, 2) Analyze where bottlenecks occur (CPU, memory, I/O, GPU), 3) Use AWS Compute Optimizer for ML-based recommendations, 4) Monitor and adjust based on actual usage."
     },
     {
+      "id": "aws-compute-services-quiz-09",
       "type": "true-false",
       "question": "An Amazon Machine Image (AMI) contains only the operating system and cannot include application software.",
       "answer": false,
@@ -113,6 +122,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Think about why custom AMIs are useful—would they be helpful if they only had the OS?"
     },
     {
+      "id": "aws-compute-services-quiz-10",
       "type": "mcq",
       "question": "What are the three main components of an AMI?",
       "options": [
@@ -126,6 +136,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Think about what's needed to define an image: the template itself, who can use it, and what storage to attach."
     },
     {
+      "id": "aws-compute-services-quiz-11",
       "type": "multiple-select",
       "question": "Which AMI types are available for use in AWS?",
       "options": [
@@ -140,6 +151,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Lambda is a different service—focus on EC2-specific image types."
     },
     {
+      "id": "aws-compute-services-quiz-12",
       "type": "mcq",
       "question": "Which AMI virtualization type is recommended for all new EC2 instances?",
       "options": [
@@ -153,6 +165,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "The question asks for 'new' instances—which technology is modern vs. legacy?"
     },
     {
+      "id": "aws-compute-services-quiz-13",
       "type": "true-false",
       "question": "An EBS-backed AMI allows you to stop an instance without losing data, while an instance store-backed AMI does not.",
       "answer": true,
@@ -160,6 +173,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Think about what 'persistent' vs 'ephemeral' storage means."
     },
     {
+      "id": "aws-compute-services-quiz-14",
       "type": "code-completion",
       "question": "Complete the command to change permissions on an SSH key pair file to read-only for the owner:",
       "instruction": "Fill in the missing permission code",
@@ -170,6 +184,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "explanation": "The command 'chmod 400' sets read-only permissions for the owner and no permissions for group/others. This is required for SSH private key security."
     },
     {
+      "id": "aws-compute-services-quiz-15",
       "type": "mcq",
       "question": "Which EBS volume type provides the highest IOPS performance?",
       "options": [
@@ -183,6 +198,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Look for 'Provisioned IOPS' and the highest number."
     },
     {
+      "id": "aws-compute-services-quiz-16",
       "type": "multiple-select",
       "question": "Which statements are true about EBS volumes?",
       "options": [
@@ -197,6 +213,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Think about what makes EBS 'elastic' and persistent vs ephemeral."
     },
     {
+      "id": "aws-compute-services-quiz-17",
       "type": "mcq",
       "question": "Which EBS volume type would be most cost-effective for infrequently accessed data with low performance requirements?",
       "options": [
@@ -210,6 +227,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "The word 'Cold' in the name suggests infrequent access."
     },
     {
+      "id": "aws-compute-services-quiz-18",
       "type": "true-false",
       "question": "EBS Multi-Attach allows a single EBS volume to be attached to multiple EC2 instances simultaneously, but only works with io2 volume types.",
       "answer": true,
@@ -217,6 +235,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Think about which volume type is designed for the highest performance and most advanced features."
     },
     {
+      "id": "aws-compute-services-quiz-19",
       "type": "multiple-select",
       "question": "What are the key characteristics of Instance Store volumes?",
       "options": [
@@ -231,11 +250,13 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Instance Store is 'ephemeral'—what does that mean for data persistence?"
     },
     {
+      "id": "aws-compute-services-quiz-20",
       "type": "flashcard",
       "question": "What is the difference between EBS and Instance Store?",
       "answer": "**EBS (Elastic Block Store)**\n- Network-attached storage\n- Persistent (survives stop/terminate)\n- Can detach and reattach\n- Snapshots for backup\n- Use case: Boot volumes, databases\n\n**Instance Store**\n- Physically attached storage\n- Ephemeral (lost on stop/terminate/failure)\n- Very high IOPS/throughput\n- No additional cost\n- Use case: Caches, buffers, temporary data"
     },
     {
+      "id": "aws-compute-services-quiz-21",
       "type": "true-false",
       "question": "An Elastic IP address is free when allocated but not associated with a running instance.",
       "answer": false,
@@ -243,6 +264,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "AWS charges for unused resources to encourage efficiency."
     },
     {
+      "id": "aws-compute-services-quiz-22",
       "type": "mcq",
       "question": "What is the primary use case for Elastic IP addresses?",
       "options": [
@@ -256,6 +278,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Think about why a 'static' IP that can be 'remapped' is valuable."
     },
     {
+      "id": "aws-compute-services-quiz-23",
       "type": "mcq",
       "question": "What is the default quota limit for Elastic IP addresses per region?",
       "options": [
@@ -269,6 +292,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "It's a small single-digit number to encourage efficient use."
     },
     {
+      "id": "aws-compute-services-quiz-24",
       "type": "multiple-select",
       "question": "Which EC2 pricing models require a commitment to reduce costs?",
       "options": [
@@ -283,6 +307,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Which models explicitly mention 'commit' in their descriptions?"
     },
     {
+      "id": "aws-compute-services-quiz-25",
       "type": "mcq",
       "question": "Which pricing model offers the most flexibility to change instance families and regions?",
       "options": [
@@ -296,6 +321,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "The word 'Compute' suggests it's not tied to specific instance configurations."
     },
     {
+      "id": "aws-compute-services-quiz-26",
       "type": "true-false",
       "question": "Spot Instances can be interrupted by AWS with a 2-minute warning when AWS needs the capacity back.",
       "answer": true,
@@ -303,6 +329,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Spot instances are cheap because they're interruptible—how much notice do you get?"
     },
     {
+      "id": "aws-compute-services-quiz-27",
       "type": "mcq",
       "question": "What is the primary difference between Dedicated Hosts and Dedicated Instances?",
       "options": [
@@ -316,11 +343,13 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Think about use cases like software licensing that require physical server details."
     },
     {
+      "id": "aws-compute-services-quiz-28",
       "type": "flashcard",
       "question": "When should you use Spot Instances?",
       "answer": "**Spot Instances are ideal for:**\n- Fault-tolerant workloads\n- Flexible start/end times\n- Batch processing jobs\n- Data analysis\n- Background processing\n- Testing and development\n\n**Avoid Spot Instances for:**\n- Critical production workloads\n- Databases requiring high availability\n- Applications that can't handle interruptions\n\n**Key benefit:** Up to 90% cost savings vs On-Demand"
     },
     {
+      "id": "aws-compute-services-quiz-29",
       "type": "drag-drop",
       "question": "Arrange these EC2 Image Builder workflow steps in the correct order:",
       "instruction": "Drag to arrange in the correct order",
@@ -334,6 +363,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "explanation": "EC2 Image Builder workflow: 1) Define Image Recipe (what to build), 2) Infrastructure Configuration (where/how to build), 3) Build Process (actually build and test), 4) Distribution (deploy to regions/accounts)."
     },
     {
+      "id": "aws-compute-services-quiz-30",
       "type": "multiple-select",
       "question": "What are the key benefits of using EC2 Image Builder over manual AMI creation?",
       "options": [
@@ -348,6 +378,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Image Builder is about image creation and management, not runtime cost optimization."
     },
     {
+      "id": "aws-compute-services-quiz-31",
       "type": "mcq",
       "question": "Which key pair type is more secure and uses a smaller key size?",
       "options": [
@@ -361,6 +392,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "The question mentions 'more secure' and 'smaller'—which is the modern alternative to RSA?"
     },
     {
+      "id": "aws-compute-services-quiz-32",
       "type": "code-output",
       "question": "You launch an EC2 instance with an EBS root volume and instance store volumes. You stop the instance and then start it again. What happens to the data?",
       "code": "Initial state:\n- EBS Root Volume: Contains OS and app (10 GB)\n- Instance Store: Contains cache data (100 GB)\n\nAction: Stop instance → Start instance\n\nResult:",
@@ -376,6 +408,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Remember: EBS = persistent, Instance Store = ephemeral"
     },
     {
+      "id": "aws-compute-services-quiz-33",
       "type": "fill-blank",
       "question": "What is the minimum time period in seconds that you are billed for when running an On-Demand EC2 instance?",
       "answer": "60",
@@ -384,6 +417,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "There's a minimum charge period, then billing is per-second."
     },
     {
+      "id": "aws-compute-services-quiz-34",
       "type": "mcq",
       "question": "You need to run a high-memory workload for in-memory databases. Which instance family should you choose?",
       "options": [
@@ -397,6 +431,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Think about what letter might represent 'RAM'."
     },
     {
+      "id": "aws-compute-services-quiz-35",
       "type": "true-false",
       "question": "You can change the instance type of a running EC2 instance without stopping it first.",
       "answer": false,
@@ -404,6 +439,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Think about whether hardware changes can happen while a server is running."
     },
     {
+      "id": "aws-compute-services-quiz-36",
       "type": "multiple-select",
       "question": "Which of the following are valid EC2 instance lifecycle states?",
       "options": [
@@ -418,6 +454,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Think about what actions you can take on an EC2 instance—there's no 'pause' button."
     },
     {
+      "id": "aws-compute-services-quiz-37",
       "type": "mcq",
       "question": "What happens to an EC2 instance's public IP address when you stop and then start the instance?",
       "options": [
@@ -431,11 +468,13 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "Think about why Elastic IPs exist—what problem do they solve?"
     },
     {
+      "id": "aws-compute-services-quiz-38",
       "type": "flashcard",
       "question": "What is the difference between Stopping and Terminating an EC2 instance?",
       "answer": "**Stopping an Instance:**\n- Instance is shut down but can be restarted\n- EBS root volume data is preserved\n- No compute charges (EBS storage charges apply)\n- Instance ID and private IP retained\n- Can change instance type\n\n**Terminating an Instance:**\n- Instance is permanently deleted\n- Cannot be restarted\n- Resources are released\n- EBS volumes deleted (unless configured to persist)\n- Instance ID cannot be reused"
     },
     {
+      "id": "aws-compute-services-quiz-39",
       "type": "mcq",
       "question": "Which HDD-backed EBS volume type is optimized for frequently accessed, throughput-intensive workloads like big data and data warehouses?",
       "options": [
@@ -449,6 +488,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "hint": "The words 'Throughput Optimized' and 'frequently accessed' match the question."
     },
     {
+      "id": "aws-compute-services-quiz-40",
       "type": "true-false",
       "question": "AWS Compute Optimizer uses machine learning to analyze historical resource usage and recommend optimal instance types.",
       "answer": true,

@@ -11,6 +11,7 @@ next: /quiz/kubernetes/12-configuration
 {
   "questions": [
     {
+      "id": "kubernetes-storage-quiz-01",
       "type": "mcq",
       "question": "What happens to data stored in a pod's local filesystem when the pod is deleted?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "Think about the ephemeral nature of pods in Kubernetes."
     },
     {
+      "id": "kubernetes-storage-quiz-02",
       "type": "true-false",
       "question": "An emptyDir volume survives pod deletion and can be reused by a new pod.",
       "answer": false,
@@ -31,6 +33,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "Consider the lifecycle relationship between emptyDir and the pod."
     },
     {
+      "id": "kubernetes-storage-quiz-03",
       "type": "multiple-select",
       "question": "Which of the following are valid use cases for emptyDir volumes?",
       "options": [
@@ -45,6 +48,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "Remember that emptyDir is ephemeral and pod-scoped."
     },
     {
+      "id": "kubernetes-storage-quiz-04",
       "type": "code-output",
       "question": "Given this emptyDir configuration, what happens if the pod tries to write 2Gi of data?",
       "code": "volumes:\n- name: cache\n  emptyDir:\n    sizeLimit: 1Gi",
@@ -60,6 +64,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "Consider what happens when a resource limit is exceeded in Kubernetes."
     },
     {
+      "id": "kubernetes-storage-quiz-05",
       "type": "mcq",
       "question": "What is the primary security concern with using hostPath volumes?",
       "options": [
@@ -73,6 +78,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "Think about what 'hostPath' means - accessing the host's files."
     },
     {
+      "id": "kubernetes-storage-quiz-06",
       "type": "fill-blank",
       "question": "In a hostPath volume configuration, the `type: ___` ensures the path exists as a directory before mounting.",
       "answer": "Directory",
@@ -81,6 +87,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "It's a type that validates the path is a folder structure."
     },
     {
+      "id": "kubernetes-storage-quiz-07",
       "type": "drag-drop",
       "question": "Arrange these steps in the correct order for the PV-PVC binding process:",
       "instruction": "Drag to arrange from first to last step",
@@ -95,6 +102,7 @@ next: /quiz/kubernetes/12-configuration
       "explanation": "The PV-PVC workflow: First, an admin provisions a PV. Then, a user requests storage via PVC. Kubernetes automatically binds the PVC to a suitable PV. The pod references the PVC name, and finally the pod can use the storage."
     },
     {
+      "id": "kubernetes-storage-quiz-08",
       "type": "mcq",
       "question": "A pod needs persistent storage that can be mounted by multiple pods across different nodes simultaneously for read and write operations. Which access mode is required?",
       "options": [
@@ -108,11 +116,13 @@ next: /quiz/kubernetes/12-configuration
       "hint": "The requirement is 'multiple nodes' AND 'read-write'."
     },
     {
+      "id": "kubernetes-storage-quiz-09",
       "type": "flashcard",
       "question": "What is the difference between a PersistentVolume (PV) and a PersistentVolumeClaim (PVC)?",
       "answer": "**PersistentVolume (PV)**: A cluster-level storage resource provisioned by administrators. It represents actual storage (NFS, EBS, etc.) with specific capacity and access modes.\n\n**PersistentVolumeClaim (PVC)**: A user's request for storage. It's like a \"storage voucher\" that asks for specific storage requirements (size, access mode). Kubernetes binds PVCs to suitable PVs.\n\n**Analogy**: PV is like a parking spot, PVC is like a parking ticket requesting a spot."
     },
     {
+      "id": "kubernetes-storage-quiz-10",
       "type": "code-completion",
       "question": "Complete the PVC manifest to request 50Gi of storage:",
       "instruction": "Fill in the missing storage size",
@@ -123,6 +133,7 @@ next: /quiz/kubernetes/12-configuration
       "explanation": "In Kubernetes resource requests, storage is specified with units like Gi (gibibytes), Mi (mebibytes), etc. The format is a number followed by the unit."
     },
     {
+      "id": "kubernetes-storage-quiz-11",
       "type": "mcq",
       "question": "What problem does StorageClass solve that manual PV provisioning cannot?",
       "options": [
@@ -136,6 +147,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "Think about the word 'dynamic' in dynamic provisioning."
     },
     {
+      "id": "kubernetes-storage-quiz-12",
       "type": "multiple-select",
       "question": "Which of the following are components/parameters typically found in a StorageClass definition?",
       "options": [
@@ -151,6 +163,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "Think about storage-specific configuration, not pod configuration."
     },
     {
+      "id": "kubernetes-storage-quiz-13",
       "type": "true-false",
       "question": "When a PVC with reclaimPolicy: Retain is deleted, the underlying PersistentVolume and its data are automatically deleted.",
       "answer": false,
@@ -158,6 +171,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "What does 'Retain' mean in everyday language?"
     },
     {
+      "id": "kubernetes-storage-quiz-14",
       "type": "code-output",
       "question": "A StorageClass has `volumeBindingMode: WaitForFirstConsumer`. When does the actual storage get provisioned?",
       "code": "apiVersion: storage.k8s.io/v1\nkind: StorageClass\nmetadata:\n  name: fast-ssd\nprovisioner: ebs.csi.aws.com\nvolumeBindingMode: WaitForFirstConsumer",
@@ -173,11 +187,13 @@ next: /quiz/kubernetes/12-configuration
       "hint": "The keyword is 'FirstConsumer' - think about when the consumer (pod) appears."
     },
     {
+      "id": "kubernetes-storage-quiz-15",
       "type": "flashcard",
       "question": "What is CSI (Container Storage Interface) and why is it important?",
       "answer": "**CSI** is a standard interface that allows storage vendors to write one plugin that works across multiple container orchestrators (Kubernetes, Mesos, etc.).\n\n**Before CSI**: Each storage provider had to write Kubernetes-specific code, tightly coupled to K8s releases.\n\n**After CSI**: Storage providers implement the standard CSI interface. This allows:\n- Decoupling: Storage drivers can update independently of Kubernetes\n- Portability: Same driver works across orchestrators\n- Innovation: Easier for new storage providers to integrate\n\n**Example**: AWS EBS CSI driver (`ebs.csi.aws.com`) can be updated by AWS without waiting for Kubernetes releases."
     },
     {
+      "id": "kubernetes-storage-quiz-16",
       "type": "mcq",
       "question": "In a StatefulSet with volumeClaimTemplates creating 3 replicas, how many PVCs are automatically created?",
       "options": [
@@ -191,6 +207,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "StatefulSets are designed for applications where each instance needs its own state."
     },
     {
+      "id": "kubernetes-storage-quiz-17",
       "type": "code-completion",
       "question": "Complete the pod manifest to mount a PVC named 'app-data':",
       "instruction": "Fill in the PVC reference",
@@ -201,6 +218,7 @@ next: /quiz/kubernetes/12-configuration
       "explanation": "To use a PVC in a pod, you reference it under `volumes` with `persistentVolumeClaim.claimName` pointing to the PVC's name. The pod must be in the same namespace as the PVC."
     },
     {
+      "id": "kubernetes-storage-quiz-18",
       "type": "multiple-select",
       "question": "Which storage provisioners would be appropriate for a multi-cloud or on-premise Kubernetes cluster?",
       "options": [
@@ -215,6 +233,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "Which provisioners don't have cloud provider names in them?"
     },
     {
+      "id": "kubernetes-storage-quiz-19",
       "type": "mcq",
       "question": "What is the primary use case for mounting ConfigMaps and Secrets as volumes instead of using environment variables?",
       "options": [
@@ -228,6 +247,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "Think about dynamic configuration updates without restarting pods."
     },
     {
+      "id": "kubernetes-storage-quiz-20",
       "type": "drag-drop",
       "question": "Arrange these storage abstractions from lowest (closest to hardware) to highest (closest to application):",
       "instruction": "Drag from lowest to highest abstraction level",
@@ -242,6 +262,7 @@ next: /quiz/kubernetes/12-configuration
       "explanation": "Abstraction layers from lowest to highest: Physical storage → StorageClass (provisioning template) → PersistentVolume (cluster resource) → PersistentVolumeClaim (user request) → volumeMount (application usage). Each layer abstracts complexity from the layer above."
     },
     {
+      "id": "kubernetes-storage-quiz-21",
       "type": "true-false",
       "question": "A PersistentVolume with accessMode ReadWriteOnce can be mounted by multiple pods as long as they are on the same node.",
       "answer": true,
@@ -249,6 +270,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "RWO is 'once per node', not 'once per pod'."
     },
     {
+      "id": "kubernetes-storage-quiz-22",
       "type": "fill-blank",
       "question": "The ___ policy for a PV determines what happens to the volume when its PVC is deleted.",
       "answer": "reclaim",
@@ -257,6 +279,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "It's about 'reclaiming' storage resources."
     },
     {
+      "id": "kubernetes-storage-quiz-23",
       "type": "mcq",
       "question": "You need storage for a database in a StatefulSet that must survive pod rescheduling, node failures, and cluster upgrades. Which solution is most appropriate?",
       "options": [
@@ -270,6 +293,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "The requirement is survival across pod and node lifecycle events."
     },
     {
+      "id": "kubernetes-storage-quiz-24",
       "type": "code-output",
       "question": "What happens when this StatefulSet is scaled from 3 to 5 replicas?",
       "code": "apiVersion: apps/v1\nkind: StatefulSet\nmetadata:\n  name: db\nspec:\n  replicas: 5\n  volumeClaimTemplates:\n  - metadata:\n      name: data\n    spec:\n      storageClassName: fast\n      accessModes: [\"ReadWriteOnce\"]\n      resources:\n        requests:\n          storage: 10Gi",
@@ -285,11 +309,13 @@ next: /quiz/kubernetes/12-configuration
       "hint": "StatefulSet volumeClaimTemplates provide automatic PVC management."
     },
     {
+      "id": "kubernetes-storage-quiz-25",
       "type": "flashcard",
       "question": "Explain the concept of 'dynamic provisioning' in Kubernetes storage.",
       "answer": "**Dynamic Provisioning** automatically creates PersistentVolumes on-demand when a PVC is created, without manual administrator intervention.\n\n**How it works**:\n1. User creates PVC referencing a StorageClass\n2. StorageClass's provisioner (e.g., AWS EBS CSI) is triggered\n3. Provisioner creates actual storage in backend (e.g., EBS volume)\n4. Provisioner creates PV object in Kubernetes\n5. Kubernetes binds PVC to the new PV\n6. Pod can use storage immediately\n\n**Benefits**:\n- Scalable: No need to pre-create PVs\n- Automated: Reduces manual operations\n- Efficient: Storage created only when needed\n\n**vs. Static Provisioning**: Admin manually creates PVs, users claim from existing pool."
     },
     {
+      "id": "kubernetes-storage-quiz-26",
       "type": "multiple-select",
       "question": "Which scenarios would benefit from using hostPath volumes despite the security risks?",
       "options": [
@@ -304,6 +330,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "Think about pods that need to inspect or monitor the host node itself."
     },
     {
+      "id": "kubernetes-storage-quiz-27",
       "type": "mcq",
       "question": "A PVC has been created but remains in 'Pending' status. What is the most likely cause?",
       "options": [
@@ -317,6 +344,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "Think about the PV-PVC matching process."
     },
     {
+      "id": "kubernetes-storage-quiz-28",
       "type": "true-false",
       "question": "ConfigMaps and Secrets mounted as volumes appear as files in the container's filesystem.",
       "answer": true,
@@ -324,6 +352,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "Think about how volume mounting works in general."
     },
     {
+      "id": "kubernetes-storage-quiz-29",
       "type": "code-completion",
       "question": "Complete the StorageClass to enable volume expansion after creation:",
       "instruction": "Fill in the parameter that allows PVC size increases",
@@ -334,6 +363,7 @@ next: /quiz/kubernetes/12-configuration
       "explanation": "The `allowVolumeExpansion: true` field in a StorageClass permits PVCs using that StorageClass to be expanded after creation by editing the PVC's storage request. Not all storage backends support this feature."
     },
     {
+      "id": "kubernetes-storage-quiz-30",
       "type": "mcq",
       "question": "What is the purpose of the `subPath` field in a volumeMount?",
       "options": [
@@ -347,6 +377,7 @@ next: /quiz/kubernetes/12-configuration
       "hint": "It's about mounting a 'sub' portion of the volume."
     },
     {
+      "id": "kubernetes-storage-quiz-31",
       "type": "flashcard",
       "question": "What are the three reclaim policies for PersistentVolumes and what does each do?",
       "answer": "**1. Retain** (default for manually created PVs):\n- PV is not deleted when PVC is deleted\n- Data is preserved\n- PV status becomes 'Released' (not 'Available')\n- Admin must manually clean up and reclaim\n- Use for: Critical data requiring manual backup\n\n**2. Delete** (default for dynamic provisioning):\n- PV and underlying storage are automatically deleted when PVC is deleted\n- Data is permanently lost\n- Use for: Temporary data, development environments\n\n**3. Recycle** (DEPRECATED):\n- Basic scrub (rm -rf on the volume)\n- PV becomes available for new claims\n- No longer recommended; use Delete + dynamic provisioning instead"

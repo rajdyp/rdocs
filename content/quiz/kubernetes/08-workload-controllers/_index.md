@@ -11,6 +11,7 @@ next: /quiz/kubernetes/09-services
 {
   "questions": [
     {
+      "id": "kubernetes-workload-controllers-quiz-01",
       "type": "mcq",
       "question": "Why should you NOT create ReplicaSets directly in production?",
       "options": [
@@ -24,11 +25,13 @@ next: /quiz/kubernetes/09-services
       "hint": "Think about what features you get with higher-level abstractions."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-02",
       "type": "flashcard",
       "question": "Explain the three nested `spec` levels in a Deployment manifest and what each controls.",
       "answer": "**Three nested spec levels:**\n\n1. **Deployment spec** (top-level): Controls the Deployment lifecycle\n   - `replicas`: How many pods to maintain\n   - `strategy`: Update strategy (RollingUpdate, Recreate)\n   - `selector`: Which pods this Deployment manages\n\n2. **Pod template spec** (under `template.spec`): Defines pod configuration\n   - `volumes`: Storage volumes\n   - `restartPolicy`: Container restart behavior\n   - `securityContext`: Pod-level security settings\n\n3. **Container spec** (under `template.spec.containers`): Individual container settings\n   - `image`: Container image to run\n   - `ports`: Exposed ports\n   - `resources`: CPU/memory requests and limits\n   - `probes`: Liveness and readiness probes"
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-03",
       "type": "multiple-select",
       "question": "During a rolling update with `maxSurge: 1` and `maxUnavailable: 0`, which statements are TRUE?",
       "options": [
@@ -43,6 +46,7 @@ next: /quiz/kubernetes/09-services
       "hint": "Think about zero-downtime deployments and readiness requirements."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-04",
       "type": "code-output",
       "question": "What happens when you apply this configuration to a Deployment currently running 3 replicas of `nginx:1.21`?",
       "code": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: web-app\nspec:\n  replicas: 3\n  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxSurge: 0\n      maxUnavailable: 1\n  template:\n    spec:\n      containers:\n      - name: web\n        image: nginx:1.22",
@@ -58,6 +62,7 @@ next: /quiz/kubernetes/09-services
       "hint": "When maxSurge=0, no extra pods can be created above the replica count."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-05",
       "type": "true-false",
       "question": "The `pod-template-hash` label is manually added by users to track different versions of pods.",
       "answer": false,
@@ -65,6 +70,7 @@ next: /quiz/kubernetes/09-services
       "hint": "Think about who manages internal Kubernetes labels."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-06",
       "type": "fill-blank",
       "question": "The `revisionHistoryLimit` parameter controls how many old _____ are retained for rollback capability.",
       "answer": "ReplicaSets",
@@ -74,6 +80,7 @@ next: /quiz/kubernetes/09-services
       "hint": "What does a Deployment create to manage pods?"
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-07",
       "type": "mcq",
       "question": "You set `minReadySeconds: 30` on a Deployment. A new pod passes its readiness probe at t=10s but crashes at t=25s. What happens?",
       "options": [
@@ -87,6 +94,7 @@ next: /quiz/kubernetes/09-services
       "hint": "This parameter exists to prevent premature rollouts of unstable versions."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-08",
       "type": "code-completion",
       "question": "Complete the Deployment strategy to achieve a blue-green deployment pattern (all new pods created before any old ones are terminated):",
       "instruction": "Fill in the maxSurge value for 3 replicas",
@@ -98,6 +106,7 @@ next: /quiz/kubernetes/09-services
       "hint": "Blue-green means running both versions fully at the same time."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-09",
       "type": "drag-drop",
       "question": "Arrange the rolling update steps in the correct order:",
       "instruction": "Drag to sequence from first to last",
@@ -113,6 +122,7 @@ next: /quiz/kubernetes/09-services
       "explanation": "Rolling updates follow this precise sequence: create new ReplicaSet → gradually scale up new pods → wait for readiness → gradually scale down old pods → complete when old ReplicaSet is at zero."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-10",
       "type": "mcq",
       "question": "What is the primary difference between a Deployment and a StatefulSet?",
       "options": [
@@ -126,6 +136,7 @@ next: /quiz/kubernetes/09-services
       "hint": "Think about what 'stateful' means - stable identity and persistent data."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-11",
       "type": "multiple-select",
       "question": "Which characteristics are true for StatefulSets?",
       "options": [
@@ -140,6 +151,7 @@ next: /quiz/kubernetes/09-services
       "hint": "StatefulSets are all about order and stability."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-12",
       "type": "code-output",
       "question": "A StatefulSet named `database` has 3 replicas. You scale it to 5 replicas. What happens?",
       "code": "kubectl scale statefulset database --replicas=5",
@@ -155,6 +167,7 @@ next: /quiz/kubernetes/09-services
       "hint": "StatefulSets maintain strict ordering during scaling."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-13",
       "type": "fill-blank",
       "question": "A StatefulSet requires a _____ Service to provide stable DNS entries for each pod.",
       "answer": "Headless",
@@ -164,11 +177,13 @@ next: /quiz/kubernetes/09-services
       "hint": "This type of service has clusterIP set to None."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-14",
       "type": "flashcard",
       "question": "Explain what volumeClaimTemplates in a StatefulSet do and how they differ from regular volume claims.",
       "answer": "**volumeClaimTemplates:**\n\n- Creates a **unique PersistentVolumeClaim for each pod** in the StatefulSet\n- Each PVC is bound to a specific pod ordinal (e.g., data-mysql-0, data-mysql-1)\n- **PVCs persist even if pods are deleted** - when a pod is recreated, it reattaches to the same PVC\n- Scaling up creates new PVCs; scaling down does NOT delete PVCs (manual cleanup required)\n\n**vs. Regular volumes:**\n- Regular volumes are shared by all pods or ephemeral\n- volumeClaimTemplates create **per-pod persistent storage**\n- Essential for stateful applications needing individual, persistent data storage"
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-15",
       "type": "mcq",
       "question": "A DaemonSet is deployed to a cluster with 5 nodes. How many pods will be created?",
       "options": [
@@ -182,6 +197,7 @@ next: /quiz/kubernetes/09-services
       "hint": "DaemonSets ensure cluster-wide coverage."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-16",
       "type": "true-false",
       "question": "DaemonSets respect node taints and will not schedule pods on tainted nodes unless the pod has matching tolerations.",
       "answer": true,
@@ -189,6 +205,7 @@ next: /quiz/kubernetes/09-services
       "hint": "Scheduling rules apply consistently across all workload types."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-17",
       "type": "code-output",
       "question": "What happens when you apply this DaemonSet to a cluster with 3 worker nodes and 2 nodes labeled `accelerator=nvidia`?",
       "code": "apiVersion: apps/v1\nkind: DaemonSet\nmetadata:\n  name: gpu-plugin\nspec:\n  selector:\n    matchLabels:\n      app: gpu\n  template:\n    metadata:\n      labels:\n        app: gpu\n    spec:\n      nodeSelector:\n        accelerator: nvidia\n      containers:\n      - name: plugin\n        image: gpu-plugin:1.0",
@@ -204,6 +221,7 @@ next: /quiz/kubernetes/09-services
       "hint": "nodeSelector filters which nodes the DaemonSet runs on."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-18",
       "type": "mcq",
       "question": "What is the main difference between a Job and a Deployment?",
       "options": [
@@ -217,6 +235,7 @@ next: /quiz/kubernetes/09-services
       "hint": "Think about the lifecycle: finite task vs. long-running service."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-19",
       "type": "multiple-select",
       "question": "Which fields control Job parallelism and completion behavior?",
       "options": [
@@ -231,6 +250,7 @@ next: /quiz/kubernetes/09-services
       "hint": "Jobs have different terminology than continuous workloads."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-20",
       "type": "code-output",
       "question": "A Job is configured with `completions: 10` and `parallelism: 3`. How does it execute?",
       "code": "spec:\n  completions: 10\n  parallelism: 3\n  template:\n    spec:\n      containers:\n      - name: worker\n        image: processor:1.0\n      restartPolicy: OnFailure",
@@ -246,6 +266,7 @@ next: /quiz/kubernetes/09-services
       "hint": "Think of parallelism as worker count and completions as total work items."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-21",
       "type": "fill-blank",
       "question": "In a Job spec, what `restartPolicy` values are allowed?",
       "answer": "Never",
@@ -255,11 +276,13 @@ next: /quiz/kubernetes/09-services
       "hint": "Jobs are finite tasks, not long-running services."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-22",
       "type": "flashcard",
       "question": "Explain the three CronJob concurrencyPolicy options and when to use each.",
       "answer": "**CronJob concurrencyPolicy options:**\n\n1. **Allow** (default)\n   - Multiple job instances can run simultaneously\n   - Use when: Jobs are independent and can overlap safely\n   - Example: Hourly log analysis where overlapping is fine\n\n2. **Forbid**\n   - Skip the new job if the previous one hasn't finished\n   - Use when: Jobs must not overlap (e.g., exclusive resource access)\n   - Example: Database backup that locks tables\n\n3. **Replace**\n   - Cancel the running job and start the new one\n   - Use when: Only the latest execution matters\n   - Example: Generating a \"current status\" report where old jobs are obsolete"
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-23",
       "type": "code-completion",
       "question": "Complete the CronJob schedule to run every day at 2:30 AM:",
       "instruction": "Fill in the cron expression",
@@ -271,6 +294,7 @@ next: /quiz/kubernetes/09-services
       "hint": "Format: minute hour day month day-of-week"
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-24",
       "type": "drag-drop",
       "question": "Match these cron expressions with their meanings:",
       "instruction": "Arrange expressions with their schedules",
@@ -284,6 +308,7 @@ next: /quiz/kubernetes/09-services
       "explanation": "Cron expressions: `*/5` = every 5 units, `0 *` = at minute 0 of every hour, `1-5` = Monday-Friday, `0 0 1` = midnight on the 1st day."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-25",
       "type": "true-false",
       "question": "When you delete a StatefulSet with default settings, all associated PersistentVolumeClaims are automatically deleted.",
       "answer": false,
@@ -291,6 +316,7 @@ next: /quiz/kubernetes/09-services
       "hint": "Kubernetes errs on the side of data safety."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-26",
       "type": "mcq",
       "question": "You have a Deployment with 5 replicas and want to temporarily stop it without losing its configuration. What should you do?",
       "options": [
@@ -304,6 +330,7 @@ next: /quiz/kubernetes/09-services
       "hint": "Think about how to maintain 0 pods while keeping the resource."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-27",
       "type": "multiple-select",
       "question": "Which workload controllers create pods that run continuously (not to completion)?",
       "options": [
@@ -318,6 +345,7 @@ next: /quiz/kubernetes/09-services
       "hint": "Which controllers are for services vs. batch tasks?"
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-28",
       "type": "code-output",
       "question": "What is the result of this rollback command when the current revision is 5?",
       "code": "kubectl rollout undo deployment web-app --to-revision=3",
@@ -333,6 +361,7 @@ next: /quiz/kubernetes/09-services
       "hint": "The --to-revision flag allows targeting specific revisions."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-29",
       "type": "mcq",
       "question": "What happens to the old ReplicaSet after a successful rolling update?",
       "options": [
@@ -346,6 +375,7 @@ next: /quiz/kubernetes/09-services
       "hint": "Think about how rollbacks work without re-downloading images."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-30",
       "type": "fill-blank",
       "question": "The `progressDeadlineSeconds` parameter sets a timeout for deployment progress. The default value is _____ seconds.",
       "answer": "600",
@@ -355,6 +385,7 @@ next: /quiz/kubernetes/09-services
       "hint": "It's 10 minutes expressed in seconds."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-31",
       "type": "true-false",
       "question": "A DaemonSet can be configured with rolling update strategy similar to Deployments.",
       "answer": true,
@@ -362,6 +393,7 @@ next: /quiz/kubernetes/09-services
       "hint": "Most Kubernetes resources support gradual updates."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-32",
       "type": "mcq",
       "question": "In the context of Deployments, what does the `selector` field do?",
       "options": [
@@ -375,11 +407,13 @@ next: /quiz/kubernetes/09-services
       "hint": "Selectors are about identifying resources, not placement."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-33",
       "type": "flashcard",
       "question": "Compare the use cases for Deployment vs. StatefulSet vs. DaemonSet. When would you use each?",
       "answer": "**Deployment:**\n- **Use for:** Stateless applications (web apps, APIs, microservices)\n- **Characteristics:** Pods are interchangeable, ephemeral storage, parallel deployment\n- **Example:** REST API server, web frontend, stateless processing service\n\n**StatefulSet:**\n- **Use for:** Stateful applications requiring stable identity and persistent storage\n- **Characteristics:** Ordered pods, stable network IDs, per-pod storage\n- **Example:** Databases (MySQL, PostgreSQL), message brokers (Kafka, RabbitMQ), distributed systems (Zookeeper, etcd)\n\n**DaemonSet:**\n- **Use for:** Cluster-wide services that must run on every node (or selected nodes)\n- **Characteristics:** One pod per node, automatic scaling with cluster\n- **Example:** Log collectors (Fluentd), monitoring agents (Prometheus Node Exporter), network plugins (Calico), storage daemons"
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-34",
       "type": "code-output",
       "question": "A Job has `backoffLimit: 3`. The pod fails 4 times. What happens?",
       "code": "spec:\n  backoffLimit: 3\n  template:\n    spec:\n      containers:\n      - name: worker\n        image: processor:1.0\n      restartPolicy: Never",
@@ -395,6 +429,7 @@ next: /quiz/kubernetes/09-services
       "hint": "backoffLimit is the number of RETRIES, not total attempts."
     },
     {
+      "id": "kubernetes-workload-controllers-quiz-35",
       "type": "multiple-select",
       "question": "Which parameters affect how long a Deployment takes to complete a rolling update?",
       "options": [

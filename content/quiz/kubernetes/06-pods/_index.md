@@ -11,6 +11,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
 {
   "questions": [
     {
+      "id": "kubernetes-pods-quiz-01",
       "type": "mcq",
       "question": "What is the smallest and most basic deployable unit in Kubernetes?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "Think about what wraps containers in Kubernetes."
     },
     {
+      "id": "kubernetes-pods-quiz-02",
       "type": "multiple-select",
       "question": "Which resources are shared by all containers within a Pod?",
       "options": [
@@ -38,6 +40,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "Consider what allows containers to communicate via localhost and share files."
     },
     {
+      "id": "kubernetes-pods-quiz-03",
       "type": "true-false",
       "question": "Containers within the same Pod must use different ports to avoid conflicts.",
       "answer": true,
@@ -45,6 +48,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "Think about what happens when multiple processes share the same IP address."
     },
     {
+      "id": "kubernetes-pods-quiz-04",
       "type": "fill-blank",
       "question": "Containers in a Pod can communicate with each other using which hostname?",
       "answer": "localhost",
@@ -53,6 +57,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "It's the same address you'd use to access services on your own machine."
     },
     {
+      "id": "kubernetes-pods-quiz-05",
       "type": "code-output",
       "question": "Given this Pod configuration, what will happen when you try to access the writer container's file from the reader container?",
       "code": "containers:\n- name: writer\n  image: busybox\n  command: [\"/bin/sh\", \"-c\", \"echo hello > /data/message.txt\"]\n  volumeMounts:\n  - name: shared-data\n    mountPath: /data\n\n- name: reader\n  image: busybox\n  command: [\"/bin/sh\", \"-c\", \"cat /data/message.txt\"]\n  volumeMounts:\n  - name: shared-data\n    mountPath: /data\n\nvolumes:\n- name: shared-data\n  emptyDir: {}",
@@ -68,11 +73,13 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "Consider what `emptyDir` volumes are designed for."
     },
     {
+      "id": "kubernetes-pods-quiz-06",
       "type": "flashcard",
       "question": "What is the Sidecar Pattern?",
       "answer": "**Sidecar Pattern**\n\nA multi-container pod pattern where auxiliary containers enhance the primary container's functionality.\n\n**Common Use Cases:**\n- Log aggregation (Fluentd, Filebeat)\n- Service mesh proxies (Envoy, Istio)\n- Configuration reloaders\n- Monitoring agents\n\n**Key Characteristic:** The sidecar extends or enhances the main container without modifying its code."
     },
     {
+      "id": "kubernetes-pods-quiz-07",
       "type": "drag-drop",
       "question": "Arrange these container lifecycle events in the correct execution order:",
       "instruction": "Drag to arrange from first to last",
@@ -87,6 +94,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "explanation": "Init containers run sequentially (serially) before application containers. Each init container must complete successfully before the next one starts. Only after all init containers complete do the application containers start in parallel."
     },
     {
+      "id": "kubernetes-pods-quiz-08",
       "type": "code-completion",
       "question": "Complete the Pod manifest to make the log-aggregator a proper sidecar container (Kubernetes 1.28+):",
       "instruction": "Fill in the missing field and value",
@@ -97,6 +105,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "explanation": "In Kubernetes 1.28+, sidecar containers are defined in the `initContainers` section with `restartPolicy: Always`. This makes them start before app containers but continue running alongside them, unlike regular init containers which terminate after completion."
     },
     {
+      "id": "kubernetes-pods-quiz-09",
       "type": "mcq",
       "question": "What is the primary purpose of the Ambassador Pattern in multi-container Pods?",
       "options": [
@@ -110,6 +119,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "Think about what an ambassador does in diplomacy—they represent and facilitate communication."
     },
     {
+      "id": "kubernetes-pods-quiz-10",
       "type": "true-false",
       "question": "Init containers and application containers within the same Pod run in parallel.",
       "answer": false,
@@ -117,6 +127,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "Consider the purpose of init containers—they prepare the environment."
     },
     {
+      "id": "kubernetes-pods-quiz-11",
       "type": "fill-blank",
       "question": "What type of volume is commonly used for sharing data between containers in a Pod when the data doesn't need to persist beyond the Pod's lifetime?",
       "answer": "emptyDir",
@@ -125,6 +136,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "The name describes its initial state."
     },
     {
+      "id": "kubernetes-pods-quiz-12",
       "type": "mcq",
       "question": "A Pod has two containers: nginx (port 80) and a metrics exporter (port 9090). If you want the metrics exporter to scrape nginx metrics, what address should it use?",
       "options": [
@@ -138,6 +150,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "Remember that containers in a Pod share the network namespace."
     },
     {
+      "id": "kubernetes-pods-quiz-13",
       "type": "multiple-select",
       "question": "Which statements about Pod characteristics are correct?",
       "options": [
@@ -152,11 +165,13 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "Think about what makes Pods the fundamental building block in Kubernetes."
     },
     {
+      "id": "kubernetes-pods-quiz-14",
       "type": "flashcard",
       "question": "What is the Adapter Pattern in multi-container Pods?",
       "answer": "**Adapter Pattern** (translates)\n\nA multi-container pattern where a sidecar container standardizes or normalizes the output/interface of the main container.\n\n**Example Use Case:**\nAn application produces custom metrics format → Adapter container converts to Prometheus format → Monitoring system scrapes standardized metrics\n\n**Why Use It:** Allows legacy or third-party applications to integrate with standardized systems without modifying the original application."
     },
     {
+      "id": "kubernetes-pods-quiz-15",
       "type": "code-output",
       "question": "What will be the result of this Pod configuration?",
       "code": "spec:\n  initContainers:\n  - name: check-db\n    image: busybox\n    command: ['sh', '-c', 'exit 1']  # Fails\n  \n  - name: setup-config\n    image: busybox\n    command: ['sh', '-c', 'echo config > /config/app.conf']\n  \n  containers:\n  - name: app\n    image: myapp",
@@ -172,6 +187,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "What happens when a prerequisite check fails?"
     },
     {
+      "id": "kubernetes-pods-quiz-16",
       "type": "drag-drop",
       "question": "Arrange these multi-container patterns based on their primary purpose, from 'data transformation' to 'connection management':",
       "instruction": "Drag to arrange from data transformation to connection management",
@@ -184,6 +200,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "explanation": "Adapter Pattern normalizes/transforms output (data transformation), Sidecar Pattern enhances functionality (general purpose, middle ground), and Ambassador Pattern proxies connections (connection management). Each serves a distinct architectural purpose."
     },
     {
+      "id": "kubernetes-pods-quiz-17",
       "type": "mcq",
       "question": "When should you use a multi-container Pod instead of separate Pods?",
       "options": [
@@ -197,6 +214,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "Think about tight coupling vs. loose coupling."
     },
     {
+      "id": "kubernetes-pods-quiz-18",
       "type": "true-false",
       "question": "A Pod's IP address persists even if the Pod is rescheduled to a different node.",
       "answer": false,
@@ -204,6 +222,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "Consider what 'ephemeral' means for Pod lifecycle."
     },
     {
+      "id": "kubernetes-pods-quiz-19",
       "type": "code-completion",
       "question": "Complete the init container configuration to wait for the database service `db-service` on port `5432` to be ready before starting the application:",
       "instruction": "Fill in the missing command",
@@ -219,6 +238,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "Think about network connectivity testing commands that check if a specific port is open."
     },
     {
+      "id": "kubernetes-pods-quiz-20",
       "type": "fill-blank",
       "question": "What field distinguishes a sidecar container from a regular init container in Kubernetes 1.28+?",
       "answer": "restartPolicy",
@@ -232,6 +252,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "It's about how the container behaves after starting."
     },
     {
+      "id": "kubernetes-pods-quiz-21",
       "type": "mcq",
       "question": "In a production web service Pod with nginx, fluentd, and Istio proxy, what is the primary role of the Istio proxy?",
       "options": [
@@ -245,6 +266,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "Service mesh proxies control the network layer."
     },
     {
+      "id": "kubernetes-pods-quiz-22",
       "type": "multiple-select",
       "question": "What are valid use cases for init containers?",
       "options": [
@@ -259,11 +281,13 @@ next: /quiz/kubernetes/07-pod-lifecycle
       "hint": "Init containers complete and terminate—they're not for ongoing tasks."
     },
     {
+      "id": "kubernetes-pods-quiz-23",
       "type": "flashcard",
       "question": "Why can't containers within a Pod be split across different nodes?",
       "answer": "**Pods are Atomic Units**\n\nPods are the smallest schedulable unit in Kubernetes. All containers in a Pod must run on the same node because:\n\n1. **Shared namespaces and resources:** Containers share network namespace and local volumes, requiring co-location on a single node\n2. **Localhost communication:** Containers communicate over localhost using a shared IP address (only works within same node)\n3. **Scheduling semantics:** Kubernetes schedules Pods—not individual containers—ensuring tightly coupled containers are co-located\n\n**Result:** All containers in a Pod always run on the same node, enabling low-latency communication and shared resource access."
     },
     {
+      "id": "kubernetes-pods-quiz-24",
       "type": "true-false",
       "question": "The CNI (Container Network Interface) plugin is responsible for assigning IP addresses to Pods and creating the Pod network.",
       "answer": true,

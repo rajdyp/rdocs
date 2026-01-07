@@ -11,6 +11,7 @@ next: /quiz/python/05-oop-fundamentals
 {
   "questions": [
     {
+      "id": "python-error-handling-quiz-01",
       "type": "mcq",
       "question": "What happens when an exception occurs in a try block and is caught by an except block, followed by an else clause?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Think about the purpose of the else clause - when does it run?"
     },
     {
+      "id": "python-error-handling-quiz-02",
       "type": "true-false",
       "question": "The finally block executes only if an exception occurs in the try block.",
       "answer": false,
@@ -31,6 +33,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Consider what 'finally' means in everyday language."
     },
     {
+      "id": "python-error-handling-quiz-03",
       "type": "multiple-select",
       "question": "Which of the following are valid reasons to use a finally block?",
       "options": [
@@ -45,6 +48,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Think about operations that must happen regardless of success or failure."
     },
     {
+      "id": "python-error-handling-quiz-04",
       "type": "drag-drop",
       "question": "Arrange the exception handling blocks in their correct execution order:",
       "instruction": "Drag to arrange in the order Python executes them",
@@ -58,6 +62,7 @@ next: /quiz/python/05-oop-fundamentals
       "explanation": "Python executes: try → except (if exception) → else (if no exception) → finally (always). The finally block runs last, regardless of what happened before."
     },
     {
+      "id": "python-error-handling-quiz-05",
       "type": "code-output",
       "question": "What gets printed when this code runs?",
       "code": "try:\n    x = 10 / 2\nexcept ZeroDivisionError:\n    print(\"Error\")\nelse:\n    print(\"Success\")\nfinally:\n    print(\"Done\")",
@@ -73,6 +78,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Trace through each block - does 10/2 raise an exception?"
     },
     {
+      "id": "python-error-handling-quiz-06",
       "type": "mcq",
       "question": "In Python's exception hierarchy, what is the relationship between Exception and ZeroDivisionError?",
       "options": [
@@ -86,6 +92,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Look at the exception hierarchy diagram in the content."
     },
     {
+      "id": "python-error-handling-quiz-07",
       "type": "fill-blank",
       "question": "To create a custom exception, you should inherit from the built-in _____ class.",
       "answer": "Exception",
@@ -94,6 +101,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "It's the most common base class for user-defined exceptions."
     },
     {
+      "id": "python-error-handling-quiz-08",
       "type": "mcq",
       "question": "Why is it recommended to catch specific exceptions rather than using a broad `except Exception`?",
       "options": [
@@ -107,6 +115,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Think about what happens when you catch errors you don't know how to handle."
     },
     {
+      "id": "python-error-handling-quiz-09",
       "type": "code-completion",
       "question": "Complete the context manager pattern for automatic file cleanup:",
       "instruction": "Fill in the missing keyword",
@@ -117,6 +126,7 @@ next: /quiz/python/05-oop-fundamentals
       "explanation": "The `with` statement creates a context manager that handles setup (opening) and cleanup (closing) automatically, even if exceptions occur."
     },
     {
+      "id": "python-error-handling-quiz-10",
       "type": "true-false",
       "question": "Context managers created with `@contextmanager` must contain a `yield` statement.",
       "answer": true,
@@ -124,6 +134,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Consider what separates the setup and teardown phases."
     },
     {
+      "id": "python-error-handling-quiz-11",
       "type": "mcq",
       "question": "When should you use `raise` without arguments in an except block?",
       "options": [
@@ -137,6 +148,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Think about preserving the original error information."
     },
     {
+      "id": "python-error-handling-quiz-12",
       "type": "multiple-select",
       "question": "Which scenarios are appropriate for creating custom exceptions?",
       "options": [
@@ -151,6 +163,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Think about errors specific to your application vs. general Python errors."
     },
     {
+      "id": "python-error-handling-quiz-13",
       "type": "code-output",
       "question": "What is the output of this code?",
       "code": "try:\n    result = 10 / 0\nexcept ZeroDivisionError:\n    print(\"A\")\nelse:\n    print(\"B\")\nfinally:\n    print(\"C\")",
@@ -166,6 +179,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "An exception occurred - which blocks run?"
     },
     {
+      "id": "python-error-handling-quiz-14",
       "type": "mcq",
       "question": "What's the difference between `raise ConfigError('msg') from e` and `raise ConfigError('msg') from None`?",
       "options": [
@@ -179,6 +193,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Think about whether you want to show or hide the underlying error."
     },
     {
+      "id": "python-error-handling-quiz-15",
       "type": "true-false",
       "question": "Assertions are suitable for validating user input or handling expected errors.",
       "answer": false,
@@ -186,6 +201,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Can assertions be disabled in production?"
     },
     {
+      "id": "python-error-handling-quiz-16",
       "type": "fill-blank",
       "question": "When writing libraries or functions, you should _____ exceptions to signal problems. When calling that code, you should use try/except to _____ those exceptions.",
       "answer": "raise, catch",
@@ -195,11 +211,13 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Think about the separation of concerns - detecting vs. handling errors."
     },
     {
+      "id": "python-error-handling-quiz-17",
       "type": "flashcard",
       "question": "What is the mental model for when to create a custom context manager?",
       "answer": "**\"If I do X, must I always undo/cleanup Y — no matter what?\"**\n\nIf yes, create a context manager. The core pattern is **pairing setup with teardown operations that must always run together** — even if an exception occurs.\n\n**Common scenarios:**\n- Temporary state changes (then restore)\n- Resource acquisition/release (files, connections, locks)\n- Transaction-like operations (commit/rollback)\n- Timing/monitoring (start/end)\n- Testing utilities (setup/cleanup)"
     },
     {
+      "id": "python-error-handling-quiz-18",
       "type": "mcq",
       "question": "Which approach is better for handling file operations and why?",
       "options": [
@@ -213,6 +231,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Think about automatic vs. manual resource management."
     },
     {
+      "id": "python-error-handling-quiz-19",
       "type": "code-completion",
       "question": "Complete the custom exception class:",
       "instruction": "Fill in the missing class name",
@@ -223,6 +242,7 @@ next: /quiz/python/05-oop-fundamentals
       "explanation": "Custom exceptions should inherit from `Exception` (or its subclasses). This follows Python's exception hierarchy and allows proper exception handling."
     },
     {
+      "id": "python-error-handling-quiz-20",
       "type": "multiple-select",
       "question": "When should you re-raise an exception after catching it?",
       "options": [
@@ -237,6 +257,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Re-raising means the error still propagates up the call stack."
     },
     {
+      "id": "python-error-handling-quiz-21",
       "type": "mcq",
       "question": "What does the `__exit__` method return value control in a custom context manager?",
       "options": [
@@ -250,6 +271,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "Think about what happens to exceptions that occur inside the with block."
     },
     {
+      "id": "python-error-handling-quiz-22",
       "type": "code-output",
       "question": "What happens when this code runs?",
       "code": "try:\n    value = int('abc')\nexcept ValueError:\n    print('Error')\nexcept TypeError:\n    print('Type Error')\nelse:\n    print('Success')",
@@ -265,6 +287,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "What exception does int('abc') raise?"
     },
     {
+      "id": "python-error-handling-quiz-23",
       "type": "true-false",
       "question": "You should use `except:` (bare except) instead of `except Exception:` for better error handling.",
       "answer": false,
@@ -272,11 +295,13 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "What system-level exceptions should you avoid catching?"
     },
     {
+      "id": "python-error-handling-quiz-24",
       "type": "flashcard",
       "question": "What is the guideline for deciding where to raise vs. where to catch exceptions?",
       "answer": "**Raise where errors occur, catch where you can handle them**\n\nFunctions/libraries should detect invalid states and raise exceptions — they shouldn't decide how to handle the error.\n\nApplication code that calls functions should catch and handle exceptions based on the context and business requirements."
     },
     {
+      "id": "python-error-handling-quiz-25",
       "type": "mcq",
       "question": "Which context manager from contextlib would you use to safely delete a file that might not exist?",
       "options": [
@@ -290,6 +315,7 @@ next: /quiz/python/05-oop-fundamentals
       "hint": "You want to suppress a specific exception type."
     },
     {
+      "id": "python-error-handling-quiz-26",
       "type": "multiple-select",
       "question": "Which statements about the exception hierarchy are correct?",
       "options": [

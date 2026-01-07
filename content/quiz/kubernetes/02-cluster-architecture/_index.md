@@ -11,6 +11,7 @@ next: /quiz/kubernetes/03-control-plane
 {
   "questions": [
     {
+      "id": "kubernetes-architecture-quiz-01",
       "type": "mcq",
       "question": "What are the two main parts of a Kubernetes cluster?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "Think about management vs execution layers."
     },
     {
+      "id": "kubernetes-architecture-quiz-02",
       "type": "mcq",
       "question": "Which component is responsible for assigning pods to nodes?",
       "options": [
@@ -37,6 +39,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "The name gives away its primary function."
     },
     {
+      "id": "kubernetes-architecture-quiz-03",
       "type": "true-false",
       "question": "The kubelet connects to the API server (not the reverse).",
       "answer": true,
@@ -44,6 +47,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "Consider which direction the persistent connection is established."
     },
     {
+      "id": "kubernetes-architecture-quiz-04",
       "type": "fill-blank",
       "question": "The _____ component stores all cluster data as a distributed key-value store.",
       "answer": "etcd",
@@ -52,6 +56,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "It's a four-letter word and acts as the cluster's database."
     },
     {
+      "id": "kubernetes-architecture-quiz-05",
       "type": "mcq",
       "question": "Which namespace contains Kubernetes system components like CoreDNS and kube-proxy?",
       "options": [
@@ -65,6 +70,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "It has 'system' in the name."
     },
     {
+      "id": "kubernetes-architecture-quiz-06",
       "type": "multiple-select",
       "question": "Which of the following are Control Plane components?",
       "options": [
@@ -80,6 +86,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "Worker nodes run pods; control plane manages the cluster."
     },
     {
+      "id": "kubernetes-architecture-quiz-07",
       "type": "multiple-select",
       "question": "Which resources are namespace-scoped (not cluster-scoped)?",
       "options": [
@@ -96,6 +103,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "Think about resources that belong to specific teams or projects."
     },
     {
+      "id": "kubernetes-architecture-quiz-08",
       "type": "true-false",
       "question": "In Kubernetes pod-to-pod communication, pods use NAT (Network Address Translation) to communicate.",
       "answer": false,
@@ -103,6 +111,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "Kubernetes networking follows a flat network model."
     },
     {
+      "id": "kubernetes-architecture-quiz-09",
       "type": "mcq",
       "question": "What happens when the kube-api-server fails in a cluster?",
       "options": [
@@ -116,6 +125,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "Think about the separation between control plane and data plane."
     },
     {
+      "id": "kubernetes-architecture-quiz-10",
       "type": "fill-blank",
       "question": "For an etcd cluster with 3 nodes, the quorum formula (N/2) + 1 means it can tolerate _____ failure(s).",
       "answer": "1",
@@ -124,6 +134,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "Calculate: how many nodes remain if one fails? Is that enough for quorum?"
     },
     {
+      "id": "kubernetes-architecture-quiz-11",
       "type": "mcq",
       "question": "What is the first status a namespace enters during deletion?",
       "options": [
@@ -137,6 +148,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "It's similar to pod deletion status."
     },
     {
+      "id": "kubernetes-architecture-quiz-12",
       "type": "drag-drop",
       "question": "Arrange these steps in the correct order when creating a Deployment:",
       "instruction": "Drag to arrange in the correct deployment creation workflow",
@@ -152,6 +164,7 @@ next: /quiz/kubernetes/03-control-plane
       "explanation": "The correct workflow is: User submits → kubectl sends to API Server → API Server validates & stores in etcd → Deployment Controller creates ReplicaSet → Scheduler assigns Pods to Nodes → kubelet starts containers."
     },
     {
+      "id": "kubernetes-architecture-quiz-13",
       "type": "mcq",
       "question": "A pod in the 'app' namespace needs to connect to a service called 'postgres' in the 'database' namespace. Which DNS name should it use?",
       "options": [
@@ -165,6 +178,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "Format: service-name.namespace.svc.cluster.local"
     },
     {
+      "id": "kubernetes-architecture-quiz-14",
       "type": "true-false",
       "question": "Namespaces provide complete security boundaries and network isolation by default.",
       "answer": false,
@@ -172,6 +186,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "Think about what additional resources you need for network isolation."
     },
     {
+      "id": "kubernetes-architecture-quiz-15",
       "type": "multiple-select",
       "question": "Which of the following are valid reasons to use separate clusters instead of namespaces?",
       "options": [
@@ -186,6 +201,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "When do namespaces become insufficient?"
     },
     {
+      "id": "kubernetes-architecture-quiz-16",
       "type": "code-completion",
       "question": "Complete this ResourceQuota to limit a namespace to 50 pods and 20Gi memory:",
       "instruction": "Fill in the missing field name",
@@ -196,6 +212,7 @@ next: /quiz/kubernetes/03-control-plane
       "explanation": "The **hard** field in a ResourceQuota spec defines the maximum resource limits that can be consumed in a namespace."
     },
     {
+      "id": "kubernetes-architecture-quiz-17",
       "type": "mcq",
       "question": "Your namespace deletion is stuck in 'Terminating' status. What is the MOST likely cause?",
       "options": [
@@ -209,11 +226,13 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "What prevents Kubernetes from completing the deletion process?"
     },
     {
+      "id": "kubernetes-architecture-quiz-18",
       "type": "flashcard",
       "question": "What is the primary difference between stacked and external etcd deployment?",
       "answer": "**Stacked etcd** runs on the same nodes as control plane components, making it simpler but less resilient.\n\n**External etcd** uses a dedicated cluster separate from control plane nodes, providing better isolation and resilience but with more complexity to manage."
     },
     {
+      "id": "kubernetes-architecture-quiz-19",
       "type": "true-false",
       "question": "In a production multi-node cluster, control plane nodes should run user workloads to maximize resource utilization.",
       "answer": false,
@@ -221,6 +240,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "Think about best practices for HA and stability."
     },
     {
+      "id": "kubernetes-architecture-quiz-20",
       "type": "code-output",
       "question": "A LimitRange is configured in the 'dev' namespace with a maximum container CPU of 2. A user tries to create a pod requesting 3 CPUs. What happens?",
       "code": "apiVersion: v1\nkind: LimitRange\nmetadata:\n  name: limits\n  namespace: dev\nspec:\n  limits:\n  - type: Container\n    max:\n      cpu: 2\n      memory: 2Gi",
@@ -236,6 +256,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "LimitRange is enforced at admission time."
     },
     {
+      "id": "kubernetes-architecture-quiz-21",
       "type": "mcq",
       "question": "For high availability, you need an etcd cluster that can tolerate 2 failures. How many etcd nodes should you deploy?",
       "options": [
@@ -249,6 +270,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "Use the formula: (N/2) + 1 for quorum. You need quorum even after 2 failures."
     },
     {
+      "id": "kubernetes-architecture-quiz-22",
       "type": "multiple-select",
       "question": "Which components are REQUIRED for pod networking to function properly?",
       "options": [
@@ -263,6 +285,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "What's needed for basic pod-to-pod and service communication?"
     },
     {
+      "id": "kubernetes-architecture-quiz-23",
       "type": "drag-drop",
       "question": "Arrange the communication flow when a user runs `kubectl get pods`:",
       "instruction": "Drag to arrange in the correct order",
@@ -277,6 +300,7 @@ next: /quiz/kubernetes/03-control-plane
       "explanation": "The flow is: kubectl authenticates → API Server queries etcd → etcd returns data → API Server responds → User sees results. All cluster operations flow through the API Server."
     },
     {
+      "id": "kubernetes-architecture-quiz-24",
       "type": "fill-blank",
       "question": "The control plane component that handles cloud provider integration (like load balancers and storage) is called _____.",
       "answer": "cloud-controller-manager",
@@ -285,6 +309,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "It has 'cloud' and 'controller' in its name."
     },
     {
+      "id": "kubernetes-architecture-quiz-25",
       "type": "true-false",
       "question": "When a worker node's kubelet fails, all pods running on that node immediately stop.",
       "answer": false,
@@ -292,6 +317,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "Think about the separation between container runtime and kubelet."
     },
     {
+      "id": "kubernetes-architecture-quiz-26",
       "type": "mcq",
       "question": "Which component is described as the 'front-end for the control plane'?",
       "options": [
@@ -305,11 +331,13 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "It's the component that all other components and users interact with."
     },
     {
+      "id": "kubernetes-architecture-quiz-27",
       "type": "flashcard",
       "question": "What are the three key responsibilities of Worker Nodes?",
       "answer": "1. **Run pods** (application containers)\n2. **Monitor pod health** and report status\n3. **Provide networking** for pods and communicate with control plane\n\nWorker nodes execute workloads while the control plane makes decisions."
     },
     {
+      "id": "kubernetes-architecture-quiz-28",
       "type": "mcq",
       "question": "What is the best practice for namespace usage in production?",
       "options": [
@@ -323,6 +351,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "Organization and separation are key in production."
     },
     {
+      "id": "kubernetes-architecture-quiz-29",
       "type": "true-false",
       "question": "All cluster operations must go through the API server for authentication and authorization.",
       "answer": true,
@@ -330,6 +359,7 @@ next: /quiz/kubernetes/03-control-plane
       "hint": "Think about the centralized control pattern."
     },
     {
+      "id": "kubernetes-architecture-quiz-30",
       "type": "fill-blank",
       "question": "The component on each worker node that maintains network rules for service routing is called _____.",
       "answer": "kube-proxy",

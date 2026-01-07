@@ -11,6 +11,7 @@ next: /quiz/terraform/02-workflow-and-cli
 {
   "questions": [
     {
+      "id": "terraform-introduction-quiz-01",
       "type": "mcq",
       "question": "What is Terraform primarily used for?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Think about what 'Infrastructure as Code' means."
     },
     {
+      "id": "terraform-introduction-quiz-02",
       "type": "multiple-select",
       "question": "Which of the following are core principles of Terraform?",
       "options": [
@@ -38,6 +40,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Terraform follows a declarative model, not procedural."
     },
     {
+      "id": "terraform-introduction-quiz-03",
       "type": "true-false",
       "question": "Terraform was originally open-source under MPL 2.0, but changed to Business Source License v1.1 in August 2023.",
       "answer": true,
@@ -45,6 +48,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Check the note about licensing in the introduction."
     },
     {
+      "id": "terraform-introduction-quiz-04",
       "type": "drag-drop",
       "question": "Arrange the Terraform workflow steps in the correct execution order:",
       "instruction": "Drag to arrange in the correct order",
@@ -58,11 +62,13 @@ next: /quiz/terraform/02-workflow-and-cli
       "explanation": "The Terraform workflow follows: Write configuration → Plan (preview) → Apply (execute) → Manage (iterate). This ensures you always preview changes before applying them."
     },
     {
+      "id": "terraform-introduction-quiz-05",
       "type": "flashcard",
       "question": "What is the State File in Terraform?",
       "answer": "**Terraform State File (terraform.tfstate)**\n\nThe state file is Terraform's record of managed infrastructure that:\n- Maps configuration to real-world resources\n- Tracks metadata and resource dependencies\n- Enables Terraform to know what currently exists\n- Is critical for determining what changes to make\n- Helps Terraform calculate the difference between desired and actual state"
     },
     {
+      "id": "terraform-introduction-quiz-06",
       "type": "fill-blank",
       "question": "What does HCL stand for in Terraform?",
       "answer": "HashiCorp Configuration Language",
@@ -71,6 +77,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "It's a language created by HashiCorp."
     },
     {
+      "id": "terraform-introduction-quiz-07",
       "type": "mcq",
       "question": "During the `terraform plan` phase, what does Terraform do to detect state drift?",
       "options": [
@@ -84,6 +91,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Think about how Terraform knows if someone made manual changes in the console."
     },
     {
+      "id": "terraform-introduction-quiz-08",
       "type": "multiple-select",
       "question": "What are the benefits of Infrastructure as Code compared to traditional manual approaches?",
       "options": [
@@ -99,6 +107,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Look for the benefits listed under the IaC approach section."
     },
     {
+      "id": "terraform-introduction-quiz-09",
       "type": "code-completion",
       "question": "Complete the command to initialize a Terraform working directory:",
       "instruction": "Fill in the missing command",
@@ -109,6 +118,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "explanation": "The `terraform init` command initializes a Terraform working directory by downloading providers, initializing modules, and setting up the backend."
     },
     {
+      "id": "terraform-introduction-quiz-10",
       "type": "mcq",
       "question": "What component in Terraform's architecture translates Terraform commands to API calls for cloud providers?",
       "options": [
@@ -122,6 +132,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Think about what sits between Terraform Core and the cloud infrastructure."
     },
     {
+      "id": "terraform-introduction-quiz-11",
       "type": "fill-blank",
       "question": "What is the default name of Terraform's state file when using a local backend?",
       "answer": "terraform.tfstate",
@@ -130,11 +141,13 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Check the file and directory structure section."
     },
     {
+      "id": "terraform-introduction-quiz-12",
       "type": "flashcard",
       "question": "What is a Terraform Provider?",
       "answer": "**Terraform Provider**\n\nA provider is a plugin that interfaces with an API (cloud provider, SaaS platform, etc.). Providers:\n- Translate Terraform commands to API calls\n- Handle authentication with the service\n- Manage resource lifecycle (create, read, update, delete)\n- Examples: AWS, Azure, GCP, Kubernetes, CloudFlare\n\nTerraform supports 100+ providers, enabling multi-cloud infrastructure management."
     },
     {
+      "id": "terraform-introduction-quiz-13",
       "type": "mcq",
       "question": "Which directory is created by `terraform init` and should typically be excluded from version control?",
       "options": [
@@ -148,6 +161,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "This directory contains downloaded providers and is a local cache."
     },
     {
+      "id": "terraform-introduction-quiz-14",
       "type": "true-false",
       "question": "Terraform follows a procedural approach where you specify the exact steps to create infrastructure.",
       "answer": false,
@@ -155,6 +169,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Think about whether you write 'what you want' or 'how to do it' in Terraform."
     },
     {
+      "id": "terraform-introduction-quiz-15",
       "type": "multiple-select",
       "question": "What operations does Terraform Core perform?",
       "options": [
@@ -169,6 +184,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Core handles the logic, but providers handle the API interaction."
     },
     {
+      "id": "terraform-introduction-quiz-16",
       "type": "mcq",
       "question": "What happens when you run `terraform apply` without a saved plan?",
       "options": [
@@ -182,11 +198,13 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Check the detailed workflow diagram for the apply phase."
     },
     {
+      "id": "terraform-introduction-quiz-17",
       "type": "flashcard",
       "question": "What is a Terraform Module?",
       "answer": "**Terraform Module**\n\nA module is a reusable unit that groups related resources together. Modules enable:\n- Code reusability across projects\n- Abstraction of complex configurations\n- Standardization of infrastructure patterns\n- Better organization and maintainability\n\nExamples: VPC module, ECS cluster module, networking module.\n\nAll Terraform configurations are technically modules—even a single `.tf` file is considered the root module."
     },
     {
+      "id": "terraform-introduction-quiz-18",
       "type": "mcq",
       "question": "Which comparison is accurate regarding Terraform vs CloudFormation?",
       "options": [
@@ -200,6 +218,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Think about which tool is cloud-agnostic."
     },
     {
+      "id": "terraform-introduction-quiz-19",
       "type": "drag-drop",
       "question": "Arrange these layers in Terraform's architecture from top to bottom:",
       "instruction": "Drag to arrange from user-facing to infrastructure",
@@ -213,6 +232,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "explanation": "The architecture flows: User Layer (where you write .tf files) → Terraform Core (execution engine) → Provider Layer (plugins for cloud APIs) → Cloud Infrastructure (actual resources like EC2, VPC, etc.)."
     },
     {
+      "id": "terraform-introduction-quiz-20",
       "type": "multiple-select",
       "question": "Which scenarios are good use cases for Terraform?",
       "options": [
@@ -228,6 +248,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Think about what Terraform was designed to manage versus what other tools handle better."
     },
     {
+      "id": "terraform-introduction-quiz-21",
       "type": "true-false",
       "question": "During `terraform apply`, Terraform acquires a state lock to prevent concurrent modifications.",
       "answer": true,
@@ -235,6 +256,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Check the detailed workflow diagram for the apply phase."
     },
     {
+      "id": "terraform-introduction-quiz-22",
       "type": "fill-blank",
       "question": "What is the term for when actual cloud resources differ from what's recorded in Terraform's state file?",
       "answer": "state drift",
@@ -243,6 +265,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "It's a two-word term describing how resources 'move away' from the recorded state."
     },
     {
+      "id": "terraform-introduction-quiz-23",
       "type": "mcq",
       "question": "In what order does Terraform create resources when there are dependencies?",
       "options": [
@@ -256,6 +279,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Think about the resource graph example with VPC, subnets, and EC2."
     },
     {
+      "id": "terraform-introduction-quiz-24",
       "type": "mcq",
       "question": "When comparing Terraform and Ansible, what is the primary difference in their use cases?",
       "options": [
@@ -269,11 +293,13 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Think about which tool creates infrastructure vs. which tool configures it."
     },
     {
+      "id": "terraform-introduction-quiz-25",
       "type": "flashcard",
       "question": "What is a Terraform Workspace?",
       "answer": "**Terraform Workspace**\n\nA workspace is a named state instance for the same configuration. Workspaces allow you to:\n- Manage multiple environments (dev, staging, prod) with the same configuration\n- Keep separate state files for each environment\n- Switch between environments easily\n- Avoid duplicating configuration files\n\nExample: Same codebase can deploy to `dev`, `staging`, and `prod` workspaces with different state files for each."
     },
     {
+      "id": "terraform-introduction-quiz-26",
       "type": "code-completion",
       "question": "Complete the command to preview infrastructure changes before applying them:",
       "instruction": "Fill in the missing command",
@@ -284,6 +310,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "explanation": "The `terraform plan` command shows a preview of changes Terraform will make, displaying what will be added (+), changed (~), or destroyed (-) before you apply them."
     },
     {
+      "id": "terraform-introduction-quiz-27",
       "type": "multiple-select",
       "question": "Which files or directories in a Terraform project are typically committed to version control?",
       "options": [
@@ -299,6 +326,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Think about what needs to be shared with the team vs. what can be regenerated."
     },
     {
+      "id": "terraform-introduction-quiz-28",
       "type": "true-false",
       "question": "Terraform follows the principle of immutable infrastructure, meaning it replaces resources rather than modifying them in place.",
       "answer": true,
@@ -306,6 +334,7 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "Check the core principles section."
     },
     {
+      "id": "terraform-introduction-quiz-29",
       "type": "mcq",
       "question": "What type of information does a Terraform Data Source provide?",
       "options": [
@@ -319,11 +348,13 @@ next: /quiz/terraform/02-workflow-and-cli
       "hint": "The key word in the definition is 'read-only'."
     },
     {
+      "id": "terraform-introduction-quiz-30",
       "type": "flashcard",
       "question": "What is a Terraform Backend?",
       "answer": "**Terraform Backend**\n\nA backend is where Terraform stores its state file. Backend types include:\n- **Local**: State stored on local filesystem (default)\n- **Remote**: State stored remotely (S3, Terraform Cloud, Azure Blob, etc.)\n\nRemote backends enable:\n- Team collaboration (shared state)\n- State locking (prevent concurrent modifications)\n- Secure storage of sensitive data\n- State versioning and backup\n\nProduction environments should always use remote backends."
     },
     {
+      "id": "terraform-introduction-quiz-31",
       "type": "mcq",
       "question": "What file extension do Terraform configuration files use?",
       "options": [

@@ -11,6 +11,7 @@ next: /quiz/python/07-advanced-functions
 {
   "questions": [
     {
+      "id": "python-standard-library-quiz-01",
       "type": "mcq",
       "question": "What is the correct way to iterate over lines in a file?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "The file object itself is iterable and yields lines."
     },
     {
+      "id": "python-standard-library-quiz-02",
       "type": "true-false",
       "question": "When using `with open()`, the file is automatically closed even if an exception occurs.",
       "answer": true,
@@ -31,6 +33,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Think about what context managers guarantee."
     },
     {
+      "id": "python-standard-library-quiz-03",
       "type": "code-output",
       "question": "What happens when you run this code?",
       "code": "with open(\"test.txt\", \"w\") as f:\n    f.write(\"Hello\\n\")\nwith open(\"test.txt\", \"a\") as f:\n    f.write(\"World\\n\")\n# File contains:",
@@ -46,6 +49,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Remember: 'w' truncates, 'a' appends."
     },
     {
+      "id": "python-standard-library-quiz-04",
       "type": "multiple-select",
       "question": "Which file modes will create a file if it doesn't exist?",
       "options": [
@@ -60,6 +64,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Write and append modes are more forgiving about missing files."
     },
     {
+      "id": "python-standard-library-quiz-05",
       "type": "fill-blank",
       "question": "What method converts a JSON file to a Python dictionary?",
       "answer": "json.load",
@@ -68,11 +73,13 @@ next: /quiz/python/07-advanced-functions
       "hint": "It's a method from the json module that works with file objects."
     },
     {
+      "id": "python-standard-library-quiz-06",
       "type": "flashcard",
       "question": "What is the key difference between `json.load()` and `json.loads()`?",
       "answer": "**`json.load()`** - Reads from a **file object**\n\n**`json.loads()`** - Reads from a **string**\n\nRemember: the 's' in `loads()` stands for 'string'!"
     },
     {
+      "id": "python-standard-library-quiz-07",
       "type": "code-completion",
       "question": "Complete the code to safely modify a config file atomically:",
       "instruction": "Fill in the missing module name",
@@ -83,6 +90,7 @@ next: /quiz/python/07-advanced-functions
       "explanation": "The `tempfile` module provides `NamedTemporaryFile` for safe atomic file modifications."
     },
     {
+      "id": "python-standard-library-quiz-08",
       "type": "mcq",
       "question": "What does `os.path.join('folder', 'subfolder', 'file.txt')` ensure?",
       "options": [
@@ -96,6 +104,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Think about cross-platform compatibility."
     },
     {
+      "id": "python-standard-library-quiz-09",
       "type": "multiple-select",
       "question": "Which of the following are valid ways to run external commands using subprocess?",
       "options": [
@@ -109,6 +118,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Think about argument parsing and shell safety."
     },
     {
+      "id": "python-standard-library-quiz-10",
       "type": "true-false",
       "question": "Using `shell=True` in subprocess is generally safer than passing a list of arguments.",
       "answer": false,
@@ -116,6 +126,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Consider security implications of shell execution."
     },
     {
+      "id": "python-standard-library-quiz-11",
       "type": "code-output",
       "question": "What will be the output?",
       "code": "from collections import Counter\ncounts = Counter(['a', 'b', 'a', 'c', 'b', 'a'])\nprint(counts['a'], counts['missing'])",
@@ -131,6 +142,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Counter has special behavior for missing keys."
     },
     {
+      "id": "python-standard-library-quiz-12",
       "type": "mcq",
       "question": "What is the main advantage of `defaultdict(list)` over a regular dict?",
       "options": [
@@ -144,6 +156,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Think about what happens when you access a key that doesn't exist."
     },
     {
+      "id": "python-standard-library-quiz-13",
       "type": "fill-blank",
       "question": "What factory function would you pass to defaultdict to auto-initialize counters to 0?",
       "answer": "int",
@@ -152,11 +165,13 @@ next: /quiz/python/07-advanced-functions
       "hint": "What built-in type returns 0 when called with no arguments?"
     },
     {
+      "id": "python-standard-library-quiz-14",
       "type": "flashcard",
       "question": "Why use namedtuple instead of a regular tuple?",
       "answer": "**Readability and Self-Documentation**\n\n`user[0]` vs `user.name` - the second is much clearer!\n\nnamedtuple provides:\n- Named field access (`p.name` instead of `p[0]`)\n- Still works like a tuple (indexing, unpacking)\n- Immutable like tuples\n- More memory-efficient than classes or dicts"
     },
     {
+      "id": "python-standard-library-quiz-15",
       "type": "code-output",
       "question": "Predict the output:",
       "code": "from collections import namedtuple\nPerson = namedtuple('Person', ['name', 'age'])\np = Person('Alice', 30)\nprint(p[0], p.name)",
@@ -172,6 +187,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "namedtuple combines features of both tuples and objects."
     },
     {
+      "id": "python-standard-library-quiz-16",
       "type": "mcq",
       "question": "Which collections type is best for implementing a circular buffer with fixed size?",
       "options": [
@@ -185,6 +201,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Look for automatic removal of old items."
     },
     {
+      "id": "python-standard-library-quiz-17",
       "type": "drag-drop",
       "question": "Arrange these log levels from LEAST to MOST severe:",
       "instruction": "Drag to arrange in order of increasing severity",
@@ -199,6 +216,7 @@ next: /quiz/python/07-advanced-functions
       "explanation": "The correct severity order is: DEBUG < INFO < WARNING < ERROR < CRITICAL. DEBUG is for detailed diagnostics, while CRITICAL indicates system-level failures."
     },
     {
+      "id": "python-standard-library-quiz-18",
       "type": "multiple-select",
       "question": "When should you use `logging.exception()` instead of `logging.error()`?",
       "options": [
@@ -213,6 +231,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Think about when traceback information is available and useful."
     },
     {
+      "id": "python-standard-library-quiz-19",
       "type": "true-false",
       "question": "In a multi-file Python application, you should call `logging.basicConfig()` in every module that uses logging.",
       "answer": false,
@@ -220,6 +239,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Think about configuration centralization."
     },
     {
+      "id": "python-standard-library-quiz-20",
       "type": "code-completion",
       "question": "Complete the logging configuration to write to both file and console:",
       "instruction": "Fill in the missing handler type",
@@ -230,6 +250,7 @@ next: /quiz/python/07-advanced-functions
       "explanation": "`StreamHandler()` writes logs to console (stderr by default). Combined with `FileHandler`, this sends logs to both file and console."
     },
     {
+      "id": "python-standard-library-quiz-21",
       "type": "mcq",
       "question": "What is the difference between `datetime.now()` and `datetime.now(timezone.utc)`?",
       "options": [
@@ -243,6 +264,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Think about timezone awareness."
     },
     {
+      "id": "python-standard-library-quiz-22",
       "type": "code-output",
       "question": "What will this print?",
       "code": "from datetime import datetime, timedelta\ndt = datetime(2025, 1, 1)\nfuture = dt + timedelta(days=7)\nprint((future - dt).days)",
@@ -258,11 +280,13 @@ next: /quiz/python/07-advanced-functions
       "hint": "What type is returned when you subtract datetimes?"
     },
     {
+      "id": "python-standard-library-quiz-23",
       "type": "flashcard",
       "question": "When should you use the `time` module vs the `datetime` module?",
       "answer": "**`time` module**: Low-level timestamps\n- Performance measurement\n- Delays (`time.sleep()`)\n- Unix timestamps (seconds since epoch)\n\n**`datetime` module**: High-level date/time\n- Business logic\n- User-facing dates\n- Calendar operations\n- Date arithmetic\n\n**Rule of thumb**: Use `datetime` for most application code, `time` for performance measurement."
     },
     {
+      "id": "python-standard-library-quiz-24",
       "type": "mcq",
       "question": "What does `re.search()` return if no match is found?",
       "options": [
@@ -276,6 +300,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "This is why you need to check before accessing groups."
     },
     {
+      "id": "python-standard-library-quiz-25",
       "type": "code-output",
       "question": "What will this match?",
       "code": "import re\ntext = 'Error on line 42: failed after 3 attempts'\nmatch = re.search(r'\\d+', text)\nif match:\n    print(match.group())",
@@ -291,6 +316,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "search() finds the first match, not all matches."
     },
     {
+      "id": "python-standard-library-quiz-26",
       "type": "multiple-select",
       "question": "Which of the following correctly use raw strings for regex patterns?",
       "options": [
@@ -304,6 +330,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Look for the 'r' prefix before the string."
     },
     {
+      "id": "python-standard-library-quiz-27",
       "type": "fill-blank",
       "question": "What method finds ALL matches of a pattern in a string and returns them as a list?",
       "answer": "re.findall",
@@ -312,6 +339,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Think about the method name that suggests 'all' matches."
     },
     {
+      "id": "python-standard-library-quiz-28",
       "type": "code-completion",
       "question": "Complete the code to extract year, month, and day using named groups:",
       "instruction": "Fill in the syntax for named groups",
@@ -322,6 +350,7 @@ next: /quiz/python/07-advanced-functions
       "explanation": "Named groups use the syntax `(?P<name>...)` where name is the identifier you'll use with `match.group('name')` or `match.groupdict()`."
     },
     {
+      "id": "python-standard-library-quiz-29",
       "type": "true-false",
       "question": "The regex pattern `r'^\\d+$'` will match '123abc'.",
       "answer": false,
@@ -329,6 +358,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "What do the ^ and $ anchors require?"
     },
     {
+      "id": "python-standard-library-quiz-30",
       "type": "mcq",
       "question": "In argparse, what does `action='store_true'` do?",
       "options": [
@@ -342,6 +372,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Think about command-line flags that don't take arguments."
     },
     {
+      "id": "python-standard-library-quiz-31",
       "type": "multiple-select",
       "question": "Which argparse nargs values allow zero arguments?",
       "options": [
@@ -355,6 +386,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Think about which symbols traditionally mean 'optional' or 'zero or more'."
     },
     {
+      "id": "python-standard-library-quiz-32",
       "type": "code-output",
       "question": "What will this Path operation return?",
       "code": "from pathlib import Path\np = Path('/home/user/file.txt')\nprint(p.stem)",
@@ -370,11 +402,13 @@ next: /quiz/python/07-advanced-functions
       "hint": "Think about the part of the filename without the extension."
     },
     {
+      "id": "python-standard-library-quiz-33",
       "type": "flashcard",
       "question": "What problem does pathlib solve compared to os.path?",
       "answer": "**Readable, maintainable path operations**\n\n**os.path**: Verbose string manipulation\n```python\nos.path.join(os.path.expanduser('~'), '.config', 'myapp', 'settings.json')\n```\n\n**pathlib**: Clean, chainable, intuitive\n```python\nPath.home() / '.config' / 'myapp' / 'settings.json'\n```\n\nPaths become objects with methods, not strings with functions."
     },
     {
+      "id": "python-standard-library-quiz-34",
       "type": "mcq",
       "question": "What's the advantage of compiling a regex pattern with `re.compile()`?",
       "options": [
@@ -388,6 +422,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Think about efficiency when using a pattern in a loop."
     },
     {
+      "id": "python-standard-library-quiz-35",
       "type": "true-false",
       "question": "The regex pattern `r'<div>.*</div>'` with `.*` is greedy by default.",
       "answer": true,
@@ -395,6 +430,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Think about what 'greedy' means in regex context."
     },
     {
+      "id": "python-standard-library-quiz-36",
       "type": "code-completion",
       "question": "Complete the code to create a Path object for the home directory:",
       "instruction": "Fill in the missing method",
@@ -405,6 +441,7 @@ next: /quiz/python/07-advanced-functions
       "explanation": "`Path.home()` returns a Path object representing the user's home directory, similar to `os.path.expanduser('~')`."
     },
     {
+      "id": "python-standard-library-quiz-37",
       "type": "multiple-select",
       "question": "Which statements about Counter are true?",
       "options": [
@@ -419,6 +456,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Counter has special behavior for missing keys and helpful methods."
     },
     {
+      "id": "python-standard-library-quiz-38",
       "type": "mcq",
       "question": "What's the difference between `datetime.strftime()` and `datetime.strptime()`?",
       "options": [
@@ -432,6 +470,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "Think about 'f' for format and 'p' for parse."
     },
     {
+      "id": "python-standard-library-quiz-39",
       "type": "code-output",
       "question": "What will be printed?",
       "code": "from collections import deque\ndq = deque([1, 2, 3], maxlen=3)\ndq.append(4)\ndq.append(5)\nprint(list(dq))",
@@ -447,6 +486,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "The deque has a maximum length of 3."
     },
     {
+      "id": "python-standard-library-quiz-40",
       "type": "fill-blank",
       "question": "What subprocess parameter should you set to True to automatically raise an exception if a command fails?",
       "answer": "check",
@@ -455,6 +495,7 @@ next: /quiz/python/07-advanced-functions
       "hint": "It's a boolean parameter that validates the command succeeded."
     },
     {
+      "id": "python-standard-library-quiz-41",
       "type": "true-false",
       "question": "Using `Path.mkdir(parents=True, exist_ok=True)` will raise an error if the directory already exists.",
       "answer": false,

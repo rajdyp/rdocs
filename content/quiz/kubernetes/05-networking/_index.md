@@ -11,6 +11,7 @@ next: /quiz/kubernetes/06-pods
 {
   "questions": [
     {
+      "id": "kubernetes-networking-quiz-01",
       "type": "multiple-select",
       "question": "Which of the following are fundamental requirements of the Kubernetes network model?",
       "options": [
@@ -25,6 +26,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "Think about the flat network model that Kubernetes implements."
     },
     {
+      "id": "kubernetes-networking-quiz-02",
       "type": "mcq",
       "question": "Which component is responsible for assigning IP addresses to pods?",
       "options": [
@@ -38,6 +40,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "This component also creates network namespaces and configures routes."
     },
     {
+      "id": "kubernetes-networking-quiz-03",
       "type": "true-false",
       "question": "ClusterIPs are virtual IP addresses that don't actually exist on any network interface.",
       "answer": true,
@@ -45,6 +48,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "Think about how kube-proxy implements Service networking."
     },
     {
+      "id": "kubernetes-networking-quiz-04",
       "type": "drag-drop",
       "question": "Arrange these steps in the correct order for the CNI plugin operation when a pod is scheduled:",
       "instruction": "Drag to arrange in the correct sequence",
@@ -61,6 +65,7 @@ next: /quiz/kubernetes/06-pods
       "explanation": "The CNI workflow follows this exact sequence: scheduling triggers kubelet, which calls the CNI plugin. The plugin then creates the network namespace, assigns an IP, creates the veth pair (virtual ethernet cable), configures routing, and finally returns the pod IP to kubelet."
     },
     {
+      "id": "kubernetes-networking-quiz-05",
       "type": "fill-blank",
       "question": "What is the default Service CIDR range in Kubernetes (format: IP/mask)?",
       "answer": "10.96.0.0/12",
@@ -69,6 +74,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "Look at the example IP allocation section showing Service CIDR configuration."
     },
     {
+      "id": "kubernetes-networking-quiz-06",
       "type": "code-output",
       "question": "A pod with IP 10.244.1.5 on Node 1 wants to communicate with another pod (10.244.1.6) on the same node. Which statement is MOST accurate?",
       "code": "Node 1\n├─ Pod CIDR: 10.244.1.0/24\n├─ Pod A: 10.244.1.5\n└─ Pod B: 10.244.1.6\n\nPod A → Pod B",
@@ -84,6 +90,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "Consider whether traffic between pods on the same node needs to leave that node."
     },
     {
+      "id": "kubernetes-networking-quiz-07",
       "type": "mcq",
       "question": "How do containers within the same pod communicate with each other?",
       "options": [
@@ -97,11 +104,13 @@ next: /quiz/kubernetes/06-pods
       "hint": "Containers in a pod share more than just storage—they share networking too."
     },
     {
+      "id": "kubernetes-networking-quiz-08",
       "type": "flashcard",
       "question": "What is the purpose of CoreDNS in a Kubernetes cluster?",
       "answer": "**CoreDNS provides DNS-based service discovery within the cluster.**\n\nIt watches the API server for service creation/changes and automatically creates DNS records. When a pod makes a DNS query, CoreDNS resolves service names to their ClusterIPs, enabling pods to communicate using service names instead of IPs.\n\n**DNS Format:** `<service-name>.<namespace>.svc.<cluster-domain>`\n\n**Example:** `my-service.default.svc.cluster.local` → `10.96.100.50`"
     },
     {
+      "id": "kubernetes-networking-quiz-09",
       "type": "multiple-select",
       "question": "Which CNI plugins support Network Policy enforcement?",
       "options": [
@@ -116,6 +125,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "Review the Popular CNI Plugins table to see which ones list 'Network policies' as a feature."
     },
     {
+      "id": "kubernetes-networking-quiz-10",
       "type": "code-completion",
       "question": "Complete the DNS configuration that automatically appears in every pod:",
       "instruction": "Fill in the missing nameserver IP",
@@ -127,6 +137,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "This is the ClusterIP address assigned to the CoreDNS service."
     },
     {
+      "id": "kubernetes-networking-quiz-11",
       "type": "drag-drop",
       "question": "Arrange the complete traffic flow from an external client to a backend pod in the correct order:",
       "instruction": "Order the steps from client request to pod response",
@@ -143,6 +154,7 @@ next: /quiz/kubernetes/06-pods
       "explanation": "External traffic follows this exact path: DNS resolution → LoadBalancer → NodePort on any node → kube-proxy intercepts → DNAT to ClusterIP → DNAT to actual pod IP → CNI routing → pod receives request. The return path follows the reverse with SNAT."
     },
     {
+      "id": "kubernetes-networking-quiz-12",
       "type": "mcq",
       "question": "What happens when a pod sends a packet to a Service ClusterIP?",
       "options": [
@@ -156,6 +168,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "Remember that ClusterIPs are virtual and implemented through netfilter rules."
     },
     {
+      "id": "kubernetes-networking-quiz-13",
       "type": "true-false",
       "question": "The kube-proxy component actively routes network traffic between services and pods.",
       "answer": false,
@@ -163,6 +176,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "Think about what 'proxy' really means in this context—it's not a traditional proxy."
     },
     {
+      "id": "kubernetes-networking-quiz-14",
       "type": "fill-blank",
       "question": "In the DNS format `<service-name>.<namespace>.svc.<cluster-domain>`, what is the default value for cluster-domain?",
       "answer": "cluster.local",
@@ -171,6 +185,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "Look at the Service DNS Format examples."
     },
     {
+      "id": "kubernetes-networking-quiz-15",
       "type": "code-output",
       "question": "Given this network configuration, identify which statement is CORRECT:",
       "code": "Cluster Configuration:\nPod CIDR:     10.244.0.0/16\nService CIDR: 10.96.0.0/12\nNode CIDR:    192.168.0.0/24\n\nNode 1: 192.168.0.10\n  ├─ Pod CIDR: 10.244.1.0/24\n  └─ Pod 1: 10.244.1.5\n\nServices:\n  └─ my-service: 10.96.100.50",
@@ -186,6 +201,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "Check each CIDR range and verify that none of the IP addresses fall outside their designated ranges."
     },
     {
+      "id": "kubernetes-networking-quiz-16",
       "type": "mcq",
       "question": "Which CNI plugin would be most appropriate for a production environment with strict security requirements and need for network policies?",
       "options": [
@@ -199,11 +215,13 @@ next: /quiz/kubernetes/06-pods
       "hint": "Check the 'Use Case' column in the Popular CNI Plugins table."
     },
     {
+      "id": "kubernetes-networking-quiz-17",
       "type": "flashcard",
       "question": "What is a veth pair and how does it work in Kubernetes pod networking?",
       "answer": "**A veth (virtual ethernet) pair is like a virtual ethernet cable with two ends. Traffic sent into one end appears on the other.**\n\n**In Kubernetes:**\n- One end is placed in the pod's network namespace (appears as `eth0`)\n- The other end is in the host namespace (appears as `vethXXXX`)\n\n**Purpose:**\n- Connects isolated pod network namespace to host network\n- Allows pods to send and receive traffic via the node\n- Serves as the basic building block for pod networking\n- The host end is managed by the CNI plugin (via a bridge, IP routing, or eBPF depending on the implementation).\n\n**Analogy:** Like a network cable connecting two separate computers, except both 'computers' are on the same physical machine."
     },
     {
+      "id": "kubernetes-networking-quiz-18",
       "type": "multiple-select",
       "question": "A NetworkPolicy with the configuration shown will apply to which traffic?\n\n```yaml\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: backend-policy\nspec:\n  podSelector:\n    matchLabels:\n      app: backend\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - protocol: TCP\n      port: 8080\n```",
       "options": [
@@ -218,6 +236,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "Look at the policyTypes and the podSelector fields to understand what this policy controls."
     },
     {
+      "id": "kubernetes-networking-quiz-19",
       "type": "true-false",
       "question": "When a pod on Node 1 (10.244.1.0/24) needs to communicate with a pod on Node 2 (10.244.2.0/24), the CNI plugin must handle cross-node routing.",
       "answer": true,
@@ -225,6 +244,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "Review the 'Pod-to-Pod (Different Nodes)' section."
     },
     {
+      "id": "kubernetes-networking-quiz-20",
       "type": "mcq",
       "question": "In the complete DNS resolution flow, after CoreDNS returns the Service ClusterIP to a pod, what happens next?",
       "options": [
@@ -238,6 +258,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "Follow the Complete DNS Resolution Flow diagram step-by-step."
     },
     {
+      "id": "kubernetes-networking-quiz-21",
       "type": "code-completion",
       "question": "Complete the NetworkPolicy to allow only frontend pods to access backend pods on port 8080:",
       "instruction": "Fill in the missing selector field",
@@ -249,11 +270,13 @@ next: /quiz/kubernetes/06-pods
       "hint": "This selector defines the SOURCE of allowed traffic in the ingress rules."
     },
     {
+      "id": "kubernetes-networking-quiz-22",
       "type": "flashcard",
       "question": "Explain why Pod CIDR, Service CIDR, and Node CIDR must not overlap.",
       "answer": "**Non-overlapping CIDRs are critical for proper routing and avoiding conflicts.**\n\n**Why they must be separate:**\n\n1. **Routing ambiguity:** If ranges overlap, the network stack can't determine whether a destination IP belongs to a pod, service, or node\n\n2. **Service ClusterIP uniqueness:** Service IPs must be in a distinct range so kube-proxy can create specific iptables rules\n\n3. **Pod connectivity:** CNI needs to route pod traffic correctly without conflicting with node infrastructure traffic\n\n**Example of bad config:**\n```\n❌ Pod CIDR: 10.0.0.0/16\n❌ Node CIDR: 10.0.0.0/24  ← Overlap!\n```\n\n**Correct config:**\n```\n✅ Pod CIDR: 10.244.0.0/16\n✅ Service CIDR: 10.96.0.0/12\n✅ Node CIDR: 192.168.0.0/24\n```"
     },
     {
+      "id": "kubernetes-networking-quiz-23",
       "type": "mcq",
       "question": "What is the primary difference between how Flannel and Calico implement pod networking?",
       "options": [
@@ -267,6 +290,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "Look at the 'Features' column in the Popular CNI Plugins comparison table."
     },
     {
+      "id": "kubernetes-networking-quiz-24",
       "type": "true-false",
       "question": "The ndots:5 option in a pod's /etc/resolv.conf means that any name with 5 or more dots will be treated as a fully qualified domain name.",
       "answer": true,
@@ -274,6 +298,7 @@ next: /quiz/kubernetes/06-pods
       "hint": "Consider how 'my-service' (0 dots) versus 'my-service.default.svc.cluster.local' (4 dots) would be resolved."
     },
     {
+      "id": "kubernetes-networking-quiz-25",
       "type": "drag-drop",
       "question": "Order the layers from closest to the pod to farthest in the network architecture:",
       "instruction": "Arrange from innermost (pod) to outermost (external)",

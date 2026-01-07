@@ -10,6 +10,7 @@ prev: /quiz/observability
 {
   "questions": [
     {
+      "id": "opentelemetry-quiz-01",
       "type": "mcq",
       "question": "What is the primary purpose of OpenTelemetry?",
       "options": [
@@ -23,6 +24,7 @@ prev: /quiz/observability
       "hint": "Think about what makes OTel vendor-agnostic."
     },
     {
+      "id": "opentelemetry-quiz-02",
       "type": "multiple-select",
       "question": "Which of the following are the four telemetry signals supported by OpenTelemetry?",
       "options": [
@@ -37,6 +39,7 @@ prev: /quiz/observability
       "hint": "Events is not listed as a separate signal type in OTel."
     },
     {
+      "id": "opentelemetry-quiz-03",
       "type": "true-false",
       "question": "In OpenTelemetry, the trace_id changes at each service hop while span_id remains constant throughout the request flow.",
       "answer": false,
@@ -44,6 +47,7 @@ prev: /quiz/observability
       "hint": "Think about what uniquely identifies the entire distributed request."
     },
     {
+      "id": "opentelemetry-quiz-04",
       "type": "mcq",
       "question": "What is the correct order of components in an OpenTelemetry Collector pipeline?",
       "options": [
@@ -57,6 +61,7 @@ prev: /quiz/observability
       "hint": "Data must be received before it can be processed or exported."
     },
     {
+      "id": "opentelemetry-quiz-05",
       "type": "fill-blank",
       "question": "The default OTLP gRPC port for the OpenTelemetry Collector is ____.",
       "answer": "4317",
@@ -65,6 +70,7 @@ prev: /quiz/observability
       "hint": "It's a 4-digit number starting with 43."
     },
     {
+      "id": "opentelemetry-quiz-06",
       "type": "code-output",
       "question": "Given this traceparent header, what is the trace_id?",
       "code": "traceparent: 00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01",
@@ -80,11 +86,13 @@ prev: /quiz/observability
       "hint": "The trace_id is the longest component in the header."
     },
     {
+      "id": "opentelemetry-quiz-07",
       "type": "flashcard",
       "question": "What are the three types of metric instrument types in OpenTelemetry and when would you use each?",
       "answer": "**Counter**: Cumulative value that only increases (e.g., total requests, errors)\n\n**Gauge**: Point-in-time value that can go up or down (e.g., CPU usage, memory, queue depth)\n\n**Histogram**: Distribution of values with configurable buckets (e.g., request durations, response sizes)"
     },
     {
+      "id": "opentelemetry-quiz-08",
       "type": "drag-drop",
       "question": "Arrange these OpenTelemetry Collector processors in the recommended order for a production pipeline:",
       "instruction": "Drag to arrange in the correct order",
@@ -98,6 +106,7 @@ prev: /quiz/observability
       "explanation": "Best practice order: memory_limiter (prevent OOM first), filter (drop unwanted data early), attributes (enrich/modify), batch (optimize export last)."
     },
     {
+      "id": "opentelemetry-quiz-09",
       "type": "mcq",
       "question": "What is the key difference between head-based and tail-based sampling?",
       "options": [
@@ -111,6 +120,7 @@ prev: /quiz/observability
       "hint": "Think about when the sampling decision is made."
     },
     {
+      "id": "opentelemetry-quiz-10",
       "type": "multiple-select",
       "question": "Which are valid use cases for the transform processor?",
       "options": [
@@ -125,6 +135,7 @@ prev: /quiz/observability
       "hint": "The transform processor modifies data, not infrastructure."
     },
     {
+      "id": "opentelemetry-quiz-11",
       "type": "true-false",
       "question": "Zero-code instrumentation requires modifying application source code to add OpenTelemetry support.",
       "answer": false,
@@ -132,6 +143,7 @@ prev: /quiz/observability
       "hint": "The name 'zero-code' is descriptive of its approach."
     },
     {
+      "id": "opentelemetry-quiz-12",
       "type": "code-completion",
       "question": "Complete the Python code to create a new span:",
       "instruction": "Fill in the missing method call",
@@ -142,6 +154,7 @@ prev: /quiz/observability
       "explanation": "The `start_as_current_span` method creates a new span and sets it as the current span within the context manager."
     },
     {
+      "id": "opentelemetry-quiz-13",
       "type": "mcq",
       "question": "What is the purpose of exemplars in OpenTelemetry?",
       "options": [
@@ -155,6 +168,7 @@ prev: /quiz/observability
       "hint": "Think about bridging metrics and traces."
     },
     {
+      "id": "opentelemetry-quiz-14",
       "type": "fill-blank",
       "question": "The W3C Trace Context standard uses the ____ header to transmit trace context between services.",
       "answer": "traceparent",
@@ -163,6 +177,7 @@ prev: /quiz/observability
       "hint": "It combines 'trace' with the relationship to the caller."
     },
     {
+      "id": "opentelemetry-quiz-15",
       "type": "multiple-select",
       "question": "Which deployment patterns are valid for OpenTelemetry Collector?",
       "options": [
@@ -176,11 +191,13 @@ prev: /quiz/observability
       "hint": "Three patterns are explicitly documented."
     },
     {
+      "id": "opentelemetry-quiz-16",
       "type": "flashcard",
       "question": "What is the spanmetrics connector and what RED metrics does it generate?",
       "answer": "**Spanmetrics Connector**: Generates metrics from trace spans (replaces deprecated spanmetrics processor).\n\n**RED Metrics Generated:**\n- **R**ate: `calls_total` (total call count)\n- **E**rrors: Error counts by status code\n- **D**uration: `duration_milliseconds_sum/count`\n\nDimensions include: service, operation, status_code"
     },
     {
+      "id": "opentelemetry-quiz-17",
       "type": "mcq",
       "question": "What happens when `otel.bsp.max.export.batch.size` is larger than `otel.bsp.max.queue.size`?",
       "options": [
@@ -194,6 +211,7 @@ prev: /quiz/observability
       "hint": "Think about the relationship between queue capacity and batch size."
     },
     {
+      "id": "opentelemetry-quiz-18",
       "type": "true-false",
       "question": "The tracestate header is required for W3C Trace Context propagation.",
       "answer": false,
@@ -201,6 +219,7 @@ prev: /quiz/observability
       "hint": "One header is mandatory, the other is optional."
     },
     {
+      "id": "opentelemetry-quiz-19",
       "type": "drag-drop",
       "question": "Arrange these components in the order data flows through the OpenTelemetry architecture:",
       "instruction": "Drag to arrange in the correct data flow order",
@@ -214,6 +233,7 @@ prev: /quiz/observability
       "explanation": "Data flows: Application generates telemetry → OTLP transmits it → Collector processes it → Backend stores/visualizes it."
     },
     {
+      "id": "opentelemetry-quiz-20",
       "type": "mcq",
       "question": "Which processor should you use to prevent memory overload in the OTel Collector?",
       "options": [
@@ -227,6 +247,7 @@ prev: /quiz/observability
       "hint": "The processor name directly describes its function."
     },
     {
+      "id": "opentelemetry-quiz-21",
       "type": "code-output",
       "question": "What does trace_flags value '01' indicate in a traceparent header?",
       "code": "traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01",
@@ -242,6 +263,7 @@ prev: /quiz/observability
       "hint": "The flag indicates the sampling decision."
     },
     {
+      "id": "opentelemetry-quiz-22",
       "type": "multiple-select",
       "question": "What are the benefits of using the OpenTelemetry Collector over direct export from applications?",
       "options": [
@@ -256,11 +278,13 @@ prev: /quiz/observability
       "hint": "Four of these are actual benefits mentioned in the documentation."
     },
     {
+      "id": "opentelemetry-quiz-23",
       "type": "flashcard",
       "question": "Explain the difference between the attributes processor and the transform processor.",
       "answer": "**Attributes Processor**: Simple operations on attributes\n- insert, update, delete, hash\n- Extract values with patterns\n- Good for basic attribute management\n\n**Transform Processor**: Advanced transformations using OTTL\n- Complex regex replacements\n- Conditional logic with 'where' clauses\n- Cross-field operations\n- Truncation, case changes\n- More powerful but more complex syntax"
     },
     {
+      "id": "opentelemetry-quiz-24",
       "type": "fill-blank",
       "question": "The Target Allocator in the OpenTelemetry Operator distributes ____ scrape targets across multiple collector instances.",
       "answer": "Prometheus",
@@ -269,6 +293,7 @@ prev: /quiz/observability
       "hint": "It relates to a popular metrics collection system."
     },
     {
+      "id": "opentelemetry-quiz-25",
       "type": "true-false",
       "question": "In a hybrid deployment pattern, agents handle heavy processing while gateways perform basic batching.",
       "answer": false,
@@ -276,6 +301,7 @@ prev: /quiz/observability
       "hint": "Think about where you'd want to concentrate compute-intensive tasks."
     },
     {
+      "id": "opentelemetry-quiz-26",
       "type": "mcq",
       "question": "Which scrape job collects container-level resource usage metrics and is embedded in the Kubelet?",
       "options": [
@@ -289,6 +315,7 @@ prev: /quiz/observability
       "hint": "Its name suggests container-level monitoring."
     },
     {
+      "id": "opentelemetry-quiz-27",
       "type": "code-completion",
       "question": "Complete the YAML to configure a filter processor that excludes health check endpoints:",
       "instruction": "Fill in the attribute name to filter on",
@@ -299,6 +326,7 @@ prev: /quiz/observability
       "explanation": "The http.url attribute contains the URL path being accessed. Filtering on this attribute allows excluding health check endpoints from traces."
     },
     {
+      "id": "opentelemetry-quiz-28",
       "type": "multiple-select",
       "question": "Which of these are valid resource detectors in OpenTelemetry?",
       "options": [
@@ -313,11 +341,13 @@ prev: /quiz/observability
       "hint": "Four detectors are explicitly listed in the documentation."
     },
     {
+      "id": "opentelemetry-quiz-29",
       "type": "flashcard",
       "question": "What is context propagation and why is it essential for distributed tracing?",
       "answer": "**Context Propagation**: The mechanism that passes trace metadata (trace_id, span_id) between services via HTTP headers.\n\n**Why Essential:**\n- Without it, each service creates disconnected, independent spans\n- Enables linking all spans from a single request into one trace\n- Provides end-to-end visibility across distributed systems\n- Allows reconstruction of the complete request journey\n\n**Transmitted via**: W3C traceparent header"
     },
     {
+      "id": "opentelemetry-quiz-30",
       "type": "mcq",
       "question": "What is the default value for `otel.bsp.max.export.batch.size`?",
       "options": [
@@ -331,6 +361,7 @@ prev: /quiz/observability
       "hint": "It's a power of 2 between 256 and 1024."
     },
     {
+      "id": "opentelemetry-quiz-31",
       "type": "true-false",
       "question": "Histograms perform server-side quantile calculation while Summaries perform client-side quantile calculation.",
       "answer": true,

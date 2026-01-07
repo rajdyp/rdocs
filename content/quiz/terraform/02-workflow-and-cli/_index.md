@@ -11,6 +11,7 @@ next: /quiz/terraform/03-configuration-basics
 {
   "questions": [
     {
+      "id": "terraform-workflow-cli-quiz-01",
       "type": "drag-drop",
       "question": "Arrange the core Terraform workflow steps in the correct order:",
       "instruction": "Drag to arrange from first to last",
@@ -24,6 +25,7 @@ next: /quiz/terraform/03-configuration-basics
       "explanation": "The correct Terraform workflow is: Write configuration → Init workspace → Plan changes → Apply changes. This ensures you always initialize before planning and preview before applying."
     },
     {
+      "id": "terraform-workflow-cli-quiz-02",
       "type": "mcq",
       "question": "What is the primary purpose of the `terraform init` command?",
       "options": [
@@ -37,6 +39,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Think about what happens when you first set up a Terraform project."
     },
     {
+      "id": "terraform-workflow-cli-quiz-03",
       "type": "multiple-select",
       "question": "What does `terraform init` do?",
       "options": [
@@ -52,6 +55,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Init prepares the workspace but doesn't make infrastructure changes."
     },
     {
+      "id": "terraform-workflow-cli-quiz-04",
       "type": "fill-blank",
       "question": "What directory does `terraform init` create to store downloaded provider plugins?",
       "answer": ".terraform",
@@ -60,6 +64,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "It's a hidden directory that starts with a dot."
     },
     {
+      "id": "terraform-workflow-cli-quiz-05",
       "type": "true-false",
       "question": "The `.terraform/` directory should be committed to version control.",
       "answer": false,
@@ -67,11 +72,13 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Think about whether downloaded plugins should be in Git."
     },
     {
+      "id": "terraform-workflow-cli-quiz-06",
       "type": "flashcard",
       "question": "What is the purpose of the Terraform State File?",
       "answer": "**Terraform State File (terraform.tfstate)**\n\nThe state file is Terraform's database of managed infrastructure. It serves to:\n\n1. **Map configuration to real-world resources** - Links your .tf code to actual cloud resources\n2. **Track metadata** - Stores dependencies and provider information\n3. **Improve performance** - Caches attribute values to avoid constant API queries\n4. **Enable collaboration** - Allows teams to share infrastructure state\n\n⚠️ Contains sensitive data (passwords, keys) and should never be manually edited."
     },
     {
+      "id": "terraform-workflow-cli-quiz-07",
       "type": "mcq",
       "question": "During `terraform plan`, how does Terraform detect state drift?",
       "options": [
@@ -85,6 +92,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Think about how Terraform knows if someone made manual changes in the console."
     },
     {
+      "id": "terraform-workflow-cli-quiz-08",
       "type": "multiple-select",
       "question": "Which scenarios cause state drift?",
       "options": [
@@ -100,6 +108,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Drift happens when changes are made outside of Terraform."
     },
     {
+      "id": "terraform-workflow-cli-quiz-09",
       "type": "true-false",
       "question": "Terraform can detect drift for any resource that exists in your cloud account.",
       "answer": false,
@@ -107,6 +116,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Think about the scope of what Terraform tracks."
     },
     {
+      "id": "terraform-workflow-cli-quiz-10",
       "type": "code-completion",
       "question": "Complete the command to detect drift without making any infrastructure changes:",
       "instruction": "Fill in the missing flag",
@@ -117,6 +127,7 @@ next: /quiz/terraform/03-configuration-basics
       "explanation": "`terraform plan -refresh-only` detects drift by refreshing the state without planning any infrastructure changes. To update the state to match reality, use `terraform apply -refresh-only`."
     },
     {
+      "id": "terraform-workflow-cli-quiz-11",
       "type": "mcq",
       "question": "What symbol in `terraform plan` output indicates a resource will be destroyed and then recreated?",
       "options": [
@@ -130,11 +141,13 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "It combines the destroy and create symbols."
     },
     {
+      "id": "terraform-workflow-cli-quiz-12",
       "type": "flashcard",
       "question": "What does 'known after apply' mean in Terraform plan output?",
       "answer": "**'known after apply'**\n\nThis appears in plan output when a value cannot be determined until the resource is actually created.\n\nExample:\n```\n+ public_ip = (known after apply)\n```\n\nThis happens because:\n- The cloud provider assigns the value (e.g., AWS assigns the public IP)\n- Terraform can't predict what the provider will assign\n- The value becomes known only after the resource is created\n\nCommon examples: resource IDs, auto-assigned IPs, generated ARNs"
     },
     {
+      "id": "terraform-workflow-cli-quiz-13",
       "type": "drag-drop",
       "question": "Arrange these steps in the correct order during `terraform apply`:",
       "instruction": "Drag to arrange in execution order",
@@ -150,6 +163,7 @@ next: /quiz/terraform/03-configuration-basics
       "explanation": "The apply process: Generate plan → Request approval → Lock state → Execute changes → Update state → Unlock state. State locking prevents concurrent modifications."
     },
     {
+      "id": "terraform-workflow-cli-quiz-14",
       "type": "fill-blank",
       "question": "What is the default parallelism value for `terraform apply` (how many resources can be created simultaneously)?",
       "answer": "10",
@@ -158,6 +172,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "It's a two-digit number."
     },
     {
+      "id": "terraform-workflow-cli-quiz-15",
       "type": "mcq",
       "question": "What happens when you run `terraform apply` without a saved plan?",
       "options": [
@@ -171,6 +186,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Terraform always shows you what will happen before applying."
     },
     {
+      "id": "terraform-workflow-cli-quiz-16",
       "type": "true-false",
       "question": "During `terraform apply`, Terraform acquires a state lock to prevent concurrent modifications.",
       "answer": true,
@@ -178,6 +194,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Think about what happens when two people run terraform apply at the same time."
     },
     {
+      "id": "terraform-workflow-cli-quiz-17",
       "type": "code-completion",
       "question": "Complete the command to apply changes without the confirmation prompt:",
       "instruction": "Fill in the missing flag",
@@ -188,6 +205,7 @@ next: /quiz/terraform/03-configuration-basics
       "explanation": "The `-auto-approve` flag skips the interactive approval prompt. Use with caution, especially in production!"
     },
     {
+      "id": "terraform-workflow-cli-quiz-18",
       "type": "multiple-select",
       "question": "Which commands should you run after writing Terraform configuration files but before applying changes?",
       "options": [
@@ -203,6 +221,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Think about the logical order: format, validate, initialize, preview."
     },
     {
+      "id": "terraform-workflow-cli-quiz-19",
       "type": "mcq",
       "question": "What does the `terraform fmt` command do?",
       "options": [
@@ -216,11 +235,13 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "fmt is short for format."
     },
     {
+      "id": "terraform-workflow-cli-quiz-20",
       "type": "flashcard",
       "question": "What is the purpose of the .terraform.lock.hcl file?",
       "answer": "**Provider Dependency Lock File (.terraform.lock.hcl)**\n\nEnsures consistent provider versions across team members and environments.\n\n**Without lock file:**\n- Developer A uses AWS provider 5.84.0\n- Developer B uses AWS provider 5.85.0 (newer release)\n- CI/CD uses AWS provider 5.86.0\n- Result: Inconsistent behavior, potential bugs\n\n**With lock file:**\n- All developers use the exact same provider version\n- Prevents unexpected changes from provider updates\n- Should be committed to version control\n\n**Update providers:** `terraform init -upgrade`"
     },
     {
+      "id": "terraform-workflow-cli-quiz-21",
       "type": "true-false",
       "question": "The .terraform.lock.hcl file should be committed to version control.",
       "answer": true,
@@ -228,6 +249,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Think about ensuring consistency across the team."
     },
     {
+      "id": "terraform-workflow-cli-quiz-22",
       "type": "mcq",
       "question": "How do you upgrade provider versions within the constraints defined in your configuration?",
       "options": [
@@ -241,6 +263,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "It's a flag added to the init command."
     },
     {
+      "id": "terraform-workflow-cli-quiz-23",
       "type": "code-completion",
       "question": "Complete the command to save a plan to a file named 'tfplan':",
       "instruction": "Fill in the missing part",
@@ -251,6 +274,7 @@ next: /quiz/terraform/03-configuration-basics
       "explanation": "`terraform plan -out=tfplan` saves the plan to a file. You can then apply this exact plan with `terraform apply tfplan`, which skips the approval prompt since the plan was already reviewed."
     },
     {
+      "id": "terraform-workflow-cli-quiz-24",
       "type": "mcq",
       "question": "What exit codes does `terraform plan -detailed-exitcode` return?",
       "options": [
@@ -264,6 +288,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "There are three possible exit codes."
     },
     {
+      "id": "terraform-workflow-cli-quiz-25",
       "type": "multiple-select",
       "question": "Which `terraform state` commands DO NOT modify actual cloud infrastructure?",
       "options": [
@@ -278,11 +303,13 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "State commands modify the state file, not the cloud."
     },
     {
+      "id": "terraform-workflow-cli-quiz-26",
       "type": "flashcard",
       "question": "What is the difference between 'terraform state rm' and 'terraform destroy'?",
       "answer": "**terraform state rm vs terraform destroy**\n\n**`terraform state rm <resource>`**\n- Removes resource from state file only\n- Resource continues to exist in the cloud\n- Terraform stops managing it\n- Use case: Move resource out of Terraform management\n\n**`terraform destroy`**\n- Actually deletes resources from the cloud\n- Updates state file to reflect deletion\n- Resource is permanently removed\n- Use case: Clean up infrastructure\n\n⚠️ **Critical:** `state rm` doesn't destroy—it just stops tracking!"
     },
     {
+      "id": "terraform-workflow-cli-quiz-27",
       "type": "mcq",
       "question": "How do you bring an existing cloud resource under Terraform management?",
       "options": [
@@ -296,6 +323,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "The command is 'import'."
     },
     {
+      "id": "terraform-workflow-cli-quiz-28",
       "type": "code-completion",
       "question": "Complete the command to force recreation of a specific resource:",
       "instruction": "Fill in the missing flag",
@@ -306,6 +334,7 @@ next: /quiz/terraform/03-configuration-basics
       "explanation": "`terraform apply -replace=aws_instance.web` forces Terraform to destroy and recreate the specified resource, even if no configuration changes require it. This replaced the deprecated `-taint` flag."
     },
     {
+      "id": "terraform-workflow-cli-quiz-29",
       "type": "multiple-select",
       "question": "When should you run `terraform init`?",
       "options": [
@@ -321,6 +350,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Init is needed when the workspace setup changes, not for every operation."
     },
     {
+      "id": "terraform-workflow-cli-quiz-30",
       "type": "mcq",
       "question": "What does the `~` symbol mean in terraform plan output?",
       "options": [
@@ -334,11 +364,13 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Think of the tilde as representing a small change."
     },
     {
+      "id": "terraform-workflow-cli-quiz-31",
       "type": "flashcard",
       "question": "What are Terraform Workspaces and when should you use them?",
       "answer": "**Terraform Workspaces**\n\nWorkspaces are named state instances for the same configuration, allowing you to manage multiple environments.\n\n**Commands:**\n- `terraform workspace list` - Show all workspaces\n- `terraform workspace new staging` - Create workspace\n- `terraform workspace select prod` - Switch workspace\n- `terraform workspace show` - Show current workspace\n\n**Use case:** Same code, different environments (dev/staging/prod)\n- Each workspace has its own state file\n- Easy to switch between environments\n\n⚠️ **Note:** For production use, many teams prefer separate directories/repos rather than workspaces for better isolation."
     },
     {
+      "id": "terraform-workflow-cli-quiz-32",
       "type": "true-false",
       "question": "The terraform.tfstate.backup file is automatically created by Terraform as a backup of the previous state.",
       "answer": true,
@@ -346,6 +378,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Think about Terraform's built-in safety mechanisms."
     },
     {
+      "id": "terraform-workflow-cli-quiz-33",
       "type": "mcq",
       "question": "You encounter a state lock error. What command can force-unlock the state?",
       "options": [
@@ -359,6 +392,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "The command includes 'force-unlock'."
     },
     {
+      "id": "terraform-workflow-cli-quiz-34",
       "type": "multiple-select",
       "question": "Which files/directories should be committed to version control in a Terraform project?",
       "options": [
@@ -374,6 +408,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Commit code and lock file, not cache or state."
     },
     {
+      "id": "terraform-workflow-cli-quiz-35",
       "type": "mcq",
       "question": "What command displays the current state in JSON format?",
       "options": [
@@ -387,6 +422,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "It's the show command with a flag."
     },
     {
+      "id": "terraform-workflow-cli-quiz-36",
       "type": "code-completion",
       "question": "Complete the command to list all resources in the state file:",
       "instruction": "Fill in the missing subcommand",
@@ -397,6 +433,7 @@ next: /quiz/terraform/03-configuration-basics
       "explanation": "`terraform state list` shows all resources currently managed in the state file. This is useful for getting an overview of what Terraform is managing."
     },
     {
+      "id": "terraform-workflow-cli-quiz-37",
       "type": "true-false",
       "question": "Terraform state files can contain sensitive information like passwords and API keys.",
       "answer": true,
@@ -404,6 +441,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Think about what data Terraform needs to track about resources."
     },
     {
+      "id": "terraform-workflow-cli-quiz-38",
       "type": "mcq",
       "question": "What is the purpose of the `terraform validate` command?",
       "options": [
@@ -417,11 +455,13 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "It validates the configuration files themselves."
     },
     {
+      "id": "terraform-workflow-cli-quiz-39",
       "type": "flashcard",
       "question": "What is the scope of Terraform's state drift detection?",
       "answer": "**Scope of Drift Detection**\n\n**CAN DETECT (Managed Resources):**\n✅ Changes to resources in the state file\n✅ Modified attributes (e.g., instance type changed from t2.micro to t2.small)\n✅ Deleted resources that Terraform manages\n✅ Tags added/removed from managed resources\n\n**CANNOT DETECT (Unmanaged Resources):**\n❌ New resources created outside Terraform\n❌ Resources in other regions not managed by Terraform\n❌ Resources created by other teams/tools\n\n**Key Point:** Terraform only queries resources listed in its state file. It does NOT scan your entire cloud account.\n\n**Solution:** Use `terraform import` for existing resources or cloud inventory tools to discover unmanaged resources."
     },
     {
+      "id": "terraform-workflow-cli-quiz-40",
       "type": "mcq",
       "question": "During the plan phase, Terraform queries the cloud provider. What does this step accomplish?",
       "options": [
@@ -435,6 +475,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Think about what Terraform needs to know before planning changes."
     },
     {
+      "id": "terraform-workflow-cli-quiz-41",
       "type": "multiple-select",
       "question": "What are best practices for managing state drift?",
       "options": [
@@ -450,6 +491,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "Think about preventing drift and safely handling it when it occurs."
     },
     {
+      "id": "terraform-workflow-cli-quiz-42",
       "type": "code-completion",
       "question": "Complete the command to target a specific resource during apply:",
       "instruction": "Fill in the missing flag",
@@ -460,6 +502,7 @@ next: /quiz/terraform/03-configuration-basics
       "explanation": "`terraform apply -target=aws_instance.web` applies changes only to the specified resource and its dependencies. Use sparingly—targeting can cause inconsistencies."
     },
     {
+      "id": "terraform-workflow-cli-quiz-43",
       "type": "mcq",
       "question": "What command would you use to see details about a specific resource from the state file?",
       "options": [
@@ -473,6 +516,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "It's a state subcommand."
     },
     {
+      "id": "terraform-workflow-cli-quiz-44",
       "type": "true-false",
       "question": "Running 'terraform plan' with the -refresh=false flag will skip querying the cloud provider for actual resource state.",
       "answer": true,
@@ -480,6 +524,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "The flag name indicates what it does."
     },
     {
+      "id": "terraform-workflow-cli-quiz-45",
       "type": "mcq",
       "question": "What happens to a resource when you run `terraform state rm` on it?",
       "options": [
@@ -493,6 +538,7 @@ next: /quiz/terraform/03-configuration-basics
       "hint": "State commands don't affect actual infrastructure."
     },
     {
+      "id": "terraform-workflow-cli-quiz-46",
       "type": "flashcard",
       "question": "How does State Locking work in Terraform?",
       "answer": "**State Locking**\n\nPrevents concurrent state modifications that could corrupt the state file.\n\n**How it works:**\n1. User A runs `terraform apply`\n2. Terraform acquires a lock (e.g., in DynamoDB)\n3. User B tries to run `terraform apply`\n4. User B gets an error: \"state is locked by User A\"\n5. User A completes, releases the lock\n6. User B can now proceed\n\n**Backends with locking:**\n- S3 (with DynamoDB table)\n- Terraform Cloud\n- Azure Blob Storage\n- Google Cloud Storage\n\n**Local backend:** No locking support (not safe for teams)\n\n**Force unlock (emergency only):** `terraform force-unlock <lock-id>`"
