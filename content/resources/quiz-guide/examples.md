@@ -8,6 +8,7 @@ weight: 3
 {
   "questions": [
     {
+      "id": "python-complete-01",
       "type": "mcq",
       "question": "What is the output of `print(type([]))`?",
       "options": [
@@ -21,6 +22,7 @@ weight: 3
       "hint": "Think about what the square brackets represent in Python."
     },
     {
+      "id": "python-complete-02",
       "type": "multiple-select",
       "question": "Which of the following are mutable data types in Python?",
       "options": [
@@ -35,6 +37,7 @@ weight: 3
       "hint": "Mutable means you can change the value after creation."
     },
     {
+      "id": "python-complete-03",
       "type": "true-false",
       "question": "Python uses zero-based indexing for sequences.",
       "answer": true,
@@ -42,6 +45,7 @@ weight: 3
       "hint": "What index do you use to access the first element?"
     },
     {
+      "id": "python-complete-04",
       "type": "fill-blank",
       "question": "What keyword is used to create a function in Python?",
       "answer": "def",
@@ -50,6 +54,7 @@ weight: 3
       "hint": "It's a three-letter keyword."
     },
     {
+      "id": "python-complete-05",
       "type": "code-output",
       "question": "Predict the output:",
       "code": "x = [1, 2, 3]\ny = x\ny.append(4)\nprint(len(x))",
@@ -65,11 +70,13 @@ weight: 3
       "hint": "Think about whether y is a copy or a reference to x."
     },
     {
+      "id": "python-complete-06",
       "type": "flashcard",
       "question": "What does DRY stand for?",
       "answer": "**Don't Repeat Yourself**\n\nA principle that encourages code reusability and avoiding duplication."
     },
     {
+      "id": "python-complete-07",
       "type": "drag-drop",
       "question": "Arrange these steps in the correct order for exception handling:",
       "instruction": "Drag to arrange in the correct order",
@@ -83,6 +90,7 @@ weight: 3
       "explanation": "The correct order is: try, except, else, finally."
     },
     {
+      "id": "python-complete-08",
       "type": "code-completion",
       "question": "Complete the code to open a file:",
       "instruction": "Fill in the missing keyword",
@@ -93,6 +101,7 @@ weight: 3
       "explanation": "The `with` statement is used for context management, ensuring the file is properly closed."
     },
     {
+      "id": "python-complete-09",
       "type": "mcq",
       "question": "Which method converts a string to lowercase?",
       "options": [
@@ -105,6 +114,7 @@ weight: 3
       "explanation": "The `.lower()` method converts a string to lowercase in Python."
     },
     {
+      "id": "python-complete-10",
       "type": "true-false",
       "question": "In Python, `0` and `False` are considered equal when compared with `==`.",
       "answer": true,

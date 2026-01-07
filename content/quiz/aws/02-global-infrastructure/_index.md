@@ -11,6 +11,7 @@ next: /quiz/aws/03-networking-fundamentals
 {
   "questions": [
     {
+      "id": "aws-global-infrastructure-quiz-01",
       "type": "mcq",
       "question": "What is the primary purpose of AWS Regions being geographically separated?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "Think about regulatory compliance and disaster scenarios."
     },
     {
+      "id": "aws-global-infrastructure-quiz-02",
       "type": "multiple-select",
       "question": "Which factors should you consider when choosing an AWS Region for your application?",
       "options": [
@@ -38,6 +40,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "The content lists five specific factors to consider when selecting a Region."
     },
     {
+      "id": "aws-global-infrastructure-quiz-03",
       "type": "true-false",
       "question": "Availability Zones within a Region are connected via the public internet to ensure maximum accessibility.",
       "answer": false,
@@ -45,6 +48,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "Consider what type of network would provide the best performance and security."
     },
     {
+      "id": "aws-global-infrastructure-quiz-04",
       "type": "code-completion",
       "question": "Complete the ARN for an EC2 instance in the us-east-1 Region:",
       "instruction": "Fill in the missing partition identifier",
@@ -55,6 +59,7 @@ next: /quiz/aws/03-networking-fundamentals
       "explanation": "The partition for standard AWS Regions is 'aws'. Other partitions include 'aws-cn' for AWS China Regions and 'aws-us-gov' for AWS GovCloud (US) Regions."
     },
     {
+      "id": "aws-global-infrastructure-quiz-05",
       "type": "mcq",
       "question": "How many data centers does an Availability Zone contain?",
       "options": [
@@ -68,6 +73,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "The definition mentions 'one or more' data centers."
     },
     {
+      "id": "aws-global-infrastructure-quiz-06",
       "type": "fill-blank",
       "question": "What is the typical inter-AZ latency within a Region (in milliseconds)?",
       "answer": "single-digit",
@@ -77,6 +83,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "Think about the order of magnitude—less than 10ms."
     },
     {
+      "id": "aws-global-infrastructure-quiz-07",
       "type": "multiple-select",
       "question": "Which of the following are characteristics of AWS Local Zones?",
       "options": [
@@ -91,11 +98,13 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "Local Zones extend AWS infrastructure but have limitations compared to full Regions."
     },
     {
+      "id": "aws-global-infrastructure-quiz-08",
       "type": "flashcard",
       "question": "What does Multi-AZ deployment provide?",
       "answer": "**High Availability and Fault Tolerance**\n\nDistributing resources across multiple Availability Zones within a Region provides:\n- Protection against AZ-level failures\n- Automatic failover capabilities\n- Continuous operation during infrastructure issues\n- Best practice: use at least 2 AZs for production (3+ preferred)"
     },
     {
+      "id": "aws-global-infrastructure-quiz-09",
       "type": "drag-drop",
       "question": "Arrange these AWS Global Infrastructure components from largest to smallest scope:",
       "instruction": "Drag to arrange in order from broadest to most specific",
@@ -109,6 +118,7 @@ next: /quiz/aws/03-networking-fundamentals
       "explanation": "The hierarchy is: AWS Global Infrastructure (worldwide) → Region (geographic location) → Availability Zone (isolated location within Region) → Data Center (physical facility)."
     },
     {
+      "id": "aws-global-infrastructure-quiz-10",
       "type": "code-output",
       "question": "Given this S3 bucket ARN, what can you determine about the bucket?",
       "code": "arn:aws:s3:::my-application-bucket",
@@ -124,6 +134,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "S3 bucket names must be globally unique, which affects the ARN format."
     },
     {
+      "id": "aws-global-infrastructure-quiz-11",
       "type": "mcq",
       "question": "Which statement about IAM (Identity and Access Management) is most accurate?",
       "options": [
@@ -137,6 +148,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "Consider the relationship between IAM and Security Token Service (STS)."
     },
     {
+      "id": "aws-global-infrastructure-quiz-12",
       "type": "true-false",
       "question": "Amazon S3 bucket names must be globally unique, but the data in buckets is always stored regionally.",
       "answer": true,
@@ -144,6 +156,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "Think about the difference between naming and storage location."
     },
     {
+      "id": "aws-global-infrastructure-quiz-13",
       "type": "multiple-select",
       "question": "Which AWS services are truly global in scope?",
       "options": [
@@ -159,6 +172,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "Global services typically relate to identity, DNS, or content delivery."
     },
     {
+      "id": "aws-global-infrastructure-quiz-14",
       "type": "mcq",
       "question": "What is the minimum recommended number of Availability Zones for production workloads?",
       "options": [
@@ -172,6 +186,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "Think about the minimum needed for redundancy versus the ideal setup."
     },
     {
+      "id": "aws-global-infrastructure-quiz-15",
       "type": "fill-blank",
       "question": "Traffic between AWS Regions stays on AWS's private ________ network and does not traverse the public internet.",
       "answer": "backbone",
@@ -180,6 +195,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "It's a term referring to the main high-capacity network infrastructure."
     },
     {
+      "id": "aws-global-infrastructure-quiz-16",
       "type": "code-completion",
       "question": "Complete the IAM role ARN:",
       "instruction": "Fill in what belongs in the region field for IAM resources",
@@ -190,6 +206,7 @@ next: /quiz/aws/03-networking-fundamentals
       "explanation": "IAM is a global service, so the region field is left empty (represented by ::). The ARN format shows two colons with nothing between them where the region would normally appear."
     },
     {
+      "id": "aws-global-infrastructure-quiz-17",
       "type": "mcq",
       "question": "When would you use AWS Local Zones instead of standard Availability Zones?",
       "options": [
@@ -203,6 +220,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "Local Zones prioritize one specific performance characteristic."
     },
     {
+      "id": "aws-global-infrastructure-quiz-18",
       "type": "multiple-select",
       "question": "What information can you extract from this ARN: arn:aws:lambda:eu-west-1:123456789012:function:my-function",
       "options": [
@@ -217,6 +235,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "ARNs contain structural information but not runtime configuration details."
     },
     {
+      "id": "aws-global-infrastructure-quiz-19",
       "type": "true-false",
       "question": "Resources in one AWS Region automatically replicate to other Regions for disaster recovery purposes.",
       "answer": false,
@@ -224,11 +243,13 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "Think about the principle of regional independence and isolation."
     },
     {
+      "id": "aws-global-infrastructure-quiz-20",
       "type": "flashcard",
       "question": "What are the key components of an AWS ARN?",
       "answer": "**ARN Format: arn:partition:service:region:account-id:resource**\n\n- **Partition**: aws, aws-cn, or aws-us-gov\n- **Service**: The AWS service (ec2, s3, iam, lambda, etc.)\n- **Region**: AWS Region (omitted for global services)\n- **Account ID**: 12-digit AWS account (omitted for globally unique names)\n- **Resource**: Resource type and identifier (format varies by service)"
     },
     {
+      "id": "aws-global-infrastructure-quiz-21",
       "type": "drag-drop",
       "question": "Arrange these deployment patterns from least resilient to most resilient:",
       "instruction": "Drag to order by increasing fault tolerance",
@@ -241,6 +262,7 @@ next: /quiz/aws/03-networking-fundamentals
       "explanation": "Resilience increases with geographic distribution: Single AZ (single point of failure) → Multi-AZ (protects against AZ failures) → Multi-Region (protects against region-wide failures and provides global redundancy)."
     },
     {
+      "id": "aws-global-infrastructure-quiz-22",
       "type": "mcq",
       "question": "Which architectural pattern provides protection against both AZ failures and region-wide failures?",
       "options": [
@@ -254,6 +276,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "Think about what's needed to survive a complete regional outage."
     },
     {
+      "id": "aws-global-infrastructure-quiz-23",
       "type": "code-output",
       "question": "What does this IAM policy statement allow?",
       "code": "{\n  \"Effect\": \"Allow\",\n  \"Action\": \"s3:GetObject\",\n  \"Resource\": \"arn:aws:s3:::my-bucket/*\"\n}",
@@ -269,6 +292,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "Focus on the Action (GetObject) and the Resource ARN with the wildcard."
     },
     {
+      "id": "aws-global-infrastructure-quiz-24",
       "type": "true-false",
       "question": "Each AWS Availability Zone has independent power, cooling, and networking infrastructure to provide fault isolation.",
       "answer": true,
@@ -276,6 +300,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "This is a core design principle of Availability Zones."
     },
     {
+      "id": "aws-global-infrastructure-quiz-25",
       "type": "multiple-select",
       "question": "Which services offer features for global distribution despite being regional by default?",
       "options": [
@@ -290,6 +315,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "Look for services that explicitly mention cross-region or global capabilities."
     },
     {
+      "id": "aws-global-infrastructure-quiz-26",
       "type": "mcq",
       "question": "What is the naming pattern for an AWS Local Zone in Boston associated with the us-east-1 Region?",
       "options": [
@@ -303,11 +329,13 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "The format includes the parent region, a city abbreviation, and zone identifier."
     },
     {
+      "id": "aws-global-infrastructure-quiz-27",
       "type": "flashcard",
       "question": "What are best practices for using Availability Zones?",
       "answer": "**AZ Best Practices:**\n\n1. Deploy resources across **multiple AZs** for high availability\n2. Use **at least 2 AZs** for production (3+ preferred)\n3. **Design for AZ failure**—applications should gracefully handle outages\n4. **Leverage AZ-aware services** (ELB, RDS Multi-AZ, Auto Scaling)\n5. **Monitor AZ health** and balance traffic appropriately"
     },
     {
+      "id": "aws-global-infrastructure-quiz-28",
       "type": "fill-blank",
       "question": "In the region code 'us-east-1', the number '1' represents the ________ number.",
       "answer": "region",
@@ -316,6 +344,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "What does the '1' distinguish from potential future regions in the same area?"
     },
     {
+      "id": "aws-global-infrastructure-quiz-29",
       "type": "mcq",
       "question": "If you need to comply with GDPR data residency requirements, which Region selection factor is most critical?",
       "options": [
@@ -329,6 +358,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "GDPR is a European regulation about data protection and privacy."
     },
     {
+      "id": "aws-global-infrastructure-quiz-30",
       "type": "true-false",
       "question": "New AWS services typically launch in all Regions simultaneously to ensure global availability.",
       "answer": false,
@@ -336,6 +366,7 @@ next: /quiz/aws/03-networking-fundamentals
       "hint": "Think about how technology companies typically roll out new features."
     },
     {
+      "id": "aws-global-infrastructure-quiz-31",
       "type": "code-completion",
       "question": "Complete the S3 object ARN for a file in a bucket:",
       "instruction": "Add the correct separator between bucket name and object path",

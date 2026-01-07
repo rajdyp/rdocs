@@ -10,6 +10,7 @@ prev: /quiz/kubernetes/15-observability
 {
   "questions": [
     {
+      "id": "kubernetes-advanced-topics-quiz-01",
       "type": "mcq",
       "question": "What is the primary purpose of a Finalizer in Kubernetes?",
       "options": [
@@ -23,6 +24,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Think about what happens when you need to release external resources before deletion."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-02",
       "type": "true-false",
       "question": "Creating a Custom Resource Definition (CRD) automatically provisions the underlying infrastructure (like pods or services) for that resource.",
       "answer": false,
@@ -30,6 +32,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Consider what happens when you apply a Database CRD without any operator installed."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-03",
       "type": "multiple-select",
       "question": "Which of the following are true about the relationship between Operators and CRDs?",
       "options": [
@@ -43,6 +46,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Think about what each component does independently and together."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-04",
       "type": "drag-drop",
       "question": "Arrange the deletion flow with Finalizers in the correct order:",
       "instruction": "Drag to arrange in the correct order",
@@ -57,6 +61,7 @@ prev: /quiz/kubernetes/15-observability
       "explanation": "The finalizer flow is: deletion initiated → deletionTimestamp set → controller performs cleanup → finalizers removed → actual deletion from etcd."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-05",
       "type": "mcq",
       "question": "In admission webhook execution, which type of webhook runs first?",
       "options": [
@@ -70,6 +75,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Consider why you'd want one type to see the results of the other."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-06",
       "type": "fill-blank",
       "question": "In Istio, what CRD is used to control routing and define where traffic goes (e.g., for canary deployments)?",
       "answer": "VirtualService",
@@ -78,6 +84,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "It's a two-word resource that describes the 'virtual' nature of the service routing."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-07",
       "type": "code-output",
       "question": "What does this kubectl command do?",
       "code": "kubectl patch pod my-pod -p '{\"metadata\":{\"finalizers\":[]}}' --type=merge",
@@ -93,6 +100,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Setting an empty array effectively clears all existing values."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-08",
       "type": "true-false",
       "question": "Service Mesh primarily handles north-south (ingress/egress) traffic rather than east-west (service-to-service) traffic.",
       "answer": false,
@@ -100,6 +108,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Think about what 'mesh' implies - connections between many services."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-09",
       "type": "multiple-select",
       "question": "Which features does a Service Mesh typically provide?",
       "options": [
@@ -114,6 +123,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Focus on features related to service-to-service communication and observability."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-10",
       "type": "mcq",
       "question": "What is the key difference between a Validating Webhook and a Mutating Webhook?",
       "options": [
@@ -127,6 +137,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "The names indicate their primary action: mutate (change) vs validate (check)."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-11",
       "type": "fill-blank",
       "question": "In Helm terminology, what is a running instance of a chart called?",
       "answer": "release",
@@ -135,6 +146,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Think about what happens when you 'install' a chart."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-12",
       "type": "code-completion",
       "question": "Complete the Helm command to install a chart with custom values:",
       "instruction": "Fill in the flag to specify a values file",
@@ -145,6 +157,7 @@ prev: /quiz/kubernetes/15-observability
       "explanation": "The `-f` or `--values` flag specifies a YAML file containing custom values to override chart defaults."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-13",
       "type": "drag-drop",
       "question": "Arrange these Helm hook types in their typical execution order during an upgrade:",
       "instruction": "Drag to arrange in the correct order",
@@ -158,6 +171,7 @@ prev: /quiz/kubernetes/15-observability
       "explanation": "During an upgrade: pre-upgrade runs before upgrade, post-upgrade runs after. If rollback is needed: pre-rollback runs before rollback, post-rollback runs after."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-14",
       "type": "mcq",
       "question": "In Kustomize, what is the purpose of an 'overlay'?",
       "options": [
@@ -171,6 +185,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Think of it as a 'layer' that goes on top of something else."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-15",
       "type": "true-false",
       "question": "Kustomize is built into kubectl and doesn't require installation of a separate tool.",
       "answer": true,
@@ -178,6 +193,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Consider the '-k' flag available in kubectl commands."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-16",
       "type": "multiple-select",
       "question": "Which are valid use cases for Kustomize Components?",
       "options": [
@@ -191,6 +207,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Think about features that are optional but might be needed in multiple environments."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-17",
       "type": "mcq",
       "question": "What is the fundamental principle of GitOps?",
       "options": [
@@ -204,6 +221,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Consider what makes Git valuable for tracking changes over time."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-18",
       "type": "fill-blank",
       "question": "In Istio, what resource type configures traffic policies like connection pools and circuit breakers for a destination?",
       "answer": "DestinationRule",
@@ -212,11 +230,13 @@ prev: /quiz/kubernetes/15-observability
       "hint": "It's a rule that applies to the destination of traffic."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-19",
       "type": "flashcard",
       "question": "What is the relationship between CRDs, Controllers, and Operators?",
       "answer": "**Operator = CRD + Controller**\n\n- **CRD**: Extends Kubernetes API with custom resource types (defines the schema)\n- **Controller**: Watches for resources and takes action to reconcile actual state with desired state\n- **Operator**: Combines both to automate complex application management, encapsulating domain-specific operational knowledge"
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-20",
       "type": "code-output",
       "question": "What does this Kustomize command do?",
       "code": "kubectl diff -k overlays/production",
@@ -232,6 +252,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "The 'diff' subcommand typically compares current vs proposed state."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-21",
       "type": "mcq",
       "question": "Which patching strategy in Kustomize is best for adding a sidecar container to a deployment?",
       "options": [
@@ -245,6 +266,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Consider which approach handles complex nested structures more naturally."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-22",
       "type": "true-false",
       "question": "In Helm, the `helm template` command applies resources directly to the cluster.",
       "answer": false,
@@ -252,6 +274,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Think about what 'template' implies - generating output vs taking action."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-23",
       "type": "multiple-select",
       "question": "Which are valid GitOps benefits?",
       "options": [
@@ -266,11 +289,13 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Focus on benefits related to using Git as source of truth for infrastructure."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-24",
       "type": "flashcard",
       "question": "When should you use Kustomize vs Helm?",
       "answer": "**Use Kustomize when:**\n- Managing multiple environments (dev/staging/prod)\n- Simple overlay/patch patterns needed\n- Want to avoid templating complexity\n- Team prefers pure YAML\n- GitOps workflows\n\n**Use Helm when:**\n- Complex applications with many parameters\n- Need reusable packages across teams\n- Dependency management required\n- Installing third-party applications\n- Want package versioning"
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-25",
       "type": "mcq",
       "question": "What happens when a GitOps operator detects that the cluster state differs from what's defined in Git?",
       "options": [
@@ -284,6 +309,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "In GitOps, which direction does the synchronization flow?"
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-26",
       "type": "fill-blank",
       "question": "What Helm command would you use to revert to a previous release version?",
       "answer": "rollback",
@@ -292,6 +318,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Think about what action undoes an upgrade."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-27",
       "type": "code-completion",
       "question": "Complete the kubectl command to apply a Kustomize overlay:",
       "instruction": "Fill in the flag that specifies a kustomization directory",
@@ -302,6 +329,7 @@ prev: /quiz/kubernetes/15-observability
       "explanation": "The `-k` or `--kustomize` flag tells kubectl to process the directory as a kustomization and apply the rendered output."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-28",
       "type": "true-false",
       "question": "In a Service Mesh like Istio, sidecar proxies are automatically injected into pods when the namespace has the label `istio-injection: enabled`.",
       "answer": true,
@@ -309,6 +337,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "Think about how Istio gets sidecars into pods without modifying deployment manifests."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-29",
       "type": "mcq",
       "question": "Which command shows the actual Kubernetes manifests that were deployed by a Helm release?",
       "options": [
@@ -322,6 +351,7 @@ prev: /quiz/kubernetes/15-observability
       "hint": "You want to 'get' information about an existing release."
     },
     {
+      "id": "kubernetes-advanced-topics-quiz-30",
       "type": "flashcard",
       "question": "What is the difference between East-West and North-South traffic in the context of Service Mesh?",
       "answer": "**East-West Traffic (Primary Service Mesh Focus):**\n- Service-to-service communication within the cluster\n- Pod A ↔ Pod B ↔ Pod C\n- Handled by sidecar proxies\n\n**North-South Traffic (Optional Integration):**\n- Traffic entering or leaving the cluster\n- External clients → Ingress → Services\n- Services → External APIs/Databases\n- Handled by optional gateway components"

@@ -11,6 +11,7 @@ next: /quiz/python/02-building-blocks
 {
   "questions": [
     {
+      "id": "python-foundation-01",
       "type": "mcq",
       "question": "What happens when you execute `a = [1, 2, 3]` followed by `b = a` and then `b.append(4)`?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Think about whether variables hold values or references to objects."
     },
     {
+      "id": "python-foundation-02",
       "type": "multiple-select",
       "question": "Which of the following evaluate to `False` in a boolean context?",
       "options": [
@@ -39,6 +41,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Empty containers are falsy, but containers with items (even if those items are falsy) are truthy."
     },
     {
+      "id": "python-foundation-03",
       "type": "true-false",
       "question": "The expression `1 < x < 10` is equivalent to `1 < x and x < 10` in Python.",
       "answer": true,
@@ -46,6 +49,7 @@ next: /quiz/python/02-building-blocks
       "hint": "This is one of Python's unique features that makes comparisons more natural."
     },
     {
+      "id": "python-foundation-04",
       "type": "code-output",
       "question": "Predict the output:",
       "code": "x = 5\nx += 3\nx *= 2\nprint(x)",
@@ -61,6 +65,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Follow each operation step by step: addition first, then multiplication."
     },
     {
+      "id": "python-foundation-05",
       "type": "fill-blank",
       "question": "What operator is used in Python 3.8+ to assign a value AND use it in the same expression?",
       "answer": ":=",
@@ -69,6 +74,7 @@ next: /quiz/python/02-building-blocks
       "hint": "It's nicknamed after an animal because of how it looks."
     },
     {
+      "id": "python-foundation-06",
       "type": "code-output",
       "question": "What is the output of this code?",
       "code": "for i in range(3):\n    count = 0\n    count += i\n    print(count, end=' ')",
@@ -84,6 +90,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Pay attention to where `count` is initialized—inside or outside the loop?"
     },
     {
+      "id": "python-foundation-07",
       "type": "mcq",
       "question": "Which comparison should you use to check if a variable is `None`?",
       "options": [
@@ -97,6 +104,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Think about identity versus equality."
     },
     {
+      "id": "python-foundation-08",
       "type": "true-false",
       "question": "The expression `False and expensive_function()` will execute `expensive_function()`.",
       "answer": false,
@@ -104,6 +112,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Consider what 'short-circuit evaluation' means."
     },
     {
+      "id": "python-foundation-09",
       "type": "drag-drop",
       "question": "Arrange these Big O complexities from fastest to slowest:",
       "instruction": "Drag to arrange in order of increasing runtime (fastest to slowest)",
@@ -119,6 +128,7 @@ next: /quiz/python/02-building-blocks
       "explanation": "The order from fastest to slowest is: O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(2ⁿ). Constant time is fastest, exponential is slowest."
     },
     {
+      "id": "python-foundation-10",
       "type": "mcq",
       "question": "What is the time complexity of this code?\n\n```python\nfor i in range(n):\n    for j in range(n):\n        print(i, j)\n```",
       "options": [
@@ -132,6 +142,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Count how many times the innermost operation executes relative to the input size."
     },
     {
+      "id": "python-foundation-11",
       "type": "code-completion",
       "question": "Complete the code to iterate over both indices and values:",
       "instruction": "Fill in the missing function name",
@@ -142,11 +153,13 @@ next: /quiz/python/02-building-blocks
       "explanation": "The `enumerate()` function returns both the index and value while iterating over a sequence. It's more Pythonic than using `range(len(fruits))` and manually indexing."
     },
     {
+      "id": "python-foundation-12",
       "type": "flashcard",
       "question": "What is the Walrus Operator and when was it introduced?",
       "answer": "**The Walrus Operator (`:=`)**\n\nIntroduced in Python 3.8+, it allows you to assign a value to a variable AND use that value in the same expression.\n\n**Example:**\n```python\nif (n := len(data)) > 10:\n    print(f\"List has {n} elements\")\n```\n\nThis evaluates `len(data)`, assigns it to `n`, and uses it in the comparison—all in one line."
     },
     {
+      "id": "python-foundation-13",
       "type": "multiple-select",
       "question": "Which of the following are valid uses of the `else` clause with loops in Python?",
       "options": [
@@ -160,6 +173,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Think about what 'normally' means for loop completion."
     },
     {
+      "id": "python-foundation-14",
       "type": "code-output",
       "question": "What does this code print?",
       "code": "result = 0 or 5 or 10\nprint(result)",
@@ -175,6 +189,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Remember that `or` returns the first truthy value, not `True`/`False`."
     },
     {
+      "id": "python-foundation-15",
       "type": "mcq",
       "question": "What is the problem with using `timeout = seconds or 30` when `seconds` can legitimately be `0`?",
       "options": [
@@ -188,6 +203,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Consider that numeric zero is falsy but might be a meaningful value."
     },
     {
+      "id": "python-foundation-16",
       "type": "true-false",
       "question": "In Big O notation, O(2n) and O(n) are considered equivalent.",
       "answer": true,
@@ -195,6 +211,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Big O cares about growth rate, not exact counts."
     },
     {
+      "id": "python-foundation-17",
       "type": "fill-blank",
       "question": "What is the time complexity of binary search? (Use Big O notation)",
       "answer": "O(log n)",
@@ -203,6 +220,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Think about how many times you can divide n by 2 until you reach 1."
     },
     {
+      "id": "python-foundation-18",
       "type": "code-output",
       "question": "Predict the output:",
       "code": "x, y = 10, 20\nx, y = y, x\nprint(x, y)",
@@ -218,11 +236,13 @@ next: /quiz/python/02-building-blocks
       "hint": "Python evaluates the entire right side before assigning to the left side."
     },
     {
+      "id": "python-foundation-19",
       "type": "flashcard",
       "question": "What is Short-Circuit Evaluation?",
       "answer": "**Short-Circuit Evaluation**\n\nPython stops evaluating a logical expression as soon as the final result is determined.\n\n**With `and`:**\n- If left side is `False`, result must be `False`—don't evaluate right side\n- `False and expensive_function()` → Never calls function\n\n**With `or`:**\n- If left side is `True`, result must be `True`—don't evaluate right side  \n- `True or expensive_function()` → Never calls function\n\nThis is both an optimization and a useful programming pattern for avoiding errors (e.g., `x and x.method()` won't fail if `x` is `None`)."
     },
     {
+      "id": "python-foundation-20",
       "type": "mcq",
       "question": "What is the time complexity of looking up a value in a Python dictionary?",
       "options": [
@@ -236,6 +256,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Dictionaries use hashing for direct access."
     },
     {
+      "id": "python-foundation-21",
       "type": "code-completion",
       "question": "Complete the code to create an independent copy of a list:",
       "instruction": "Fill in the method name",
@@ -246,6 +267,7 @@ next: /quiz/python/02-building-blocks
       "explanation": "The `.copy()` method creates a shallow copy of a list, making it independent from the original. Modifying the copy won't affect the original. Alternatively, you could use `independent = original[:]` or `independent = list(original)`."
     },
     {
+      "id": "python-foundation-22",
       "type": "multiple-select",
       "question": "Which statements about the `range()` function are correct?",
       "options": [
@@ -260,6 +282,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Remember: start is inclusive, stop is exclusive."
     },
     {
+      "id": "python-foundation-23",
       "type": "code-output",
       "question": "What is printed?",
       "code": "for num in [1, 2, 3, 4, 5]:\n    if num % 2 == 0:\n        continue\n    print(num, end=' ')",
@@ -275,6 +298,7 @@ next: /quiz/python/02-building-blocks
       "hint": "`continue` skips to the next iteration."
     },
     {
+      "id": "python-foundation-24",
       "type": "true-false",
       "question": "The expression `isinstance(3.14, (int, float))` returns `True`.",
       "answer": true,
@@ -282,11 +306,13 @@ next: /quiz/python/02-building-blocks
       "hint": "isinstance() accepts either a single type or a tuple of types."
     },
     {
+      "id": "python-foundation-25",
       "type": "flashcard",
       "question": "What is the Accumulator Pattern?",
       "answer": "**The Accumulator Pattern**\n\nA fundamental programming pattern that builds up a result through iteration:\n\n1. **Initialize** a variable before the loop (e.g., `total = 0`)\n2. **Update** it inside the loop (e.g., `total += num`)\n3. **Use** the final result after the loop\n\n**Examples:**\n```python\n# Sum accumulator\ntotal = 0\nfor num in numbers:\n    total += num\n\n# List accumulator\nsquares = []\nfor i in range(1, 6):\n    squares.append(i ** 2)\n```\n\nThe key is that the variable is declared **outside** the loop so it persists across iterations."
     },
     {
+      "id": "python-foundation-26",
       "type": "mcq",
       "question": "In the nested loops below, how many times does the inner `print` statement execute?\n\n```python\nfor i in range(3):\n    for j in range(4):\n        print(i, j)\n```",
       "options": [
@@ -300,6 +326,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Multiply the number of outer iterations by the number of inner iterations."
     },
     {
+      "id": "python-foundation-27",
       "type": "code-output",
       "question": "What does this code output?",
       "code": "numbers = [1, 2, 3, 4, 5]\nfor num in numbers:\n    if num == 3:\n        print(\"Found\")\n        break\nelse:\n    print(\"Not found\")",
@@ -315,6 +342,7 @@ next: /quiz/python/02-building-blocks
       "hint": "The `else` clause is skipped when `break` is executed."
     },
     {
+      "id": "python-foundation-28",
       "type": "fill-blank",
       "question": "What keyword is used to skip the current iteration of a loop and move to the next one?",
       "answer": "continue",
@@ -323,6 +351,7 @@ next: /quiz/python/02-building-blocks
       "hint": "It's not `break` or `pass`."
     },
     {
+      "id": "python-foundation-29",
       "type": "mcq",
       "question": "Which operation has O(n²) time complexity?",
       "options": [
@@ -336,6 +365,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Think about which operation requires nested loops over the same data."
     },
     {
+      "id": "python-foundation-30",
       "type": "code-completion",
       "question": "Complete the code to iterate over both parallel lists simultaneously:",
       "instruction": "Fill in the missing function",
@@ -346,6 +376,7 @@ next: /quiz/python/02-building-blocks
       "explanation": "The `zip()` function takes multiple iterables and returns an iterator of tuples, pairing up elements from each iterable. It's perfect for parallel iteration over multiple sequences."
     },
     {
+      "id": "python-foundation-31",
       "type": "true-false",
       "question": "An algorithm with O(n + n²) time complexity simplifies to O(n) in Big O notation.",
       "answer": false,
@@ -353,6 +384,7 @@ next: /quiz/python/02-building-blocks
       "hint": "Which term grows faster as n increases?"
     },
     {
+      "id": "python-foundation-32",
       "type": "flashcard",
       "question": "What is the difference between `==` and `is` in Python?",
       "answer": "**`==` vs `is`**\n\n**`==` (Equality Operator):**\n- Compares **values**\n- Checks if two objects have the same content\n- Example: `[1, 2, 3] == [1, 2, 3]` → `True`\n\n**`is` (Identity Operator):**\n- Compares **object identity** (memory address)\n- Checks if two variables reference the exact same object\n- Example: `a = [1, 2, 3]; b = [1, 2, 3]; a is b` → `False`\n\n**Best Practice:**\n- Use `is` for singleton objects like `None`: `x is None`\n- Use `==` for value comparisons"

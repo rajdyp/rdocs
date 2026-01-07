@@ -54,6 +54,54 @@ Optional fields:
 
 Type-specific fields vary (see [Question Types](question-types) reference).
 
+## Performance Tracking
+
+The quiz system automatically tracks your performance on each question across sessions using browser localStorage.
+
+### What's Tracked
+
+For each question, the system records:
+- **Attempts**: Total number of times you've answered the question
+- **Correct/Incorrect**: Count of right and wrong answers
+- **Streak**: Current correct/incorrect streak
+- **Last Result**: Whether your last attempt was correct or incorrect
+- **Last Attempt**: Timestamp of your most recent attempt
+
+### Weak Question Detection
+
+Questions are automatically highlighted with an amber left border if:
+- You've attempted them at least 2 times, AND
+- Your accuracy is below 50%, OR
+- You have a negative streak of 2+ (missed it twice in a row)
+
+This helps you identify topics that need more practice.
+
+### Review Modes
+
+#### Review Incorrect Questions
+After viewing quiz results, click **"Review Incorrect Questions"** to practice only the questions you missed in the current attempt. This is perfect for immediate reinforcement.
+
+#### Review Past Incorrect
+Click **"Review Past Incorrect"** in the progress bar to practice questions you've struggled with historically across all sessions. The button shows the count of historically incorrect questions and is disabled if none exist.
+
+When in review mode, click **"Show All Questions"** to return to the full quiz.
+
+### Question IDs for Stable Tracking
+
+For consistent performance tracking across quiz updates, assign explicit IDs to questions:
+
+```json
+{
+  "id": "python-basics-01",
+  "type": "mcq",
+  "question": "What is Python?",
+  "options": ["A snake", "A language", "A framework"],
+  "correct": 1
+}
+```
+
+Without explicit IDs, the system uses `quizId-index` as a fallback, which can shift if you reorder questions.
+
 ## Features
 
 ### Hints
@@ -100,27 +148,32 @@ Question text and explanations support markdown:
 
 ## Best Practices
 
-### 1. Question Design
+### 1. Use Explicit Question IDs
+- **Always** assign explicit IDs to questions for stable performance tracking
+- Use descriptive IDs: `"python-basics-01"`, not generic ones
+- Never change IDs after publishing (or tracking data will be lost)
+
+### 2. Question Design
 - Keep questions clear and concise
 - Provide meaningful explanations
 - Use hints for learning, not just giving away answers
 
-### 2. Answer Options
+### 3. Answer Options
 - Make distractors (wrong answers) plausible
 - Avoid "all of the above" or "none of the above" when possible
 - Keep option lengths similar
 
-### 3. Quiz Length
+### 4. Quiz Length
 - 5-10 questions per quiz is ideal
 - For longer content, split into multiple quizzes
 - Place quizzes after relevant content sections
 
-### 4. Code Questions
+### 5. Code Questions
 - Use syntax highlighting with the `language` property
 - Keep code snippets short and focused
 - Test your code examples to ensure they're correct
 
-### 5. Accessibility
+### 6. Accessibility
 - Write clear question text
 - Provide explanations for all answers
 - Use semantic question types (e.g., true/false for binary questions)
@@ -136,6 +189,7 @@ Here's a well-structured quiz:
   "description": "Test your understanding of Python fundamentals",
   "questions": [
     {
+      "id": "python-basics-01",
       "type": "mcq",
       "question": "Which of these is NOT a Python data type?",
       "options": ["int", "float", "char", "str"],
@@ -144,12 +198,14 @@ Here's a well-structured quiz:
       "hint": "Think about single character types"
     },
     {
+      "id": "python-basics-02",
       "type": "true-false",
       "question": "Lists in Python are immutable.",
       "answer": false,
       "explanation": "Lists are mutable; you can modify them after creation"
     },
     {
+      "id": "python-basics-03",
       "type": "fill-blank",
       "question": "The keyword to create a loop in Python is ___",
       "answer": "for",

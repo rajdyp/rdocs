@@ -11,6 +11,7 @@ next: /quiz/python/03-functions-deep-dive
 {
   "questions": [
     {
+      "id": "python-building-blocks-quiz-01",
       "type": "mcq",
       "question": "Which data structure allows duplicate values but has immutable keys?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Think about key-value pairs and which part must be unique."
     },
     {
+      "id": "python-building-blocks-quiz-02",
       "type": "code-output",
       "question": "Predict the output:",
       "code": "s = \"Python\"\nprint(s[::2])",
@@ -39,6 +41,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "The syntax is [start:stop:step]. What does step=2 mean?"
     },
     {
+      "id": "python-building-blocks-quiz-03",
       "type": "multiple-select",
       "question": "Which of the following operations have O(1) average time complexity?",
       "options": [
@@ -53,6 +56,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Which operations require searching through all elements?"
     },
     {
+      "id": "python-building-blocks-quiz-04",
       "type": "fill-blank",
       "question": "What string method converts 'hello world' to 'Hello World' (capitalizing each word)?",
       "answer": "title",
@@ -61,6 +65,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "It's a method that treats each word like a book title."
     },
     {
+      "id": "python-building-blocks-quiz-05",
       "type": "code-completion",
       "question": "Complete the code to join a list of words with commas:",
       "instruction": "Fill in the missing method",
@@ -71,6 +76,7 @@ next: /quiz/python/03-functions-deep-dive
       "explanation": "The `join()` method is called on the separator string and takes an iterable as argument: `separator.join(iterable)`. This produces 'apple, banana, cherry'."
     },
     {
+      "id": "python-building-blocks-quiz-06",
       "type": "true-false",
       "question": "Strings in Python are mutable, meaning you can change individual characters after creation.",
       "answer": false,
@@ -78,6 +84,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Try running: s = 'hello'; s[0] = 'H'"
     },
     {
+      "id": "python-building-blocks-quiz-07",
       "type": "mcq",
       "question": "What is the result of `\"Ha\" * 3`?",
       "options": [
@@ -91,6 +98,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "String repetition is a built-in operation in Python."
     },
     {
+      "id": "python-building-blocks-quiz-08",
       "type": "code-output",
       "question": "What does this code print?",
       "code": "numbers = [1, 2, 3]\nnumbers.append(4)\nnumbers.extend([5, 6])\nprint(len(numbers))",
@@ -106,11 +114,13 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "append() adds one item, extend() adds multiple items."
     },
     {
+      "id": "python-building-blocks-quiz-09",
       "type": "flashcard",
       "question": "What is the key difference between `.remove()` and `.pop()` for lists?",
       "answer": "**`.remove(value)`** removes the first occurrence of a **value** and raises ValueError if not found.\n\n**`.pop(index)`** removes and **returns** the element at an **index** (default: last item) and raises IndexError if index is out of range.\n\nKey differences:\n- `remove()` searches by value, `pop()` removes by position\n- `pop()` returns the removed item, `remove()` returns None\n- Different error types when operation fails"
     },
     {
+      "id": "python-building-blocks-quiz-10",
       "type": "multiple-select",
       "question": "Which statements about list comprehensions are true?",
       "options": [
@@ -125,6 +135,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Think about what 'comprehension' means and what iterables are."
     },
     {
+      "id": "python-building-blocks-quiz-11",
       "type": "code-output",
       "question": "What is the output?",
       "code": "matrix = [[j for j in range(2)] for i in range(2)]\nprint(matrix[1][0])",
@@ -140,6 +151,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Build the matrix step by step, then access [row][column]."
     },
     {
+      "id": "python-building-blocks-quiz-12",
       "type": "true-false",
       "question": "The `.sort()` method returns a new sorted list without modifying the original.",
       "answer": false,
@@ -147,6 +159,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "What does 'in-place' mean?"
     },
     {
+      "id": "python-building-blocks-quiz-13",
       "type": "mcq",
       "question": "Why must you use `(1,)` instead of `(1)` to create a single-element tuple?",
       "options": [
@@ -160,6 +173,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "What makes a tuple a tuple—the parentheses or the comma?"
     },
     {
+      "id": "python-building-blocks-quiz-14",
       "type": "fill-blank",
       "question": "What method would you use to find the first index of value 3 in a tuple `t = (1, 2, 3, 2, 4)`?",
       "answer": "index",
@@ -168,11 +182,13 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "This method exists for both tuples and lists."
     },
     {
+      "id": "python-building-blocks-quiz-15",
       "type": "flashcard",
       "question": "Why can tuples be used as dictionary keys but lists cannot?",
       "answer": "**Dictionary keys must be hashable (immutable)**.\n\n**Tuples are immutable** → can be hashed → valid as keys\n\n**Lists are mutable** → cannot be hashed → TypeError if used as keys\n\nExample:\n```python\n# Valid\nlocations = {(0, 0): \"Origin\", (1, 2): \"Point A\"}\n\n# Invalid - TypeError\n# bad_dict = {[0, 0]: \"Origin\"}\n```\n\nHashability ensures the key's hash value never changes, which is critical for dictionary lookup performance."
     },
     {
+      "id": "python-building-blocks-quiz-16",
       "type": "code-completion",
       "question": "Complete the tuple unpacking to extract the first element and the rest:",
       "instruction": "Fill in the unpacking syntax",
@@ -183,6 +199,7 @@ next: /quiz/python/03-functions-deep-dive
       "explanation": "The `*` operator in unpacking captures remaining elements into a list. `first, *rest = (1, 2, 3, 4)` assigns 1 to first and [2, 3, 4] to rest."
     },
     {
+      "id": "python-building-blocks-quiz-17",
       "type": "mcq",
       "question": "What does `user.get('email', 'N/A')` return if the key 'email' doesn't exist?",
       "options": [
@@ -196,6 +213,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "The second argument to .get() is the default value."
     },
     {
+      "id": "python-building-blocks-quiz-18",
       "type": "code-output",
       "question": "What is printed?",
       "code": "counts = {}\ncounts.setdefault('apple', 0)\ncounts['apple'] += 1\nprint(counts['apple'])",
@@ -211,6 +229,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "setdefault() inserts the key with default value if missing, then returns the value."
     },
     {
+      "id": "python-building-blocks-quiz-19",
       "type": "multiple-select",
       "question": "Which operations modify a dictionary in place?",
       "options": [
@@ -225,6 +244,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Which operations change the dictionary vs just reading from it?"
     },
     {
+      "id": "python-building-blocks-quiz-20",
       "type": "drag-drop",
       "question": "Arrange the dictionary methods in order from 'safest' (won't raise errors) to 'most likely to raise errors':",
       "instruction": "Drag to arrange from safest to most error-prone",
@@ -238,6 +258,7 @@ next: /quiz/python/03-functions-deep-dive
       "explanation": "`.get(key, default)` never raises errors (returns default). `.get(key)` returns None if missing (no error). `dict[key]` raises KeyError if missing. `.pop(key)` raises KeyError if missing and no default provided."
     },
     {
+      "id": "python-building-blocks-quiz-21",
       "type": "code-completion",
       "question": "Complete the dictionary comprehension to create {1: 'a', 2: 'b'}:",
       "instruction": "Fill in the comprehension",
@@ -248,11 +269,13 @@ next: /quiz/python/03-functions-deep-dive
       "explanation": "Dictionary comprehension syntax is `{key_expr: value_expr for ...}`. To reverse keys and values, use `{v: k for k, v in original.items()}`."
     },
     {
+      "id": "python-building-blocks-quiz-22",
       "type": "flashcard",
       "question": "What's the difference between `dict.keys()`, `dict.values()`, and `dict.items()`?",
       "answer": "**`.keys()`** → Returns view of all keys\n- Example: `dict_keys(['name', 'age'])`\n\n**`.values()`** → Returns view of all values  \n- Example: `dict_values(['Alice', 30])`\n\n**`.items()`** → Returns view of (key, value) pairs as tuples\n- Example: `dict_items([('name', 'Alice'), ('age', 30)])`\n\nAll return **dictionary views** (not lists) that reflect changes to the original dictionary. Use `list()` to convert if needed."
     },
     {
+      "id": "python-building-blocks-quiz-23",
       "type": "true-false",
       "question": "In Python 3.7+, dictionaries maintain insertion order.",
       "answer": true,
@@ -260,6 +283,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Check the data structure comparison table in the notes."
     },
     {
+      "id": "python-building-blocks-quiz-24",
       "type": "mcq",
       "question": "What happens when you try to add a duplicate element to a set?",
       "options": [
@@ -273,6 +297,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Sets are defined as collections of unique elements."
     },
     {
+      "id": "python-building-blocks-quiz-25",
       "type": "code-output",
       "question": "What is the result?",
       "code": "a = {1, 2, 3, 4}\nb = {3, 4, 5, 6}\nprint(a - b)",
@@ -288,6 +313,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Difference means 'in a but not in b'."
     },
     {
+      "id": "python-building-blocks-quiz-26",
       "type": "multiple-select",
       "question": "Which set operations return a new set (rather than modifying in place)?",
       "options": [
@@ -302,6 +328,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Operators typically return new objects; methods often modify in place."
     },
     {
+      "id": "python-building-blocks-quiz-27",
       "type": "fill-blank",
       "question": "What set method removes an element without raising an error if it doesn't exist?",
       "answer": "discard",
@@ -310,11 +337,13 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Think about 'safe removal' that won't crash your program."
     },
     {
+      "id": "python-building-blocks-quiz-28",
       "type": "flashcard",
       "question": "What's the difference between `a | b` and `a & b` for sets?",
       "answer": "**`a | b` (Union)** → All unique elements from both sets\n- Example: `{1, 2} | {2, 3}` = `{1, 2, 3}`\n- Can also use `a.union(b)`\n\n**`a & b` (Intersection)** → Only elements present in BOTH sets\n- Example: `{1, 2} & {2, 3}` = `{2}`\n- Can also use `a.intersection(b)`\n\nThink: **Union = everything**, **Intersection = common elements**"
     },
     {
+      "id": "python-building-blocks-quiz-29",
       "type": "code-output",
       "question": "What does this print?",
       "code": "items = [1, 2, 2, 3, 3, 3, 4]\nprint(len(set(items)))",
@@ -330,6 +359,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Sets automatically remove duplicates."
     },
     {
+      "id": "python-building-blocks-quiz-30",
       "type": "true-false",
       "question": "Sets maintain the order of elements as they were inserted.",
       "answer": false,
@@ -337,6 +367,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Check the data structure comparison table."
     },
     {
+      "id": "python-building-blocks-quiz-31",
       "type": "mcq",
       "question": "What does `map()` return in Python 3?",
       "options": [
@@ -350,6 +381,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Think about lazy evaluation and memory efficiency."
     },
     {
+      "id": "python-building-blocks-quiz-32",
       "type": "code-output",
       "question": "What is printed?",
       "code": "names = ['alice', 'bob']\nresult = list(map(str.upper, names))\nprint(result[1])",
@@ -365,11 +397,13 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "map() applies the function to each element. Index 1 is the second element."
     },
     {
+      "id": "python-building-blocks-quiz-33",
       "type": "flashcard",
       "question": "Why do we need to wrap `map()` with `list()` in Python 3?",
       "answer": "**`map()` returns an iterator (lazy evaluation), not a list.**\n\n**Without `list()`:**\n```python\nresult = map(str.upper, names)\nprint(result)  # <map object at 0x...>\n```\n\n**With `list()`:**\n```python\nresult = list(map(str.upper, names))\nprint(result)  # ['ALICE', 'BOB']\n```\n\n**Benefits of lazy evaluation:**\n- Memory efficient (processes one item at a time)\n- Only computes when needed\n- Can work with infinite sequences\n\n**When to use `list()`:** When you need the complete result immediately or need to use it multiple times."
     },
     {
+      "id": "python-building-blocks-quiz-34",
       "type": "code-completion",
       "question": "Complete the code to filter even numbers:",
       "instruction": "Fill in the lambda function",
@@ -380,6 +414,7 @@ next: /quiz/python/03-functions-deep-dive
       "explanation": "`filter()` keeps elements where the function returns True. `lambda x: x % 2 == 0` returns True for even numbers (divisible by 2)."
     },
     {
+      "id": "python-building-blocks-quiz-35",
       "type": "mcq",
       "question": "What happens when `zip()` receives iterables of different lengths?",
       "options": [
@@ -393,6 +428,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Think about parallel iteration—what happens when one sequence runs out?"
     },
     {
+      "id": "python-building-blocks-quiz-36",
       "type": "code-output",
       "question": "What does this print?",
       "code": "pairs = [('a', 1), ('b', 2), ('c', 3)]\nletters, numbers = zip(*pairs)\nprint(numbers)",
@@ -408,6 +444,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "The * operator unpacks the list. What does zip return?"
     },
     {
+      "id": "python-building-blocks-quiz-37",
       "type": "multiple-select",
       "question": "Which statements about `enumerate()` are true?",
       "options": [
@@ -422,6 +459,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "enumerate() is a non-destructive iterator function."
     },
     {
+      "id": "python-building-blocks-quiz-38",
       "type": "fill-blank",
       "question": "What function returns a new sorted list without modifying the original?",
       "answer": "sorted",
@@ -430,6 +468,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Is it a function or a method?"
     },
     {
+      "id": "python-building-blocks-quiz-39",
       "type": "code-output",
       "question": "What is the output?",
       "code": "words = ['apple', 'pie', 'banana']\nresult = max(words, key=len)\nprint(result)",
@@ -445,6 +484,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "max() with key=len returns the element itself, not the length."
     },
     {
+      "id": "python-building-blocks-quiz-40",
       "type": "true-false",
       "question": "`any([False, False, False])` returns True.",
       "answer": false,
@@ -452,11 +492,13 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "any() means 'at least one True'."
     },
     {
+      "id": "python-building-blocks-quiz-41",
       "type": "flashcard",
       "question": "What's the difference between `any()` and `all()`?",
       "answer": "**`any(iterable)`** → True if **at least one** element is True\n- `any([False, False, True])` = `True`\n- `any([False, False, False])` = `False`\n- Short-circuits: stops at first True\n\n**`all(iterable)`** → True if **all** elements are True\n- `all([True, True, True])` = `True`\n- `all([True, False, True])` = `False`\n- Short-circuits: stops at first False\n\n**Common patterns:**\n```python\n# Check if string has any digits\nany(c.isdigit() for c in \"abc3x\")  # True\n\n# Check if all numbers are positive\nall(n > 0 for n in [1, 2, 3])  # True\n```"
     },
     {
+      "id": "python-building-blocks-quiz-42",
       "type": "code-completion",
       "question": "Complete the lambda function to sort points by their second element:",
       "instruction": "Fill in the lambda",
@@ -467,6 +509,7 @@ next: /quiz/python/03-functions-deep-dive
       "explanation": "To sort by the second element of each tuple, the lambda should return `x[1]`. This gives [(3, 2), (1, 5), (2, 8)] sorted by second values: 2, 5, 8."
     },
     {
+      "id": "python-building-blocks-quiz-43",
       "type": "mcq",
       "question": "When should you prefer a list comprehension over `map()`?",
       "options": [
@@ -480,6 +523,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Consider readability and the Zen of Python."
     },
     {
+      "id": "python-building-blocks-quiz-44",
       "type": "code-output",
       "question": "What does this code produce?",
       "code": "numbers = [1, 2, 3, 4]\nresult = all(n > 0 for n in numbers)\nprint(result)",
@@ -495,6 +539,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "all() returns a single boolean, not a list."
     },
     {
+      "id": "python-building-blocks-quiz-45",
       "type": "drag-drop",
       "question": "Arrange these operations from fastest to slowest time complexity for large lists:",
       "instruction": "Drag to order by speed (fastest to slowest)",
@@ -509,6 +554,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Check the time complexity tables in the notes."
     },
     {
+      "id": "python-building-blocks-quiz-46",
       "type": "true-false",
       "question": "The expression `[1, 2, 3] + [4, 5]` creates a new list without modifying the original lists.",
       "answer": true,
@@ -516,6 +562,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Concatenation with + always creates new objects."
     },
     {
+      "id": "python-building-blocks-quiz-47",
       "type": "mcq",
       "question": "Why should you avoid modifying a list while iterating over it?",
       "options": [
@@ -529,6 +576,7 @@ next: /quiz/python/03-functions-deep-dive
       "hint": "Think about what happens when you remove an element that the iterator is pointing to."
     },
     {
+      "id": "python-building-blocks-quiz-48",
       "type": "code-completion",
       "question": "Fix this code to safely remove even numbers while iterating:",
       "instruction": "Replace the problematic line",
@@ -539,6 +587,7 @@ next: /quiz/python/03-functions-deep-dive
       "explanation": "Use list comprehension to create a new list with only odd numbers: `numbers = [n for n in numbers if n % 2 != 0]`. This avoids modifying the list during iteration."
     },
     {
+      "id": "python-building-blocks-quiz-49",
       "type": "flashcard",
       "question": "What's the gotcha with `.append()` when adding multiple items to a list?",
       "answer": "**`.append()` takes exactly ONE argument!**\n\n**Wrong:**\n```python\nmy_list = []\nmy_list.append(1, 2, 3)  # TypeError!\n```\n\n**Correct options:**\n\n1. **One at a time:**\n```python\nmy_list.append(1)\nmy_list.append(2)\n```\n\n2. **Use `.extend()` for multiple items:**\n```python\nmy_list.extend([1, 2, 3])  # [1, 2, 3]\n```\n\n3. **Append a single structured item (e.g., dict):**\n```python\nlog = []\nlog.append({'ip': '192.168.1.1', 'method': 'GET'})\n```\n\n**Key: append = one item, extend = multiple items**"

@@ -11,6 +11,7 @@ next: /quiz/kubernetes/05-networking
 {
   "questions": [
     {
+      "id": "kubernetes-worker-nodes-quiz-01",
       "type": "mcq",
       "question": "What is the primary role of kubelet in a Kubernetes worker node?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "Think about which component directly interacts with containers on the node."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-02",
       "type": "multiple-select",
       "question": "Which of the following are direct responsibilities of kubelet?",
       "options": [
@@ -38,6 +40,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "Focus on pod-level operations rather than cluster-wide networking."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-03",
       "type": "true-false",
       "question": "The Service object in Kubernetes directly routes traffic from the Service IP to pod IPs.",
       "answer": false,
@@ -45,6 +48,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "Think about what happens at the kernel level when packets arrive."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-04",
       "type": "code-output",
       "question": "A pod has the following resource configuration. What happens when the container tries to use 600Mi of memory?",
       "code": "resources:\n  requests:\n    memory: 128Mi\n  limits:\n    memory: 512Mi",
@@ -60,6 +64,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "Memory and CPU limits are handled differently—one is throttled, one is killed."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-05",
       "type": "fill-blank",
       "question": "kubelet uses _____ (control groups) to enforce resource requests and limits on containers.",
       "answer": "cgroups",
@@ -68,6 +73,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "It's a Linux kernel feature abbreviated as a single word."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-06",
       "type": "drag-drop",
       "question": "Arrange the pod startup flow in the correct sequence:",
       "instruction": "Drag to arrange in the correct order",
@@ -82,6 +88,7 @@ next: /quiz/kubernetes/05-networking
       "explanation": "The sequence is: 1) Scheduler assigns pod → 2) kubelet detects assignment → 3) CNI creates network namespace and assigns IP → 4) Runtime pulls image and starts container → 5) kubelet starts health probes → 6) Status reported to API server → 7) Endpoints updated → 8) kube-proxy updates rules."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-07",
       "type": "mcq",
       "question": "What happens when a pod's readiness probe fails?",
       "options": [
@@ -95,11 +102,13 @@ next: /quiz/kubernetes/05-networking
       "hint": "Consider what 'ready' means in the context of receiving traffic."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-08",
       "type": "flashcard",
       "question": "What is the Container Runtime Interface (CRI)?",
       "answer": "**Container Runtime Interface (CRI)**\n\nA standardized gRPC API that allows Kubernetes (specifically kubelet) to work with different container runtimes (containerd, CRI-O, etc.) without being tied to a specific implementation. It abstracts image management, container lifecycle, and execution operations."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-09",
       "type": "code-completion",
       "question": "Complete the health probe configuration to check if a container is alive:",
       "instruction": "Fill in the probe type",
@@ -110,6 +119,7 @@ next: /quiz/kubernetes/05-networking
       "explanation": "livenessProbe checks if a container is alive. If it fails, kubelet restarts the container. This is different from readinessProbe (can accept traffic?) and startupProbe (has finished starting?)."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-10",
       "type": "multiple-select",
       "question": "In the traffic routing flow, which components actually process or modify network packets?",
       "options": [
@@ -124,6 +134,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "Think about what operates at the kernel/network layer versus what's stored in etcd."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-11",
       "type": "mcq",
       "question": "When kube-proxy operates in iptables mode and a client sends a request to a Service ClusterIP (10.96.100.50), what happens at the network level?",
       "options": [
@@ -137,6 +148,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "Focus on what happens at the kernel level with the rules that were pre-configured."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-12",
       "type": "true-false",
       "question": "When kubelet enforces CPU limits on a container, the container is killed if it exceeds the limit.",
       "answer": false,
@@ -144,6 +156,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "Think about the difference between how CPU and memory limits are enforced."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-13",
       "type": "mcq",
       "question": "During pod eviction due to node resource pressure, in what order does kubelet evict pods?",
       "options": [
@@ -157,11 +170,13 @@ next: /quiz/kubernetes/05-networking
       "hint": "Think about which pods have the least resource guarantees."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-14",
       "type": "flashcard",
       "question": "Why is the Service ClusterIP called a 'virtual IP'?",
       "answer": "**Virtual IP (VIP)**\n\nThe Service ClusterIP doesn't exist on any network interface in the cluster. It's not assigned to any device. Instead, it's a placeholder IP that kube-proxy uses to create iptables/IPVS rules. When packets are sent to this IP, kernel rules intercept and rewrite them to real pod IPs. The ClusterIP exists only in routing rules, not as an actual network address."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-15",
       "type": "multiple-select",
       "question": "Which of the following statements correctly describe kube-proxy's role?",
       "options": [
@@ -176,6 +191,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "kube-proxy is a 'rule creator', not a 'packet processor'."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-16",
       "type": "code-output",
       "question": "A node stops sending heartbeats to the API server. How long until the node is marked as NotReady?",
       "code": "# Default Kubernetes node monitoring settings\nnode-monitor-period: 5s\nnode-monitor-grace-period: 40s\npod-eviction-timeout: 5m",
@@ -191,6 +207,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "Look at the grace period specifically for node monitoring."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-17",
       "type": "mcq",
       "question": "What is the primary advantage of kube-proxy's IPVS mode over iptables mode?",
       "options": [
@@ -204,6 +221,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "Think about algorithmic complexity and scale."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-18",
       "type": "fill-blank",
       "question": "kubelet communicates with the container runtime through the _____ (three-letter acronym) interface.",
       "answer": "CRI",
@@ -212,6 +230,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "It's a three-letter acronym that starts with 'C'."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-19",
       "type": "true-false",
       "question": "kubelet can run containers even if the API server is down, as long as it has the pod specifications cached.",
       "answer": true,
@@ -219,6 +238,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "Think about kubelet's autonomy and local caching capabilities."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-20",
       "type": "mcq",
       "question": "Which component is responsible for assigning an IP address to a newly created pod?",
       "options": [
@@ -232,6 +252,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "Think about which plugin handles networking specifically."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-21",
       "type": "drag-drop",
       "question": "Arrange the components in order of who interacts with what during packet routing from Service IP to Pod IP:",
       "instruction": "Order from first to last in the routing process",
@@ -246,11 +267,13 @@ next: /quiz/kubernetes/05-networking
       "explanation": "Traffic flow: Client sends to ClusterIP → Node network stack → Kernel netfilter intercepts → iptables/IPVS performs DNAT → CNI routes to pod. The Service object is never in this flow—it's just configuration."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-22",
       "type": "flashcard",
       "question": "Explain the three QoS classes that determine pod eviction priority.",
       "answer": "**QoS Classes (Quality of Service)**\n\n1. **Guaranteed**: requests = limits for all containers. Highest priority, evicted last.\n\n2. **Burstable**: requests < limits (or only requests set). Medium priority.\n\n3. **BestEffort**: No requests or limits set. Lowest priority, evicted first.\n\nkubelet uses these classes during resource pressure to decide which pods to evict, protecting workloads with stronger resource guarantees."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-23",
       "type": "multiple-select",
       "question": "When a worker node fails completely, which of the following occur in the cluster recovery process?",
       "options": [
@@ -265,6 +288,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "Consider what happens to pods and how controllers respond, not immediate removal."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-24",
       "type": "mcq",
       "question": "What is the relationship between Service objects and Endpoints objects?",
       "options": [
@@ -278,6 +302,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "Think about the flow: Service selector → which pods match → where to route."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-25",
       "type": "code-completion",
       "question": "Complete the probe that determines if a container should receive traffic from a Service:",
       "instruction": "Fill in the probe type",
@@ -288,6 +313,7 @@ next: /quiz/kubernetes/05-networking
       "explanation": "readinessProbe determines if a container can accept traffic. When it fails, the pod is removed from Service endpoints. This is different from livenessProbe (restart if fails) and startupProbe (initial startup check)."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-26",
       "type": "true-false",
       "question": "In iptables mode, kube-proxy supports advanced load balancing algorithms like least-connection and round-robin with weights.",
       "answer": false,
@@ -295,6 +321,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "Think about the capabilities difference between iptables and IPVS modes."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-27",
       "type": "mcq",
       "question": "Which statement best describes how kubelet interacts with the API server?",
       "options": [
@@ -308,11 +335,13 @@ next: /quiz/kubernetes/05-networking
       "hint": "Think about the efficiency of watch vs polling, and two-way communication."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-28",
       "type": "flashcard",
       "question": "What happens at each step when kubelet enforces resource limits on a container?",
       "answer": "**Resource Limit Enforcement**\n\n**Setup**: kubelet reads resource requests/limits from pod spec.\n\n**Enforcement via cgroups**: kubelet configures Linux cgroups to limit container resources.\n\n**CPU**: When limit reached → container is *throttled* (slowed down) but continues running.\n\n**Memory**: When limit exceeded → container is *killed* with OOMKilled status.\n\n**Requests vs Limits**: Requests (guarantee) used for scheduling, limits (just promise) enforced by kubelet."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-29",
       "type": "multiple-select",
       "question": "Which of the following are responsibilities of the container runtime (not kubelet)?",
       "options": [
@@ -327,6 +356,7 @@ next: /quiz/kubernetes/05-networking
       "hint": "Focus on low-level container operations vs orchestration tasks."
     },
     {
+      "id": "kubernetes-worker-nodes-quiz-30",
       "type": "mcq",
       "question": "Why does the Service ClusterIP (e.g., 10.96.100.50) not appear on any network interface in the cluster?",
       "options": [

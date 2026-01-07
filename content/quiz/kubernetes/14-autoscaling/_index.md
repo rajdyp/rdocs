@@ -11,6 +11,7 @@ next: /quiz/kubernetes/15-observability
 {
   "questions": [
     {
+      "id": "kubernetes-autoscaling-quiz-01",
       "type": "mcq",
       "question": "What is the default interval at which the HPA controller queries the Metrics API?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/kubernetes/15-observability
       "hint": "This is different from the Metrics Server scrape interval."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-02",
       "type": "multiple-select",
       "question": "Which of the following are required for HPA to function properly?",
       "options": [
@@ -37,6 +39,7 @@ next: /quiz/kubernetes/15-observability
       "hint": "Think about what HPA needs to calculate utilization and make scaling decisions."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-03",
       "type": "true-false",
       "question": "Karpenter provisions nodes faster than Cluster Autoscaler because it provisions directly through cloud provider APIs rather than scaling node groups.",
       "answer": true,
@@ -44,6 +47,7 @@ next: /quiz/kubernetes/15-observability
       "hint": "Consider the architectural difference between direct API calls and group-based scaling."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-04",
       "type": "code-output",
       "question": "Using the HPA formula, calculate the desired replicas:",
       "code": "currentReplicas = 3\ncurrentCPU = 90%\ntargetCPU = 50%\n\ndesiredReplicas = ceil[currentReplicas * (currentCPU / targetCPU)]",
@@ -59,6 +63,7 @@ next: /quiz/kubernetes/15-observability
       "hint": "Remember to use ceiling function on the final result."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-05",
       "type": "mcq",
       "question": "Which VPA update mode should be used for databases where automatic restarts are risky?",
       "options": [
@@ -72,6 +77,7 @@ next: /quiz/kubernetes/15-observability
       "hint": "Databases need careful handling when changing resources."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-06",
       "type": "fill-blank",
       "question": "What component embedded in Kubelet collects container-level metrics like CPU, memory, and network I/O?",
       "answer": "cAdvisor",
@@ -80,6 +86,7 @@ next: /quiz/kubernetes/15-observability
       "hint": "Its full name is Container Advisor."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-07",
       "type": "drag-drop",
       "question": "Arrange the metrics collection flow from container to HPA:",
       "instruction": "Drag to arrange in the correct order",
@@ -94,6 +101,7 @@ next: /quiz/kubernetes/15-observability
       "explanation": "Container Runtime runs containers → cAdvisor collects metrics → Kubelet aggregates → Metrics Server queries and aggregates cluster-wide → HPA Controller consumes metrics for scaling decisions."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-08",
       "type": "multiple-select",
       "question": "Which are valid KEDA trigger sources for event-driven autoscaling?",
       "options": [
@@ -107,6 +115,7 @@ next: /quiz/kubernetes/15-observability
       "hint": "KEDA focuses on external events, not resource metrics."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-09",
       "type": "true-false",
       "question": "VPA and HPA can safely be used together on the same deployment scaling on the same metric (CPU).",
       "answer": false,
@@ -114,6 +123,7 @@ next: /quiz/kubernetes/15-observability
       "hint": "Consider what happens when both try to optimize CPU at the same time."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-10",
       "type": "mcq",
       "question": "In Karpenter, what is the purpose of the NodeClass (EC2NodeClass)?",
       "options": [
@@ -127,6 +137,7 @@ next: /quiz/kubernetes/15-observability
       "hint": "NodePool and NodeClass have distinct responsibilities."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-11",
       "type": "code-completion",
       "question": "Complete the HPA behavior policy to prevent aggressive scale-down:",
       "instruction": "Fill in the parameter that limits scale-down to 50% of pods",
@@ -137,11 +148,13 @@ next: /quiz/kubernetes/15-observability
       "explanation": "The 'Percent' type allows you to specify scale-down as a percentage of current replicas, preventing too many pods from being removed at once."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-12",
       "type": "flashcard",
       "question": "What is the key difference between Cluster Autoscaler and Karpenter in terms of instance selection?",
       "answer": "**Cluster Autoscaler** is limited to pre-defined instance types configured in ASGs/node groups.\n\n**Karpenter** dynamically selects the optimal instance type from the entire cloud provider catalog based on actual pod requirements, enabling better bin-packing and cost optimization."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-13",
       "type": "mcq",
       "question": "What does Karpenter's consolidation policy 'WhenUnderutilized' do?",
       "options": [
@@ -155,6 +168,7 @@ next: /quiz/kubernetes/15-observability
       "hint": "Think about active optimization, not just cleanup."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-14",
       "type": "fill-blank",
       "question": "In the HPA formula `desiredReplicas = ceil[currentReplicas * (currentMetric / targetMetric)]`, what mathematical function is applied to the result?",
       "answer": "ceil",
@@ -163,6 +177,7 @@ next: /quiz/kubernetes/15-observability
       "hint": "It rounds in a specific direction."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-15",
       "type": "true-false",
       "question": "The Metrics Server stores historical metrics data for long-term analysis.",
       "answer": false,
@@ -170,6 +185,7 @@ next: /quiz/kubernetes/15-observability
       "hint": "Consider its purpose as a real-time metrics aggregator."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-16",
       "type": "multiple-select",
       "question": "Which actions does Karpenter perform for cost optimization?",
       "options": [
@@ -183,6 +199,7 @@ next: /quiz/kubernetes/15-observability
       "hint": "Karpenter is designed for comprehensive cost optimization."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-17",
       "type": "mcq",
       "question": "Which VPA component is responsible for evicting pods that need resource updates?",
       "options": [
@@ -196,6 +213,7 @@ next: /quiz/kubernetes/15-observability
       "hint": "Each VPA component has a specific role in the update workflow."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-18",
       "type": "drag-drop",
       "question": "Arrange the VPA workflow steps in correct order:",
       "instruction": "Drag to arrange in the correct order",
@@ -209,11 +227,13 @@ next: /quiz/kubernetes/15-observability
       "explanation": "Recommender analyzes usage and updates recommendations → Updater sees difference and evicts pod → Admission Controller intercepts pod creation and applies recommendations → New pod runs with optimized resources."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-19",
       "type": "flashcard",
       "question": "Why is stabilizationWindowSeconds important for HPA scale-down behavior?",
       "answer": "**stabilizationWindowSeconds** prevents \"flapping\" - rapid scale up/down cycles caused by temporary metric fluctuations.\n\nBy requiring metrics to stay below the threshold for the window duration (e.g., 300 seconds), HPA avoids premature scale-down that could cause capacity issues when load returns."
     },
     {
+      "id": "kubernetes-autoscaling-quiz-20",
       "type": "code-output",
       "question": "A deployment has these resource specifications. What percentage CPU utilization triggers HPA scaling?",
       "code": "resources:\n  requests:\n    cpu: 200m\n  limits:\n    cpu: 500m\n\nHPA target: averageUtilization: 70",

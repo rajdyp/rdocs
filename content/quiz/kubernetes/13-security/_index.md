@@ -11,6 +11,7 @@ next: /quiz/kubernetes/14-autoscaling
 {
   "questions": [
     {
+      "id": "kubernetes-security-quiz-01",
       "type": "mcq",
       "question": "In the Kubernetes security layers model, which layer answers the question 'What can you do?'",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "Think about which layer defines permissions and roles."
     },
     {
+      "id": "kubernetes-security-quiz-02",
       "type": "multiple-select",
       "question": "Which of the following are considered 'Admin-Level Verbs' that pose security risks in RBAC?",
       "options": [
@@ -38,6 +40,7 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "These verbs allow gaining additional privileges beyond normal operations."
     },
     {
+      "id": "kubernetes-security-quiz-03",
       "type": "true-false",
       "question": "By default, Kubernetes network policies deny all traffic between pods.",
       "answer": false,
@@ -45,6 +48,7 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "Consider what happens when no NetworkPolicy exists in a namespace."
     },
     {
+      "id": "kubernetes-security-quiz-04",
       "type": "fill-blank",
       "question": "What field is used to disable automatic mounting of service account tokens in a ServiceAccount spec?",
       "answer": "automountServiceAccountToken",
@@ -53,6 +57,7 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "It's a boolean field that controls automatic mounting behavior."
     },
     {
+      "id": "kubernetes-security-quiz-05",
       "type": "code-output",
       "question": "What does this kubectl command check?",
       "code": "kubectl auth can-i create pods --as=system:serviceaccount:default:my-sa",
@@ -68,11 +73,13 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "The 'can-i' subcommand is for permission checking, and '--as' is for impersonation."
     },
     {
+      "id": "kubernetes-security-quiz-06",
       "type": "flashcard",
       "question": "What is the difference between a Role and a ClusterRole in Kubernetes RBAC?",
       "answer": "**Role**: Namespace-scoped - permissions apply only within a single namespace.\n\n**ClusterRole**: Cluster-scoped - permissions apply across the entire cluster.\n\n**Hybrid use**: A ClusterRole can be bound with a RoleBinding to reuse cluster-defined roles in specific namespaces."
     },
     {
+      "id": "kubernetes-security-quiz-07",
       "type": "drag-drop",
       "question": "Arrange the Kubernetes API request flow in correct order:",
       "instruction": "Drag to arrange in the correct order",
@@ -87,6 +94,7 @@ next: /quiz/kubernetes/14-autoscaling
       "explanation": "Requests flow: Authentication → Authorization (RBAC) → Mutating Admission → Schema Validation → Validating Admission → Persist to etcd."
     },
     {
+      "id": "kubernetes-security-quiz-08",
       "type": "code-completion",
       "question": "Complete the security context to drop all Linux capabilities:",
       "instruction": "Fill in the missing keyword",
@@ -97,6 +105,7 @@ next: /quiz/kubernetes/14-autoscaling
       "explanation": "Using `drop: [ALL]` removes all Linux capabilities from the container. You can then selectively add back only the capabilities needed using the `add` field."
     },
     {
+      "id": "kubernetes-security-quiz-09",
       "type": "mcq",
       "question": "What is the purpose of the `seccompProfile` field in a Pod's security context?",
       "options": [
@@ -110,6 +119,7 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "Seccomp uses BPF (Berkeley Packet Filter) for syscall filtering."
     },
     {
+      "id": "kubernetes-security-quiz-10",
       "type": "multiple-select",
       "question": "Which of the following are valid Pod Security Standards (PSS) levels?",
       "options": [
@@ -124,6 +134,7 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "There are exactly three levels, from least to most restrictive."
     },
     {
+      "id": "kubernetes-security-quiz-11",
       "type": "true-false",
       "question": "In Kubernetes RBAC, a RoleBinding can reference a ClusterRole to grant permissions within a specific namespace.",
       "answer": true,
@@ -131,6 +142,7 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "Consider how you might reuse common permission sets across namespaces."
     },
     {
+      "id": "kubernetes-security-quiz-12",
       "type": "mcq",
       "question": "What happens when a NetworkPolicy's podSelector matches a pod?",
       "options": [
@@ -144,11 +156,13 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "NetworkPolicy enables isolation on a per-pod basis."
     },
     {
+      "id": "kubernetes-security-quiz-13",
       "type": "flashcard",
       "question": "What is IRSA and why is it important for AWS EKS security?",
       "answer": "**IRSA (IAM Roles for Service Accounts)** allows Kubernetes ServiceAccounts to assume AWS IAM roles.\n\n**Benefits:**\n- Separate IAM role per service account\n- Fine-grained AWS permissions\n- Automatic credential rotation\n- No hardcoded AWS secrets in pods\n\nPods annotated with `eks.amazonaws.com/role-arn` automatically receive temporary AWS credentials."
     },
     {
+      "id": "kubernetes-security-quiz-14",
       "type": "code-output",
       "question": "What does this namespace label configuration enforce?",
       "code": "labels:\n  pod-security.kubernetes.io/enforce: restricted\n  pod-security.kubernetes.io/audit: restricted\n  pod-security.kubernetes.io/warn: restricted",
@@ -164,6 +178,7 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "Each label controls a different enforcement mode."
     },
     {
+      "id": "kubernetes-security-quiz-15",
       "type": "fill-blank",
       "question": "What Linux capability allows a container to bind to ports below 1024?",
       "answer": "NET_BIND_SERVICE",
@@ -172,6 +187,7 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "It's related to network and service binding."
     },
     {
+      "id": "kubernetes-security-quiz-16",
       "type": "multiple-select",
       "question": "Which authentication methods are supported by Kubernetes?",
       "options": [
@@ -186,6 +202,7 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "Think about methods that can be verified by the API server."
     },
     {
+      "id": "kubernetes-security-quiz-17",
       "type": "drag-drop",
       "question": "Arrange Pod Security Standards from LEAST secure to MOST secure:",
       "instruction": "Drag to arrange from least to most secure",
@@ -198,6 +215,7 @@ next: /quiz/kubernetes/14-autoscaling
       "explanation": "Privileged (no restrictions) → Baseline (minimal restrictions) → Restricted (most secure with non-root, no host access, limited capabilities)."
     },
     {
+      "id": "kubernetes-security-quiz-18",
       "type": "mcq",
       "question": "What is the key difference between Built-in Admission Controllers and Admission Webhooks?",
       "options": [
@@ -211,6 +229,7 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "Consider where each type of controller runs and how it's modified."
     },
     {
+      "id": "kubernetes-security-quiz-19",
       "type": "true-false",
       "question": "Setting `readOnlyRootFilesystem: true` means the container cannot write to any filesystem location.",
       "answer": false,
@@ -218,11 +237,13 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "Consider how applications that need to write temporary files would work."
     },
     {
+      "id": "kubernetes-security-quiz-20",
       "type": "flashcard",
       "question": "Explain the RBAC mental model: WHO can do WHAT on WHICH resources WHERE?",
       "answer": "**WHO**: Subjects - User, Group, or ServiceAccount\n\n**WHAT**: Verbs - get, list, create, delete, update, patch, watch, etc.\n\n**WHICH**: Resources - pods, services, deployments, secrets, etc.\n\n**WHERE**: Scope - Namespace-scoped (Role) or Cluster-wide (ClusterRole)\n\nRoleBindings connect WHO to WHAT+WHICH+WHERE by linking subjects to roles."
     },
     {
+      "id": "kubernetes-security-quiz-21",
       "type": "code-completion",
       "question": "Complete the Pod spec to run as non-root user with UID 1000:",
       "instruction": "Fill in the missing field name",
@@ -233,6 +254,7 @@ next: /quiz/kubernetes/14-autoscaling
       "explanation": "The `runAsUser` field specifies the UID to run the container process. Combined with `runAsNonRoot: true`, it ensures the container runs as a non-root user."
     },
     {
+      "id": "kubernetes-security-quiz-22",
       "type": "mcq",
       "question": "Why is granting the 'bind' verb in RBAC considered a security risk?",
       "options": [
@@ -246,6 +268,7 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "Think about what happens when someone can assign any role to themselves."
     },
     {
+      "id": "kubernetes-security-quiz-23",
       "type": "multiple-select",
       "question": "Which securityContext fields are available ONLY at the container level (not pod level)?",
       "options": [
@@ -260,6 +283,7 @@ next: /quiz/kubernetes/14-autoscaling
       "hint": "Container-level fields typically control container-specific runtime behavior."
     },
     {
+      "id": "kubernetes-security-quiz-24",
       "type": "true-false",
       "question": "Every Kubernetes namespace automatically gets a 'default' ServiceAccount created.",
       "answer": true,

@@ -12,6 +12,7 @@ Single correct answer from multiple options.
 
 ```json
 {
+  "id": "example-mcq-01",
   "type": "mcq",
   "question": "What is 2 + 2?",
   "options": ["3", "4", "5", "6"],
@@ -22,6 +23,7 @@ Single correct answer from multiple options.
 ```
 
 **Properties:**
+- `id` (string, recommended): Unique identifier for stable performance tracking
 - `options` (array): List of answer choices
 - `answer` (number): Index of correct answer (0-based)
 - `explanation` (string, optional): Shown after submission
@@ -35,6 +37,7 @@ Multiple correct answers (checkboxes).
 
 ```json
 {
+  "id": "example-multiple-01",
   "type": "multiple-select",
   "question": "Which are prime numbers?",
   "options": ["1", "2", "3", "4", "5"],
@@ -45,6 +48,7 @@ Multiple correct answers (checkboxes).
 ```
 
 **Properties:**
+- `id` (string, recommended): Unique identifier for stable performance tracking
 - `options` (array): List of answer choices
 - `answers` (array): Indices of all correct answers
 - `explanation` (string, optional): Shown after submission
@@ -58,6 +62,7 @@ Binary true or false question.
 
 ```json
 {
+  "id": "example-tf-01",
   "type": "true-false",
   "question": "Python is case-sensitive.",
   "answer": true,
@@ -67,6 +72,7 @@ Binary true or false question.
 ```
 
 **Properties:**
+- `id` (string, recommended): Unique identifier for stable performance tracking
 - `answer` (boolean): `true` or `false`
 - `explanation` (string, optional): Shown after submission
 - `hint` (string, optional): Hint button users can click
@@ -79,6 +85,7 @@ Text input question.
 
 ```json
 {
+  "id": "example-fill-01",
   "type": "fill-blank",
   "question": "The keyword to define a function in Python is ___",
   "answer": "def",
@@ -90,6 +97,7 @@ Text input question.
 ```
 
 **Properties:**
+- `id` (string, recommended): Unique identifier for stable performance tracking
 - `answer` (string): The correct answer
 - `caseSensitive` (boolean, optional): Default is `false`
 - `acceptedAnswers` (array, optional): Alternative accepted answers
@@ -104,6 +112,7 @@ Show code and ask what it outputs.
 
 ```json
 {
+  "id": "example-code-output-01",
   "type": "code-output",
   "question": "What will this code print?",
   "code": "x = [1, 2, 3]\nprint(x[1])",
@@ -116,6 +125,7 @@ Show code and ask what it outputs.
 ```
 
 **Properties:**
+- `id` (string, recommended): Unique identifier for stable performance tracking
 - `code` (string): The code to display
 - `language` (string): Language for syntax highlighting (default: "python")
 - `options` (array): Possible output choices
@@ -131,6 +141,7 @@ Flip card with question on front, answer on back. Self-assessed.
 
 ```json
 {
+  "id": "example-flashcard-01",
   "type": "flashcard",
   "question": "What does API stand for?",
   "answer": "**Application Programming Interface**\n\nA set of protocols for building software applications."
@@ -138,6 +149,7 @@ Flip card with question on front, answer on back. Self-assessed.
 ```
 
 **Properties:**
+- `id` (string, recommended): Unique identifier for stable performance tracking
 - `question` (string): Front of the card (supports markdown)
 - `answer` (string): Back of the card (supports markdown)
 
@@ -151,6 +163,7 @@ Arrange items in the correct order.
 
 ```json
 {
+  "id": "example-drag-drop-01",
   "type": "drag-drop",
   "question": "Order these steps in the software development lifecycle:",
   "instruction": "Drag items to arrange them in the correct order",
@@ -167,6 +180,7 @@ Arrange items in the correct order.
 ```
 
 **Properties:**
+- `id` (string, recommended): Unique identifier for stable performance tracking
 - `instruction` (string, optional): Instructions for the user
 - `items` (array): List of items to arrange
 - `correctOrder` (array): Indices representing correct order
@@ -180,6 +194,7 @@ Fill in missing code.
 
 ```json
 {
+  "id": "example-code-completion-01",
   "type": "code-completion",
   "question": "Complete the code:",
   "instruction": "Fill in the missing keyword to handle exceptions",
@@ -193,6 +208,7 @@ Fill in missing code.
 ```
 
 **Properties:**
+- `id` (string, recommended): Unique identifier for stable performance tracking
 - `instruction` (string, optional): Instructions for the user
 - `codeTemplate` (string): Code with blank (use `___` for the blank)
 - `answer` (string): The correct answer
@@ -214,6 +230,7 @@ Here's a complete quiz with multiple question types:
   "description": "Test your understanding of Python fundamentals",
   "questions": [
     {
+      "id": "python-basics-01",
       "type": "mcq",
       "question": "Which of these is NOT a Python data type?",
       "options": ["int", "float", "char", "str"],
@@ -222,12 +239,14 @@ Here's a complete quiz with multiple question types:
       "hint": "Think about single character types"
     },
     {
+      "id": "python-basics-02",
       "type": "true-false",
       "question": "Lists in Python are immutable.",
       "answer": false,
       "explanation": "Lists are mutable; you can modify them after creation"
     },
     {
+      "id": "python-basics-03",
       "type": "fill-blank",
       "question": "The keyword to create a loop in Python is ___",
       "answer": "for",
@@ -235,6 +254,7 @@ Here's a complete quiz with multiple question types:
       "explanation": "Both 'for' and 'while' create loops in Python"
     },
     {
+      "id": "python-basics-04",
       "type": "flashcard",
       "question": "What is a list comprehension?",
       "answer": "A concise way to create lists using a single line of code.\n\nExample: `[x*2 for x in range(5)]`"
@@ -246,6 +266,12 @@ Here's a complete quiz with multiple question types:
 
 ## Features
 
+### Performance Tracking
+The quiz system automatically tracks your performance on each question:
+- **Attempts, Correct/Incorrect counts, Streak**
+- **Weak Question Detection**: Questions with <50% accuracy or negative streak ≤ -2 are highlighted
+- **Review Modes**: Practice incorrect questions from the current or past attempts
+
 ### Automatic Scoring
 The quiz automatically calculates and displays:
 - Percentage score
@@ -255,6 +281,7 @@ The quiz automatically calculates and displays:
 ### Visual Feedback
 - Correct answers highlighted in green
 - Incorrect answers highlighted in red
+- Weak questions marked with amber left border
 - Explanations shown after submission
 
 ### Hints
@@ -276,27 +303,32 @@ All quiz components automatically adapt to light/dark themes.
 
 ## Best Practices
 
-### 1. Question Design
+### 1. Use Explicit Question IDs
+- **ALWAYS** assign explicit `id` fields to questions for stable performance tracking
+- Use descriptive IDs: `"python-basics-01"`, not generic ones
+- Never change IDs after publishing (or tracking data will be lost)
+
+### 2. Question Design
 - Keep questions clear and concise
 - Provide meaningful explanations
 - Use hints for learning, not just giving away answers
 
-### 2. Answer Options
+### 3. Answer Options
 - Make distractors (wrong answers) plausible
 - Avoid "all of the above" or "none of the above" when possible
 - Keep option lengths similar
 
-### 3. Quiz Length
+### 4. Quiz Length
 - 5-10 questions per quiz is ideal
 - For longer content, split into multiple quizzes
 - Place quizzes after relevant content sections
 
-### 4. Accessibility
+### 5. Accessibility
 - Write clear question text
 - Provide explanations for all answers
 - Use semantic question types (e.g., true/false for binary questions)
 
-### 5. Code Questions
+### 6. Code Questions
 - Use syntax highlighting with the `language` property
 - Keep code snippets short and focused
 - Test your code examples to ensure they're correct

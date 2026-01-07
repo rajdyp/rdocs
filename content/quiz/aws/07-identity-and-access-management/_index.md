@@ -11,6 +11,7 @@ next: /quiz/aws/08-storage-services
 {
   "questions": [
     {
+      "id": "aws-iam-quiz-01",
       "type": "mcq",
       "question": "In AWS IAM's policy evaluation logic, what happens when there is an explicit DENY in any policy?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Think about the most restrictive rule in IAM security."
     },
     {
+      "id": "aws-iam-quiz-02",
       "type": "multiple-select",
       "question": "Which of the following are characteristics of IAM Roles? (Select all that apply)",
       "options": [
@@ -38,6 +40,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Roles are designed for temporary access without long-term credentials."
     },
     {
+      "id": "aws-iam-quiz-03",
       "type": "true-false",
       "question": "Permissions boundaries grant permissions to IAM users and roles.",
       "answer": false,
@@ -45,6 +48,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Think about whether boundaries add or limit permissions."
     },
     {
+      "id": "aws-iam-quiz-04",
       "type": "fill-blank",
       "question": "What AWS service generates temporary credentials when an IAM role is assumed?",
       "answer": "STS",
@@ -53,6 +57,7 @@ next: /quiz/aws/08-storage-services
       "hint": "It's a three-letter abbreviation for a service related to security tokens."
     },
     {
+      "id": "aws-iam-quiz-05",
       "type": "code-output",
       "question": "Given the following IAM setup, what is the effective permission for IAM action `iam:CreateUser`?",
       "code": "Identity-Based Policy:\n  Allow: s3:*, ec2:*, iam:*\n\nPermissions Boundary:\n  Allow: s3:*, ec2:*\n\nRequest: iam:CreateUser",
@@ -68,11 +73,13 @@ next: /quiz/aws/08-storage-services
       "hint": "Effective permissions = Identity Policy ∩ Permissions Boundary"
     },
     {
+      "id": "aws-iam-quiz-06",
       "type": "flashcard",
       "question": "What is the Confused Deputy Problem in AWS IAM?",
       "answer": "**The Confused Deputy Problem** occurs when a trusted third-party service (the \"deputy\") can be tricked into accessing resources on behalf of the wrong customer.\n\n**Solution:** Use **External ID** in cross-account trust policies. This adds a secret value that must be provided when assuming the role, ensuring the service acts on behalf of the correct customer.\n\n**Example:** Without External ID, a malicious customer could trick Datadog into accessing another customer's AWS account by providing their account ID."
     },
     {
+      "id": "aws-iam-quiz-07",
       "type": "drag-drop",
       "question": "Arrange these IAM policy evaluation steps in the correct order:",
       "instruction": "Drag to arrange in the order AWS evaluates policies",
@@ -87,6 +94,7 @@ next: /quiz/aws/08-storage-services
       "explanation": "AWS evaluates policies in this order: 1) Request arrives, 2) Check for explicit DENY (if found, deny immediately), 3) Check for ALLOW in all applicable policies, 4) If no ALLOW, apply default DENY, 5) Grant or deny access based on evaluation."
     },
     {
+      "id": "aws-iam-quiz-08",
       "type": "code-completion",
       "question": "Complete this trust policy to allow an EC2 instance to assume the role:",
       "instruction": "Fill in the missing service principal",
@@ -98,6 +106,7 @@ next: /quiz/aws/08-storage-services
       "hint": "What is the service domain for EC2?"
     },
     {
+      "id": "aws-iam-quiz-09",
       "type": "mcq",
       "question": "What is the primary difference between identity-based policies and resource-based policies?",
       "options": [
@@ -111,6 +120,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Think about WHERE each policy type lives."
     },
     {
+      "id": "aws-iam-quiz-10",
       "type": "mcq",
       "question": "In cross-account access, what is required for a user in Account A to access a resource in Account B?",
       "options": [
@@ -124,6 +134,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Cross-account access requires consent from both sides."
     },
     {
+      "id": "aws-iam-quiz-11",
       "type": "true-false",
       "question": "IAM Groups can be nested (a group can contain another group).",
       "answer": false,
@@ -131,6 +142,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Think about what IAM Groups can contain."
     },
     {
+      "id": "aws-iam-quiz-12",
       "type": "multiple-select",
       "question": "Which of the following are IAM best practices? (Select all that apply)",
       "options": [
@@ -146,6 +158,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Focus on security, least privilege, and automated credential management."
     },
     {
+      "id": "aws-iam-quiz-13",
       "type": "fill-blank",
       "question": "What IAM principle states that all actions are denied unless explicitly allowed?",
       "answer": "deny by default",
@@ -154,6 +167,7 @@ next: /quiz/aws/08-storage-services
       "hint": "It's about the default state when no policy grants permission."
     },
     {
+      "id": "aws-iam-quiz-14",
       "type": "mcq",
       "question": "What is the purpose of External ID in IAM trust policies?",
       "options": [
@@ -167,6 +181,7 @@ next: /quiz/aws/08-storage-services
       "hint": "It's about preventing unauthorized cross-account access by third parties."
     },
     {
+      "id": "aws-iam-quiz-15",
       "type": "code-output",
       "question": "What is the effective permission for this scenario?",
       "code": "Policy 1 (Identity):\n  Effect: Allow\n  Action: s3:*\n  Resource: *\n\nPolicy 2 (Boundary):\n  Effect: Deny\n  Action: s3:DeleteBucket\n  Resource: *\n\nRequest: s3:DeleteBucket",
@@ -182,11 +197,13 @@ next: /quiz/aws/08-storage-services
       "hint": "Remember: Explicit DENY always wins."
     },
     {
+      "id": "aws-iam-quiz-16",
       "type": "flashcard",
       "question": "What is the difference between a Trust Policy and a Permissions Policy in IAM roles?",
       "answer": "**Trust Policy (Assume Role Policy):**\n- Defines **WHO** can assume the role\n- Contains `Principal` element\n- Uses `sts:AssumeRole` action\n- Attached only to IAM roles\n- Always inline (cannot be reused)\n\n**Permissions Policy (IAM Policy):**\n- Defines **WHAT** actions are allowed\n- No `Principal` element\n- Uses service-specific actions (s3:*, ec2:*, etc.)\n- Can attach to users, groups, or roles\n- Can be managed (reusable) or inline\n\n**Together:** Trust policy controls access to the role, permissions policy controls what the role can do."
     },
     {
+      "id": "aws-iam-quiz-17",
       "type": "mcq",
       "question": "Which of the following credentials types are considered long-term? (Select the best answer)",
       "options": [
@@ -200,6 +217,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Which credentials require manual rotation?"
     },
     {
+      "id": "aws-iam-quiz-18",
       "type": "true-false",
       "question": "AWS managed policies can be modified by customers to fit their specific requirements.",
       "answer": false,
@@ -207,6 +225,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Who controls AWS managed policies?"
     },
     {
+      "id": "aws-iam-quiz-19",
       "type": "multiple-select",
       "question": "When should you use IAM roles instead of IAM users? (Select all that apply)",
       "options": [
@@ -221,6 +240,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Roles are for temporary access and services; users are for people."
     },
     {
+      "id": "aws-iam-quiz-20",
       "type": "code-completion",
       "question": "Complete this IAM policy to allow read-only access to a specific S3 bucket:",
       "instruction": "Fill in the missing action that allows listing bucket contents",
@@ -232,6 +252,7 @@ next: /quiz/aws/08-storage-services
       "hint": "What action lets you see what's inside the bucket?"
     },
     {
+      "id": "aws-iam-quiz-21",
       "type": "mcq",
       "question": "What happens when an IAM user belongs to multiple groups with different policies?",
       "options": [
@@ -245,6 +266,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Think about how multiple policies interact - additive or restrictive?"
     },
     {
+      "id": "aws-iam-quiz-22",
       "type": "drag-drop",
       "question": "Arrange these IAM identity types in order from most specific to most general:",
       "instruction": "Drag to arrange from most granular to broadest",
@@ -259,6 +281,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Think about scope and who/what can use each identity type."
     },
     {
+      "id": "aws-iam-quiz-23",
       "type": "true-false",
       "question": "Inline policies can be attached to multiple IAM users, groups, or roles for reusability.",
       "answer": false,
@@ -266,11 +289,13 @@ next: /quiz/aws/08-storage-services
       "hint": "What does 'inline' imply about the relationship?"
     },
     {
+      "id": "aws-iam-quiz-24",
       "type": "flashcard",
       "question": "What is the Principle of Least Privilege in IAM?",
       "answer": "**Principle of Least Privilege** means granting only the minimum permissions necessary to perform required tasks.\n\n**Implementation:**\n- Start with no permissions (deny by default)\n- Add permissions only as needed\n- Regularly review and revoke unused permissions\n- Use specific actions and resources instead of wildcards\n\n**Benefits:**\n- Reduces security risk from compromised credentials\n- Limits blast radius of accidents or mistakes\n- Improves compliance and auditability\n- Forces intentional permission design\n\n**Example:** Give a developer read-only S3 access to specific buckets, not full S3 admin access to all buckets."
     },
     {
+      "id": "aws-iam-quiz-25",
       "type": "mcq",
       "question": "Which element is REQUIRED in a resource-based policy but NOT in an identity-based policy?",
       "options": [
@@ -284,6 +309,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Resource-based policies need to specify WHO, identity-based policies don't."
     },
     {
+      "id": "aws-iam-quiz-26",
       "type": "multiple-select",
       "question": "Which AWS services commonly use resource-based policies? (Select all that apply)",
       "options": [
@@ -298,6 +324,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Which of these are AWS resources vs IAM identities?"
     },
     {
+      "id": "aws-iam-quiz-27",
       "type": "code-output",
       "question": "For this cross-account scenario, will access be granted?",
       "code": "Account A (111111111111):\n  User: Alice\n  Identity Policy: Allow s3:GetObject on bucket-B/*\n\nAccount B (222222222222):\n  Bucket: bucket-B\n  Resource Policy: (no policy exists)\n\nRequest: Alice tries to get object from bucket-B",
@@ -313,6 +340,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Cross-account requires two-way approval."
     },
     {
+      "id": "aws-iam-quiz-28",
       "type": "fill-blank",
       "question": "What IAM tool helps identify resources shared with external entities and unused access?",
       "answer": "IAM Access Analyzer",
@@ -321,6 +349,7 @@ next: /quiz/aws/08-storage-services
       "hint": "It's a service that analyzes your IAM configuration for security insights."
     },
     {
+      "id": "aws-iam-quiz-29",
       "type": "mcq",
       "question": "What is the maximum duration for temporary credentials from an assumed IAM role?",
       "options": [
@@ -334,6 +363,7 @@ next: /quiz/aws/08-storage-services
       "hint": "It's measured in hours, and it's the longest option that doesn't exceed half a day."
     },
     {
+      "id": "aws-iam-quiz-30",
       "type": "true-false",
       "question": "MFA (Multi-Factor Authentication) should be enabled for all IAM users in an AWS account.",
       "answer": false,
@@ -341,6 +371,7 @@ next: /quiz/aws/08-storage-services
       "hint": "Consider the difference between 'best practice' and 'minimum requirement.'"
     },
     {
+      "id": "aws-iam-quiz-31",
       "type": "flashcard",
       "question": "What are the three main IAM identity types and when should each be used?",
       "answer": "**1. IAM Users**\n- For: Individual people or applications\n- Credentials: Long-term (username/password, access keys)\n- Use when: Need persistent human access or dedicated application credentials\n\n**2. IAM Groups**\n- For: Collections of IAM users with similar permissions\n- Credentials: None (users have credentials)\n- Use when: Managing permissions for multiple users (teams, roles)\n\n**3. IAM Roles**\n- For: Temporary access for services, cross-account, or federated users\n- Credentials: Temporary (STS-generated, auto-rotated)\n- Use when: EC2/Lambda need AWS access, cross-account access, or federated identity\n\n**Best Practice:** Prefer roles over users for services; use groups to manage user permissions."

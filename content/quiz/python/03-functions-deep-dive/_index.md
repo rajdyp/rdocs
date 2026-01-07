@@ -11,6 +11,7 @@ next: /quiz/python/04-error-handling
 {
   "questions": [
     {
+      "id": "python-functions-deep-dive-quiz-01",
       "type": "code-output",
       "question": "What are `name` and `'Alice'` called in this code?",
       "code": "def greet(name):     # Function definition\n    return f\"Hello {name}\"\n\ngreet('Alice')       # Function call",
@@ -26,6 +27,7 @@ next: /quiz/python/04-error-handling
       "hint": "Think about which one is in the definition and which one is passed when calling."
     },
     {
+      "id": "python-functions-deep-dive-quiz-02",
       "type": "code-output",
       "question": "What is the output of the following code?",
       "code": "def get_user():\n    return 'Alice', 30, 'alice@example.com'\n\nprint(get_user())",
@@ -41,6 +43,7 @@ next: /quiz/python/04-error-handling
       "hint": "Think about what happens when a function has multiple return values separated by commas."
     },
     {
+      "id": "python-functions-deep-dive-quiz-03",
       "type": "code-output",
       "question": "What will this code print?",
       "code": "def greet(name, greeting=\"Hello\"):\n    return f\"{greeting} {name}\"\n\nprint(greet(\"Bob\", \"Hi\"))",
@@ -56,6 +59,7 @@ next: /quiz/python/04-error-handling
       "hint": "Default parameters can be overridden by passing explicit values."
     },
     {
+      "id": "python-functions-deep-dive-quiz-04",
       "type": "multiple-select",
       "question": "Which of the following are valid ways to call this function: `def func(a, b, /, c, d)`?",
       "options": [
@@ -69,6 +73,7 @@ next: /quiz/python/04-error-handling
       "hint": "The `/` separator forces parameters before it to be positional-only."
     },
     {
+      "id": "python-functions-deep-dive-quiz-05",
       "type": "fill-blank",
       "question": "What keyword is used to modify a variable from an outer (enclosing) function's scope?",
       "answer": "nonlocal",
@@ -77,6 +82,7 @@ next: /quiz/python/04-error-handling
       "hint": "It's not 'global', which is for module-level variables."
     },
     {
+      "id": "python-functions-deep-dive-quiz-06",
       "type": "true-false",
       "question": "Type hints in Python are enforced at runtime and will raise errors if wrong types are passed.",
       "answer": false,
@@ -84,6 +90,7 @@ next: /quiz/python/04-error-handling
       "hint": "Consider whether Python checks types automatically or if you need external tools."
     },
     {
+      "id": "python-functions-deep-dive-quiz-07",
       "type": "code-output",
       "question": "What is the output of this code?",
       "code": "def sum_all(*args):\n    return sum(args)\n\nprint(type(sum_all(1, 2, 3)))",
@@ -99,6 +106,7 @@ next: /quiz/python/04-error-handling
       "hint": "What does the sum() function return?"
     },
     {
+      "id": "python-functions-deep-dive-quiz-08",
       "type": "drag-drop",
       "question": "Arrange these parameter types in the correct order they must appear in a function definition:",
       "instruction": "Drag to arrange in the correct order",
@@ -112,6 +120,7 @@ next: /quiz/python/04-error-handling
       "explanation": "Python requires this specific order: positional → *args → keyword → **kwargs. For example: `def func(a, b, *args, x=10, y=20, **kwargs)`"
     },
     {
+      "id": "python-functions-deep-dive-quiz-09",
       "type": "mcq",
       "question": "According to the LEGB rule, which scope is searched FIRST when looking up a variable?",
       "options": [
@@ -125,6 +134,7 @@ next: /quiz/python/04-error-handling
       "hint": "Think about which scope is 'closest' to where the variable is being used."
     },
     {
+      "id": "python-functions-deep-dive-quiz-10",
       "type": "code-output",
       "question": "What will this code print?",
       "code": "def make_multiplier(n):\n    def multiply(x):\n        return x * n\n    return multiply\n\ntimes2 = make_multiplier(2)\ntimes3 = make_multiplier(3)\nprint(times2(5) + times3(5))",
@@ -140,6 +150,7 @@ next: /quiz/python/04-error-handling
       "hint": "Each function returned by make_multiplier remembers its own value of n."
     },
     {
+      "id": "python-functions-deep-dive-quiz-11",
       "type": "true-false",
       "question": "A closure is created automatically when an inner function references a variable from its outer function's scope.",
       "answer": true,
@@ -147,6 +158,7 @@ next: /quiz/python/04-error-handling
       "hint": "Think about what happens when multiply(x) uses 'n' from make_multiplier."
     },
     {
+      "id": "python-functions-deep-dive-quiz-12",
       "type": "fill-blank",
       "question": "What keyword is used in a generator function to pause execution and return a value?",
       "answer": "yield",
@@ -155,6 +167,7 @@ next: /quiz/python/04-error-handling
       "hint": "It's a 5-letter word that sounds like 'giving up control temporarily'."
     },
     {
+      "id": "python-functions-deep-dive-quiz-13",
       "type": "code-output",
       "question": "What is the output?",
       "code": "def yield_example():\n    yield 1\n    return 2\n    yield 3\n\ngen = yield_example()\nprint(next(gen))",
@@ -170,6 +183,7 @@ next: /quiz/python/04-error-handling
       "hint": "What does the first yield statement produce?"
     },
     {
+      "id": "python-functions-deep-dive-quiz-14",
       "type": "multiple-select",
       "question": "Which statements about generators are TRUE?",
       "options": [
@@ -183,6 +197,7 @@ next: /quiz/python/04-error-handling
       "hint": "Think about what happens after a generator has yielded all its values."
     },
     {
+      "id": "python-functions-deep-dive-quiz-15",
       "type": "code-completion",
       "question": "Complete the code to make this a tail-recursive function:",
       "instruction": "Fill in the missing function name",
@@ -193,6 +208,7 @@ next: /quiz/python/04-error-handling
       "explanation": "Tail recursion occurs when the recursive call is the last operation. The function must call itself with updated parameters."
     },
     {
+      "id": "python-functions-deep-dive-quiz-16",
       "type": "mcq",
       "question": "What is the main difference between `return` and `yield` in a function?",
       "options": [
@@ -206,6 +222,7 @@ next: /quiz/python/04-error-handling
       "hint": "Think about whether you can continue execution after the statement."
     },
     {
+      "id": "python-functions-deep-dive-quiz-17",
       "type": "true-false",
       "question": "Python automatically optimizes tail recursion to prevent stack overflow.",
       "answer": false,
@@ -213,6 +230,7 @@ next: /quiz/python/04-error-handling
       "hint": "Review the 'Tail Recursion' section about Python's behavior."
     },
     {
+      "id": "python-functions-deep-dive-quiz-18",
       "type": "code-output",
       "question": "What will this code print?",
       "code": "count = 0\n\ndef increment():\n    global count\n    count += 1\n\nincrement()\nincrement()\nprint(count)",
@@ -228,6 +246,7 @@ next: /quiz/python/04-error-handling
       "hint": "What does the 'global' keyword allow you to do?"
     },
     {
+      "id": "python-functions-deep-dive-quiz-19",
       "type": "mcq",
       "question": "Why should you avoid mutable default parameters like `def append_to(item, lst=[])`?",
       "options": [
@@ -241,16 +260,19 @@ next: /quiz/python/04-error-handling
       "hint": "Think about when the default value is created."
     },
     {
+      "id": "python-functions-deep-dive-quiz-20",
       "type": "flashcard",
       "question": "What is the LEGB rule?",
       "answer": "**L**ocal → **E**nclosing → **G**lobal → **B**uilt-in\n\nThe order in which Python searches for variables:\n1. **Local**: Inside current function\n2. **Enclosing**: Inside outer functions\n3. **Global**: Module level\n4. **Built-in**: Python built-ins"
     },
     {
+      "id": "python-functions-deep-dive-quiz-21",
       "type": "flashcard",
       "question": "When should you use `global` vs `nonlocal`?",
       "answer": "**`global`**: Modify module-level variables from within a function\n\n**`nonlocal`**: Modify variables from an outer (enclosing) function's scope\n\nBoth should be used sparingly. Prefer passing parameters and returning values instead."
     },
     {
+      "id": "python-functions-deep-dive-quiz-22",
       "type": "code-output",
       "question": "Predict the output:",
       "code": "def outer():\n    x = \"enclosing\"\n    def inner():\n        x = \"local\"\n        print(x)\n    inner()\n    print(x)\n\nouter()",
@@ -266,6 +288,7 @@ next: /quiz/python/04-error-handling
       "hint": "Each function has its own local scope. Assignment creates a new local variable."
     },
     {
+      "id": "python-functions-deep-dive-quiz-23",
       "type": "multiple-select",
       "question": "Which are valid reasons to use recursion over iteration?",
       "options": [
@@ -279,6 +302,7 @@ next: /quiz/python/04-error-handling
       "hint": "Think about the advantages mentioned in 'Why Use Recursion?'"
     },
     {
+      "id": "python-functions-deep-dive-quiz-24",
       "type": "code-completion",
       "question": "Complete the code to unpack the dictionary as keyword arguments:",
       "instruction": "Fill in the operator needed",
@@ -289,6 +313,7 @@ next: /quiz/python/04-error-handling
       "explanation": "Use `**` to unpack a dictionary as keyword arguments. This passes `a=1, b=2, c=3` to the function."
     },
     {
+      "id": "python-functions-deep-dive-quiz-25",
       "type": "mcq",
       "question": "What is the default recursion depth limit in Python?",
       "options": [
@@ -302,6 +327,7 @@ next: /quiz/python/04-error-handling
       "hint": "It's mentioned in the 'Recursion Limit' section."
     },
     {
+      "id": "python-functions-deep-dive-quiz-26",
       "type": "code-output",
       "question": "What is the output?",
       "code": "def func(a, b, *args, x=10, **kwargs):\n    return len(args) + len(kwargs)\n\nprint(func(1, 2, 3, 4, x=100, y=200, z=300))",
@@ -317,6 +343,7 @@ next: /quiz/python/04-error-handling
       "hint": "Count how many values go into args and kwargs separately."
     },
     {
+      "id": "python-functions-deep-dive-quiz-27",
       "type": "true-false",
       "question": "Generator expressions use square brackets `[]` like list comprehensions.",
       "answer": false,
@@ -324,6 +351,7 @@ next: /quiz/python/04-error-handling
       "hint": "Think about the syntax difference between lazy and eager evaluation."
     },
     {
+      "id": "python-functions-deep-dive-quiz-28",
       "type": "mcq",
       "question": "What decorator can be used to automatically cache recursive function results?",
       "options": [
@@ -337,6 +365,7 @@ next: /quiz/python/04-error-handling
       "hint": "It's imported from the functools module."
     },
     {
+      "id": "python-functions-deep-dive-quiz-29",
       "type": "code-output",
       "question": "What happens when you run this code?",
       "code": "def count_up_to(n):\n    count = 1\n    while count <= n:\n        yield count\n        count += 1\n\ngen = count_up_to(3)\nprint(next(gen))\nprint(next(gen))\nprint(list(gen))",
@@ -352,6 +381,7 @@ next: /quiz/python/04-error-handling
       "hint": "Generators remember their state. list() consumes what's left."
     },
     {
+      "id": "python-functions-deep-dive-quiz-30",
       "type": "multiple-select",
       "question": "Which of the following demonstrate closures?",
       "options": [
@@ -365,6 +395,7 @@ next: /quiz/python/04-error-handling
       "hint": "Closures involve inner functions accessing outer function variables."
     },
     {
+      "id": "python-functions-deep-dive-quiz-31",
       "type": "fill-blank",
       "question": "What method is used to get the next value from a generator?",
       "answer": "next",
@@ -373,6 +404,7 @@ next: /quiz/python/04-error-handling
       "hint": "It's a built-in function with 4 letters."
     },
     {
+      "id": "python-functions-deep-dive-quiz-32",
       "type": "true-false",
       "question": "When you define a function with a docstring, you can access it using the `__doc__` attribute.",
       "answer": true,
@@ -380,6 +412,7 @@ next: /quiz/python/04-error-handling
       "hint": "Think about what happens to the triple-quoted string in a function."
     },
     {
+      "id": "python-functions-deep-dive-quiz-33",
       "type": "mcq",
       "question": "In the function definition `def func(a, /, b, *, c)`, which parameter can be passed BOTH positionally and as a keyword?",
       "options": [
@@ -393,6 +426,7 @@ next: /quiz/python/04-error-handling
       "hint": "Look for the parameter that's neither before / nor after *."
     },
     {
+      "id": "python-functions-deep-dive-quiz-34",
       "type": "code-output",
       "question": "What will this code print?",
       "code": "def make_counter():\n    count = 0\n    def increment():\n        nonlocal count\n        count += 1\n        return count\n    return increment\n\nc1 = make_counter()\nc2 = make_counter()\nprint(c1())\nprint(c1())\nprint(c2())",
@@ -408,11 +442,13 @@ next: /quiz/python/04-error-handling
       "hint": "Each counter function has its own independent count variable."
     },
     {
+      "id": "python-functions-deep-dive-quiz-35",
       "type": "flashcard",
       "question": "What is memoization in the context of recursive functions?",
       "answer": "**Memoization** is an optimization technique that caches the results of expensive function calls.\n\nWhen a recursive function is called with the same arguments again, it returns the cached result instead of recalculating.\n\nThis dramatically improves performance for recursive algorithms like Fibonacci that have overlapping subproblems."
     },
     {
+      "id": "python-functions-deep-dive-quiz-36",
       "type": "drag-drop",
       "question": "Arrange these steps for exception handling in the correct execution order:",
       "instruction": "Drag to arrange in the order Python executes them",
@@ -426,6 +462,7 @@ next: /quiz/python/04-error-handling
       "explanation": "Python executes: try → except (if error) → else (if no error) → finally (always). The finally block always runs regardless of whether an exception occurred."
     },
     {
+      "id": "python-functions-deep-dive-quiz-37",
       "type": "code-completion",
       "question": "Complete the generator function to read a file line by line:",
       "instruction": "Fill in the missing keyword",
@@ -436,6 +473,7 @@ next: /quiz/python/04-error-handling
       "explanation": "Using `yield` makes this a generator that produces lines one at a time, which is memory-efficient for large files."
     },
     {
+      "id": "python-functions-deep-dive-quiz-38",
       "type": "mcq",
       "question": "Which approach is generally MORE memory-efficient for processing large datasets?",
       "options": [
@@ -449,6 +487,7 @@ next: /quiz/python/04-error-handling
       "hint": "Think about when the values are created and stored."
     },
     {
+      "id": "python-functions-deep-dive-quiz-39",
       "type": "true-false",
       "question": "A function can have multiple `yield` statements but only one `return` statement.",
       "answer": false,

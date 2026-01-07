@@ -10,6 +10,7 @@ prev: /quiz/python/08-working-with-data
 {
   "questions": [
     {
+      "id": "python-log-analysis-comprehensive-01",
       "type": "mcq",
       "question": "When should you use string manipulation (split, find, slice) over regular expressions for log parsing?",
       "options": [
@@ -23,6 +24,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Think about when you need the simplest, fastest approach without validation."
     },
     {
+      "id": "python-log-analysis-comprehensive-02",
       "type": "multiple-select",
       "question": "Which of the following are advantages of using regular expressions with named groups for log parsing?",
       "options": [
@@ -37,6 +39,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Consider what regex offers beyond simple string splitting."
     },
     {
+      "id": "python-log-analysis-comprehensive-03",
       "type": "code-output",
       "question": "What will be printed?",
       "code": "import json\nevent = json.loads('{\"type\": \"Warning\", \"obj\": {\"name\": \"pod1\"}}')\nresult = event.get(\"obj\", {}).get(\"namespace\", \"default\")\nprint(result)",
@@ -52,6 +55,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Think about what .get() returns when a key is missing and a default is provided."
     },
     {
+      "id": "python-log-analysis-comprehensive-04",
       "type": "fill-blank",
       "question": "What dictionary method should you use to safely access nested JSON fields that might not exist?",
       "answer": "get",
@@ -60,6 +64,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "It returns a default value instead of raising an exception."
     },
     {
+      "id": "python-log-analysis-comprehensive-05",
       "type": "mcq",
       "question": "Which data structure is best for counting the frequency of log levels (INFO, WARN, ERROR) when you also need to find the top 3 most common levels?",
       "options": [
@@ -73,6 +78,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Which structure has a built-in method for getting the most common items?"
     },
     {
+      "id": "python-log-analysis-comprehensive-06",
       "type": "true-false",
       "question": "defaultdict(int) automatically initializes missing keys to 0, eliminating the need for .get() or existence checks when counting.",
       "answer": true,
@@ -80,6 +86,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Think about what 'default' means in defaultdict."
     },
     {
+      "id": "python-log-analysis-comprehensive-07",
       "type": "drag-drop",
       "question": "Arrange these data structure choices from most appropriate to least appropriate for tracking unique pod names:",
       "instruction": "Drag to arrange from most to least appropriate",
@@ -93,6 +100,7 @@ prev: /quiz/python/08-working-with-data
       "explanation": "For uniqueness: set is ideal (O(1) lookup, auto-deduplication). Counter works but is overkill. defaultdict(int) can work but adds complexity. list is worst (O(n) lookup, no auto-deduplication)."
     },
     {
+      "id": "python-log-analysis-comprehensive-08",
       "type": "code-completion",
       "question": "Complete the code to safely handle division by zero when calculating average latency:",
       "instruction": "Fill in the condition",
@@ -103,6 +111,7 @@ prev: /quiz/python/08-working-with-data
       "explanation": "Always check that the divisor is greater than 0 before dividing to avoid ZeroDivisionError. This is a critical best practice in log analysis."
     },
     {
+      "id": "python-log-analysis-comprehensive-09",
       "type": "mcq",
       "question": "What is the result of subtracting two datetime objects?",
       "options": [
@@ -116,6 +125,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Think about what represents a duration or time difference."
     },
     {
+      "id": "python-log-analysis-comprehensive-10",
       "type": "code-output",
       "question": "What will be the output?",
       "code": "from datetime import timedelta\ntd1 = timedelta(hours=2)\ntd2 = timedelta(hours=3)\navg = (td1 + td2) / 2\nprint(type(avg).__name__)",
@@ -131,6 +141,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Think about what type represents a duration."
     },
     {
+      "id": "python-log-analysis-comprehensive-11",
       "type": "multiple-select",
       "question": "Which operations are valid in Python's datetime module?",
       "options": [
@@ -145,11 +156,13 @@ prev: /quiz/python/08-working-with-data
       "hint": "You can add durations together or to points in time, but not points in time to each other."
     },
     {
+      "id": "python-log-analysis-comprehensive-12",
       "type": "flashcard",
       "question": "What is the two-pass processing pattern and when should you use it?",
       "answer": "**Two-Pass Processing Pattern:**\n\nA two-pass processing pattern separates analysis from mutation by processing the dataset twice.\n\n**Pass 1:** Analyze (read-only)\n\n- Scan the data to detect patterns or conflicts and build the required state\n(e.g., find duplicate UIDs and create a reassignment map).\n\n**Pass 2:** Apply (write/action)\n\n- Apply corrections using only the results from Pass 1, without making new decisions.\n\n**When to use:**\nUse this pattern when fixes depend on global knowledge of the data, and modifying records safely requires seeing the full dataset first. Example: Finding duplicate UIDs and reassigning them to available unique values."
     },
     {
+      "id": "python-log-analysis-comprehensive-13",
       "type": "mcq",
       "question": "When parsing log files, what should you ALWAYS do before checking if a line is empty?",
       "options": [
@@ -163,6 +176,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "What handles lines that contain only spaces or tabs?"
     },
     {
+      "id": "python-log-analysis-comprehensive-14",
       "type": "true-false",
       "question": "When using find() to locate substrings, it returns -1 if the substring is not found, which can cause slice errors if not handled properly.",
       "answer": true,
@@ -170,6 +184,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "What happens when you use -1 as a slice index?"
     },
     {
+      "id": "python-log-analysis-comprehensive-15",
       "type": "code-output",
       "question": "What will this code print?",
       "code": "count = {}\nfor item in ['a', 'b', 'a', 'c', 'a']:\n    count[item] = count.get(item, 0) + 1\nprint(count['a'])",
@@ -185,6 +200,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Count how many times 'a' appears in the list."
     },
     {
+      "id": "python-log-analysis-comprehensive-16",
       "type": "mcq",
       "question": "Which approach is better for finding the top 3 most frequent error codes from parsed logs?",
       "options": [
@@ -198,6 +214,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Consider readability and whether you're already using the Counter data structure."
     },
     {
+      "id": "python-log-analysis-comprehensive-17",
       "type": "fill-blank",
       "question": "What regex pattern matches an IP address in log parsing?",
       "answer": "\\d+\\.\\d+\\.\\d+\\.\\d+",
@@ -206,6 +223,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Remember that dots need to be escaped in regex."
     },
     {
+      "id": "python-log-analysis-comprehensive-18",
       "type": "mcq",
       "question": "When should you load an entire log file into memory before processing?",
       "options": [
@@ -219,6 +237,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Think about when you need to see all data before you can process it correctly."
     },
     {
+      "id": "python-log-analysis-comprehensive-19",
       "type": "code-completion",
       "question": "Complete the code to track only the first login timestamp for each user:",
       "instruction": "Fill in the missing condition",
@@ -230,6 +249,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "You want to add the user only if they haven't been added yet."
     },
     {
+      "id": "python-log-analysis-comprehensive-20",
       "type": "multiple-select",
       "question": "Which statements about defaultdict and Counter are correct?",
       "options": [
@@ -244,11 +264,13 @@ prev: /quiz/python/08-working-with-data
       "hint": "Think about the trade-offs and special features of each structure."
     },
     {
+      "id": "python-log-analysis-comprehensive-21",
       "type": "flashcard",
       "question": "What is the difference between find() and index() when searching for substrings?",
       "answer": "**find()**\n- Returns -1 if substring not found\n- Silent failure - can cause subtle bugs with slicing\n- Use when you want to check and handle missing substrings with conditionals\n\n**index()**\n- Raises ValueError if substring not found\n- Explicit error handling with try/except\n- Clearer for error cases\n\n**Best practice:** Use index() with try/except for clearer error handling in log parsing."
     },
     {
+      "id": "python-log-analysis-comprehensive-22",
       "type": "code-output",
       "question": "What will this code print?",
       "code": "import re\npattern = r'\\[(?P<LEVEL>\\w+)\\]'\nline = '[ERROR] Connection failed'\nmatch = re.search(pattern, line)\nprint(match.groupdict()['LEVEL'])",
@@ -264,6 +286,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Named groups capture what's inside the parentheses, not the surrounding brackets."
     },
     {
+      "id": "python-log-analysis-comprehensive-23",
       "type": "mcq",
       "question": "What is the main disadvantage of using regular expressions compared to simple string manipulation for log parsing?",
       "options": [
@@ -277,6 +300,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Think about the trade-offs mentioned in the 'Cons' section."
     },
     {
+      "id": "python-log-analysis-comprehensive-24",
       "type": "true-false",
       "question": "For line-delimited JSON logs (one JSON object per line), you should use json.loads() on each line individually rather than loading the entire file as one JSON array.",
       "answer": true,
@@ -284,6 +308,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Think about whether each line is a complete JSON object or part of a larger structure."
     },
     {
+      "id": "python-log-analysis-comprehensive-25",
       "type": "mcq",
       "question": "Why should you compile regex patterns outside of loops?",
       "options": [
@@ -297,6 +322,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Think about what happens when you compile the same pattern thousands of times."
     },
     {
+      "id": "python-log-analysis-comprehensive-26",
       "type": "code-completion",
       "question": "Complete the pattern to match quoted content in a log line:",
       "instruction": "Fill in the regex pattern",
@@ -308,26 +334,31 @@ prev: /quiz/python/08-working-with-data
       "hint": "Use .\\*? for non-greedy matching between quotes."
     },
     {
+      "id": "python-log-analysis-comprehensive-27",
       "type": "flashcard",
       "question": "What data structure should you use for counting occurrences in log analysis?",
       "answer": "**Three options with trade-offs:**\n\n**dict with .get()** - Simple counting, minimal overhead\n```python\ncount[item] = count.get(item, 0) + 1\n```\n\n**defaultdict(int)** - Cleaner code, no .get() needed\n```python\ncount[item] += 1\n```\n\n**Counter** - When you need .most_common() or count arithmetic\n\n**Choose based on needs:** Start simple (dict), use defaultdict for cleaner code, use Counter when you need its special features."
     },
     {
+      "id": "python-log-analysis-comprehensive-28",
       "type": "flashcard",
       "question": "What data structure should you use for tracking unique items in log analysis?",
       "answer": "**set** - Ideal for uniqueness tracking\n\n**Benefits:**\n- O(1) membership testing: `if item in seen_set`\n- Automatic deduplication\n- Memory efficient for large unique sets\n\n**Example use cases:** Track unique IP addresses, pod names, user IDs\n\n**Alternative:** dict keys work but are overkill unless you need associated values."
     },
     {
+      "id": "python-log-analysis-comprehensive-29",
       "type": "flashcard",
       "question": "What data structure should you use for grouping log entries by a key (e.g., events by pod name)?",
       "answer": "**defaultdict(list)** - Purpose-built for grouping\n\n**Why it's ideal:**\n- Auto-initializes missing keys to empty lists\n- No existence checks needed: `pod_events[pod_name].append(event)`\n- Clean, readable code\n\n**Manual alternative:**\n```python\ndict.setdefault(key, []).append(value)  # More verbose\n```"
     },
     {
+      "id": "python-log-analysis-comprehensive-30",
       "type": "flashcard",
       "question": "When should you use Counter instead of a regular dict for counting in log analysis?",
       "answer": "**Use Counter when you need:**\n- **.most_common(N)**: Find top N frequent items\n- **Count arithmetic**: Combine counts from multiple sources (`count1 + count2`)\n- **Multiple count operations**: Subtract, intersect, union\n\n**Use dict/defaultdict when:**\n- Simple counting without special operations\n- Want minimal overhead\n- Don't need Counter's features\n\n**Key insight:** Counter is a specialized tool - use it when you need its features, not just for basic counting."
     },
     {
+      "id": "python-log-analysis-comprehensive-31",
       "type": "multiple-select",
       "question": "Which of these are valid reasons to use the two-pass processing pattern?",
       "options": [
@@ -342,6 +373,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "When do you need to see everything before you can fix anything?"
     },
     {
+      "id": "python-log-analysis-comprehensive-32",
       "type": "code-output",
       "question": "What will be printed?",
       "code": "from collections import Counter\nwords = Counter(['apple', 'banana', 'apple', 'cherry', 'banana', 'apple'])\nresult = words.most_common(2)\nprint(len(result))",
@@ -357,6 +389,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "How many items did you ask for with most_common()?"
     },
     {
+      "id": "python-log-analysis-comprehensive-33",
       "type": "mcq",
       "question": "What is the best practice for handling punctuation when analyzing word frequencies in log messages?",
       "options": [
@@ -370,6 +403,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Should 'error,' and 'error' be counted as the same word or different words?"
     },
     {
+      "id": "python-log-analysis-comprehensive-34",
       "type": "true-false",
       "question": "Sets in Python provide O(1) membership testing, making them ideal for checking if an item has been seen before.",
       "answer": true,
@@ -377,6 +411,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Think about the performance characteristics of sets versus lists."
     },
     {
+      "id": "python-log-analysis-comprehensive-35",
       "type": "drag-drop",
       "question": "Arrange these steps for parsing logs with regular expressions in the correct order:",
       "instruction": "Drag to arrange in logical order",
@@ -391,6 +426,7 @@ prev: /quiz/python/08-working-with-data
       "explanation": "Correct flow: 1) Compile pattern once (performance), 2) Read lines, 3) Match pattern, 4) Extract with groupdict() if matched, 5) Handle/skip non-matching lines."
     },
     {
+      "id": "python-log-analysis-comprehensive-36",
       "type": "code-completion",
       "question": "Complete the code to safely find the slowest request from a filtered list:",
       "instruction": "Fill in the parameter to avoid errors on empty lists",
@@ -402,11 +438,13 @@ prev: /quiz/python/08-working-with-data
       "hint": "What parameter prevents max() from crashing on an empty sequence?"
     },
     {
+      "id": "python-log-analysis-comprehensive-37",
       "type": "flashcard",
       "question": "What are the key differences between parsing delimited files (like /etc/passwd) versus JSON logs?",
       "answer": "**Delimited Files (CSV-like):**\n- Use split(':') or split(',')\n- Fixed column positions\n- Flat structure\n- Must handle comments (#) and empty lines manually\n- Simple index-based access: data[2]\n\n**JSON Logs:**\n- Use json.loads() per line\n- Named fields with .get()\n- Nested structures\n- Type-safe (booleans, numbers preserved)\n- Safer with .get() defaults: event.get('field', {})\n\n**Key insight**: JSON is self-describing and handles nesting; delimited is simpler but requires knowing column positions."
     },
     {
+      "id": "python-log-analysis-comprehensive-38",
       "type": "mcq",
       "question": "Which datetime parsing method should you use for ISO 8601 formatted timestamps like '2025-01-15T10:23:45+00:00'?",
       "options": [
@@ -420,6 +458,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "There's a specific method for ISO format in the datetime module."
     },
     {
+      "id": "python-log-analysis-comprehensive-39",
       "type": "multiple-select",
       "question": "Which are valid performance optimization tips for log analysis?",
       "options": [
@@ -434,6 +473,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Think about memory efficiency and algorithmic complexity."
     },
     {
+      "id": "python-log-analysis-comprehensive-40",
       "type": "code-output",
       "question": "What will this code output?",
       "code": "text = 'ERROR: failed'\nfor punc in '!@#$%^&*(),.:':\n    text = text.replace(punc, ' ')\nwords = text.split()\nprint(len(words))",
@@ -449,6 +489,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Count the words after punctuation removal and splitting."
     },
     {
+      "id": "python-log-analysis-comprehensive-41",
       "type": "true-false",
       "question": "When grouping events by pod name using defaultdict(list), you must initialize the list for each pod before appending to it.",
       "answer": false,
@@ -456,6 +497,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "What does 'default' in defaultdict mean?"
     },
     {
+      "id": "python-log-analysis-comprehensive-42",
       "type": "mcq",
       "question": "What is the primary benefit of using named groups in regular expressions like (?P&lt;IP&gt;\\\\d+\\\\.\\\\d+\\\\.\\\\d+\\\\.\\\\d+)?",
       "options": [
@@ -469,6 +511,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Think about code clarity and how you access the matched data."
     },
     {
+      "id": "python-log-analysis-comprehensive-43",
       "type": "code-completion",
       "question": "Complete the code to handle case-insensitive matching when parsing log levels:",
       "instruction": "Fill in the normalization step",
@@ -480,11 +523,13 @@ prev: /quiz/python/08-working-with-data
       "hint": "You need to normalize all strings to the same case."
     },
     {
+      "id": "python-log-analysis-comprehensive-44",
       "type": "flashcard",
       "question": "Why should you use early 'continue' statements when filtering with multiple conditions?",
       "answer": "**Early Continue Pattern:**\n\nEarly continue enables fail-fast logic, keeping the main logic flat, readable, and focused on valid cases.\n```python\nfor event in events:\n    if obj.get('kind') != 'Pod':\n        continue\n    if event.get('type') != 'Warning':\n        continue\n    # Process filtered event\n```\n\n**Benefits:**\n- Improves readability with many conditions\n- Reduces nesting levels\n- Makes filtering logic explicit\n- Each condition is independent and clear\n\n**Alternative:** Chain with 'and' for compact code with few conditions\n\n**Best practice:** Use early continue when you have 3+ filtering conditions."
     },
     {
+      "id": "python-log-analysis-comprehensive-45",
       "type": "mcq",
       "question": "When should you use Counter.update() instead of counting manually?",
       "options": [
@@ -498,6 +543,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Think about combining or adding to existing counts."
     },
     {
+      "id": "python-log-analysis-comprehensive-46",
       "type": "code-output",
       "question": "What is the output?",
       "code": "line = '192.168.1.1 - [ERROR] message'\nstart = line.find('[')\nend = line.find(']')\nresult = line[start+1:end]\nprint(result)",
@@ -513,6 +559,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "Slicing from start+1 to end excludes the opening bracket and includes up to but not including the closing bracket."
     },
     {
+      "id": "python-log-analysis-comprehensive-47",
       "type": "multiple-select",
       "question": "Which scenarios require loading the entire log file into memory before processing?",
       "options": [
@@ -527,6 +574,7 @@ prev: /quiz/python/08-working-with-data
       "hint": "When do you need to see all data before you can process correctly?"
     },
     {
+      "id": "python-log-analysis-comprehensive-48",
       "type": "true-false",
       "question": "List comprehensions in Python are generally faster than for-loops with append() for building lists.",
       "answer": true,

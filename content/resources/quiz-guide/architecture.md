@@ -102,7 +102,33 @@ class Quiz {
   constructor(container) {
     this.data = this.loadQuizData(); // Read JSON
     this.userAnswers = new Map();
+    this.performanceStore = new PerformanceStore(); // Track performance
+    this.resultsScope = 'all'; // For subset results
     this.init();
+  }
+}
+```
+
+**Performance Tracking:**
+```javascript
+class PerformanceStore {
+  record(questionId, isCorrect) {
+    const entry = this.data.questions[questionId] || {
+      attempts: 0, correct: 0, incorrect: 0, streak: 0
+    };
+    entry.attempts++;
+    entry[isCorrect ? 'correct' : 'incorrect']++;
+    entry.streak = isCorrect ? Math.max(1, entry.streak + 1)
+                             : Math.min(-1, entry.streak - 1);
+    entry.lastResult = isCorrect ? 'correct' : 'incorrect';
+    this.save(); // Persist to localStorage
+  }
+
+  isWeak(questionId) {
+    const entry = this.get(questionId);
+    if (!entry || entry.attempts < 2) return false;
+    const accuracy = entry.correct / entry.attempts;
+    return accuracy < 0.5 || entry.streak <= -2;
   }
 }
 ```
@@ -111,23 +137,35 @@ class Quiz {
 - Each question type has a validator
 - Compares user answers with correct answers
 - Shows visual feedback
+- Records performance data per question
 
-**Scoring:**
+**Scoring with Scope:**
 ```javascript
-submitQuiz() {
-  questions.forEach((q, i) => {
-    let isCorrect = this.checkQuestionType(q, i);
+showFinalResults() {
+  const indices = this.resultsScope === 'subset'
+    ? this.resultsIndices  // Review mode: only selected questions
+    : this.getAllQuestionIndices();  // Normal mode: all questions
+
+  indices.forEach((index) => {
+    let isCorrect = this.checkQuestionType(questions[index], index);
     if (isCorrect) this.results.correct++;
   });
   this.showResults();
 }
 ```
 
+**Review Features:**
+- Filter questions by review mode (all, incorrect, past-incorrect)
+- Reset questions for retry without affecting historical stats
+- Toggle between full quiz and targeted review
+- Update weak indicators dynamically
+
 **Interactive Features:**
 - Hint toggling
 - Flashcard flipping (CSS 3D transforms)
 - Drag-drop reordering (HTML5 Drag API)
 - Reset functionality
+- Review mode switching
 
 ## Data Flow
 
@@ -138,11 +176,11 @@ Hugo Shortcode Processing
         ↓
 JSON Parsing (transform.Unmarshal)
         ↓
-HTML Template Rendering
+HTML Template Rendering (with data-question-id)
         ↓
 Browser Receives HTML + CSS + JS
         ↓
-JavaScript Reads Embedded JSON
+JavaScript Reads Embedded JSON + localStorage
         ↓
 User Interaction
         ↓
@@ -150,8 +188,47 @@ Event Handlers
         ↓
 Answer Validation
         ↓
+Performance Tracking (localStorage update)
+        ↓
 Visual Feedback & Scoring
 ```
+
+## Data Persistence
+
+### localStorage Schema
+
+Performance data is stored in `localStorage` with key `rdocs.quiz.performance.v1`:
+
+```json
+{
+  "questions": {
+    "quiz-id-question-01": {
+      "attempts": 5,
+      "correct": 3,
+      "incorrect": 2,
+      "streak": -1,
+      "lastResult": "incorrect",
+      "lastAttemptAt": "2024-01-15T10:30:00.000Z"
+    },
+    "quiz-id-question-02": {
+      "attempts": 3,
+      "correct": 3,
+      "incorrect": 0,
+      "streak": 3,
+      "lastResult": "correct",
+      "lastAttemptAt": "2024-01-15T10:31:00.000Z"
+    }
+  }
+}
+```
+
+### Question ID Strategy
+
+Questions use stable IDs in this priority:
+1. **Explicit ID**: `"id": "my-question-01"` (recommended)
+2. **Fallback**: `${quizId}-${questionIndex}` (auto-generated)
+
+Explicit IDs ensure tracking persists even if questions are reordered.
 
 ## Technical Details
 
@@ -161,10 +238,11 @@ Visual Feedback & Scoring
 - Pure CSS (no preprocessors)
 
 ### Performance
-- Lightweight (~15KB CSS, ~10KB JS)
+- Lightweight (~15KB CSS, ~13KB JS)
 - No API calls
 - Client-side scoring
 - Minimal DOM manipulation
+- localStorage for persistence (graceful fallback if unavailable)
 
 ### Browser Support
 - Modern browsers (Chrome, Firefox, Safari, Edge)

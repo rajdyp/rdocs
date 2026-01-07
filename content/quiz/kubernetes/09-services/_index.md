@@ -11,6 +11,7 @@ next: /quiz/kubernetes/10-ingress
 {
   "questions": [
     {
+      "id": "kubernetes-services-quiz-01",
       "type": "mcq",
       "question": "Why do we need Services in Kubernetes instead of connecting directly to pod IPs?",
       "options": [
@@ -24,11 +25,13 @@ next: /quiz/kubernetes/10-ingress
       "hint": "Think about what happens when a pod crashes and is recreated."
     },
     {
+      "id": "kubernetes-services-quiz-02",
       "type": "flashcard",
       "question": "Explain how Endpoints work in the context of Service traffic routing. Are they queried during active traffic?",
       "answer": "**Background Synchronization (NOT queried during traffic):**\n\nEndpoints work as a background synchronization mechanism:\n\n1. **Setup Phase**: Endpoints Controller watches pods matching Service selector → Updates Endpoints object → kube-proxy watches Endpoints → Programs iptables/IPVS rules\n\n2. **Active Traffic**: Request hits Service IP → Kernel networking stack → Pre-programmed iptables/IPVS rules → Direct routing to Pod IP\n\n**Key Point**: Endpoints are NOT queried during active traffic. They update iptables/IPVS rules asynchronously in the background.\n\n**Benefits**:\n- Kernel-level routing (no API calls)\n- No control plane bottleneck\n- Nanosecond routing decisions\n- Traffic continues even if API server is slow"
     },
     {
+      "id": "kubernetes-services-quiz-03",
       "type": "multiple-select",
       "question": "What does a Kubernetes Service provide?",
       "options": [
@@ -43,6 +46,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "Think about what Services directly manage vs. what they depend on."
     },
     {
+      "id": "kubernetes-services-quiz-04",
       "type": "true-false",
       "question": "When traffic reaches a Service IP, the Endpoints object is queried in real-time to determine which pod to route to.",
       "answer": false,
@@ -50,6 +54,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "Think about performance - would querying an API object for every request be fast?"
     },
     {
+      "id": "kubernetes-services-quiz-05",
       "type": "mcq",
       "question": "What is the default Service type in Kubernetes?",
       "options": [
@@ -63,6 +68,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "Think about the most common use case - internal microservices communication."
     },
     {
+      "id": "kubernetes-services-quiz-06",
       "type": "code-output",
       "question": "Given this Service configuration, how can you access it from outside the cluster?",
       "code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: backend-api\nspec:\n  type: ClusterIP\n  selector:\n    app: backend\n  ports:\n  - port: 80\n    targetPort: 8080",
@@ -78,6 +84,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "ClusterIP means cluster-internal only."
     },
     {
+      "id": "kubernetes-services-quiz-07",
       "type": "fill-blank",
       "question": "The DNS format for a Service in Kubernetes is: <service-name>.<namespace>._____.cluster.local",
       "answer": "svc",
@@ -87,6 +94,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "It's a three-letter abbreviation for the resource type."
     },
     {
+      "id": "kubernetes-services-quiz-08",
       "type": "drag-drop",
       "question": "Arrange the ClusterIP traffic flow in the correct order:",
       "instruction": "Sequence from client request to pod response",
@@ -102,6 +110,7 @@ next: /quiz/kubernetes/10-ingress
       "explanation": "Traffic flow: Client request → DNS resolution → Packet to ClusterIP → Kernel routing via iptables/IPVS → Pod. Note that kube-proxy pre-programs the routing rules but doesn't handle actual traffic."
     },
     {
+      "id": "kubernetes-services-quiz-09",
       "type": "mcq",
       "question": "What is the default port range for NodePort services?",
       "options": [
@@ -115,6 +124,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "It's a high port range above the well-known ports."
     },
     {
+      "id": "kubernetes-services-quiz-10",
       "type": "code-completion",
       "question": "Complete the NodePort Service to expose port 80 on node port 30080:",
       "instruction": "Fill in the missing Service type",
@@ -125,6 +135,7 @@ next: /quiz/kubernetes/10-ingress
       "explanation": "The `NodePort` type exposes the Service on each node's IP at a static port (30080 in this case), allowing external access via any node's IP address."
     },
     {
+      "id": "kubernetes-services-quiz-11",
       "type": "multiple-select",
       "question": "Why is NodePort NOT recommended for production external access?",
       "options": [
@@ -139,11 +150,13 @@ next: /quiz/kubernetes/10-ingress
       "hint": "Think about operational challenges and better architectural patterns."
     },
     {
+      "id": "kubernetes-services-quiz-12",
       "type": "flashcard",
       "question": "Explain the traffic flow for a LoadBalancer Service from external client to pod.",
       "answer": "**LoadBalancer Traffic Flow:**\n\n```\nClient (external)\n  ↓\nCloud Load Balancer (AWS ELB, GCP LB, Azure LB)\n  ↓\nNode IP:NodePort (LB distributes across nodes)\n  ↓\niptables/IPVS rules (programmed by kube-proxy)\n  ↓\nDNAT: NodePort → Pod IP (e.g., 10.244.1.5:8080)\n  ↓\nPod\n```\n\n**Key Points:**\n- LoadBalancer type automatically creates a NodePort\n- Cloud provider's LB uses NodePorts as backend targets\n- kube-proxy programs iptables/IPVS rules\n- ClusterIP is also created but data plane traffic flows directly from NodePort to Pod via DNAT\n- Only works with cloud providers (AWS, GCP, Azure)"
     },
     {
+      "id": "kubernetes-services-quiz-13",
       "type": "true-false",
       "question": "A LoadBalancer Service can only be created in cloud environments (AWS, GCP, Azure) and will not work in on-premises clusters.",
       "answer": true,
@@ -151,6 +164,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "Think about who provides the external load balancer."
     },
     {
+      "id": "kubernetes-services-quiz-14",
       "type": "mcq",
       "question": "What makes a Headless Service different from a regular ClusterIP Service?",
       "options": [
@@ -164,6 +178,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "Think about what 'headless' means - no head/single IP."
     },
     {
+      "id": "kubernetes-services-quiz-15",
       "type": "code-output",
       "question": "A Headless Service named 'mysql' is created with 3 StatefulSet pods (mysql-0, mysql-1, mysql-2). What DNS records are created?",
       "code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: mysql\nspec:\n  clusterIP: None\n  selector:\n    app: mysql\n  ports:\n  - port: 3306",
@@ -179,6 +194,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "Headless Services provide BOTH collective and individual pod DNS records."
     },
     {
+      "id": "kubernetes-services-quiz-16",
       "type": "fill-blank",
       "question": "An ExternalName Service type returns a _____ DNS record instead of creating a ClusterIP or proxying traffic.",
       "answer": "CNAME",
@@ -188,6 +204,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "It's a DNS record type that aliases one domain to another."
     },
     {
+      "id": "kubernetes-services-quiz-17",
       "type": "mcq",
       "question": "Which Kubernetes components are involved in routing traffic for an ExternalName Service?",
       "options": [
@@ -201,11 +218,13 @@ next: /quiz/kubernetes/10-ingress
       "hint": "ExternalName is DNS-only, no Kubernetes networking components."
     },
     {
+      "id": "kubernetes-services-quiz-18",
       "type": "flashcard",
       "question": "Compare the five Service types: ClusterIP, NodePort, LoadBalancer, Headless, and ExternalName. When would you use each?",
       "answer": "**ClusterIP** (default):\n- Internal cluster communication only\n- Use for: Microservices, internal APIs, backends\n- Access: Within cluster via DNS or ClusterIP\n\n**NodePort**:\n- Exposes Service on each node's IP at a static port (30000-32767)\n- Use for: Development/testing, direct node access\n- Access: External via <NodeIP>:<NodePort>\n- Production: ❌ Use LoadBalancer or Ingress instead\n\n**LoadBalancer**:\n- Creates external cloud load balancer\n- Use for: Production external access (cloud only)\n- Access: External via cloud LB IP\n\n**Headless** (clusterIP: None):\n- Returns pod IPs directly, no load balancing\n- Use for: StatefulSets, direct pod access, custom load balancing\n- Access: DNS returns individual pod IPs\n\n**ExternalName**:\n- DNS alias (CNAME) to external service\n- Use for: Accessing external databases/APIs, migration scenarios\n- Access: Returns CNAME, no proxying"
     },
     {
+      "id": "kubernetes-services-quiz-19",
       "type": "true-false",
       "question": "When you create a Service with a selector, Kubernetes automatically creates a corresponding Endpoints object.",
       "answer": true,
@@ -213,6 +232,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "Services with selectors are 'selector-based' and get automatic endpoint management."
     },
     {
+      "id": "kubernetes-services-quiz-20",
       "type": "multiple-select",
       "question": "What are the benefits of EndpointSlices over the older Endpoints objects?",
       "options": [
@@ -227,6 +247,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "Focus on scalability and control plane efficiency, not data plane performance."
     },
     {
+      "id": "kubernetes-services-quiz-21",
       "type": "code-output",
       "question": "What happens when you create a Service without a selector?",
       "code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: external-database\nspec:\n  ports:\n  - port: 3306\n    targetPort: 3306",
@@ -242,6 +263,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "No selector = no automatic pod discovery."
     },
     {
+      "id": "kubernetes-services-quiz-22",
       "type": "mcq",
       "question": "What does sessionAffinity: ClientIP do in a Service?",
       "options": [
@@ -255,6 +277,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "Think about maintaining session state across requests."
     },
     {
+      "id": "kubernetes-services-quiz-23",
       "type": "code-completion",
       "question": "Complete the Service configuration to enable session affinity with a 3-hour timeout:",
       "instruction": "Fill in the sessionAffinity value and timeout",
@@ -265,6 +288,7 @@ next: /quiz/kubernetes/10-ingress
       "explanation": "Set `sessionAffinity: ClientIP` and `timeoutSeconds: 10800` (3 hours = 10800 seconds). This ensures requests from the same client IP go to the same pod for 3 hours."
     },
     {
+      "id": "kubernetes-services-quiz-24",
       "type": "mcq",
       "question": "With sessionAffinity: None (default), how does traffic distribution work?",
       "options": [
@@ -278,11 +302,13 @@ next: /quiz/kubernetes/10-ingress
       "hint": "The behavior differs based on kube-proxy's networking mode."
     },
     {
+      "id": "kubernetes-services-quiz-25",
       "type": "flashcard",
       "question": "Explain externalTrafficPolicy: Local vs Cluster. What are the tradeoffs?",
       "answer": "**externalTrafficPolicy: Cluster (default):**\n- Traffic can be routed to any pod on any node\n- Even distribution across all pods\n- ❌ Source IP is lost (SNAT applied)\n- ❌ Extra network hop possible (cross-node traffic)\n- ✅ Better load distribution\n\n**externalTrafficPolicy: Local:**\n- Traffic only routes to pods on the same node\n- Nodes without pods are marked unhealthy\n- ✅ Source IP preserved (no SNAT)\n- ✅ No extra network hops\n- ❌ Uneven distribution if pods spread unevenly\n\n**Use Cases:**\n- Local: When you need source IP (logging, security) or want to avoid cross-node traffic\n- Cluster: When even distribution is more important than preserving source IP\n\n**Note:** With LoadBalancer + Local, health checks ensure only nodes with pods receive traffic."
     },
     {
+      "id": "kubernetes-services-quiz-26",
       "type": "true-false",
       "question": "When using externalTrafficPolicy: Local with a LoadBalancer Service, the cloud load balancer's health checks automatically exclude nodes that don't have any matching pods.",
       "answer": true,
@@ -290,6 +316,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "Health checks are key to making Local policy work effectively."
     },
     {
+      "id": "kubernetes-services-quiz-27",
       "type": "multiple-select",
       "question": "Which Service fields are used in the port configuration section?",
       "options": [
@@ -304,6 +331,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "containerPort is a pod-level configuration, not Service-level."
     },
     {
+      "id": "kubernetes-services-quiz-28",
       "type": "code-output",
       "question": "Given this Service configuration, what happens when a client inside the cluster accesses it using just the Service name 'api'?",
       "code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: api\n  namespace: production\nspec:\n  type: ClusterIP\n  ports:\n  - port: 80\n    targetPort: 8080\n  selector:\n    app: api-server",
@@ -319,6 +347,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "DNS shortcuts are namespace-scoped."
     },
     {
+      "id": "kubernetes-services-quiz-29",
       "type": "drag-drop",
       "question": "Match the Service type to its primary use case:",
       "instruction": "Pair each Service type with its best use case",
@@ -333,6 +362,7 @@ next: /quiz/kubernetes/10-ingress
       "explanation": "Each Service type is optimized for specific scenarios: ClusterIP for internal traffic, NodePort for dev/test external access, LoadBalancer for production external access, Headless for direct pod connectivity, ExternalName for external service aliasing."
     },
     {
+      "id": "kubernetes-services-quiz-30",
       "type": "mcq",
       "question": "What kubectl command allows you to access a ClusterIP Service from your local machine?",
       "options": [
@@ -346,6 +376,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "Think about creating a local tunnel to the cluster."
     },
     {
+      "id": "kubernetes-services-quiz-31",
       "type": "fill-blank",
       "question": "The Kubernetes component responsible for resolving Service DNS names to IP addresses is _____.",
       "answer": "CoreDNS",
@@ -355,6 +386,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "It's the DNS component that replaced kube-dns."
     },
     {
+      "id": "kubernetes-services-quiz-32",
       "type": "true-false",
       "question": "kube-proxy directly handles all network traffic flowing through Services by acting as a proxy layer between clients and pods.",
       "answer": false,
@@ -362,6 +394,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "The name 'proxy' is misleading - think about what kube-proxy actually does."
     },
     {
+      "id": "kubernetes-services-quiz-33",
       "type": "mcq",
       "question": "When a pod is deleted, how quickly does the Service stop routing traffic to it?",
       "options": [
@@ -375,11 +408,13 @@ next: /quiz/kubernetes/10-ingress
       "hint": "Think about the asynchronous background update process."
     },
     {
+      "id": "kubernetes-services-quiz-34",
       "type": "flashcard",
       "question": "Explain the complete lifecycle of how a new pod becomes part of Service traffic routing.",
       "answer": "**Pod to Service Traffic Lifecycle:**\n\n1. **Pod Created**: New pod starts with labels matching Service selector\n\n2. **Endpoints Controller Detection**: Controller watches pods and detects the new pod\n\n3. **Endpoints Update**: Endpoints object updated to add new Pod IP:Port\n\n4. **kube-proxy Watch**: kube-proxy receives Endpoints update notification\n\n5. **Rules Programming**: kube-proxy programs new iptables/IPVS rules on the node to include the new pod\n\n6. **Traffic Inclusion**: Traffic now routes to the new pod (typically within 1-2 seconds)\n\n**Reverse for deletion:**\nPod Deleted → Endpoints Controller removes IP → Endpoints updated → kube-proxy removes rules → Traffic stops\n\n**Key Point**: This is all asynchronous background synchronization. Active traffic uses pre-programmed kernel rules, not real-time API queries."
     },
     {
+      "id": "kubernetes-services-quiz-35",
       "type": "multiple-select",
       "question": "Which statements about Service selectors are TRUE?",
       "options": [
@@ -394,6 +429,7 @@ next: /quiz/kubernetes/10-ingress
       "hint": "Multiple labels in a selector all must match (AND logic)."
     },
     {
+      "id": "kubernetes-services-quiz-36",
       "type": "code-output",
       "question": "What happens when you try to create a LoadBalancer Service in an on-premises cluster without cloud provider integration?",
       "code": "kubectl apply -f loadbalancer-service.yaml\nkubectl get svc my-service",

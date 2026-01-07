@@ -10,6 +10,7 @@ prev: /quiz/aws/07-identity-and-access-management
 {
   "questions": [
     {
+      "id": "aws-storage-services-quiz-01",
       "type": "mcq",
       "question": "Which storage service should you choose if you need a boot volume for an EC2 instance?",
       "options": [
@@ -23,6 +24,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Think about which service provides block-level storage that can be attached to a single EC2 instance."
     },
     {
+      "id": "aws-storage-services-quiz-02",
       "type": "multiple-select",
       "question": "Which of the following are characteristics of EBS gp3 volumes?",
       "options": [
@@ -37,6 +39,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Review the gp3 specifications in the EBS Volume Types section."
     },
     {
+      "id": "aws-storage-services-quiz-03",
       "type": "true-false",
       "question": "EBS snapshots are full backups of the entire EBS volume every time a snapshot is created.",
       "answer": false,
@@ -44,6 +47,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Consider how AWS optimizes storage costs for multiple snapshots of the same volume."
     },
     {
+      "id": "aws-storage-services-quiz-04",
       "type": "mcq",
       "question": "What is the key difference between EFS Regional (Standard) and EFS One Zone file systems?",
       "options": [
@@ -57,6 +61,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Think about the 'Regional' and 'One Zone' naming and what it implies about data placement."
     },
     {
+      "id": "aws-storage-services-quiz-05",
       "type": "fill-blank",
       "question": "EFS mount targets require one mount target per _____ and use port _____ for NFS communication.",
       "answer": "Availability Zone, 2049",
@@ -65,6 +70,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "The first blank relates to AWS regional architecture, the second is the standard NFS port number."
     },
     {
+      "id": "aws-storage-services-quiz-06",
       "type": "code-output",
       "question": "Given this EFS mounting command, what protocol version is being used?",
       "code": "sudo mount -t nfs4 -o nfsvers=4.1 \\\n  fs-12345678.efs.us-east-1.amazonaws.com:/ /mnt/efs",
@@ -80,11 +86,13 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Look at the `-o` option parameters in the mount command."
     },
     {
+      "id": "aws-storage-services-quiz-07",
       "type": "flashcard",
       "question": "What is an EFS Access Point and when should you use it?",
       "answer": "**EFS Access Point** is an application-specific entry point into an EFS file system that enforces POSIX user/group identity and root directory.\n\n**When to use:**\n- Multi-tenant SaaS applications requiring data isolation\n- Container workloads (ECS, EKS) with shared storage\n- Lambda functions accessing EFS\n- Enforcing separation between different applications\n\n**Benefits:**\n- Each application sees only its own directory\n- Simplified IAM-based access control\n- Automatic directory creation with correct permissions"
     },
     {
+      "id": "aws-storage-services-quiz-08",
       "type": "drag-drop",
       "question": "Arrange these S3 storage classes from MOST expensive (storage cost per GB) to LEAST expensive:",
       "instruction": "Drag to arrange from highest to lowest storage cost",
@@ -99,6 +107,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "explanation": "Storage costs decrease as access frequency decreases: S3 Express One Zone (highest performance) → S3 Standard → S3 Standard-IA → S3 Glacier Instant Retrieval → S3 Glacier Deep Archive (lowest cost for rarely accessed data)."
     },
     {
+      "id": "aws-storage-services-quiz-09",
       "type": "mcq",
       "question": "You have data that you need to access quarterly but require millisecond retrieval time when accessed. Which S3 storage class is most appropriate?",
       "options": [
@@ -112,6 +121,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "The question emphasizes both 'quarterly access' and 'millisecond retrieval' - find the storage class that meets both requirements."
     },
     {
+      "id": "aws-storage-services-quiz-10",
       "type": "multiple-select",
       "question": "Which statements are true about S3 Versioning?",
       "options": [
@@ -126,6 +136,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Remember that versioning is designed to protect data, not delete it."
     },
     {
+      "id": "aws-storage-services-quiz-11",
       "type": "true-false",
       "question": "S3 Lifecycle Policies automatically move objects between storage classes based on how frequently they are accessed.",
       "answer": false,
@@ -133,6 +144,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Consider the difference between Lifecycle Policies and Intelligent-Tiering discussed in the content."
     },
     {
+      "id": "aws-storage-services-quiz-12",
       "type": "mcq",
       "question": "What is the minimum storage duration for objects stored in S3 Glacier Deep Archive before you can delete them without incurring additional charges?",
       "options": [
@@ -146,6 +158,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Deep Archive has the longest minimum duration among all storage classes."
     },
     {
+      "id": "aws-storage-services-quiz-13",
       "type": "code-completion",
       "question": "Complete the AWS CLI command to enable S3 Object Lock on a new bucket:",
       "instruction": "Fill in the missing parameter",
@@ -156,6 +169,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "explanation": "The parameter `--object-lock-enabled-for-bucket` must be specified at bucket creation time to enable Object Lock. It cannot be enabled on existing buckets."
     },
     {
+      "id": "aws-storage-services-quiz-14",
       "type": "mcq",
       "question": "In S3 Object Lock, what is the key difference between Governance mode and Compliance mode?",
       "options": [
@@ -169,11 +183,13 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Think about the level of protection and who can override it."
     },
     {
+      "id": "aws-storage-services-quiz-15",
       "type": "flashcard",
       "question": "Explain the difference between S3 Replication and S3 Backup (Versioning + Lifecycle)",
       "answer": "**S3 Replication:**\n- Real-time/near real-time copying of objects\n- Keeps destination in sync with source\n- Deletes in source can replicate to destination (if configured)\n- Purpose: Availability, performance, compliance\n\n**S3 Backup (Versioning + Lifecycle):**\n- Point-in-time snapshots of object versions\n- Retains historical versions over time\n- Protects against accidental deletion (versions preserved)\n- Purpose: Data recovery, compliance, audit trail\n\n**Best Practice:** Use BOTH - replication for availability/performance, versioning for backup/recovery."
     },
     {
+      "id": "aws-storage-services-quiz-16",
       "type": "true-false",
       "question": "S3 Batch Operations can process billions of objects with a single API request and provides automatic retry mechanisms for failed operations.",
       "answer": true,
@@ -181,6 +197,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Consider the purpose and capabilities of Batch Operations discussed in the content."
     },
     {
+      "id": "aws-storage-services-quiz-17",
       "type": "multiple-select",
       "question": "Which operations can be performed using S3 Batch Operations?",
       "options": [
@@ -195,6 +212,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "All correct answers relate to S3 object management operations."
     },
     {
+      "id": "aws-storage-services-quiz-18",
       "type": "mcq",
       "question": "What is the primary difference between S3 Server Access Logs and AWS CloudTrail for S3 monitoring?",
       "options": [
@@ -208,6 +226,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Consider the scope (what each service tracks) and delivery guarantees."
     },
     {
+      "id": "aws-storage-services-quiz-19",
       "type": "fill-blank",
       "question": "When using S3 Intelligent-Tiering, AWS charges a small _____ fee per 1000 objects but does NOT charge _____ fees when objects are accessed.",
       "answer": "monitoring, retrieval",
@@ -216,6 +235,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Think about the cost trade-offs of automated optimization versus manual tier selection."
     },
     {
+      "id": "aws-storage-services-quiz-20",
       "type": "mcq",
       "question": "You need to ensure that financial records cannot be deleted or modified for 7 years to meet SEC Rule 17a-4 compliance. Which combination of S3 features should you use?",
       "options": [
@@ -229,6 +249,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Look for the option that provides guaranteed immutability without any override capability."
     },
     {
+      "id": "aws-storage-services-quiz-21",
       "type": "drag-drop",
       "question": "Arrange these steps in the correct order for using S3 Batch Operations:",
       "instruction": "Order the workflow from start to finish",
@@ -242,6 +263,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "explanation": "The S3 Batch Operations workflow: 1) Create manifest listing objects to process, 2) Create batch job specifying the operation, 3) Review scope/cost estimate and confirm, 4) AWS executes with automatic retries and generates a completion report."
     },
     {
+      "id": "aws-storage-services-quiz-22",
       "type": "mcq",
       "question": "Which EBS volume type would be most appropriate for a mission-critical database requiring up to 256,000 IOPS with 99.999% durability?",
       "options": [
@@ -255,6 +277,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Focus on the IOPS requirement (256,000) and durability (99.999%) specifications."
     },
     {
+      "id": "aws-storage-services-quiz-23",
       "type": "true-false",
       "question": "When you delete an S3 object in a versioned bucket, the object is permanently deleted and cannot be recovered.",
       "answer": false,
@@ -262,6 +285,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Remember that versioning is designed to protect against data loss."
     },
     {
+      "id": "aws-storage-services-quiz-24",
       "type": "multiple-select",
       "question": "Which statements are true about EFS Data Protection features?",
       "options": [
@@ -276,6 +300,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "One statement about encryption at rest is incorrect - consider when encryption settings can be changed."
     },
     {
+      "id": "aws-storage-services-quiz-25",
       "type": "code-output",
       "question": "Based on this Lifecycle Policy configuration, when will an object uploaded on January 1st be transitioned to Glacier?",
       "code": "{\n  \"Transitions\": [\n    {\n      \"Days\": 30,\n      \"StorageClass\": \"STANDARD_IA\"\n    },\n    {\n      \"Days\": 90,\n      \"StorageClass\": \"GLACIER\"\n    }\n  ]\n}",
@@ -291,6 +316,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Days are counted from the object upload date, and transitions happen at the specified day count, not as a sequence of transitions."
     },
     {
+      "id": "aws-storage-services-quiz-26",
       "type": "mcq",
       "question": "What happens when you enable S3 Transfer Acceleration on a bucket?",
       "options": [
@@ -304,11 +330,13 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Think about how AWS's edge network infrastructure can speed up data transfers."
     },
     {
+      "id": "aws-storage-services-quiz-27",
       "type": "flashcard",
       "question": "When should you use S3 Lifecycle Policies versus S3 Intelligent-Tiering?",
       "answer": "**Use S3 Lifecycle Policies when:**\n- You have predictable access patterns\n- Data naturally ages (logs, backups)\n- Compliance requires specific retention periods\n- You know when data becomes less valuable\n- Example: \"Move logs to IA after 30 days, Glacier after 90 days\"\n\n**Use S3 Intelligent-Tiering when:**\n- Access patterns are unknown or unpredictable\n- Data usage changes over time\n- You want \"set it and forget it\" optimization\n- Mixed workloads (some hot, some cold)\n- Example: Data lakes, user-generated content\n\n**Can use BOTH:** Lifecycle to move to Intelligent-Tiering after known active period, then let AWS optimize long-term storage."
     },
     {
+      "id": "aws-storage-services-quiz-28",
       "type": "true-false",
       "question": "S3 Legal Hold and S3 Object Lock retention periods are the same feature with different names.",
       "answer": false,
@@ -316,6 +344,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Consider the duration characteristics and use cases (compliance vs. litigation) discussed in the content."
     },
     {
+      "id": "aws-storage-services-quiz-29",
       "type": "mcq",
       "question": "Which AWS service should you use to automate the creation, retention, and deletion of EBS snapshots?",
       "options": [
@@ -329,6 +358,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "Look for the AWS-native service specifically designed for EBS snapshot automation."
     },
     {
+      "id": "aws-storage-services-quiz-30",
       "type": "multiple-select",
       "question": "Which factors should you consider when choosing an S3 storage class?",
       "options": [
@@ -343,6 +373,7 @@ prev: /quiz/aws/07-identity-and-access-management
       "hint": "The content explicitly lists three key factors at the beginning of the S3 Storage Classes section."
     },
     {
+      "id": "aws-storage-services-quiz-31",
       "type": "fill-blank",
       "question": "S3 uses _____ storage architecture where objects are identified by unique _____ within a bucket, and folders are simulated using key _____.",
       "answer": "flat, keys, prefixes",

@@ -11,6 +11,7 @@ next: /quiz/kubernetes-add-ons/crd
 {
   "questions": [
     {
+      "id": "external-secrets-operator-quiz-01",
       "type": "mcq",
       "question": "What is the PRIMARY purpose of External Secrets Operator?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/kubernetes-add-ons/crd
       "hint": "Think about what 'External' in the name implies."
     },
     {
+      "id": "external-secrets-operator-quiz-02",
       "type": "multiple-select",
       "question": "Which of the following are key benefits of using External Secrets Operator?",
       "options": [
@@ -38,6 +40,7 @@ next: /quiz/kubernetes-add-ons/crd
       "hint": "One option contradicts security best practices."
     },
     {
+      "id": "external-secrets-operator-quiz-03",
       "type": "true-false",
       "question": "A SecretStore can be used by ExternalSecrets from any namespace in the cluster.",
       "answer": false,
@@ -45,6 +48,7 @@ next: /quiz/kubernetes-add-ons/crd
       "hint": "Consider the scope difference between SecretStore and ClusterSecretStore."
     },
     {
+      "id": "external-secrets-operator-quiz-04",
       "type": "drag-drop",
       "question": "Arrange the ESO architecture layers in order from external provider to application consumption:",
       "instruction": "Drag to arrange in the correct order",
@@ -59,6 +63,7 @@ next: /quiz/kubernetes-add-ons/crd
       "explanation": "The flow is: External Store → SecretStore (connection config) → ExternalSecret (fetch instructions) → K8s Secret → Application Pod."
     },
     {
+      "id": "external-secrets-operator-quiz-05",
       "type": "mcq",
       "question": "Which resource would you use to distribute the same Docker registry credentials to ALL namespaces that have a specific label?",
       "options": [
@@ -72,6 +77,7 @@ next: /quiz/kubernetes-add-ons/crd
       "hint": "You need something that works across namespaces automatically."
     },
     {
+      "id": "external-secrets-operator-quiz-06",
       "type": "fill-blank",
       "question": "What resource type does ESO use to PUSH Kubernetes secrets TO external secret stores (reverse synchronization)?",
       "answer": "PushSecret",
@@ -80,6 +86,7 @@ next: /quiz/kubernetes-add-ons/crd
       "hint": "It's the opposite direction of ExternalSecret."
     },
     {
+      "id": "external-secrets-operator-quiz-07",
       "type": "true-false",
       "question": "ClusterSecretStore requires a namespace to be specified in its metadata.",
       "answer": false,
@@ -87,6 +94,7 @@ next: /quiz/kubernetes-add-ons/crd
       "hint": "Think about what 'cluster-scoped' means."
     },
     {
+      "id": "external-secrets-operator-quiz-08",
       "type": "code-output",
       "question": "What does this kubectl command output tell you about an ExternalSecret's ownership?",
       "code": "kubectl get externalsecret datadog-secret -o yaml | grep -A 5 ownerReferences\n\n# Output:\nownerReferences:\n- apiVersion: external-secrets.io/v1beta1\n  kind: ClusterExternalSecret\n  name: datadog-monitoring",
@@ -102,6 +110,7 @@ next: /quiz/kubernetes-add-ons/crd
       "hint": "Look at the 'kind' field in ownerReferences."
     },
     {
+      "id": "external-secrets-operator-quiz-09",
       "type": "multiple-select",
       "question": "Which scenarios are appropriate use cases for PushSecret?",
       "options": [
@@ -116,11 +125,13 @@ next: /quiz/kubernetes-add-ons/crd
       "hint": "PushSecret pushes FROM Kubernetes TO external systems."
     },
     {
+      "id": "external-secrets-operator-quiz-10",
       "type": "flashcard",
       "question": "What is the purpose of Templates in External Secrets Operator?",
       "answer": "**Transform and customize secret data** before it becomes a Kubernetes Secret.\n\nTemplates allow you to:\n- Combine multiple secrets\n- Reformat data (JSON, YAML, .env files)\n- Add static configuration\n- Apply transformations\n\nExample: Creating a DATABASE_URL from separate username, password, host, and port secrets."
     },
     {
+      "id": "external-secrets-operator-quiz-11",
       "type": "mcq",
       "question": "What happens when a ClusterExternalSecret tries to create an ExternalSecret with the same name as an existing manually-created ExternalSecret in a namespace?",
       "options": [
@@ -134,6 +145,7 @@ next: /quiz/kubernetes-add-ons/crd
       "hint": "Think about Kubernetes ownership and controller behavior."
     },
     {
+      "id": "external-secrets-operator-quiz-12",
       "type": "code-completion",
       "question": "Complete the Helm command to install External Secrets Operator:",
       "instruction": "Fill in the missing Helm subcommand",
@@ -144,6 +156,7 @@ next: /quiz/kubernetes-add-ons/crd
       "explanation": "The `helm install` command is used to install a Helm chart. The syntax is `helm install [RELEASE_NAME] [CHART] [flags]`."
     },
     {
+      "id": "external-secrets-operator-quiz-13",
       "type": "true-false",
       "question": "The ESO operator polls external secret stores and automatically updates Kubernetes Secrets if external values change.",
       "answer": true,
@@ -151,6 +164,7 @@ next: /quiz/kubernetes-add-ons/crd
       "hint": "Think about how secrets stay synchronized."
     },
     {
+      "id": "external-secrets-operator-quiz-14",
       "type": "mcq",
       "question": "In an ExternalSecret status, what does `reason: SecretSyncedError` with `status: \"False\"` indicate?",
       "options": [
@@ -164,6 +178,7 @@ next: /quiz/kubernetes-add-ons/crd
       "hint": "Look at what 'Error' in the reason implies."
     },
     {
+      "id": "external-secrets-operator-quiz-15",
       "type": "fill-blank",
       "question": "What is the default polling interval for ESO to check external secret stores for changes?",
       "answer": "1 hour",
@@ -172,6 +187,7 @@ next: /quiz/kubernetes-add-ons/crd
       "hint": "It's measured in hours, not minutes."
     },
     {
+      "id": "external-secrets-operator-quiz-16",
       "type": "multiple-select",
       "question": "Which external secret providers are mentioned as compatible with ESO?",
       "options": [
@@ -186,11 +202,13 @@ next: /quiz/kubernetes-add-ons/crd
       "hint": "ESO supports a very wide range of providers."
     },
     {
+      "id": "external-secrets-operator-quiz-17",
       "type": "flashcard",
       "question": "What is the difference between SecretStore and ClusterSecretStore?",
       "answer": "**SecretStore**\n- Namespace-scoped\n- Only usable by ExternalSecrets in the same namespace\n- Good for team-specific configurations\n\n**ClusterSecretStore**\n- Cluster-scoped (no namespace)\n- Usable by ExternalSecrets in ANY namespace\n- Common for platform teams to provide shared backends"
     },
     {
+      "id": "external-secrets-operator-quiz-18",
       "type": "true-false",
       "question": "SecretStore resources store the actual secret values from external providers.",
       "answer": false,
@@ -198,6 +216,7 @@ next: /quiz/kubernetes-add-ons/crd
       "hint": "Think about what 'connection config' means."
     },
     {
+      "id": "external-secrets-operator-quiz-19",
       "type": "mcq",
       "question": "Why is ESO considered 'GitOps-friendly'?",
       "options": [
@@ -211,6 +230,7 @@ next: /quiz/kubernetes-add-ons/crd
       "hint": "What goes in Git vs what stays external?"
     },
     {
+      "id": "external-secrets-operator-quiz-20",
       "type": "drag-drop",
       "question": "Arrange the debugging steps from basic status check to detailed investigation:",
       "instruction": "Drag to arrange in the correct order",

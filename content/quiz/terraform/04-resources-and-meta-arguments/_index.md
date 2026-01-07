@@ -11,6 +11,7 @@ next: /quiz/terraform/05-variables-and-outputs
 {
   "questions": [
     {
+      "id": "terraform-resources-meta-arguments-01",
       "type": "mcq",
       "question": "What are the five core meta-arguments that work with any Terraform resource type?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "Think about the arguments shown in the meta-arguments matrix."
     },
     {
+      "id": "terraform-resources-meta-arguments-02",
       "type": "code-completion",
       "question": "Complete the code to create 3 identical EC2 instances:",
       "instruction": "Fill in the missing meta-argument",
@@ -34,6 +36,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "explanation": "The `count` meta-argument creates multiple identical instances of a resource. Setting `count = 3` creates three instances addressed as `[0]`, `[1]`, `[2]`."
     },
     {
+      "id": "terraform-resources-meta-arguments-03",
       "type": "true-false",
       "question": "When using `count`, if you remove an item from the middle of the list, Terraform will only destroy that specific item without affecting others.",
       "answer": false,
@@ -41,6 +44,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "Think about how count uses array indices."
     },
     {
+      "id": "terraform-resources-meta-arguments-04",
       "type": "mcq",
       "question": "What is the primary advantage of using `for_each` over `count`?",
       "options": [
@@ -54,6 +58,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "Consider what happens when you remove an item from the middle of a collection."
     },
     {
+      "id": "terraform-resources-meta-arguments-05",
       "type": "fill-blank",
       "question": "Within a resource using `for_each`, what variable gives you access to the current map value?",
       "answer": "each.value",
@@ -62,6 +67,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "It starts with 'each.' and refers to the data, not the identifier."
     },
     {
+      "id": "terraform-resources-meta-arguments-06",
       "type": "code-output",
       "question": "Given this Terraform code, what will be the reference address for the 'app' instance?",
       "code": "variable \"servers\" {\n  default = [\"web\", \"app\", \"db\"]\n}\n\nresource \"aws_instance\" \"server\" {\n  for_each = toset(var.servers)\n  ami = \"ami-123\"\n  instance_type = \"t2.micro\"\n}",
@@ -77,6 +83,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "for_each uses key-based addressing, not numeric indices."
     },
     {
+      "id": "terraform-resources-meta-arguments-07",
       "type": "multiple-select",
       "question": "Which of the following are valid use cases for the `depends_on` meta-argument?",
       "options": [
@@ -90,11 +97,13 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "depends_on is for HIDDEN dependencies that Terraform can't automatically detect through references."
     },
     {
+      "id": "terraform-resources-meta-arguments-08",
       "type": "flashcard",
       "question": "What does the `provider` meta-argument do?",
       "answer": "**Selects a non-default provider configuration**\n\nThe `provider` meta-argument allows you to use an aliased provider instead of the default one. This is essential for multi-region or multi-account deployments.\n\nExample: `provider = aws.west` uses the AWS provider with alias \"west\" instead of the default provider."
     },
     {
+      "id": "terraform-resources-meta-arguments-09",
       "type": "drag-drop",
       "question": "Arrange these lifecycle argument options in order from most to least restrictive:",
       "instruction": "Drag to arrange from most restrictive (prevents changes) to least restrictive",
@@ -108,6 +117,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "explanation": "From most to least restrictive: 1) `prevent_destroy` - blocks destruction entirely, 2) `ignore_changes` - prevents Terraform from making changes to specified attributes, 3) `replace_triggered_by` - forces replacement based on other resource changes, 4) `create_before_destroy` - just changes replacement order but doesn't prevent changes."
     },
     {
+      "id": "terraform-resources-meta-arguments-10",
       "type": "mcq",
       "question": "What is the default behavior when a `remote-exec` provisioner fails during resource creation?",
       "options": [
@@ -121,6 +131,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "Think about what happens to resources that fail during creation."
     },
     {
+      "id": "terraform-resources-meta-arguments-11",
       "type": "true-false",
       "question": "Provisioners are recommended as the first choice for configuring resources in Terraform.",
       "answer": false,
@@ -128,6 +139,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "Review the warning box in the Provisioners section."
     },
     {
+      "id": "terraform-resources-meta-arguments-12",
       "type": "fill-blank",
       "question": "What provisioner type runs commands on the machine executing Terraform?",
       "answer": "local-exec",
@@ -136,6 +148,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "Think about where the command executes - locally or remotely."
     },
     {
+      "id": "terraform-resources-meta-arguments-13",
       "type": "mcq",
       "question": "What is the fundamental difference between a resource and a data source in Terraform?",
       "options": [
@@ -149,6 +162,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "Think about what Terraform controls vs. what it just reads."
     },
     {
+      "id": "terraform-resources-meta-arguments-14",
       "type": "code-completion",
       "question": "Complete the code to reference a data source for an existing VPC:",
       "instruction": "Fill in the missing keyword",
@@ -159,6 +173,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "explanation": "Data sources are declared with the `data` keyword, not `resource`. The syntax is `data \"provider_type\" \"name\"`. They allow you to fetch information about existing infrastructure."
     },
     {
+      "id": "terraform-resources-meta-arguments-15",
       "type": "multiple-select",
       "question": "According to the decision tree, when should you use `for_each` instead of `count`?",
       "options": [
@@ -172,6 +187,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "Think about stability and dynamic changes."
     },
     {
+      "id": "terraform-resources-meta-arguments-16",
       "type": "code-output",
       "question": "What happens when you apply this configuration with `var.create_instance = false`?",
       "code": "variable \"create_instance\" {\n  type = bool\n  default = true\n}\n\nresource \"aws_instance\" \"web\" {\n  count = var.create_instance ? 1 : 0\n  ami = \"ami-123\"\n  instance_type = \"t2.micro\"\n}",
@@ -187,11 +203,13 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "What does count = 0 mean for resource creation?"
     },
     {
+      "id": "terraform-resources-meta-arguments-17",
       "type": "flashcard",
       "question": "What is the purpose of `create_before_destroy` in the lifecycle block?",
       "answer": "**Changes resource replacement order to eliminate downtime**\n\nDefault behavior: Destroy old → Create new (causes downtime)\n\nWith `create_before_destroy = true`: Create new → Destroy old (zero downtime)\n\nThis is critical for resources that must always be available, like load balancers or DNS records."
     },
     {
+      "id": "terraform-resources-meta-arguments-18",
       "type": "mcq",
       "question": "If you need to convert a list to work with `for_each`, which function should you use?",
       "options": [
@@ -205,6 +223,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "for_each accepts maps or sets, not lists."
     },
     {
+      "id": "terraform-resources-meta-arguments-19",
       "type": "true-false",
       "question": "The `ignore_changes` lifecycle argument prevents Terraform from detecting any changes to the specified attributes, even in plan output.",
       "answer": true,
@@ -212,6 +231,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "Think about what 'ignore' means in this context."
     },
     {
+      "id": "terraform-resources-meta-arguments-20",
       "type": "multiple-select",
       "question": "Which of the following statements about provisioners are correct?",
       "options": [
@@ -225,6 +245,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "Think about provisioner capabilities and limitations."
     },
     {
+      "id": "terraform-resources-meta-arguments-21",
       "type": "code-output",
       "question": "How many subnets will this code create?",
       "code": "variable \"availability_zones\" {\n  default = [\"us-east-1a\", \"us-east-1b\", \"us-east-1c\"]\n}\n\nresource \"aws_subnet\" \"public\" {\n  count = length(var.availability_zones)\n  vpc_id = aws_vpc.main.id\n  cidr_block = \"10.0.${count.index}.0/24\"\n  availability_zone = var.availability_zones[count.index]\n}",
@@ -240,6 +261,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "What does length([\"us-east-1a\", \"us-east-1b\", \"us-east-1c\"]) return?"
     },
     {
+      "id": "terraform-resources-meta-arguments-22",
       "type": "mcq",
       "question": "When should you use an aliased provider with the `provider` meta-argument?",
       "options": [
@@ -253,6 +275,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "Think about scenarios requiring different provider configurations simultaneously."
     },
     {
+      "id": "terraform-resources-meta-arguments-23",
       "type": "fill-blank",
       "question": "What lifecycle argument would you use to force a resource to be replaced whenever another resource changes?",
       "answer": "replace_triggered_by",
@@ -261,6 +284,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "Look for the lifecycle argument that 'triggers' replacement based on other resources."
     },
     {
+      "id": "terraform-resources-meta-arguments-24",
       "type": "drag-drop",
       "question": "Arrange these steps in the order Terraform manages a resource lifecycle:",
       "instruction": "Drag to arrange in the correct order",
@@ -274,6 +298,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "explanation": "Terraform manages the complete resource lifecycle: 1) **Create** - when first applied, 2) **Read** - refresh state to detect drift, 3) **Update** - when configuration changes, 4) **Delete** - when removed from config or destroyed."
     },
     {
+      "id": "terraform-resources-meta-arguments-25",
       "type": "true-false",
       "question": "Data sources can have dependencies on resources, meaning Terraform will wait for the resource to be created before querying the data source.",
       "answer": true,
@@ -281,6 +306,7 @@ next: /quiz/terraform/05-variables-and-outputs
       "hint": "Think about whether data sources can reference resource attributes."
     },
     {
+      "id": "terraform-resources-meta-arguments-26",
       "type": "mcq",
       "question": "What is the splat operator used for when working with `count`?",
       "options": [

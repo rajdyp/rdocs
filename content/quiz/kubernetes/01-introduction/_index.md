@@ -11,6 +11,7 @@ next: /quiz/kubernetes/02-cluster-architecture
 {
   "questions": [
     {
+      "id": "kubernetes-introduction-quiz-01",
       "type": "mcq",
       "question": "What is Kubernetes primarily used for?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Think about what Kubernetes manages and automates."
     },
     {
+      "id": "kubernetes-introduction-quiz-02",
       "type": "true-false",
       "question": "Kubernetes uses an imperative approach where you specify HOW to achieve your goals rather than WHAT you want.",
       "answer": false,
@@ -31,6 +33,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Think about whether you tell Kubernetes the steps to follow or the end result you want."
     },
     {
+      "id": "kubernetes-introduction-quiz-03",
       "type": "fill-blank",
       "question": "The smallest deployable unit in Kubernetes is called a _____.",
       "answer": "pod",
@@ -39,6 +42,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "It's a three-letter word that can also mean a group of whales or dolphins."
     },
     {
+      "id": "kubernetes-introduction-quiz-04",
       "type": "multiple-select",
       "question": "Which of the following are key characteristics of Kubernetes? (Select all that apply)",
       "options": [
@@ -53,6 +57,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Four of these are explicitly mentioned as key characteristics in the introduction."
     },
     {
+      "id": "kubernetes-introduction-quiz-05",
       "type": "drag-drop",
       "question": "Arrange the steps in the Kubernetes reconciliation loop in the correct order:",
       "instruction": "Drag to arrange in the correct order",
@@ -66,11 +71,13 @@ next: /quiz/kubernetes/02-cluster-architecture
       "explanation": "The reconciliation loop: 1) You define desired state in spec, 2) Kubernetes observes actual state, 3) Compares them, 4) Takes action if they differ. This runs continuously (~every 30 seconds)."
     },
     {
+      "id": "kubernetes-introduction-quiz-06",
       "type": "flashcard",
       "question": "What is the reconciliation loop in Kubernetes and why is it important?",
       "answer": "**The Reconciliation Loop** is Kubernetes' core control mechanism that continuously compares the desired state (what you want) with the actual state (current reality) and takes corrective action when they differ.\n\n**Why it's important:**\n\n- Enables self-healing: automatically recovers from failures\n- Maintains desired state: if a pod crashes, Kubernetes restarts it\n- Runs continuously: checks every ~30 seconds\n- Reduces manual intervention: no need to manually fix issues"
     },
     {
+      "id": "kubernetes-introduction-quiz-07",
       "type": "mcq",
       "question": "In the reconciliation loop, if you declare 3 replicas but only 2 are running, what does Kubernetes do?",
       "options": [
@@ -84,6 +91,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Remember that Kubernetes uses a declarative model with self-healing."
     },
     {
+      "id": "kubernetes-introduction-quiz-08",
       "type": "true-false",
       "question": "In Kubernetes, the desired state is specified in the 'status' field and actual state is in the 'spec' field.",
       "answer": false,
@@ -91,6 +99,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Think about 'spec' as specification (what you specify/want) and 'status' as the current status."
     },
     {
+      "id": "kubernetes-introduction-quiz-09",
       "type": "multiple-select",
       "question": "Which problems did organizations face before Kubernetes that it helps solve? (Select all that apply)",
       "options": [
@@ -105,6 +114,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Four of these are infrastructure and operations challenges that Kubernetes addresses."
     },
     {
+      "id": "kubernetes-introduction-quiz-10",
       "type": "code-completion",
       "question": "Complete the kubectl command to deploy an application:",
       "instruction": "Fill in the missing kubectl subcommand",
@@ -115,6 +125,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "explanation": "The `kubectl apply` command is used to deploy or update resources declaratively. It applies the configuration from the YAML file to your cluster. This is the preferred declarative approach in Kubernetes."
     },
     {
+      "id": "kubernetes-introduction-quiz-11",
       "type": "mcq",
       "question": "What is 'bin-packing' in the context of Kubernetes resource optimization?",
       "options": [
@@ -128,6 +139,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Think about how you pack items into boxes to use space efficiently."
     },
     {
+      "id": "kubernetes-introduction-quiz-12",
       "type": "true-false",
       "question": "Kubernetes eliminates the need for different configurations across dev, staging, and production environments.",
       "answer": false,
@@ -135,6 +147,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Think about whether dev and prod should use the same database URL and resource limits."
     },
     {
+      "id": "kubernetes-introduction-quiz-13",
       "type": "code-output",
       "question": "Given these two ConfigMaps, what will the LOG_LEVEL environment variable be in the production namespace?",
       "code": "# dev/configmap.yaml\napiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: app-config\n  namespace: dev\ndata:\n  LOG_LEVEL: \"debug\"\n\n# prod/configmap.yaml\napiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: app-config\n  namespace: prod\ndata:\n  LOG_LEVEL: \"info\"",
@@ -150,6 +163,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Look at which namespace you're asking about and what value that namespace's ConfigMap defines."
     },
     {
+      "id": "kubernetes-introduction-quiz-14",
       "type": "fill-blank",
       "question": "Kubernetes makes environment-specific configurations explicit through _____ and Secrets.",
       "answer": "ConfigMaps",
@@ -158,6 +172,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "It's a Kubernetes resource that starts with 'Config'."
     },
     {
+      "id": "kubernetes-introduction-quiz-15",
       "type": "mcq",
       "question": "Which deployment scenario is Kubernetes BEST suited for?",
       "options": [
@@ -171,6 +186,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Think about which scenario requires the most orchestration, scaling, and automation."
     },
     {
+      "id": "kubernetes-introduction-quiz-16",
       "type": "multiple-select",
       "question": "What does Kubernetes actually solve? (Select all correct statements)",
       "options": [
@@ -185,11 +201,13 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Three of these are what Kubernetes DOES solve according to the content."
     },
     {
+      "id": "kubernetes-introduction-quiz-17",
       "type": "flashcard",
       "question": "Explain the difference between 'declarative' and 'imperative' approaches in infrastructure management.",
       "answer": "**Imperative Approach:**\n\n- You specify HOW to achieve something\n- Step-by-step commands: 'Start 3 servers', 'Update to version 2.0'\n- Like giving directions: 'Turn left, go 2 blocks, turn right'\n\n**Declarative Approach (Kubernetes):**\n\n- You specify WHAT you want\n- Desired state: 'I want 3 replicas running', 'Desired version: 2.0'\n- Like giving a destination: 'Take me to the airport'\n- System figures out HOW to get there\n\n**Benefits of Declarative:**\n\n- Self-healing: system maintains desired state\n- Reproducible: same manifest = same result\n- Version controlled: infrastructure as code"
     },
     {
+      "id": "kubernetes-introduction-quiz-18",
       "type": "true-false",
       "question": "Kubernetes provides portability, allowing you to run the same workloads on AWS, GCP, Azure, or on-premises infrastructure.",
       "answer": true,
@@ -197,6 +215,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "This is one of the key benefits mentioned in the 'Kubernetes vs Other Solutions' section."
     },
     {
+      "id": "kubernetes-introduction-quiz-19",
       "type": "mcq",
       "question": "What happens during a rolling update if a new version fails health checks?",
       "options": [
@@ -210,6 +229,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Kubernetes prevents bad deployments from progressing, but doesn't automatically revert them."
     },
     {
+      "id": "kubernetes-introduction-quiz-20",
       "type": "multiple-select",
       "question": "Which of the following are key benefits of Kubernetes? (Select all that apply)",
       "options": [
@@ -224,6 +244,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Four of these are core benefits mentioned in the introduction."
     },
     {
+      "id": "kubernetes-introduction-quiz-21",
       "type": "multiple-select",
       "question": "Which of these are valid local Kubernetes development options? (Select all that apply)",
       "options": [
@@ -238,6 +259,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Three of these are real tools mentioned in the 'Getting Started Paths' section."
     },
     {
+      "id": "kubernetes-introduction-quiz-22",
       "type": "fill-blank",
       "question": "A set of machines running Kubernetes is called a _____.",
       "answer": "cluster",
@@ -246,6 +268,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "It's a term used to describe a group of connected computers working together."
     },
     {
+      "id": "kubernetes-introduction-quiz-23",
       "type": "true-false",
       "question": "A 'namespace' in Kubernetes provides physical isolation by running on separate hardware.",
       "answer": false,
@@ -253,6 +276,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Think about whether namespaces are about organizing resources or separating hardware."
     },
     {
+      "id": "kubernetes-introduction-quiz-24",
       "type": "mcq",
       "question": "Compared to traditional VMs, containers managed by Kubernetes offer:",
       "options": [
@@ -266,6 +290,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "hint": "Think about the trade-offs mentioned in 'Kubernetes vs Traditional VMs'."
     },
     {
+      "id": "kubernetes-introduction-quiz-25",
       "type": "code-completion",
       "question": "Complete this statement about Kubernetes' promise:",
       "instruction": "Fill in the missing core promise",

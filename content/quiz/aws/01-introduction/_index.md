@@ -11,6 +11,7 @@ next: /quiz/aws/02-global-infrastructure
 {
   "questions": [
     {
+      "id": "aws-introduction-quiz-01",
       "type": "mcq",
       "question": "What is the fundamental definition of cloud computing?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/aws/02-global-infrastructure
       "hint": "Focus on the key characteristics: on-demand, internet-based, and pricing model."
     },
     {
+      "id": "aws-introduction-quiz-02",
       "type": "multiple-select",
       "question": "Which of the following are key characteristics of cloud computing?",
       "options": [
@@ -38,6 +40,7 @@ next: /quiz/aws/02-global-infrastructure
       "hint": "Think about the characteristics that enable flexibility, scalability, and cost optimization."
     },
     {
+      "id": "aws-introduction-quiz-03",
       "type": "drag-drop",
       "question": "Arrange the cloud service models from most customer control to least customer control:",
       "instruction": "Drag to arrange in the correct order (most control → least control)",
@@ -50,6 +53,7 @@ next: /quiz/aws/02-global-infrastructure
       "explanation": "IaaS gives customers the most control (managing applications, data, runtime, middleware, OS), PaaS provides intermediate control (managing only applications and data), and SaaS offers the least control (provider manages everything)."
     },
     {
+      "id": "aws-introduction-quiz-04",
       "type": "code-output",
       "question": "In the cloud service model hierarchy, if a customer uses Amazon EC2, what components must they manage?",
       "code": "Service: Amazon EC2 (IaaS)\n\nManagement Responsibility:\nApplications: ?\nData: ?\nRuntime: ?\nMiddleware: ?\nOS: ?\nVirtualization: ?\nServers: ?\nStorage: ?\nNetworking: ?",
@@ -65,6 +69,7 @@ next: /quiz/aws/02-global-infrastructure
       "hint": "EC2 is an Infrastructure as a Service offering. What does 'infrastructure' mean in this context?"
     },
     {
+      "id": "aws-introduction-quiz-05",
       "type": "mcq",
       "question": "A company wants to deploy applications using a mix of on-premises servers for sensitive data and AWS cloud for scalable web applications. Which deployment model best describes this approach?",
       "options": [
@@ -78,6 +83,7 @@ next: /quiz/aws/02-global-infrastructure
       "hint": "The key is the combination of different infrastructure types working together."
     },
     {
+      "id": "aws-introduction-quiz-06",
       "type": "fill-blank",
       "question": "What AWS service is an example of Platform as a Service (PaaS) that automatically handles deployment, capacity provisioning, load balancing, and auto-scaling?",
       "answer": "Elastic Beanstalk",
@@ -86,6 +92,7 @@ next: /quiz/aws/02-global-infrastructure
       "hint": "Think about AWS services that manage the platform layer for you."
     },
     {
+      "id": "aws-introduction-quiz-07",
       "type": "true-false",
       "question": "In the AWS Shared Responsibility Model, AWS is responsible for managing customer data encryption and network firewall configuration.",
       "answer": false,
@@ -93,6 +100,7 @@ next: /quiz/aws/02-global-infrastructure
       "hint": "Consider the difference between 'Security OF the Cloud' vs 'Security IN the Cloud'."
     },
     {
+      "id": "aws-introduction-quiz-08",
       "type": "multiple-select",
       "question": "Which of the following are AWS responsibilities under the Shared Responsibility Model?",
       "options": [
@@ -107,11 +115,13 @@ next: /quiz/aws/02-global-infrastructure
       "hint": "AWS manages the infrastructure and foundation. What can you physically touch in a data center?"
     },
     {
+      "id": "aws-introduction-quiz-09",
       "type": "flashcard",
       "question": "What does 'Rapid Elasticity' mean in cloud computing?",
       "answer": "**Rapid Elasticity**\n\nThe ability to scale computing resources up or down quickly and automatically based on demand. Resources can be elastically provisioned and released, allowing systems to scale rapidly outward and inward as needed.\n\nThis ensures you have the right amount of resources at the right time without over-provisioning."
     },
     {
+      "id": "aws-introduction-quiz-10",
       "type": "mcq",
       "question": "Which AWS benefit directly addresses the challenge of reducing latency for global users?",
       "options": [
@@ -125,6 +135,7 @@ next: /quiz/aws/02-global-infrastructure
       "hint": "Think about geographical distribution of infrastructure."
     },
     {
+      "id": "aws-introduction-quiz-11",
       "type": "code-completion",
       "question": "Complete the AWS value proposition statement:",
       "instruction": "Fill in the missing benefit",
@@ -135,6 +146,7 @@ next: /quiz/aws/02-global-infrastructure
       "explanation": "Security is a core AWS value proposition, featuring industry-leading security practices, compliance certifications, and the Shared Responsibility Model."
     },
     {
+      "id": "aws-introduction-quiz-12",
       "type": "multiple-select",
       "question": "Which statements accurately describe customer responsibilities in the AWS Shared Responsibility Model?",
       "options": [
@@ -150,6 +162,7 @@ next: /quiz/aws/02-global-infrastructure
       "hint": "Focus on what happens 'in' the cloud that customers control, not the cloud infrastructure itself."
     },
     {
+      "id": "aws-introduction-quiz-13",
       "type": "true-false",
       "question": "With AWS's pay-as-you-go model, organizations benefit from economies of scale, which means variable costs decrease over time as AWS grows.",
       "answer": true,
@@ -157,6 +170,7 @@ next: /quiz/aws/02-global-infrastructure
       "hint": "Consider how large-scale operations typically affect per-unit costs."
     },
     {
+      "id": "aws-introduction-quiz-14",
       "type": "mcq",
       "question": "A startup wants to experiment with machine learning without large capital expenditure and needs to deploy quickly. Which AWS benefit is most relevant to this scenario?",
       "options": [
@@ -170,11 +184,13 @@ next: /quiz/aws/02-global-infrastructure
       "hint": "What matters most for a startup: fast deployment or geographical distribution?"
     },
     {
+      "id": "aws-introduction-quiz-15",
       "type": "flashcard",
       "question": "What is the AWS Shared Responsibility Model?",
       "answer": "**AWS Shared Responsibility Model**\n\nA security framework that defines the division of responsibilities between AWS and customers:\n\n**AWS Responsibility (Security OF the Cloud):**\n- Physical security, hardware, networking\n- Virtualization layer\n- Global infrastructure (Regions, AZs, Edge Locations)\n\n**Customer Responsibility (Security IN the Cloud):**\n- Data encryption and integrity\n- Network and firewall configuration\n- Identity and access management\n- OS and application patching\n- Application security"
     },
     {
+      "id": "aws-introduction-quiz-16",
       "type": "fill-blank",
       "question": "In cloud computing, the ability to provision resources automatically without human interaction with service providers is called _______ Self-Service.",
       "answer": "On-Demand",
@@ -183,6 +199,7 @@ next: /quiz/aws/02-global-infrastructure
       "hint": "This characteristic emphasizes immediate availability without waiting."
     },
     {
+      "id": "aws-introduction-quiz-17",
       "type": "mcq",
       "question": "Which example best illustrates the 'Resource Pooling' characteristic of cloud computing?",
       "options": [
@@ -196,6 +213,7 @@ next: /quiz/aws/02-global-infrastructure
       "hint": "Think about how resources are shared among multiple customers."
     },
     {
+      "id": "aws-introduction-quiz-18",
       "type": "code-output",
       "question": "Analyze this scenario: A company uses Amazon WorkMail for email. Under the cloud service model, what does the company primarily manage?",
       "code": "Service: Amazon WorkMail (SaaS)\n\nCloud Service Model Analysis:\n- Applications: Managed by ?\n- Data: Managed by ?\n- Runtime: Managed by ?\n- Middleware: Managed by ?\n- OS: Managed by ?\n- Infrastructure: Managed by ?",
@@ -211,6 +229,7 @@ next: /quiz/aws/02-global-infrastructure
       "hint": "WorkMail is mentioned as a SaaS example. What's unique about SaaS compared to other service models?"
     },
     {
+      "id": "aws-introduction-quiz-19",
       "type": "true-false",
       "question": "AWS Lambda is classified as Infrastructure as a Service (IaaS) because it provides virtual machines for running code.",
       "answer": false,
@@ -218,6 +237,7 @@ next: /quiz/aws/02-global-infrastructure
       "hint": "Lambda is serverless—you don't manage any servers or VMs."
     },
     {
+      "id": "aws-introduction-quiz-20",
       "type": "multiple-select",
       "question": "Which characteristics distinguish a Private Cloud deployment model?",
       "options": [

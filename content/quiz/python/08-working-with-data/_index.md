@@ -11,6 +11,7 @@ next: /quiz/python/log-analysis
 {
   "questions": [
     {
+      "id": "python-working-with-data-quiz-01",
       "type": "mcq",
       "question": "When reading CSV files, what is the primary advantage of using `csv.DictReader` over `csv.reader`?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/python/log-analysis
       "hint": "Think about what 'Dict' in DictReader represents."
     },
     {
+      "id": "python-working-with-data-quiz-02",
       "type": "code-output",
       "question": "What will be the output of this code?",
       "code": "import json\n\ndata = {\"status\": \"ok\", \"count\": 42}\njson_str = json.dumps(data)\nprint(type(json_str))",
@@ -39,6 +41,7 @@ next: /quiz/python/log-analysis
       "hint": "Remember: the 's' in dumps means 'string'."
     },
     {
+      "id": "python-working-with-data-quiz-03",
       "type": "multiple-select",
       "question": "Which of the following are valid ways to handle missing or nested JSON fields safely?",
       "options": [
@@ -53,6 +56,7 @@ next: /quiz/python/log-analysis
       "hint": "Think about methods that don't raise exceptions when keys are missing."
     },
     {
+      "id": "python-working-with-data-quiz-04",
       "type": "true-false",
       "question": "In Python's `json` module, `json.load()` reads from a file while `json.loads()` reads from a string.",
       "answer": true,
@@ -60,6 +64,7 @@ next: /quiz/python/log-analysis
       "hint": "The 's' stands for 'string'."
     },
     {
+      "id": "python-working-with-data-quiz-05",
       "type": "fill-blank",
       "question": "What parameter should you ALWAYS pass to the `open()` function when writing CSV files to prevent blank rows on Windows?",
       "answer": "newline=''",
@@ -68,6 +73,7 @@ next: /quiz/python/log-analysis
       "hint": "It's related to line endings and takes an empty string as its value."
     },
     {
+      "id": "python-working-with-data-quiz-06",
       "type": "mcq",
       "question": "When making HTTP requests with the `requests` library, what is the purpose of `response.raise_for_status()`?",
       "options": [
@@ -81,6 +87,7 @@ next: /quiz/python/log-analysis
       "hint": "Think about what 'raise' typically means in Python error handling."
     },
     {
+      "id": "python-working-with-data-quiz-07",
       "type": "code-completion",
       "question": "Complete the code to make a safe, parameterized SQLite query:",
       "instruction": "Fill in the missing placeholder syntax",
@@ -92,6 +99,7 @@ next: /quiz/python/log-analysis
       "hint": "It's a single character that acts as a placeholder."
     },
     {
+      "id": "python-working-with-data-quiz-08",
       "type": "multiple-select",
       "question": "Which of the following are benefits of using `requests.Session()` instead of individual `requests.get()` calls?",
       "options": [
@@ -106,6 +114,7 @@ next: /quiz/python/log-analysis
       "hint": "Focus on what gets 'reused' or 'persisted' across requests."
     },
     {
+      "id": "python-working-with-data-quiz-09",
       "type": "drag-drop",
       "question": "Arrange these steps in the correct order for making a production-ready HTTP request:",
       "instruction": "Drag to arrange from first to last",
@@ -120,6 +129,7 @@ next: /quiz/python/log-analysis
       "explanation": "The correct flow is: 1) Set up infrastructure (session with retries), 2) Configure authentication, 3) Make the request (with timeout), 4) Check for HTTP errors, 5) Parse the response. This ensures robustness and proper error handling."
     },
     {
+      "id": "python-working-with-data-quiz-10",
       "type": "code-output",
       "question": "What does this CSV writing code produce?",
       "code": "import csv\n\ndata = [{'name': 'Alice', 'age': 30}]\nwith open('out.csv', 'w', newline='') as f:\n    writer = csv.DictWriter(f, fieldnames=['name', 'age'])\n    writer.writeheader()\n    writer.writerows(data)\n\n# How many lines are in out.csv?",
@@ -135,6 +145,7 @@ next: /quiz/python/log-analysis
       "hint": "Count what writeheader() and writerows() each contribute."
     },
     {
+      "id": "python-working-with-data-quiz-11",
       "type": "true-false",
       "question": "JSONL (JSON Lines) format allows you to append new records to a file without rewriting the entire file.",
       "answer": true,
@@ -142,6 +153,7 @@ next: /quiz/python/log-analysis
       "hint": "Think about how standard JSON arrays require complete rewrites versus line-by-line formats."
     },
     {
+      "id": "python-working-with-data-quiz-12",
       "type": "mcq",
       "question": "In SQLite, what happens if you execute INSERT/UPDATE/DELETE operations but forget to call `conn.commit()`?",
       "options": [
@@ -155,6 +167,7 @@ next: /quiz/python/log-analysis
       "hint": "Think about the transactional nature of databases."
     },
     {
+      "id": "python-working-with-data-quiz-13",
       "type": "fill-blank",
       "question": "In the `requests` library, what parameter prevents a request from hanging forever if the server doesn't respond?",
       "answer": "timeout",
@@ -163,6 +176,7 @@ next: /quiz/python/log-analysis
       "hint": "It's a parameter that specifies how long to wait in seconds."
     },
     {
+      "id": "python-working-with-data-quiz-14",
       "type": "mcq",
       "question": "Why should you use `?` placeholders instead of f-strings when building SQL queries?",
       "options": [
@@ -176,6 +190,7 @@ next: /quiz/python/log-analysis
       "hint": "Think about security and what happens with malicious user input."
     },
     {
+      "id": "python-working-with-data-quiz-15",
       "type": "multiple-select",
       "question": "When working with BeautifulSoup for HTML parsing, which methods can you use to find elements?",
       "options": [
@@ -190,6 +205,7 @@ next: /quiz/python/log-analysis
       "hint": "BeautifulSoup focuses on 'find' methods and CSS selectors."
     },
     {
+      "id": "python-working-with-data-quiz-16",
       "type": "code-output",
       "question": "What will this code print?",
       "code": "import sqlite3\n\nconn = sqlite3.connect(':memory:')\ncursor = conn.cursor()\n\ncursor.execute(\"CREATE TABLE test (id INTEGER PRIMARY KEY, name TEXT)\")\ncursor.execute(\"INSERT INTO test (name) VALUES ('Alice')\")\nprint(cursor.lastrowid)",
@@ -205,11 +221,13 @@ next: /quiz/python/log-analysis
       "hint": "Think about what auto-increment primary keys start from."
     },
     {
+      "id": "python-working-with-data-quiz-17",
       "type": "flashcard",
       "question": "What is the mental model for working with JSON in Python?",
       "answer": "**Decode → Work → Encode**\n\n1. **Decode**: JSON string/file → Python objects (`json.load()` / `json.loads()`)\n2. **Work**: Manipulate using native Python (dicts, lists, etc.)\n3. **Encode**: Python objects → JSON string/file (`json.dump()` / `json.dumps()`)\n\nKey insight: JSON is always a string format. You decode it to Python, work with native objects, then encode back to JSON when needed."
     },
     {
+      "id": "python-working-with-data-quiz-18",
       "type": "true-false",
       "question": "When using `requests.Session()` with retry logic via `HTTPAdapter`, you should retry POST and DELETE requests to ensure reliability.",
       "answer": false,
@@ -217,6 +235,7 @@ next: /quiz/python/log-analysis
       "hint": "Think about what happens if a POST request succeeds on the server but the response gets lost—should you retry?"
     },
     {
+      "id": "python-working-with-data-quiz-19",
       "type": "mcq",
       "question": "What is the primary difference between ElementTree and BeautifulSoup for parsing?",
       "options": [
@@ -230,6 +249,7 @@ next: /quiz/python/log-analysis
       "hint": "Think about the primary use case for each library."
     },
     {
+      "id": "python-working-with-data-quiz-20",
       "type": "fill-blank",
       "question": "What SQLite setting should you configure immediately after connecting to enable dictionary-like access to query results by column name?",
       "answer": "conn.row_factory = sqlite3.Row",
@@ -238,6 +258,7 @@ next: /quiz/python/log-analysis
       "hint": "It's about configuring how rows are returned from queries."
     },
     {
+      "id": "python-working-with-data-quiz-21",
       "type": "mcq",
       "question": "In the requests library, what is the difference between the `json` parameter and the `data` parameter in POST requests?",
       "options": [
@@ -251,6 +272,7 @@ next: /quiz/python/log-analysis
       "hint": "Think about what each parameter does to the Content-Type header."
     },
     {
+      "id": "python-working-with-data-quiz-22",
       "type": "code-completion",
       "question": "Complete the code to safely navigate nested JSON and provide a default value:",
       "instruction": "Fill in the safe navigation method",
@@ -262,6 +284,7 @@ next: /quiz/python/log-analysis
       "hint": "It's a dictionary method that returns a default value if the key doesn't exist."
     },
     {
+      "id": "python-working-with-data-quiz-23",
       "type": "drag-drop",
       "question": "Arrange these SQLite operations in the correct execution order:",
       "instruction": "Drag to arrange in the correct order",
@@ -276,6 +299,7 @@ next: /quiz/python/log-analysis
       "explanation": "The correct workflow is: 1) Connect to database, 2) Get cursor, 3) Execute SQL, 4) Commit changes (for INSERT/UPDATE/DELETE), 5) Close connection. Committing before closing ensures changes are persisted."
     },
     {
+      "id": "python-working-with-data-quiz-24",
       "type": "multiple-select",
       "question": "Which HTTP status codes should you typically configure for automatic retries in a retry strategy?",
       "options": [
@@ -290,11 +314,13 @@ next: /quiz/python/log-analysis
       "hint": "Think about which errors are temporary versus permanent."
     },
     {
+      "id": "python-working-with-data-quiz-25",
       "type": "flashcard",
       "question": "What is the workflow for making production-ready HTTP requests with the requests library?",
       "answer": "**Progressive HTTP Request Workflow:**\n\n1. **Choose approach**: Single request (`requests.get()`) vs. Session (multiple requests)\n2. **Build request**: Method + URL + optional params (headers, params, json, data, timeout)\n3. **Handle response**: `response.json()` / `.text` / `.content` + `response.status_code` / `.ok`\n4. **Error handling**: Catch `requests.RequestException` hierarchy (ConnectionError, Timeout, HTTPError)\n5. **Advanced**: Add retry logic (`HTTPAdapter` + `Retry`) and rate limiting (`@limits` decorator)\n\nKey: Always set `timeout`, use Sessions for multiple requests, retry only safe methods, handle three error layers (network, HTTP, JSON)."
     },
     {
+      "id": "python-working-with-data-quiz-26",
       "type": "true-false",
       "question": "When using pandas to read CSV files, you must manually handle data type conversions for numeric columns.",
       "answer": false,
@@ -302,6 +328,7 @@ next: /quiz/python/log-analysis
       "hint": "Think about pandas' automatic type inference capabilities."
     },
     {
+      "id": "python-working-with-data-quiz-27",
       "type": "mcq",
       "question": "What is the purpose of the `backoff_factor` parameter in the `Retry` strategy?",
       "options": [
@@ -315,6 +342,7 @@ next: /quiz/python/log-analysis
       "hint": "Think about the time delay pattern between retry attempts."
     },
     {
+      "id": "python-working-with-data-quiz-28",
       "type": "code-output",
       "question": "What will this code print?",
       "code": "import json\n\ndata = {'a': 1, 'b': 2}\njson_str = json.dumps(data, separators=(',', ':'))\nprint(len(json_str))",
@@ -330,6 +358,7 @@ next: /quiz/python/log-analysis
       "hint": "Count the characters in compact JSON: {\"a\":1,\"b\":2}"
     },
     {
+      "id": "python-working-with-data-quiz-29",
       "type": "multiple-select",
       "question": "Which of the following are best practices when working with SQLite in Python?",
       "options": [
@@ -344,6 +373,7 @@ next: /quiz/python/log-analysis
       "hint": "Think about security, performance, readability, and testing."
     },
     {
+      "id": "python-working-with-data-quiz-30",
       "type": "mcq",
       "question": "When scraping HTML with BeautifulSoup, what's the most flexible way to select elements?",
       "options": [
@@ -357,6 +387,7 @@ next: /quiz/python/log-analysis
       "hint": "Think about which method supports the most complex selection patterns."
     },
     {
+      "id": "python-working-with-data-quiz-31",
       "type": "fill-blank",
       "question": "In SQLite, what SQL keyword makes a table creation idempotent (safe to run multiple times)?",
       "answer": "IF NOT EXISTS",
@@ -365,6 +396,7 @@ next: /quiz/python/log-analysis
       "hint": "It's a clause that checks for existence before creating."
     },
     {
+      "id": "python-working-with-data-quiz-32",
       "type": "true-false",
       "question": "In the requests library, calling `response.json()` is equivalent to calling `json.loads(response.text)`.",
       "answer": true,

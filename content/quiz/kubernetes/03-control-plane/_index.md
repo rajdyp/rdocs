@@ -11,6 +11,7 @@ next: /quiz/kubernetes/04-worker-nodes
 {
   "questions": [
     {
+      "id": "kubernetes-control-plane-quiz-01",
       "type": "mcq",
       "question": "Which component is the ONLY one that directly interacts with etcd?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Think about which component serves as the central hub for all communication."
     },
     {
+      "id": "kubernetes-control-plane-quiz-02",
       "type": "multiple-select",
       "question": "What happens when the kube-api-server fails? Select all that apply.",
       "options": [
@@ -38,6 +40,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Consider the difference between control plane and data plane operations."
     },
     {
+      "id": "kubernetes-control-plane-quiz-03",
       "type": "true-false",
       "question": "The kube-scheduler both makes scheduling decisions AND executes the actual pod placement on nodes.",
       "answer": false,
@@ -45,6 +48,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Think about the division of responsibilities between control plane and worker nodes."
     },
     {
+      "id": "kubernetes-control-plane-quiz-04",
       "type": "fill-blank",
       "question": "The scheduling process has two main phases: the filtering phase removes unsuitable nodes, and the _______ phase ranks the remaining nodes.",
       "answer": "scoring",
@@ -53,6 +57,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "After filtering, nodes need to be ranked somehow."
     },
     {
+      "id": "kubernetes-control-plane-quiz-05",
       "type": "code-output",
       "question": "Given an etcd cluster configuration, what is the minimum number of nodes needed for quorum if you want to tolerate 2 node failures?",
       "code": "# etcd cluster configuration\n# Goal: Tolerate 2 failures\n# Formula: Quorum = (N/2) + 1\n# Quorum must be > 50% of total nodes\n\n# If 2 nodes can fail, how many total nodes needed?",
@@ -68,11 +73,13 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Calculate backwards: if 2 fail, how many remain must still meet (N/2)+1?"
     },
     {
+      "id": "kubernetes-control-plane-quiz-06",
       "type": "flashcard",
       "question": "What is the reconciliation loop in Kubernetes?",
       "answer": "**Reconciliation Loop** is the continuous process where controllers compare the **desired state** (from resource specs in etcd) with the **actual state** (current reality) and take corrective action when they differ.\n\n**Key characteristics:**\n- Runs approximately every 30 seconds\n- Event-driven but also periodic\n- Ensures self-healing and state enforcement\n- Core mechanism for Kubernetes' declarative model"
     },
     {
+      "id": "kubernetes-control-plane-quiz-07",
       "type": "drag-drop",
       "question": "Arrange the API server request processing pipeline in the correct order:",
       "instruction": "Drag to arrange in the correct order from first to last",
@@ -87,6 +94,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "explanation": "The correct pipeline is: 1) Authentication (Who are you?), 2) Authorization (What can you do?), 3) Admission Control (Should we allow this?), 4) Validation (Is this valid?), 5) Persistence to etcd. Each step must pass before proceeding to the next."
     },
     {
+      "id": "kubernetes-control-plane-quiz-08",
       "type": "code-completion",
       "question": "Complete the kubectl command to taint a node so that no pods will schedule on it:",
       "instruction": "Fill in the missing taint effect",
@@ -97,6 +105,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "explanation": "The NoSchedule effect prevents new pods from being scheduled on the node unless they have a matching toleration. Other effects include NoExecute (evicts existing pods) and PreferNoSchedule (soft version)."
     },
     {
+      "id": "kubernetes-control-plane-quiz-09",
       "type": "mcq",
       "question": "In a 3-node etcd cluster, what happens if 2 nodes fail?",
       "options": [
@@ -110,6 +119,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Think about the quorum formula: (N/2) + 1"
     },
     {
+      "id": "kubernetes-control-plane-quiz-10",
       "type": "multiple-select",
       "question": "Which controllers are part of the kube-controller-manager? Select all that apply.",
       "options": [
@@ -125,6 +135,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Consider which controllers are fundamental to Kubernetes vs. add-ons."
     },
     {
+      "id": "kubernetes-control-plane-quiz-11",
       "type": "true-false",
       "question": "When the kube-controller-manager fails, Kubernetes can no longer perform self-healing operations like replacing failed pods.",
       "answer": true,
@@ -132,6 +143,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Think about what component enforces desired state."
     },
     {
+      "id": "kubernetes-control-plane-quiz-12",
       "type": "fill-blank",
       "question": "The kube-scheduler watches for pods where the _______ field is null, indicating they need to be assigned to a node.",
       "answer": "nodeName",
@@ -140,6 +152,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "What field identifies which node a pod should run on?"
     },
     {
+      "id": "kubernetes-control-plane-quiz-13",
       "type": "code-output",
       "question": "A Deployment specifies `replicas: 5` but only 3 pods are currently running. What action will the Deployment Controller take?",
       "code": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: web-app\nspec:\n  replicas: 5\n\n# Current state: 3 pods running",
@@ -155,11 +168,13 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Think about how reconciliation loops work."
     },
     {
+      "id": "kubernetes-control-plane-quiz-14",
       "type": "flashcard",
       "question": "What is the Raft consensus algorithm's role in etcd?",
       "answer": "**Raft Consensus Algorithm** ensures consistency across the distributed etcd cluster.\n\n**How it works:**\n- Elects a leader among etcd nodes\n- Leader handles all write operations\n- Writes must be acknowledged by quorum (majority)\n- Guarantees strong consistency\n- Automatically handles leader failures\n\n**Why it matters:** Prevents split-brain scenarios and ensures all nodes agree on the cluster state even during network partitions or node failures."
     },
     {
+      "id": "kubernetes-control-plane-quiz-15",
       "type": "drag-drop",
       "question": "Arrange the complete flow of pod creation in the correct order:",
       "instruction": "Order these steps from when a user creates a pod to when it's running",
@@ -175,6 +190,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "explanation": "The complete flow: 1) User sends create request, 2) API server processes it (auth, authz, validation), 3) Pod saved to etcd without node assignment, 4) Scheduler watches, selects node, and binds pod, 5) kubelet on assigned node pulls image and starts container, 6) Controller monitors to ensure state is maintained."
     },
     {
+      "id": "kubernetes-control-plane-quiz-16",
       "type": "code-completion",
       "question": "Complete the etcdctl command to create a backup snapshot:",
       "instruction": "Fill in the missing subcommand",
@@ -185,6 +201,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "explanation": "The correct command is `etcdctl snapshot save`. The snapshot subcommand creates a point-in-time backup of the etcd database. This is critical for disaster recovery since etcd stores all cluster state."
     },
     {
+      "id": "kubernetes-control-plane-quiz-17",
       "type": "mcq",
       "question": "Which phase of the scheduling process eliminates nodes that lack sufficient CPU resources?",
       "options": [
@@ -198,6 +215,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Think about whether resource requirements are hard constraints or preferences."
     },
     {
+      "id": "kubernetes-control-plane-quiz-18",
       "type": "multiple-select",
       "question": "What data is stored in etcd? Select all that apply.",
       "options": [
@@ -213,6 +231,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Consider what represents cluster state vs. runtime operational data."
     },
     {
+      "id": "kubernetes-control-plane-quiz-19",
       "type": "true-false",
       "question": "The cloud-controller-manager is required for all Kubernetes clusters to function properly.",
       "answer": false,
@@ -220,6 +239,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Think about whether all Kubernetes clusters run in the cloud."
     },
     {
+      "id": "kubernetes-control-plane-quiz-20",
       "type": "fill-blank",
       "question": "All control plane components communicate through the _______, which serves as the central hub for the cluster.",
       "answer": "kube-api-server",
@@ -229,6 +249,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "What component is described as the 'front door' of Kubernetes?"
     },
     {
+      "id": "kubernetes-control-plane-quiz-21",
       "type": "code-output",
       "question": "What will happen if you try to run kubectl commands when the kube-api-server is down but the kube-scheduler and kube-controller-manager are running?",
       "code": "# Control plane status:\n# kube-api-server: DOWN ❌\n# kube-scheduler: UP ✅\n# kube-controller-manager: UP ✅\n# etcd: UP ✅\n\n$ kubectl get pods",
@@ -244,11 +265,13 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "How does kubectl communicate with the cluster?"
     },
     {
+      "id": "kubernetes-control-plane-quiz-22",
       "type": "flashcard",
       "question": "What are Node Affinity and Pod Affinity/Anti-Affinity?",
       "answer": "**Node Affinity** places pods based on node labels.\n- `requiredDuringSchedulingIgnoredDuringExecution`: Hard requirement (must match)\n- `preferredDuringSchedulingIgnoredDuringExecution`: Soft preference (best effort)\n\n**Pod Affinity/Anti-Affinity** places pods based on other pods’ labels and where those pods are running.\n- **Affinity**: Schedule near certain pods (e.g., same zone)\n- **Anti-Affinity**: Schedule away from certain pods (e.g., spread replicas)\n\n**Use cases:**\n- Affinity: Co-locate related services for low latency\n- Anti-Affinity: Spread replicas for high availability"
     },
     {
+      "id": "kubernetes-control-plane-quiz-23",
       "type": "mcq",
       "question": "Why does Kubernetes recommend odd numbers (3, 5, 7) rather than even numbers for etcd cluster size?",
       "options": [
@@ -262,6 +285,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Compare the fault tolerance of 3 vs 4 nodes, or 5 vs 6 nodes."
     },
     {
+      "id": "kubernetes-control-plane-quiz-24",
       "type": "multiple-select",
       "question": "When the kube-scheduler fails, which statements are true? Select all that apply.",
       "options": [
@@ -276,6 +300,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Think about what the scheduler does vs. what keeps pods running."
     },
     {
+      "id": "kubernetes-control-plane-quiz-25",
       "type": "true-false",
       "question": "The API server provides a 'watch' mechanism that allows components to subscribe to real-time updates when resources change, rather than constantly polling.",
       "answer": true,
@@ -283,6 +308,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Think about how components stay in sync without overwhelming the API server."
     },
     {
+      "id": "kubernetes-control-plane-quiz-26",
       "type": "fill-blank",
       "question": "The cloud-controller-manager includes a Service Controller that creates, updates, and deletes cloud _______ for LoadBalancer type services.",
       "answer": "load balancers",
@@ -291,6 +317,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "What cloud resource distributes traffic across multiple backends?"
     },
     {
+      "id": "kubernetes-control-plane-quiz-27",
       "type": "code-output",
       "question": "Given this nodeSelector configuration, which node label must exist for the pod to be scheduled?",
       "code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: web-pod\nspec:\n  nodeSelector:\n    disktype: ssd\n    zone: us-east-1a\n  containers:\n  - name: nginx\n    image: nginx",
@@ -306,6 +333,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Does nodeSelector use AND logic or OR logic?"
     },
     {
+      "id": "kubernetes-control-plane-quiz-28",
       "type": "drag-drop",
       "question": "Order these etcd cluster sizes from LEAST to MOST fault-tolerant:",
       "instruction": "Arrange by number of node failures each can tolerate",
@@ -319,11 +347,13 @@ next: /quiz/kubernetes/04-worker-nodes
       "explanation": "Fault tolerance increases with cluster size: 1-node clusters cannot tolerate any failures, 3-node clusters tolerate 1 failure, 5-node clusters tolerate 2 failures, and 7-node clusters tolerate 3 failures. The pattern follows: tolerated failures = (N-1)/2."
     },
     {
+      "id": "kubernetes-control-plane-quiz-29",
       "type": "flashcard",
       "question": "What is the difference between Admission Controllers (mutating vs validating)?",
       "answer": "**Mutating Admission Controllers** modify requests before they're persisted.\n- Run FIRST in admission pipeline\n- Examples: Add default values, inject labels, add sidecars\n- Can change the resource definition\n\n**Validating Admission Controllers** validate requests without modifying them.\n- Run AFTER mutating controllers\n- Examples: Enforce policies, check quotas, validate custom rules\n- Can only accept or reject requests\n\n**Pipeline:** Request → Mutating → Validating → Validation → etcd\n\n**Example:** A mutating webhook might inject an Istio sidecar, then a validating webhook ensures the pod doesn't exceed namespace resource quotas."
     },
     {
+      "id": "kubernetes-control-plane-quiz-30",
       "type": "mcq",
       "question": "What is the PRIMARY role of the Endpoints Controller?",
       "options": [
@@ -337,6 +367,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Think about how Services know which Pods to send traffic to."
     },
     {
+      "id": "kubernetes-control-plane-quiz-31",
       "type": "code-completion",
       "question": "Complete the pod tolerations configuration to allow scheduling on a node with a specific taint:",
       "instruction": "Fill in the missing toleration field",
@@ -347,6 +378,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "explanation": "The `effect` field in tolerations specifies which taint effect this toleration applies to (NoSchedule, NoExecute, or PreferNoSchedule). The toleration must match the taint's key, value, and effect for the pod to be scheduled on the tainted node."
     },
     {
+      "id": "kubernetes-control-plane-quiz-32",
       "type": "true-false",
       "question": "If etcd experiences total data loss, the cluster can recover by having the controllers and API server rebuild the state from memory.",
       "answer": false,
@@ -354,6 +386,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "hint": "Where is cluster state persisted?"
     },
     {
+      "id": "kubernetes-control-plane-quiz-33",
       "type": "multiple-select",
       "question": "Which of the following are responsibilities of the cloud-controller-manager? Select all that apply.",
       "options": [

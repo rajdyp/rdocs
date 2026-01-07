@@ -9,9 +9,9 @@ sidebar:
   open: true
 ---
 
-A comprehensive interactive quiz system for Hugo documentation sites with 8 question types, automatic scoring, and full dark mode support.
+A comprehensive interactive quiz system for Hugo documentation sites with 8 question types, automatic scoring, performance tracking, and intelligent review features.
 
-**Features:** 8 Question Types • Automatic Scoring • Dark Mode • Hints & Explanations • Mobile Responsive
+**Features:** 8 Question Types • Performance Tracking • Smart Review • Weak Question Detection • Dark Mode • Hints & Explanations • Mobile Responsive
 
 {{< cards >}}
   {{< card link="usage" title="Usage Guide" subtitle="How to create and use quizzes" icon="book-open" >}}

@@ -11,6 +11,7 @@ next: /quiz/kubernetes/08-workload-controllers
 {
   "questions": [
     {
+      "id": "kubernetes-pod-lifecycle-quiz-01",
       "type": "mcq",
       "question": "A Pod is stuck in the `Pending` phase with `nodeName=worker-1` set. What is the most likely cause?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "Check the pod lifecycle diagram - what happens after the scheduler assigns a node?"
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-02",
       "type": "multiple-select",
       "question": "Which of the following will cause a container to restart when `restartPolicy: Always` is set?",
       "options": [
@@ -38,6 +40,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "Remember that 'Always' means restart on ANY termination, not just failures."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-03",
       "type": "true-false",
       "question": "The scheduler's filtering phase removes nodes that have insufficient resources, while the scoring phase ranks the remaining nodes.",
       "answer": true,
@@ -45,6 +48,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "Think about the two-phase approach: eliminate first, then rank."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-04",
       "type": "drag-drop",
       "question": "Arrange the scheduling process steps in the correct order:",
       "instruction": "Drag to arrange from first to last",
@@ -60,6 +64,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "explanation": "The scheduler follows this exact sequence: watch for unscheduled pods → filter unsuitable nodes → score remaining nodes → select best → bind to node."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-05",
       "type": "code-output",
       "question": "Given this configuration, what will happen if you try to schedule a pod without the required toleration?",
       "code": "# Node taint:\nkubectl taint nodes worker-1 gpu=nvidia:NoSchedule\n\n# Pod spec (no tolerations):\napiVersion: v1\nkind: Pod\nmetadata:\n  name: regular-app\nspec:\n  containers:\n  - name: app\n    image: nginx",
@@ -75,6 +80,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "NoSchedule affects new pod scheduling, not running pods."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-06",
       "type": "mcq",
       "question": "What is the key difference between `nodeSelector` and `nodeAffinity`?",
       "options": [
@@ -88,6 +94,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "Think about flexibility - which one offers 'preferred' scheduling?"
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-07",
       "type": "fill-blank",
       "question": "In pod affinity rules, the `topologyKey` field defines the scope of co-location. What is the topologyKey value to ensure pods are scheduled on the same physical node?",
       "answer": "kubernetes.io/hostname",
@@ -96,6 +103,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "It's a built-in Kubernetes label that identifies individual nodes."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-08",
       "type": "code-completion",
       "question": "Complete the PodDisruptionBudget to ensure at least 3 pods remain available during voluntary disruptions:",
       "instruction": "Fill in the missing field name and value",
@@ -106,6 +114,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "explanation": "The `minAvailable` field specifies the minimum number of pods that must remain running during voluntary disruptions. Alternatively, you could use `maxUnavailable` to specify the maximum number that can be down."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-09",
       "type": "multiple-select",
       "question": "Which scenarios are considered VOLUNTARY disruptions that PodDisruptionBudgets protect against?",
       "options": [
@@ -121,11 +130,13 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "Think 'planned' vs 'unexpected' - PDBs protect against planned operations."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-10",
       "type": "flashcard",
       "question": "What is Pod Priority and how does it differ from Preemption?",
       "answer": "**Pod Priority** assigns importance levels to pods using PriorityClass, determining scheduling order when resources are available.\n\n**Preemption** is the action of evicting lower-priority pods to make room for higher-priority pods when the cluster is at capacity.\n\n**Key difference:**\n- Priority = scheduling order (which pod goes first)\n- Preemption = resource reclamation (whether to evict others)\n\nYou can have priority WITHOUT preemption by setting `preemptionPolicy: Never`."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-11",
       "type": "mcq",
       "question": "A pod has resource requests and limits defined, but the values are not equal (requests < limits). What QoS class will it be assigned?",
       "options": [
@@ -139,6 +150,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "Look for whether requests equal limits or not."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-12",
       "type": "code-output",
       "question": "What is the correct eviction order when a node experiences memory pressure?",
       "code": "Node memory pressure detected!\n\nRunning pods:\n- Pod A: BestEffort (no resources defined)\n- Pod B: Burstable (using more than requests)\n- Pod C: Guaranteed (requests == limits)\n- Pod D: Burstable (within requests)",
@@ -154,6 +166,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "Best effort gets evicted first, guaranteed last."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-13",
       "type": "true-false",
       "question": "The `preStop` hook executes AFTER the SIGTERM signal is sent to the container.",
       "answer": false,
@@ -161,6 +174,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "The name 'preStop' gives a clue about when it runs."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-14",
       "type": "mcq",
       "question": "You set `terminationGracePeriodSeconds: 60` and your `preStop` hook runs for 45 seconds. How much time does your application have to handle SIGTERM and shut down gracefully?",
       "options": [
@@ -174,6 +188,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "It's a total budget, not separate time allowances."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-15",
       "type": "fill-blank",
       "question": "What exit code indicates that a container was forcefully killed with SIGKILL?",
       "answer": "137",
@@ -182,6 +197,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "It's 128 plus the signal number for SIGKILL (9)."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-16",
       "type": "code-output",
       "question": "What happens when you apply this topology spread constraint with 3 replicas across 3 zones?",
       "code": "topologySpreadConstraints:\n- maxSkew: 1\n  topologyKey: topology.kubernetes.io/zone\n  whenUnsatisfiable: DoNotSchedule\n  labelSelector:\n    matchLabels:\n      app: web",
@@ -197,6 +213,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "Calculate: what's the most even distribution possible with maxSkew=1?"
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-17",
       "type": "multiple-select",
       "question": "Which taint effects will cause existing pods WITHOUT matching tolerations to be evicted?",
       "options": [
@@ -210,11 +227,13 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "The word 'Execute' relates to running pods, not just scheduling."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-18",
       "type": "flashcard",
       "question": "Explain the difference between Pod Affinity and Pod Anti-Affinity, with use cases.",
       "answer": "**Pod Affinity:**\n- Attracts pods to nodes where certain other pods are running\n- Purpose: Co-locate related pods\n- Use case: Schedule app pod near its cache pod (reduce network latency)\n\n**Pod Anti-Affinity:**\n- Repels pods from nodes where certain other pods are running\n- Purpose: Separate pods for high availability\n- Use case: Spread replicas across different nodes/zones (avoid single point of failure)\n\n**topologyKey determines scope:**\n- `kubernetes.io/hostname` = same/different node\n- `topology.kubernetes.io/zone` = same/different availability zone"
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-19",
       "type": "mcq",
       "question": "A deployment has 5 replicas with a PodDisruptionBudget of `minAvailable: 3`. You run `kubectl drain node-1` which has 3 of the 5 pods. What happens?",
       "options": [
@@ -228,6 +247,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "PDBs ensure minimum availability - drain must work around this constraint."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-20",
       "type": "code-completion",
       "question": "Complete the node affinity rule to PREFER (soft constraint) SSD nodes:",
       "instruction": "Fill in the missing field name for soft preferences",
@@ -238,6 +258,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "explanation": "`preferredDuringSchedulingIgnoredDuringExecution` creates a soft constraint - the scheduler tries to match but will schedule anyway if impossible. Compare with `requiredDuringSchedulingIgnoredDuringExecution` for hard constraints."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-21",
       "type": "mcq",
       "question": "When using `nodeName` to assign a pod to a specific node, which of the following is TRUE?",
       "options": [
@@ -251,6 +272,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "Think about the trade-off: speed vs safety checks."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-22",
       "type": "true-false",
       "question": "Setting `preemptionPolicy: Never` on a PriorityClass means the pod will have low priority and can be preempted by others.",
       "answer": false,
@@ -258,6 +280,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "The policy controls what the pod CAN DO, not what can be done TO it."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-23",
       "type": "multiple-select",
       "question": "Which of the following are valid node affinity operators?",
       "options": [
@@ -273,6 +296,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "Think about set operations and numeric comparisons."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-24",
       "type": "code-output",
       "question": "A pod with this configuration is deleted. What happens at t=30s if the preStop hook is still running?",
       "code": "spec:\n  terminationGracePeriodSeconds: 30\n  containers:\n  - name: app\n    lifecycle:\n      preStop:\n        exec:\n          command: [\"/bin/sh\", \"-c\", \"sleep 60\"]",
@@ -288,11 +312,13 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "The grace period is a hard limit - it's not extended for hooks."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-25",
       "type": "flashcard",
       "question": "What is the difference between Topology Spread Constraints and Pod Anti-Affinity?",
       "answer": "**Pod Anti-Affinity:**\n- Binary decision: same node or different node\n- All-or-nothing (hard requirement)\n- Simple: \"Don't put 2 replicas together\"\n- Limited control over distribution\n\n**Topology Spread Constraints:**\n- Gradual control via `maxSkew` (1, 2, 3...)\n- Even distribution across domains\n- Flexible: \"Spread evenly with max difference of N\"\n- Better for multi-zone/multi-region deployments\n\n**Example:**\n- Anti-affinity: \"Never same node\" (binary)\n- Topology spread: \"Max 1 pod difference between zones\" (balanced)"
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-26",
       "type": "mcq",
       "question": "What is the default value for `terminationGracePeriodSeconds` if not specified?",
       "options": [
@@ -306,6 +332,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "It's the most commonly seen value in Kubernetes documentation."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-27",
       "type": "fill-blank",
       "question": "What is the scheduling phase called where unsuitable nodes are eliminated before scoring?",
       "answer": "filtering",
@@ -315,6 +342,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "It's about removing/eliminating unsuitable options."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-28",
       "type": "true-false",
       "question": "A Pod's QoS class can be changed after the Pod is created by updating its resource requests and limits.",
       "answer": false,
@@ -322,6 +350,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "Think about immutability - many pod specs cannot be changed after creation."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-29",
       "type": "mcq",
       "question": "Which built-in Kubernetes taint is automatically applied when a node becomes unready?",
       "options": [
@@ -335,6 +364,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "hint": "NoExecute is used because running pods should be moved off unhealthy nodes."
     },
     {
+      "id": "kubernetes-pod-lifecycle-quiz-30",
       "type": "code-completion",
       "question": "Complete the toleration to allow scheduling on nodes tainted with ANY value for the 'gpu' key:",
       "instruction": "Fill in the operator type",

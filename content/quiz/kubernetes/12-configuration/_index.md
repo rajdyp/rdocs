@@ -8,6 +8,7 @@ weight: 12
 {
   "questions": [
     {
+      "id": "kubernetes-configuration-quiz-01",
       "type": "mcq",
       "question": "What is the maximum size limit for a single ConfigMap in Kubernetes?",
       "options": [
@@ -21,6 +22,7 @@ weight: 12
       "hint": "Think about the documented size constraints for Kubernetes configuration objects."
     },
     {
+      "id": "kubernetes-configuration-quiz-02",
       "type": "true-false",
       "question": "Kubernetes Secrets are encrypted by default when stored in etcd.",
       "answer": false,
@@ -28,6 +30,7 @@ weight: 12
       "hint": "Base64 encoding and encryption are not the same thing."
     },
     {
+      "id": "kubernetes-configuration-quiz-03",
       "type": "multiple-select",
       "question": "Which of the following are valid methods to consume ConfigMap data in a Pod?",
       "options": [
@@ -41,6 +44,7 @@ weight: 12
       "hint": "Consider how Pods can reference external configuration sources."
     },
     {
+      "id": "kubernetes-configuration-quiz-04",
       "type": "fill-blank",
       "question": "What field in a ConfigMap or Secret YAML makes it unchangeable after creation?",
       "answer": "immutable",
@@ -49,6 +53,7 @@ weight: 12
       "hint": "It's a boolean field that, when set to true, prevents changes."
     },
     {
+      "id": "kubernetes-configuration-quiz-05",
       "type": "code-output",
       "question": "What happens when you run this command?",
       "code": "echo \"bXlzZWNyZXQ=\" | base64 -d",
@@ -64,6 +69,7 @@ weight: 12
       "hint": "Base64 is an encoding scheme, not encryption."
     },
     {
+      "id": "kubernetes-configuration-quiz-06",
       "type": "mcq",
       "question": "Which Secret type should you use for storing Docker registry credentials?",
       "options": [
@@ -77,6 +83,7 @@ weight: 12
       "hint": "There's a specific type for Docker configuration in JSON format."
     },
     {
+      "id": "kubernetes-configuration-quiz-07",
       "type": "drag-drop",
       "question": "Arrange these configuration practices from LEAST secure to MOST secure:",
       "instruction": "Drag to arrange from least secure (top) to most secure (bottom)",
@@ -90,6 +97,7 @@ weight: 12
       "explanation": "Hardcoded credentials are worst (in code/images). ConfigMaps store data as plain text. K8s Secrets use base64 (not true encryption). External secrets managers provide proper encryption, rotation, and access control."
     },
     {
+      "id": "kubernetes-configuration-quiz-08",
       "type": "true-false",
       "question": "By default, Pods automatically reload when a mounted ConfigMap is updated.",
       "answer": false,
@@ -97,6 +105,7 @@ weight: 12
       "hint": "Think about whether Kubernetes handles hot-reloading of configuration."
     },
     {
+      "id": "kubernetes-configuration-quiz-09",
       "type": "mcq",
       "question": "What is the primary purpose of Configuration Management in Kubernetes?",
       "options": [
@@ -110,6 +119,7 @@ weight: 12
       "hint": "Think about the 12-factor app principles."
     },
     {
+      "id": "kubernetes-configuration-quiz-10",
       "type": "code-completion",
       "question": "Complete the Pod spec to mount a Secret as a read-only volume:",
       "instruction": "Fill in the missing boolean value",
@@ -120,6 +130,7 @@ weight: 12
       "explanation": "The `readOnly: true` field ensures the mounted Secret cannot be modified by the container, which is a security best practice for sensitive data."
     },
     {
+      "id": "kubernetes-configuration-quiz-11",
       "type": "multiple-select",
       "question": "Which of the following are valid Kubernetes Secret types?",
       "options": [
@@ -133,11 +144,13 @@ weight: 12
       "hint": "Review the documented Secret types in Kubernetes."
     },
     {
+      "id": "kubernetes-configuration-quiz-12",
       "type": "flashcard",
       "question": "What is the key difference between ConfigMap `data` and `stringData` fields?",
       "answer": "**data** - Values must be base64-encoded\n\n**stringData** - Values are plain text; Kubernetes automatically base64-encodes them\n\n`stringData` is more convenient for writing manifests, but both store data the same way internally."
     },
     {
+      "id": "kubernetes-configuration-quiz-13",
       "type": "mcq",
       "question": "When using `subPath` in a volumeMount, what is the primary benefit?",
       "options": [
@@ -151,6 +164,7 @@ weight: 12
       "hint": "Think about selective file mounting."
     },
     {
+      "id": "kubernetes-configuration-quiz-14",
       "type": "fill-blank",
       "question": "What kubectl command decodes a secret value? `kubectl get secret db-secret -o jsonpath='{.data.password}' | _____ -d`",
       "answer": "base64",
@@ -159,6 +173,7 @@ weight: 12
       "hint": "Secrets are base64-encoded in Kubernetes."
     },
     {
+      "id": "kubernetes-configuration-quiz-15",
       "type": "true-false",
       "question": "The `envFrom` field in a Pod spec can load all keys from a ConfigMap as environment variables at once.",
       "answer": true,
@@ -166,6 +181,7 @@ weight: 12
       "hint": "Think about bulk loading configuration."
     },
     {
+      "id": "kubernetes-configuration-quiz-16",
       "type": "code-output",
       "question": "Given this ConfigMap, what files will be created when mounted at /etc/config?",
       "code": "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: app-config\ndata:\n  database.host: \"db.example.com\"\n  app.properties: |\n    timeout=30\n    level=INFO",
@@ -181,11 +197,13 @@ weight: 12
       "hint": "Each key in the ConfigMap data section becomes a file."
     },
     {
+      "id": "kubernetes-configuration-quiz-17",
       "type": "flashcard",
       "question": "Why should you use external secrets management systems like HashiCorp Vault instead of native Kubernetes Secrets?",
       "answer": "**Native K8s Secrets limitations:**\n- Only base64-encoded, not encrypted by default\n- No automatic rotation\n- Limited audit capabilities\n\n**External systems provide:**\n- True encryption at rest and in transit\n- Automatic secret rotation\n- Fine-grained access control\n- Comprehensive audit logging\n- Dynamic secret generation"
     },
     {
+      "id": "kubernetes-configuration-quiz-18",
       "type": "multiple-select",
       "question": "Which are benefits of making ConfigMaps immutable (`immutable: true`)?",
       "options": [
@@ -199,6 +217,7 @@ weight: 12
       "hint": "Think about operational and performance benefits."
     },
     {
+      "id": "kubernetes-configuration-quiz-19",
       "type": "mcq",
       "question": "What is the recommended approach when you have 50+ configuration values to pass to a container?",
       "options": [
@@ -212,6 +231,7 @@ weight: 12
       "hint": "Think about what's more maintainable and readable."
     },
     {
+      "id": "kubernetes-configuration-quiz-20",
       "type": "drag-drop",
       "question": "Arrange the steps to create and use a ConfigMap from a file:",
       "instruction": "Drag to arrange in the correct order",

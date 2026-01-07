@@ -11,6 +11,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
 {
   "questions": [
     {
+      "id": "terraform-configuration-basics-quiz-01",
       "type": "mcq",
       "question": "What is the correct basic syntax structure for an HCL block?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Think about how resource blocks are defined in Terraform."
     },
     {
+      "id": "terraform-configuration-basics-quiz-02",
       "type": "fill-blank",
       "question": "What operator is used for pessimistic version constraints in Terraform?",
       "answer": "~>",
@@ -32,6 +34,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "It's a two-character operator combining a tilde and greater-than symbol."
     },
     {
+      "id": "terraform-configuration-basics-quiz-03",
       "type": "code-completion",
       "question": "Complete the terraform block to require version 1.2.0 or later:",
       "instruction": "Fill in the missing configuration",
@@ -42,6 +45,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "explanation": "The `required_version` argument in the terraform block specifies which versions of Terraform can be used with this configuration."
     },
     {
+      "id": "terraform-configuration-basics-quiz-04",
       "type": "true-false",
       "question": "Backend configuration in Terraform supports variables and expressions for dynamic configuration.",
       "answer": false,
@@ -49,6 +53,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Think about when the backend needs to be initialized in the Terraform workflow."
     },
     {
+      "id": "terraform-configuration-basics-quiz-05",
       "type": "multiple-select",
       "question": "Which of the following are valid components of the `terraform` block?",
       "options": [
@@ -63,6 +68,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "The provider configuration uses its own block type."
     },
     {
+      "id": "terraform-configuration-basics-quiz-06",
       "type": "mcq",
       "question": "What does the version constraint `~> 1.2.0` allow?",
       "options": [
@@ -76,6 +82,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "More specific version constraints create tighter restrictions."
     },
     {
+      "id": "terraform-configuration-basics-quiz-07",
       "type": "code-completion",
       "question": "Complete the provider alias configuration for a disaster recovery region:",
       "instruction": "Fill in the missing keyword",
@@ -86,6 +93,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "explanation": "The `alias` argument creates an alternative provider configuration that can be referenced in resources using `provider = aws.west`."
     },
     {
+      "id": "terraform-configuration-basics-quiz-08",
       "type": "mcq",
       "question": "How do you reference an aliased provider in a resource?",
       "options": [
@@ -99,6 +107,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "It's a reference, not a string literal."
     },
     {
+      "id": "terraform-configuration-basics-quiz-09",
       "type": "multiple-select",
       "question": "Which attributes are typically computed (not provided by you) for an `aws_instance` resource?",
       "options": [
@@ -113,6 +122,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Computed attributes are values only known after the resource is created."
     },
     {
+      "id": "terraform-configuration-basics-quiz-10",
       "type": "drag-drop",
       "question": "Arrange the resource dependency chain in the correct creation order:",
       "instruction": "Drag to arrange from first to last",
@@ -125,6 +135,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "explanation": "VPC must be created first, then subnet (which depends on VPC), then instance (which depends on subnet). Destruction happens in reverse order."
     },
     {
+      "id": "terraform-configuration-basics-quiz-11",
       "type": "true-false",
       "question": "When using references like `aws_vpc.main.id`, Terraform automatically creates implicit dependencies.",
       "answer": true,
@@ -132,6 +143,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Terraform analyzes your configuration to understand resource relationships."
     },
     {
+      "id": "terraform-configuration-basics-quiz-12",
       "type": "fill-blank",
       "question": "What is the resource address for a resource defined as `resource \"aws_instance\" \"web_server\"`?",
       "answer": "aws_instance.web_server",
@@ -140,6 +152,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Combine the two quoted strings with a dot separator."
     },
     {
+      "id": "terraform-configuration-basics-quiz-13",
       "type": "mcq",
       "question": "In a standard Terraform project structure, where should provider configurations be placed?",
       "options": [
@@ -153,11 +166,13 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "The file name typically matches what it contains."
     },
     {
+      "id": "terraform-configuration-basics-quiz-14",
       "type": "flashcard",
       "question": "What is the difference between a Map and an Object in Terraform?",
       "answer": "**Map**: Flexible keys, all values must be the same type. Used for tags, labels, dynamic data.\n\n**Object**: Fixed keys (schema), values can be different types. Used for structured configuration.\n\n**Example:**\n- Map: `map(string)` - all values are strings\n- Object: `object({ name = string, count = number })` - mixed types"
     },
     {
+      "id": "terraform-configuration-basics-quiz-15",
       "type": "code-output",
       "question": "Given this configuration, which region will `aws_instance.app` be created in?",
       "code": "provider \"aws\" {\n  region = \"us-east-1\"\n}\n\nprovider \"aws\" {\n  alias  = \"west\"\n  region = \"us-west-2\"\n}\n\nresource \"aws_instance\" \"app\" {\n  ami           = \"ami-123\"\n  instance_type = \"t2.micro\"\n}",
@@ -173,6 +188,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Resources without explicit provider argument use the default provider."
     },
     {
+      "id": "terraform-configuration-basics-quiz-16",
       "type": "multiple-select",
       "question": "Which of the following are correct workarounds for the limitation that backends cannot use variables?",
       "options": [
@@ -187,6 +203,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "The backend configuration must be static, but can be provided externally."
     },
     {
+      "id": "terraform-configuration-basics-quiz-17",
       "type": "mcq",
       "question": "What does `terraform fmt` do?",
       "options": [
@@ -200,6 +217,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Think about code formatting and style consistency."
     },
     {
+      "id": "terraform-configuration-basics-quiz-18",
       "type": "true-false",
       "question": "Nested blocks inside resources use the equals sign (`=`) just like arguments.",
       "answer": false,
@@ -207,6 +225,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Look at how security group ingress rules are defined."
     },
     {
+      "id": "terraform-configuration-basics-quiz-19",
       "type": "code-completion",
       "question": "Complete the required_providers block for AWS provider version 5.x:",
       "instruction": "Fill in the version constraint",
@@ -217,6 +236,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "explanation": "The `~> 5.0` constraint allows any 5.x version but blocks 6.0 and above. This is the standard way to lock to a major version."
     },
     {
+      "id": "terraform-configuration-basics-quiz-20",
       "type": "mcq",
       "question": "In which order does Terraform destroy resources with dependencies?",
       "options": [
@@ -230,6 +250,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "You need to delete dependent resources before their dependencies."
     },
     {
+      "id": "terraform-configuration-basics-quiz-21",
       "type": "multiple-select",
       "question": "Which statements about HCL comments are true?",
       "options": [
@@ -244,11 +265,13 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "HCL comment syntax is similar to many other languages."
     },
     {
+      "id": "terraform-configuration-basics-quiz-22",
       "type": "flashcard",
       "question": "Why are provider aliases necessary?",
       "answer": "**Provider aliases enable multiple configurations of the same provider type.**\n\n**Common use cases:**\n- Multi-region deployments (deploy to multiple AWS regions)\n- Multi-account setups (manage resources across different accounts)\n- Disaster recovery (replicate infrastructure in backup regions)\n- Cross-region dependencies (e.g., CloudFront + S3 in different regions)\n\n**Without aliases**, you could only have one configuration per provider type."
     },
     {
+      "id": "terraform-configuration-basics-quiz-23",
       "type": "code-output",
       "question": "What will happen when you run `terraform apply` with this configuration?",
       "code": "terraform {\n  backend \"s3\" {\n    bucket = var.state_bucket\n    key    = \"terraform.tfstate\"\n    region = \"us-east-1\"\n  }\n}\n\nvariable \"state_bucket\" {\n  default = \"my-state-bucket\"\n}",
@@ -264,6 +287,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "Think about when the backend is initialized versus when variables are loaded."
     },
     {
+      "id": "terraform-configuration-basics-quiz-24",
       "type": "mcq",
       "question": "What is the purpose of the `.terraform.lock.hcl` file?",
       "options": [
@@ -277,6 +301,7 @@ next: /quiz/terraform/04-resources-and-meta-arguments
       "hint": "It's created after `terraform init` and relates to providers."
     },
     {
+      "id": "terraform-configuration-basics-quiz-25",
       "type": "true-false",
       "question": "You can have multiple default providers (without alias) of the same type in a Terraform configuration.",
       "answer": false,

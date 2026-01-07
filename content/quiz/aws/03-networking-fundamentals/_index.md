@@ -11,6 +11,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
 {
   "questions": [
     {
+      "id": "aws-networking-fundamentals-quiz-01",
       "type": "mcq",
       "question": "What is the valid CIDR block size range for an AWS VPC?",
       "options": [
@@ -24,6 +25,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Think about the range from smallest to largest supported VPC sizes."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-02",
       "type": "multiple-select",
       "question": "Which IP addresses are reserved by AWS in a subnet with CIDR block `10.0.0.0/24`?",
       "options": [
@@ -38,6 +40,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "AWS always reserves exactly 5 IP addresses in each subnet."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-03",
       "type": "true-false",
       "question": "A VPC can span multiple AWS Regions.",
       "answer": false,
@@ -45,6 +48,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Consider the scope of a VPC - is it global, regional, or AZ-specific?"
     },
     {
+      "id": "aws-networking-fundamentals-quiz-04",
       "type": "mcq",
       "question": "What is the primary difference between a public subnet and a private subnet?",
       "options": [
@@ -58,6 +62,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Focus on routing configuration, not size or location."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-05",
       "type": "code-output",
       "question": "Given a VPC with CIDR `10.0.0.0/16`, which route is automatically added to all route tables?",
       "code": "VPC CIDR: 10.0.0.0/16\n\nRoute Table:\nDestination        Target\n--------------------------\n?                  ?",
@@ -73,6 +78,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "This route enables intra-VPC communication and is automatic."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-06",
       "type": "fill-blank",
       "question": "What keyword is used in route tables to enable intra-VPC communication?",
       "answer": "local",
@@ -81,11 +87,13 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "It's a 5-letter word that describes traffic staying within the VPC."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-07",
       "type": "flashcard",
       "question": "What is the difference between a NAT Gateway and a NAT Instance?",
       "answer": "**NAT Gateway:**\n- Managed by AWS (no maintenance)\n- Highly available within an AZ\n- Scales automatically up to 45 Gbps\n- No security groups (use NACLs)\n- Higher cost, lower operational overhead\n\n**NAT Instance:**\n- Self-managed EC2 instance\n- Single point of failure (manual HA needed)\n- Limited by instance type bandwidth\n- Supports security groups\n- Can be used as bastion host\n- Lower cost, higher operational overhead"
     },
     {
+      "id": "aws-networking-fundamentals-quiz-08",
       "type": "multiple-select",
       "question": "What are the requirements for an EC2 instance in a public subnet to have internet access?",
       "options": [
@@ -100,6 +108,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Internet access requires multiple layers to be configured correctly."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-09",
       "type": "true-false",
       "question": "Security Groups are stateful, meaning return traffic is automatically allowed.",
       "answer": true,
@@ -107,6 +116,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Think about whether you need to configure both inbound and outbound rules for a connection."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-10",
       "type": "mcq",
       "question": "At what level are Network ACLs (NACLs) applied?",
       "options": [
@@ -120,6 +130,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "NACLs provide a boundary defense for a specific network segment."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-11",
       "type": "drag-drop",
       "question": "Arrange the security layers in order from outermost to innermost when traffic enters a VPC:",
       "instruction": "Drag to arrange in the correct order (first to last)",
@@ -133,6 +144,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "explanation": "Traffic flows through multiple security layers: Internet Gateway → Network ACL (subnet boundary) → Security Group (instance firewall) → EC2 Instance. This defense-in-depth strategy provides multiple security checkpoints."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-12",
       "type": "code-completion",
       "question": "Complete the route table entry for a private subnet to route internet traffic through a NAT Gateway:",
       "instruction": "Fill in the destination CIDR block",
@@ -143,6 +155,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "explanation": "The route `0.0.0.0/0` → NAT Gateway directs all internet-bound traffic from the private subnet through the NAT Gateway. The NAT Gateway then forwards traffic to the Internet Gateway."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-13",
       "type": "multiple-select",
       "question": "Which statements are true about VPC Flow Logs?",
       "options": [
@@ -157,6 +170,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Flow Logs are for metadata analysis, not deep packet inspection."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-14",
       "type": "mcq",
       "question": "How many NAT Gateways should you deploy for high availability in a VPC with resources across two Availability Zones?",
       "options": [
@@ -170,6 +184,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "NAT Gateways are highly available within an AZ but not across AZs."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-15",
       "type": "true-false",
       "question": "VPC Peering connections are transitive, meaning if VPC-A peers with VPC-B and VPC-B peers with VPC-C, then VPC-A can communicate with VPC-C.",
       "answer": false,
@@ -177,11 +192,13 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Consider whether VPC Peering supports hub-and-spoke patterns."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-16",
       "type": "flashcard",
       "question": "What is AWS Transit Gateway and when should you use it?",
       "answer": "**AWS Transit Gateway** is a central hub that connects VPCs and on-premises networks with transitive routing.\n\n**Key Features:**\n- Hub-and-spoke model (simpler than VPC Peering mesh)\n- Transitive routing (A→TGW→C works)\n- Centralized management\n- Supports thousands of VPCs\n- Inter-region peering available\n- Route tables for network segmentation\n\n**Use When:**\n- Connecting many VPCs (>3-5)\n- Need transitive routing\n- Centralizing on-premises connectivity\n- Requiring network segmentation between environments"
     },
     {
+      "id": "aws-networking-fundamentals-quiz-17",
       "type": "mcq",
       "question": "What is the main advantage of Gateway Endpoints over Interface Endpoints for S3 and DynamoDB?",
       "options": [
@@ -195,6 +212,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Think about cost differences between the two endpoint types."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-18",
       "type": "code-output",
       "question": "In a NACL, what happens when traffic matches rule number 100 that denies it, but rule 200 would allow it?",
       "code": "NACL Inbound Rules:\nRule #   Type        Port   Source       Allow/Deny\n-----------------------------------------------\n100      SSH         22     0.0.0.0/0    DENY\n200      SSH         22     0.0.0.0/0    ALLOW\n*        All         All    0.0.0.0/0    DENY\n\nSSH request from 203.0.113.5 arrives.",
@@ -210,6 +228,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "NACLs use a 'first match wins' evaluation strategy."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-19",
       "type": "fill-blank",
       "question": "For NACLs to work with stateless connections, outbound rules must allow ephemeral ports in the range _____ to 65535.",
       "answer": "1024",
@@ -218,6 +237,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Think about the starting port number for the ephemeral port range."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-20",
       "type": "multiple-select",
       "question": "Which components are required to implement AWS PrivateLink?",
       "options": [
@@ -232,6 +252,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "PrivateLink is about private connectivity, not internet-facing components."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-21",
       "type": "mcq",
       "question": "What is the maximum number of VPC peering connections needed for a full mesh topology with 5 VPCs?",
       "options": [
@@ -245,6 +266,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Use the formula N*(N-1)/2 where N is the number of VPCs."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-22",
       "type": "drag-drop",
       "question": "Arrange these networking components from least granular (broadest scope) to most granular (narrowest scope):",
       "instruction": "Drag to arrange from broadest to narrowest scope",
@@ -258,6 +280,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "explanation": "The hierarchy from broadest to narrowest: VPC spans an entire region and multiple AZs → Subnet exists in a single AZ → Security Group applies to instances → ENI is the actual network interface attached to an instance."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-23",
       "type": "true-false",
       "question": "A subnet can span multiple Availability Zones for high availability.",
       "answer": false,
@@ -265,6 +288,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Think about the AZ binding of subnets."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-24",
       "type": "mcq",
       "question": "Which VPC Flow Logs analysis would help identify potential port scanning activity?",
       "options": [
@@ -278,11 +302,13 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Port scanning involves one source trying many different ports."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-25",
       "type": "flashcard",
       "question": "Explain the concept of Security Group chaining and its benefits.",
       "answer": "**Security Group Chaining** is a pattern where Security Groups reference other Security Groups instead of IP addresses.\n\n**Example:**\n- Web tier SG: Outbound to `sg-app` on port 8080\n- App tier SG: Inbound from `sg-web` on port 8080, Outbound to `sg-db` on port 3306\n- DB tier SG: Inbound from `sg-app` on port 3306\n\n**Benefits:**\n- **Dynamic**: Rules automatically apply to all instances with referenced SG\n- **Maintainable**: No need to update IP addresses when instances change\n- **Secure**: Enforces tier-based access control\n- **Scalable**: Works regardless of instance count in each tier\n- **Clear**: Documents architectural relationships"
     },
     {
+      "id": "aws-networking-fundamentals-quiz-26",
       "type": "code-completion",
       "question": "Complete the Security Group rule to allow HTTPS traffic from anywhere:",
       "instruction": "Fill in the source CIDR block for 'anywhere'",
@@ -293,6 +319,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "explanation": "`0.0.0.0/0` represents all IPv4 addresses (anywhere on the internet). For public web servers, this is the appropriate source for HTTP (80) and HTTPS (443) traffic. For SSH/RDP, you should restrict to specific IP ranges."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-27",
       "type": "multiple-select",
       "question": "What are the key differences between Security Groups and NACLs?",
       "options": [
@@ -307,6 +334,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Focus on statefulness, scope, rule types, and evaluation logic."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-28",
       "type": "mcq",
       "question": "In a three-tier architecture, which subnets should the database tier be placed in?",
       "options": [
@@ -320,6 +348,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Think about security best practices for sensitive data."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-29",
       "type": "true-false",
       "question": "An Internet Gateway has bandwidth constraints that may limit high-traffic applications.",
       "answer": false,
@@ -327,6 +356,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Consider AWS-managed service characteristics."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-30",
       "type": "fill-blank",
       "question": "How many IP addresses are available for use in a /24 subnet after AWS reserves its required addresses?",
       "answer": "251",
@@ -335,6 +365,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "hint": "Start with 256 IPs in a /24, subtract AWS's 5 reserved addresses."
     },
     {
+      "id": "aws-networking-fundamentals-quiz-31",
       "type": "mcq",
       "question": "What happens when a NAT Gateway in AZ-A fails and private subnet instances in AZ-A need internet access?",
       "options": [
