@@ -130,6 +130,7 @@
       const resetBtn = this.container.querySelector('.quiz-reset-btn');
       const reviewIncorrectBtn = this.container.querySelector('.quiz-review-incorrect-btn');
       const reviewPastBtn = this.container.querySelector('.quiz-review-past-btn');
+      const wrongCountBtn = this.container.querySelector('.wrong-count');
 
       if (prevBtn) {
         prevBtn.addEventListener('click', () => this.previousQuestion());
@@ -180,6 +181,12 @@
         });
       }
 
+      if (wrongCountBtn) {
+        wrongCountBtn.addEventListener('click', () => {
+          this.copyIncorrectList();
+        });
+      }
+
       // Submit answer buttons for each question
       this.container.querySelectorAll('.submit-answer-btn').forEach((btn, index) => {
         btn.addEventListener('click', () => this.submitAnswer(index));
@@ -205,6 +212,44 @@
           }
         }
       });
+    }
+
+    async copyIncorrectList() {
+      const wrongCountBtn = this.container.querySelector('.wrong-count');
+      if (!wrongCountBtn) return;
+      const list = (wrongCountBtn.dataset.incorrectList || '').trim();
+      if (!list) return;
+
+      const status = this.container.querySelector('.incorrect-copy-status');
+      const setStatus = (message) => {
+        if (status) status.textContent = message;
+      };
+
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(list);
+        } else {
+          const temp = document.createElement('textarea');
+          temp.value = list;
+          temp.setAttribute('readonly', '');
+          temp.style.position = 'absolute';
+          temp.style.left = '-9999px';
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand('copy');
+          document.body.removeChild(temp);
+        }
+        setStatus('Copied incorrect questions.');
+      } catch (err) {
+        setStatus('Copy failed.');
+      }
+
+      if (status) {
+        clearTimeout(this.copyStatusTimeout);
+        this.copyStatusTimeout = setTimeout(() => {
+          status.textContent = '';
+        }, 2000);
+      }
     }
 
     initQuestionHandlers() {
@@ -862,6 +907,7 @@
       const scoreValue = this.container.querySelector('.score-value');
       const correctCount = this.container.querySelector('.correct-count');
       const wrongCount = this.container.querySelector('.wrong-count');
+      const incorrectCopyStatus = this.container.querySelector('.incorrect-copy-status');
       const skippedCount = this.container.querySelector('.skipped-count');
       const rightCount = this.container.querySelector('.right-count');
       const totalCount = this.container.querySelector('.total-count');
@@ -890,6 +936,14 @@
 
       if (wrongCount) {
         wrongCount.textContent = incorrect;
+        const list = incorrectIndices.map(idx => `Q${idx + 1}`).join(', ');
+        wrongCount.dataset.incorrectList = list;
+        wrongCount.disabled = !list;
+        wrongCount.title = list ? `Copy: ${list}` : 'No incorrect questions to copy';
+      }
+
+      if (incorrectCopyStatus) {
+        incorrectCopyStatus.textContent = '';
       }
 
       if (skippedCount) {
