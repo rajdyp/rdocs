@@ -147,7 +147,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "type": "fill-blank",
       "question": "The kube-scheduler watches for pods where the _______ field is null, indicating they need to be assigned to a node.",
       "answer": "nodeName",
-      "caseSensitive": false,
+      "caseSensitive": true,
       "explanation": "The scheduler watches for pods with nodeName=null (unscheduled pods). After selecting an appropriate node through filtering and scoring, the scheduler updates the pod's nodeName field via the API server, which triggers the kubelet on that node to start the pod.",
       "hint": "What field identifies which node a pod should run on?"
     },

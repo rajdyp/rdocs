@@ -129,6 +129,7 @@ next: /quiz/kubernetes/03-control-plane
       "type": "fill-blank",
       "question": "For an etcd cluster with 3 nodes, the quorum formula (N/2) + 1 means it can tolerate _____ failure(s).",
       "answer": "1",
+      "acceptedAnswers": ["1", "one"],
       "caseSensitive": false,
       "explanation": "With 3 nodes, the quorum is (3/2) + 1 = 2 nodes. This means the cluster can tolerate **1 failure** and still maintain quorum with 2 healthy nodes.",
       "hint": "Calculate: how many nodes remain if one fails? Is that enough for quorum?"
@@ -174,8 +175,8 @@ next: /quiz/kubernetes/03-control-plane
         "database.postgres"
       ],
       "answer": 2,
-      "explanation": "For cross-namespace service access, use the fully qualified DNS name: **service-name.namespace-name.svc.cluster.local**. In this case: `postgres.database.svc.cluster.local`. You can also use the short form `postgres.database`.",
-      "hint": "Format: service-name.namespace.svc.cluster.local"
+      "explanation": "For cross-namespace service access, use the fully qualified DNS name: `<service-name>.<namespace-name>.svc.cluster.local`. In this case: `postgres.database.svc.cluster.local`. You can also use the short form `postgres.database`.",
+      "hint": "Format: `<service-name>.<namespace-name>.svc.cluster.local`"
     },
     {
       "id": "kubernetes-architecture-quiz-14",

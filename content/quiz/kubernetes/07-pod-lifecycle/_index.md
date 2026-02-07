@@ -53,14 +53,14 @@ next: /quiz/kubernetes/08-workload-controllers
       "question": "Arrange the scheduling process steps in the correct order:",
       "instruction": "Drag to arrange from first to last",
       "items": [
-        "Pod created (nodeName=null)",
         "Scheduler watches for unscheduled pods",
+        "Pod created (nodeName=null)",
         "Filtering phase (remove unsuitable nodes)",
         "Scoring phase (rank remaining nodes)",
         "Select highest-scored node",
         "Bind pod to node"
       ],
-      "correctOrder": [0, 1, 2, 3, 4, 5],
+      "correctOrder": [1, 0, 2, 3, 4, 5],
       "explanation": "The scheduler follows this exact sequence: watch for unscheduled pods → filter unsuitable nodes → score remaining nodes → select best → bind to node."
     },
     {
@@ -193,7 +193,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "question": "What exit code indicates that a container was forcefully killed with SIGKILL?",
       "answer": "137",
       "caseSensitive": false,
-      "explanation": "Exit code 137 = 128 + 9 (SIGKILL signal number). This indicates the container was forcefully terminated, often because it didn't exit within `terminationGracePeriodSeconds`.",
+      "explanation": "Exit code 137 = 128 + 9 (SIGKILL signal number). When a process is terminated by a signal, the exit code is 128 plus the signal number. SIGKILL (exit code 137) indicates forceful termination, often because the container didn't exit within `terminationGracePeriodSeconds`. For reference, SIGTERM has exit code 143 (128 + 15).",
       "hint": "It's 128 plus the signal number for SIGKILL (9)."
     },
     {
@@ -315,7 +315,7 @@ next: /quiz/kubernetes/08-workload-controllers
       "id": "kubernetes-pod-lifecycle-quiz-25",
       "type": "flashcard",
       "question": "What is the difference between Topology Spread Constraints and Pod Anti-Affinity?",
-      "answer": "**Pod Anti-Affinity:**\n- Binary decision: same node or different node\n- All-or-nothing (hard requirement)\n- Simple: \"Don't put 2 replicas together\"\n- Limited control over distribution\n\n**Topology Spread Constraints:**\n- Gradual control via `maxSkew` (1, 2, 3...)\n- Even distribution across domains\n- Flexible: \"Spread evenly with max difference of N\"\n- Better for multi-zone/multi-region deployments\n\n**Example:**\n- Anti-affinity: \"Never same node\" (binary)\n- Topology spread: \"Max 1 pod difference between zones\" (balanced)"
+      "answer": "**Pod Anti-Affinity:**\n- **Relationship-based**: \"Keep pods with label X away from pods with label Y\"\n- Can be hard (required) or soft (preferred with weights)\n- Works across any topology domain defined by `topologyKey` (node, zone, region, etc.)\n- Good for: High availability (spread replicas), workload isolation\n\n**Topology Spread Constraints:**\n- **Distribution-based**: \"Spread pods evenly within a max skew of N\"\n- Fine-grained control via `maxSkew` (1, 2, 3...) for balanced distribution\n- Focuses on balanced distribution across topology domains\n- Good for: Even load distribution, multi-zone deployments\n\n**Key Difference:**\n- Anti-affinity: \"Don't schedule near pods with label X\" (defines relationships)\n- Topology spread: \"Balance across domains with max skew N\" (defines distribution)\n\n**Example:**\n- Anti-affinity with `topologyKey: kubernetes.io/hostname`: \"Never 2 replicas on same node\"\n- Topology spread with `maxSkew: 1`: \"Across 3 zones, distribution can be 2-2-1 but not 3-1-1\""
     },
     {
       "id": "kubernetes-pod-lifecycle-quiz-26",

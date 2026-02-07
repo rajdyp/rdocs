@@ -199,7 +199,7 @@ next: /quiz/aws/03-networking-fundamentals
       "type": "code-completion",
       "question": "Complete the IAM role ARN:",
       "instruction": "Fill in what belongs in the region field for IAM resources",
-      "codeTemplate": "arn:aws:iam::___:123456789012:role/MyApplicationRole",
+      "codeTemplate": "arn:aws:iam:___:123456789012:role/MyApplicationRole",
       "answer": "",
       "caseSensitive": false,
       "acceptedAnswers": [""],
@@ -288,7 +288,7 @@ next: /quiz/aws/03-networking-fundamentals
         "Access to all S3 buckets in the account"
       ],
       "answer": 1,
-      "explanation": "This policy grants read access (GetObject) to all objects (/*) in the specific bucket 'my-bucket'. The wildcard (*) after the bucket name matches all object keys. It does not grant write access or access to other buckets.",
+      "explanation": "This policy grants read access (GetObject) to all objects (`/*`) in the specific bucket 'my-bucket'. The wildcard (`*`) after the bucket name matches all object keys. It does not grant write access or access to other buckets.",
       "hint": "Focus on the Action (GetObject) and the Resource ARN with the wildcard."
     },
     {
@@ -325,7 +325,7 @@ next: /quiz/aws/03-networking-fundamentals
         "lz-us-east-1-boston"
       ],
       "answer": 1,
-      "explanation": "Local Zone identifiers follow the pattern: parent-region-city-code-zone-letter. For Boston associated with us-east-1, it would be 'us-east-1-bos-1a'. Other examples include us-west-2-lax-1a (Los Angeles) and us-west-2-phx-1a (Phoenix).",
+      "explanation": "Local Zone identifiers follow the pattern: `<parent-region>-<metro-code>-<zone-id><letter>`. For Boston associated with us-east-1, it would be 'us-east-1-bos-1a'. Other examples include us-west-2-lax-1a (Los Angeles) and us-west-2-phx-1a (Phoenix).",
       "hint": "The format includes the parent region, a city abbreviation, and zone identifier."
     },
     {
@@ -340,7 +340,7 @@ next: /quiz/aws/03-networking-fundamentals
       "question": "In the region code 'us-east-1', the number '1' represents the ________ number.",
       "answer": "region",
       "caseSensitive": false,
-      "explanation": "In AWS Region naming (e.g., us-east-1), the components are: partition (aws) - country/continent code (us) - geographic area (east) - region number (1). The number distinguishes between multiple regions in the same geographic area.",
+      "explanation": "In AWS Region naming (e.g., us-east-1), the components are: geographic area (us) - location within area (east) - region number (1). The number distinguishes between multiple regions in the same geographic area.",
       "hint": "What does the '1' distinguish from potential future regions in the same area?"
     },
     {
