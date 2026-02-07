@@ -169,7 +169,7 @@ next: /quiz/python/03-functions-deep-dive
         "To distinguish it from a list"
       ],
       "answer": 1,
-      "explanation": "Parentheses alone don't create tuples—the comma does. `(1)` is just integer 1 with parentheses (grouping). `(1,)` uses the comma to signal a tuple. This is necessary because parentheses are used for grouping in Python.",
+      "explanation": "Parentheses don't create tuples — the comma does. Parentheses are just grouping syntax, not tuple syntax. `(1)` is just integer 1 with parentheses (grouping). `(1,)` uses the comma to signal a tuple. This is necessary because parentheses are used for grouping in Python.",
       "hint": "What makes a tuple a tuple—the parentheses or the comma?"
     },
     {

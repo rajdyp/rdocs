@@ -100,7 +100,7 @@ next: /quiz/python/02-building-blocks
         "`not x`"
       ],
       "answer": 1,
-      "explanation": "Always use `is` (not `==`) for `None` checks. `is` checks for object identity, while `==` checks for value equality. Since `None` is a singleton, `is None` is the correct and idiomatic approach.",
+      "explanation": "Always use `is` (not `==`) for `None` checks. `is` checks object identity, while `==` checks value equality. Since `None` is a singleton (there is exactly one None object in memory), `is None` is the correct and idiomatic approach.",
       "hint": "Think about identity versus equality."
     },
     {

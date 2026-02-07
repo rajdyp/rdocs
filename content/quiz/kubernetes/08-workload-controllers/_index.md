@@ -21,7 +21,7 @@ next: /quiz/kubernetes/09-services
         "ReplicaSets can only manage one pod at a time"
       ],
       "answer": 1,
-      "explanation": "ReplicaSets are low-level controllers that only maintain desired replica count. Deployments manage ReplicaSets and provide declarative updates, rolling updates, and rollback capabilities, making them the preferred choice for production workloads.",
+      "explanation": "ReplicaSets DO provide self-healing and scaling by maintaining the desired replica count. However, they don't support rolling updates (gradually replacing pods with new versions) or rollbacks (reverting to previous versions). Deployments layer these critical update strategies on top of ReplicaSets, making them essential for production workloads where you need to update applications safely without downtime.",
       "hint": "Think about what features you get with higher-level abstractions."
     },
     {
@@ -296,16 +296,16 @@ next: /quiz/kubernetes/09-services
     {
       "id": "kubernetes-workload-controllers-quiz-24",
       "type": "drag-drop",
-      "question": "Match these cron expressions with their meanings:",
-      "instruction": "Arrange expressions with their schedules",
+      "question": "Arrange these CronJob schedules from MOST frequent to LEAST frequent:",
+      "instruction": "Order from most frequent (top) to least frequent (bottom)",
       "items": [
-        "*/5 * * * * → Every 5 minutes",
-        "0 * * * * → Every hour at minute 0",
-        "0 9 * * 1-5 → Weekdays at 9 AM",
-        "0 0 1 * * → First day of each month at midnight"
+        "0 0 1 * *",
+        "*/5 * * * *",
+        "0 9 * * 1-5",
+        "0 * * * *"
       ],
-      "correctOrder": [0, 1, 2, 3],
-      "explanation": "Cron expressions: `*/5` = every 5 units, `0 *` = at minute 0 of every hour, `1-5` = Monday-Friday, `0 0 1` = midnight on the 1st day."
+      "correctOrder": [1, 3, 2, 0],
+      "explanation": "Frequency order: Every 5 minutes (288/day) → Every hour (24/day) → Weekdays at 9 AM (5/week) → First of month (12/year). Remember: smaller time units = higher frequency."
     },
     {
       "id": "kubernetes-workload-controllers-quiz-25",
@@ -410,7 +410,7 @@ next: /quiz/kubernetes/09-services
       "id": "kubernetes-workload-controllers-quiz-33",
       "type": "flashcard",
       "question": "Compare the use cases for Deployment vs. StatefulSet vs. DaemonSet. When would you use each?",
-      "answer": "**Deployment:**\n- **Use for:** Stateless applications (web apps, APIs, microservices)\n- **Characteristics:** Pods are interchangeable, ephemeral storage, parallel deployment\n- **Example:** REST API server, web frontend, stateless processing service\n\n**StatefulSet:**\n- **Use for:** Stateful applications requiring stable identity and persistent storage\n- **Characteristics:** Ordered pods, stable network IDs, per-pod storage\n- **Example:** Databases (MySQL, PostgreSQL), message brokers (Kafka, RabbitMQ), distributed systems (Zookeeper, etcd)\n\n**DaemonSet:**\n- **Use for:** Cluster-wide services that must run on every node (or selected nodes)\n- **Characteristics:** One pod per node, automatic scaling with cluster\n- **Example:** Log collectors (Fluentd), monitoring agents (Prometheus Node Exporter), network plugins (Calico), storage daemons"
+      "answer": "**Deployment:**\n- **Use for:** Stateless applications (web apps, APIs, microservices)\n- **Characteristics:** Pods are interchangeable, ephemeral storage, parallel deployment\n- **Example:** REST API server, web frontend, stateless processing service\n\n**StatefulSet:**\n- **Use for:** Stateful applications requiring stable identity and stable storage\n- **Characteristics:** Ordered pods, stable network IDs, stable per-pod storage (each pod always reattaches to its specific PVC)\n- **Example:** Databases (MySQL, PostgreSQL), message brokers (Kafka, RabbitMQ), distributed systems (Zookeeper, etcd)\n\n**DaemonSet:**\n- **Use for:** Cluster-wide services that must run on every node (or selected nodes)\n- **Characteristics:** One pod per node, automatic scaling with cluster\n- **Example:** Log collectors (Fluentd), monitoring agents (Prometheus Node Exporter), network plugins (Calico), storage daemons"
     },
     {
       "id": "kubernetes-workload-controllers-quiz-34",
@@ -442,6 +442,12 @@ next: /quiz/kubernetes/09-services
       "answers": [0, 1, 2, 3],
       "explanation": "Update duration is affected by: `minReadySeconds` (stability wait), `progressDeadlineSeconds` (timeout), `maxSurge` (creation rate), and `maxUnavailable` (termination rate). `revisionHistoryLimit` only affects cleanup, not update speed.",
       "hint": "Think about factors that control the pace and timing of updates."
+    },
+    {
+      "id": "kubernetes-workload-controllers-quiz-36",
+      "type": "flashcard",
+      "question": "Explain the functional purpose of each workload controller. What problem does each solve?",
+      "answer": "**ReplicaSet:** Maintains pod count and self-healing (but no update strategy)\n\n**Deployment:** Provides rolling updates, rollbacks, and zero-downtime deployments\n\n**StatefulSet:** Manages stateful apps with stable identity, ordered deployment, and stable storage bindings\n\n**DaemonSet:** Ensures node-level coverage for cluster-wide services"
     }
   ]
 }

@@ -163,7 +163,7 @@ next: /quiz/python/04-error-handling
       "question": "What keyword is used in a generator function to pause execution and return a value?",
       "answer": "yield",
       "caseSensitive": false,
-      "explanation": "The `yield` keyword pauses the generator function and returns a value. When the generator is called again with `next()`, it resumes from where it left off.",
+      "explanation": "`yield` produces a value and pauses the generator; `next()` resumes execution and returns that value to the caller.",
       "hint": "It's a 5-letter word that sounds like 'giving up control temporarily'."
     },
     {
@@ -310,7 +310,7 @@ next: /quiz/python/04-error-handling
       "answer": "**",
       "caseSensitive": false,
       "acceptedAnswers": ["**"],
-      "explanation": "Use `**` to unpack a dictionary as keyword arguments. This passes `a=1, b=2, c=3` to the function."
+      "explanation": "Use `**` to unpack a dictionary as keyword arguments. This passes `a=1, b=2, c=3` to the function.\n\n**Remember:** `*` spreads values by position, `**` spreads values by name."
     },
     {
       "id": "python-functions-deep-dive-quiz-25",

@@ -355,7 +355,7 @@ prev: /quiz/python/08-working-with-data
       "id": "python-log-analysis-comprehensive-30",
       "type": "flashcard",
       "question": "When should you use Counter instead of a regular dict for counting in log analysis?",
-      "answer": "**Use Counter when you need:**\n- **.most_common(N)**: Find top N frequent items\n- **Count arithmetic**: Combine counts from multiple sources (`count1 + count2`)\n- **Multiple count operations**: Subtract, intersect, union\n\n**Use dict/defaultdict when:**\n- Simple counting without special operations\n- Want minimal overhead\n- Don't need Counter's features\n\n**Key insight:** Counter is a specialized tool - use it when you need its features, not just for basic counting."
+      "answer": "**Use Counter when you need:**\n- **.most_common(N)**: Find top N most common items\n- **Count arithmetic**: Combine counts from multiple sources (`count1 + count2`)\n- **Multiple count operations**: Subtract, intersect, union\n\n**Use dict/defaultdict when:**\n- Simple counting without special operations\n- Want minimal overhead\n- Don't need Counter's features\n\n**Key insight:** Counter is a specialized tool - use it when you need its features, not just for basic counting."
     },
     {
       "id": "python-log-analysis-comprehensive-31",

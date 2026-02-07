@@ -69,7 +69,7 @@ next: /quiz/kubernetes/07-pod-lifecycle
         "Only the writer can access the volume"
       ],
       "answer": 0,
-      "explanation": "Both containers mount the same volume (`shared-data`) at `/data`. The writer creates the file, and the reader can access it because they share the same `emptyDir` volume. This is a common pattern for data sharing between containers in a Pod.",
+      "explanation": "Both containers mount the same volume (`shared-data`) at `/data`. The writer creates the file, and the reader can access it because they share the same `emptyDir` volume. This is a common pattern for data sharing between containers in a Pod.\n\n**Key concept:** `volumes` define WHAT storage exists (Pod-level), while `volumeMounts` define WHERE that storage appears inside each container. The `name` field is the glue that connects them.",
       "hint": "Consider what `emptyDir` volumes are designed for."
     },
     {
