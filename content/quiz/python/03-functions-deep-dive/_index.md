@@ -493,6 +493,52 @@ next: /quiz/python/04-error-handling
       "answer": false,
       "explanation": "A function can have multiple `return` statements (though only one executes). Similarly, a generator can have multiple `yield` statements, and they will all execute in sequence as the generator is consumed.",
       "hint": "Think about early returns and multiple yield points in a generator."
+    },
+    {
+      "id": "python-functions-deep-dive-quiz-40",
+      "type": "code-output",
+      "question": "Compare loop behavior vs function behavior. What's the output?",
+      "code": "# With loop\ndata = \"hello\"\nfor i in range(2):\n    data = \"goodbye\"\nprint(data)\n\n# With function\ndata = \"hello\"\ndef modify():\n    data = \"goodbye\"\nmodify()\nprint(data)",
+      "language": "python",
+      "options": [
+        "`goodbye` then `goodbye`",
+        "`hello` then `hello`",
+        "`goodbye` then `hello`",
+        "`hello` then `goodbye`"
+      ],
+      "answer": 2,
+      "explanation": "**Loop:** Assignment modifies the OUTER data → prints `goodbye`. **Function:** Assignment creates a NEW local variable → outer data unchanged → prints `hello`. Loops don't create scope; functions do.",
+      "hint": "Which one creates a new scope for variables?"
+    },
+    {
+      "id": "python-functions-deep-dive-quiz-41",
+      "type": "code-output",
+      "question": "What will this code print?",
+      "code": "data = \"hello\"\n\nfor i in range(3):\n    data = data + \"!\"\n\nprint(data)",
+      "language": "python",
+      "options": [
+        "`hello`",
+        "`hello!`",
+        "`hello!!!`",
+        "`Error (data is not defined)`"
+      ],
+      "answer": 2,
+      "explanation": "The loop modifies the OUTER `data` variable (doesn't create a new one). Each iteration: `hello` → `hello!` → `hello!!` → `hello!!!`. The modified value persists after the loop.",
+      "hint": "Does the loop create a new 'data' variable or modify the existing one?"
+    },
+    {
+      "id": "python-functions-deep-dive-quiz-42",
+      "type": "mcq",
+      "question": "Where does a variable belong in Python?",
+      "options": [
+        "In the scope where it's first assigned",
+        "In the scope where it's first used/read",
+        "In the innermost loop or function where it appears",
+        "Always in the global scope unless marked local"
+      ],
+      "answer": 0,
+      "explanation": "A variable belongs to the scope where it's first **assigned** (not where it's used). This is why `data = data.replace(...)` modifies an outer variable if `data` was assigned outside the loop.",
+      "hint": "Think about when Python decides which scope a variable belongs to."
     }
   ]
 }

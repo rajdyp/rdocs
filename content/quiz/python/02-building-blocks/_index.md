@@ -591,6 +591,20 @@ next: /quiz/python/03-functions-deep-dive
       "type": "flashcard",
       "question": "What's the gotcha with `.append()` when adding multiple items to a list?",
       "answer": "**`.append()` takes exactly ONE argument!**\n\n**Wrong:**\n```python\nmy_list = []\nmy_list.append(1, 2, 3)  # TypeError!\n```\n\n**Correct options:**\n\n1. **One at a time:**\n```python\nmy_list.append(1)\nmy_list.append(2)\n```\n\n2. **Use `.extend()` for multiple items:**\n```python\nmy_list.extend([1, 2, 3])  # [1, 2, 3]\n```\n\n3. **Append a single structured item (e.g., dict):**\n```python\nlog = []\nlog.append({'ip': '192.168.1.1', 'method': 'GET'})\n```\n\n**Key: append = one item, extend = multiple items**"
+    },
+    {
+      "id": "python-building-blocks-quiz-50",
+      "type": "mcq",
+      "question": "You need to modify list elements in-place based on their current values. What's the safest approach?",
+      "options": [
+        "for item in my_list: my_list[i] = transform(item)",
+        "for i, item in enumerate(my_list): my_list[i] = transform(item)",
+        "for i, item in enumerate(my_list[:]): my_list[i] = transform(item)",
+        "my_list = [transform(item) for item in my_list]"
+      ],
+      "answer": 2,
+      "explanation": "Option 3 is correct: `enumerate(my_list[:])` iterates over a COPY while modifying the original by index. Option 2 might work for simple cases but can fail with insertions/deletions. Option 4 creates a new list (not in-place). Option 1 has a bug (undefined `i`).",
+      "hint": "When modifying in-place, what should you iterate over?"
     }
   ]
 }

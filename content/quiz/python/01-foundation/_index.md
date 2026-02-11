@@ -156,7 +156,7 @@ next: /quiz/python/02-building-blocks
       "id": "python-foundation-12",
       "type": "flashcard",
       "question": "What is the Walrus Operator and when was it introduced?",
-      "answer": "**The Walrus Operator (`:=`)**\n\nIntroduced in Python 3.8+, it allows you to assign a value to a variable AND use that value in the same expression.\n\n**Example:**\n```python\nif (n := len(data)) > 10:\n    print(f\"List has {n} elements\")\n```\n\nThis evaluates `len(data)`, assigns it to `n`, and uses it in the comparison—all in one line."
+      "answer": "**The Walrus Operator (`:=`)**\n\nIntroduced in Python 3.8+, it allows you to assign a value to a variable AND use that value in the same expression.\n\n**General Form:**\n```python\nvariable := expression\n```\n\n**Example:**\n```python\nif (n := len(data)) > 10:\n    print(f\"List has {n} elements\")\n```\n\nThis evaluates `len(data)`, assigns it to `n`, and uses it in the comparison—all in one line."
     },
     {
       "id": "python-foundation-13",
