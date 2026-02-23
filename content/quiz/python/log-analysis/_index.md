@@ -349,7 +349,7 @@ prev: /quiz/python/08-working-with-data
       "id": "python-log-analysis-comprehensive-29",
       "type": "flashcard",
       "question": "What data structure should you use for grouping log entries by a key (e.g., events by pod name)?",
-      "answer": "**defaultdict(list)** - Purpose-built for grouping\n\n**Why it's ideal:**\n- Auto-initializes missing keys to empty lists\n- No existence checks needed: `pod_events[pod_name].append(event)`\n- Clean, readable code\n\n**Manual alternative:**\n```python\ndict.setdefault(key, []).append(value)  # More verbose\n```"
+      "answer": "**defaultdict(list)** - Purpose-built for grouping\n\n**Why it's ideal:**\n- Auto-initializes missing keys to empty lists\n- No existence checks needed: `pod_events[pod_name].append(event)`\n- Clean, readable code\n\n**Manual alternatives (from explicit to Pythonic):**\n```python\n# Most explicit - shows the logic clearly\nif key in my_dict:\n    my_dict[key].append(value)\nelse:\n    my_dict[key] = [value]\n\n# More concise with setdefault\ndict.setdefault(key, []).append(value)\n```"
     },
     {
       "id": "python-log-analysis-comprehensive-30",

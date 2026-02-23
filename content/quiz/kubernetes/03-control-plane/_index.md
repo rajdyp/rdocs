@@ -76,7 +76,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "id": "kubernetes-control-plane-quiz-06",
       "type": "flashcard",
       "question": "What is the reconciliation loop in Kubernetes?",
-      "answer": "**Reconciliation Loop** is the continuous process where controllers compare the **desired state** (from resource specs in etcd) with the **actual state** (current reality) and take corrective action when they differ.\n\n**Key characteristics:**\n- Runs approximately every 30 seconds\n- Event-driven but also periodic\n- Ensures self-healing and state enforcement\n- Core mechanism for Kubernetes' declarative model"
+      "answer": "**Reconciliation Loop** is the continuous process where controllers compare the **desired state** (from resource specs in etcd) with the **actual state** (current reality) and take corrective action when they differ.\n\n**Key characteristics:**\n- Runs approximately every 30 seconds\n- Event-driven but also periodic\n- Ensures self-healing and state enforcement\n- Foundation of Kubernetes' declarative model"
     },
     {
       "id": "kubernetes-control-plane-quiz-07",
@@ -102,7 +102,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "answer": "NoSchedule",
       "caseSensitive": false,
       "acceptedAnswers": ["NoSchedule", "noschedule"],
-      "explanation": "The NoSchedule effect prevents new pods from being scheduled on the node unless they have a matching toleration. Other effects include NoExecute (evicts existing pods) and PreferNoSchedule (soft version)."
+      "explanation": "The `NoSchedule` effect prevents new pods from being scheduled on the node unless they have a matching toleration. Other effects include `NoExecute` (evicts existing pods) and `PreferNoSchedule` (soft version)."
     },
     {
       "id": "kubernetes-control-plane-quiz-09",
@@ -131,7 +131,7 @@ next: /quiz/kubernetes/04-worker-nodes
         "StatefulSet Controller"
       ],
       "answers": [0, 1, 3, 5],
-      "explanation": "The kube-controller-manager includes Node Controller, Endpoints Controller, Deployment Controller, and StatefulSet Controller (among others). Ingress Controller and Service Mesh Controller are typically separate components deployed in the cluster, not part of the core controller manager.",
+      "explanation": "The kube-controller-manager includes `Node Controller`, `Endpoints Controller`, `Deployment Controller`, and `StatefulSet Controller` (among others). `Ingress Controller` and `Service Mesh Controller` are typically separate components deployed in the cluster, not part of the core controller manager.",
       "hint": "Consider which controllers are fundamental to Kubernetes vs. add-ons."
     },
     {
@@ -148,7 +148,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "question": "The kube-scheduler watches for pods where the _______ field is null, indicating they need to be assigned to a node.",
       "answer": "nodeName",
       "caseSensitive": true,
-      "explanation": "The scheduler watches for pods with nodeName=null (unscheduled pods). After selecting an appropriate node through filtering and scoring, the scheduler updates the pod's nodeName field via the API server, which triggers the kubelet on that node to start the pod.",
+      "explanation": "The kube-scheduler watches for pods with nodeName=null (unscheduled pods). After selecting an appropriate node through filtering and scoring, the scheduler updates the pod's nodeName field via the API server, which triggers the kubelet on that node to start the pod.",
       "hint": "What field identifies which node a pod should run on?"
     },
     {

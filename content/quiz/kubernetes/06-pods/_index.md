@@ -189,15 +189,15 @@ next: /quiz/kubernetes/07-pod-lifecycle
     {
       "id": "kubernetes-pods-quiz-16",
       "type": "drag-drop",
-      "question": "Arrange these multi-container patterns based on their primary purpose, from 'data transformation' to 'connection management':",
-      "instruction": "Drag to arrange from data transformation to connection management",
+      "question": "Arrange these descriptions to match the patterns in order: **Adapter Pattern → Sidecar Pattern → Ambassador Pattern**",
+      "instruction": "Drag to match each description to its pattern (Adapter → Sidecar → Ambassador)",
       "items": [
-        "Adapter Pattern",
-        "Sidecar Pattern",
-        "Ambassador Pattern"
+        "Enhances the main container with auxiliary functionality (e.g., logging, config sync)",
+        "Proxies external network connections on behalf of the main container",
+        "Normalizes or transforms the main container's output to a standard format"
       ],
-      "correctOrder": [0, 1, 2],
-      "explanation": "Adapter Pattern normalizes/transforms output (data transformation), Sidecar Pattern enhances functionality (general purpose, middle ground), and Ambassador Pattern proxies connections (connection management). Each serves a distinct architectural purpose."
+      "correctOrder": [2, 0, 1],
+      "explanation": "Adapter Pattern normalizes/transforms output to a standard format (data transformation). Sidecar Pattern enhances the main container with auxiliary functionality (general purpose helper). Ambassador Pattern proxies external network connections on behalf of the main container (connection management)."
     },
     {
       "id": "kubernetes-pods-quiz-17",

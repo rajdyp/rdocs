@@ -310,7 +310,7 @@ next: /quiz/python/04-error-handling
       "answer": "**",
       "caseSensitive": false,
       "acceptedAnswers": ["**"],
-      "explanation": "Use `**` to unpack a dictionary as keyword arguments. This passes `a=1, b=2, c=3` to the function.\n\n**Remember:** `*` spreads values by position, `**` spreads values by name."
+      "explanation": "Use `**` to unpack a dictionary as keyword arguments. This passes `a=1, b=2, c=3` to the function.\n**Remember:** `*` spreads values by position, `**` spreads values by name."
     },
     {
       "id": "python-functions-deep-dive-quiz-25",

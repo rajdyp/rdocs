@@ -287,9 +287,8 @@ next: /quiz/kubernetes/10-ingress
       "question": "Complete the Service configuration to enable session affinity with a 3-hour timeout:",
       "instruction": "Fill in the sessionAffinity value and timeout",
       "codeTemplate": "apiVersion: v1\nkind: Service\nmetadata:\n  name: stateful-app\nspec:\n  sessionAffinity: _____\n  sessionAffinityConfig:\n    clientIP:\n      timeoutSeconds: _____\n  selector:\n    app: stateful-app\n  ports:\n  - port: 80",
-      "answer": "ClientIP",
+      "answer": "ClientIP, 10800",
       "caseSensitive": false,
-      "acceptedAnswers": ["ClientIP", "clientip"],
       "explanation": "Set `sessionAffinity: ClientIP` and `timeoutSeconds: 10800` (3 hours = 10800 seconds). This ensures requests from the same client IP go to the same pod for 3 hours."
     },
     {
@@ -323,7 +322,7 @@ next: /quiz/kubernetes/10-ingress
     {
       "id": "kubernetes-services-quiz-27",
       "type": "multiple-select",
-      "question": "Which Service fields are used in the port configuration section?",
+      "question": "Which fields are used in the Service port configuration section?",
       "options": [
         "`port` - The Service's exposed port",
         "`targetPort` - The port on the Pod that traffic is forwarded to",
@@ -332,7 +331,7 @@ next: /quiz/kubernetes/10-ingress
         "`protocol` - TCP, UDP, or SCTP"
       ],
       "answers": [0, 1, 2, 4],
-      "explanation": "Service port configuration uses: `port` (Service's exposed port), `targetPort` (port on the Pod that traffic is forwarded to), `nodePort` (node's static port for NodePort/LoadBalancer types), and `protocol` (TCP/UDP/SCTP).\n\n**Traffic flow:** Client → Service's `port` → Service forwards to Pod's `targetPort` → Container\n\n**Key distinction:** `containerPort` is defined in the **pod spec** (where container listens), while `targetPort` in the **Service spec** points to that container port.",
+      "explanation": "Service port configuration uses: `port` (Service's exposed port), `targetPort` (port on the Pod that traffic is forwarded to), `nodePort` (node's static port for NodePort/LoadBalancer types), and `protocol` (TCP/UDP/SCTP). **Traffic flow:** Client → Service's `port` → Service forwards to Pod's `targetPort` → Container **Key distinction:** `containerPort` is defined in the **pod spec** (where container listens), while `targetPort` in the **Service spec** points to that container port.",
       "hint": "containerPort is a pod-level configuration, not Service-level."
     },
     {

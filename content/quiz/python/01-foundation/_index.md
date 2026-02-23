@@ -388,6 +388,20 @@ next: /quiz/python/02-building-blocks
       "type": "flashcard",
       "question": "What is the difference between `==` and `is` in Python?",
       "answer": "**`==` vs `is`**\n\n**`==` (Equality Operator):**\n- Compares **values**\n- Checks if two objects have the same content\n- Example: `[1, 2, 3] == [1, 2, 3]` → `True`\n\n**`is` (Identity Operator):**\n- Compares **object identity** (memory address)\n- Checks if two variables reference the exact same object\n- Example: `a = [1, 2, 3]; b = [1, 2, 3]; a is b` → `False`\n\n**Best Practice:**\n- Use `is` for singleton objects like `None`: `x is None`\n- Use `==` for value comparisons"
+    },
+    {
+      "id": "python-foundation-33",
+      "type": "mcq",
+      "question": "You want code to run only when **both** of these are true:\n- `reason == 'Scheduled'`\n- Either `s_time is None` **or** `ts < s_time`\n\nWhich condition is correct?",
+      "options": [
+        "`reason == 'Scheduled' and s_time is None or ts < s_time`",
+        "`reason == 'Scheduled' and (s_time is None or ts < s_time)`",
+        "`(reason == 'Scheduled' and s_time is None) or ts < s_time`",
+        "Options A and C are equivalent to B"
+      ],
+      "answer": 1,
+      "explanation": "Only option B matches the intent. Options A and C are identical after Python applies precedence: since `and` binds tighter than `or`, `reason == 'Scheduled' and s_time is None or ts < s_time` is parsed as `(reason == 'Scheduled' and s_time is None) or ts < s_time`. This causes the condition to fire whenever `ts < s_time`, regardless of `reason`. Explicit parentheses around the `or` subexpression are required.",
+      "hint": "`and` has higher precedence than `or`—it groups first, just like `*` before `+`."
     }
   ]
 }
