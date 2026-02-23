@@ -179,8 +179,8 @@ next: /quiz/kubernetes/09-services
     {
       "id": "kubernetes-workload-controllers-quiz-14",
       "type": "flashcard",
-      "question": "Explain what volumeClaimTemplates in a StatefulSet do and how they differ from regular volume claims.",
-      "answer": "**volumeClaimTemplates:**\n\n- Creates a **unique PersistentVolumeClaim for each pod** in the StatefulSet\n- Each PVC is bound to a specific pod ordinal (e.g., data-mysql-0, data-mysql-1)\n- **PVCs persist even if pods are deleted** - when a pod is recreated, it reattaches to the same PVC\n- Scaling up creates new PVCs; scaling down does NOT delete PVCs (manual cleanup required)\n\n**vs. Regular volumes:**\n- Regular volumes are shared by all pods or ephemeral\n- volumeClaimTemplates create **per-pod persistent storage**\n- Essential for stateful applications needing individual, persistent data storage"
+      "question": "Explain what volumeClaimTemplates in a StatefulSet do and how they differ from regular PersistentVolumeClaim.",
+      "answer": "**volumeClaimTemplates:**\n\n- Automatically creates a **unique PersistentVolumeClaim for each pod** in the StatefulSet\n- Each PVC is bound to a specific pod ordinal (e.g., data-mysql-0, data-mysql-1)\n- **PVCs persist even if pods are deleted** - when a pod is recreated, it reattaches to the same PVC\n- Scaling up creates new PVCs; scaling down does NOT delete PVCs (manual cleanup required)\n\n**vs. Regular PersistentVolumeClaim:**\n- Regular PVC is manually created and **all pods reference the same PVC by name**\n- With ReadWriteOnce (RWO), only one pod can mount it at a time\n- With ReadWriteMany (RWX), all pods share the same storage (not isolated)\n- volumeClaimTemplates provide **per-pod isolated persistent storage**\n- Essential for stateful applications where each instance needs its own data"
     },
     {
       "id": "kubernetes-workload-controllers-quiz-15",
@@ -207,7 +207,7 @@ next: /quiz/kubernetes/09-services
     {
       "id": "kubernetes-workload-controllers-quiz-17",
       "type": "code-output",
-      "question": "What happens when you apply this DaemonSet to a cluster with 3 worker nodes and 2 nodes labeled `accelerator=nvidia`?",
+      "question": "What happens when you apply this DaemonSet to a cluster with 5 nodes, where 2 of them are labeled `accelerator=nvidia`?",
       "code": "apiVersion: apps/v1\nkind: DaemonSet\nmetadata:\n  name: gpu-plugin\nspec:\n  selector:\n    matchLabels:\n      app: gpu\n  template:\n    metadata:\n      labels:\n        app: gpu\n    spec:\n      nodeSelector:\n        accelerator: nvidia\n      containers:\n      - name: plugin\n        image: gpu-plugin:1.0",
       "language": "yaml",
       "options": [

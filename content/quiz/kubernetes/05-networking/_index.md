@@ -197,7 +197,7 @@ next: /quiz/kubernetes/06-pods
         "The pod IP is outside its node's Pod CIDR range"
       ],
       "answer": 1,
-      "explanation": "This configuration is correct! The CIDRs are properly non-overlapping: Pod CIDR (10.244.0.0/16), Service CIDR (10.96.0.0/12), and Node CIDR (192.168.0.0/24) don't overlap. The node IP (192.168.0.10) is in the node range, pod IP (10.244.1.5) is correctly in its node's pod CIDR (10.244.1.0/24), and service IP (10.96.100.50) is within the service range. CIDR quick reference: /24 -> only last octet varies, /16 -> last two octets vary, /8 -> last three octets vary.",
+      "explanation": "This configuration is correct! The CIDRs are properly non-overlapping: Pod CIDR (10.244.0.0/16), Service CIDR (10.96.0.0/12), and Node CIDR (192.168.0.0/24) don't overlap. The node IP (192.168.0.10) is in the node range, pod IP (10.244.1.5) is correctly in its node's pod CIDR (10.244.1.0/24), and service IP (10.96.100.50) is within the service range. **CIDR quick reference:** /24 -> only last octet varies, /16 -> last two octets vary, /8 -> last three octets vary.",
       "hint": "Check each CIDR range and verify that none of the IP addresses fall outside their designated ranges."
     },
     {

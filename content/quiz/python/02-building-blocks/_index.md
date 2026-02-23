@@ -249,13 +249,12 @@ next: /quiz/python/03-functions-deep-dive
       "question": "Arrange the dictionary methods in order from 'safest' (won't raise errors) to 'most likely to raise errors':",
       "instruction": "Drag to arrange from safest to most error-prone",
       "items": [
-        "dict.get(key, default)",
-        "dict.get(key)",
         "dict[key]",
-        "dict.pop(key)"
+        "dict.get(key)",
+        "dict.get(key, default)"
       ],
-      "correctOrder": [0, 1, 2, 3],
-      "explanation": "`.get(key, default)` never raises errors (returns default). `.get(key)` returns None if missing (no error). `dict[key]` raises KeyError if missing. `.pop(key)` raises KeyError if missing and no default provided."
+      "correctOrder": [2, 1, 0],
+      "explanation": "`.get(key, default)` never raises errors (returns default). `.get(key)` returns None if missing (no error). `dict[key]` raises KeyError if missing."
     },
     {
       "id": "python-building-blocks-quiz-21",
@@ -605,6 +604,56 @@ next: /quiz/python/03-functions-deep-dive
       "answer": 2,
       "explanation": "Option 3 is correct: `enumerate(my_list[:])` iterates over a COPY while modifying the original by index. Option 2 might work for simple cases but can fail with insertions/deletions. Option 4 creates a new list (not in-place). Option 1 has a bug (undefined `i`).",
       "hint": "When modifying in-place, what should you iterate over?"
+    },
+    {
+      "id": "python-building-blocks-quiz-51",
+      "type": "mcq",
+      "question": "Given:\n```python\nstudents = {\n    \"student1\": {\"name\": \"Alice\", \"age\": 16, \"classes\": [\"Math\", \"Physics\"]},\n    \"student2\": {\"name\": \"Bob\",   \"age\": 17, \"classes\": [\"Chemistry\", \"Biology\"]}\n}\n```\nWhich expression accesses `\"Math\"`?",
+      "options": [
+        "`students[\"student1\"][\"classes\"][1]`",
+        "`students[\"student1\"][0]`",
+        "`students[\"student1\"][\"classes\"][0]`",
+        "`students[\"classes\"][\"student1\"][0]`"
+      ],
+      "answer": 2,
+      "explanation": "Nested access works left to right: `students[\"student1\"]` → Alice's dict → `[\"classes\"]` → the list `[\"Math\", \"Physics\"]` → `[0]` → first element `\"Math\"`. Option 1 gets `\"Physics\"` (index 1). Options 2 and 4 use the wrong key order.",
+      "hint": "Follow the chain: dict → nested dict → list → index."
+    },
+    {
+      "id": "python-building-blocks-quiz-52",
+      "type": "true-false",
+      "question": "Given:\n```python\nstudents = {\n    \"student1\": {\"name\": \"Alice\", \"age\": 16, \"classes\": [\"Math\", \"Physics\"]},\n    \"student2\": {\"name\": \"Bob\",   \"age\": 17, \"classes\": [\"Chemistry\", \"Biology\"]}\n}\n```\n`\"grade\" in students[\"student1\"]` returns `True` because `students[\"student1\"]` is a non-empty dictionary.",
+      "answer": false,
+      "explanation": "The `in` operator checks **key existence**, not whether the dict is non-empty. `students[\"student1\"]` has keys `\"name\"`, `\"age\"`, `\"classes\"` — but no `\"grade\"` key. Result is `False`. Compare: `\"classes\" in students[\"student2\"]` → `True`.",
+      "hint": "What exactly does `in` check on a dictionary?"
+    },
+    {
+      "id": "python-building-blocks-quiz-53",
+      "type": "code-output",
+      "question": "What does this raise?\n```python\nscores = {}\nscores[\"alice\"][\"math\"] = 95\n```",
+      "options": [
+        "No error — creates `{\"alice\": {\"math\": 95}}`",
+        "KeyError: 'alice'",
+        "TypeError: 'dict' object does not support item assignment",
+        "ValueError: missing nested key"
+      ],
+      "answer": 1,
+      "explanation": "`scores[\"alice\"]` raises `KeyError` immediately — the key doesn't exist yet, so there's no nested dict to assign into. Fix: initialize first with `scores[\"alice\"] = {}` then `scores[\"alice\"][\"math\"] = 95`, or in one step: `scores[\"alice\"] = {\"math\": 95}`.",
+      "hint": "What does `scores[\"alice\"]` return when `\"alice\"` isn't in the dict yet?"
+    },
+    {
+      "id": "python-building-blocks-quiz-54",
+      "type": "mcq",
+      "question": "You're processing a log file where multiple lines can belong to the same pod. You want to track the first `Scheduled` and `Killing` timestamps per pod. Which initialization pattern is correct?",
+      "options": [
+        "`pod_events[pod] = {'s_time': None, 'k_time': None}` (before the loop)",
+        "`if pod not in pod_events: pod_events[pod] = {'s_time': None, 'k_time': None}` (inside the loop)",
+        "`pod_events[pod] = {'s_time': None, 'k_time': None}` (inside the loop, unconditionally)",
+        "`pod_events.get(pod, {})['s_time'] = None`"
+      ],
+      "answer": 1,
+      "explanation": "Option 2 is correct: initialize the entry **only on first encounter** inside the loop. Option 1 fails because `pod` isn't known before the loop. Option 3 resets the dict on every log line, wiping previously recorded timestamps for that pod. Option 4 calls `.get()` which returns a temporary `{}` that gets discarded — the assignment never reaches `pod_events`.",
+      "hint": "The init should happen once per pod, not once per log line."
     }
   ]
 }

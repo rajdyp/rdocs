@@ -35,7 +35,7 @@ next: /quiz/aws/05-compute-services
         "Multivalue Answer Routing",
         "Latency-Based Routing"
       ],
-      "answers": [1, 3, 4],
+      "answers": [1, 2, 3],
       "explanation": "**Failover**, **Multivalue Answer**, and **Weighted Routing** (when configured) support health checks. Simple routing does not support health checks. Latency-based routing can use health checks but the question asks which inherently support them in their design.",
       "hint": "Think about which routing policies need to know if endpoints are healthy to make routing decisions."
     },
@@ -52,6 +52,7 @@ next: /quiz/aws/05-compute-services
       "type": "fill-blank",
       "question": "Route 53 Private Hosted Zones contain records for routing traffic within ____ and responses are only visible within associated resources.",
       "answer": "VPCs",
+      "acceptedAnswers": ["VPC", "VPCs"],
       "caseSensitive": false,
       "explanation": "Private Hosted Zones route traffic within **VPCs** (Virtual Private Clouds). Unlike public hosted zones that are accessible from the internet, private hosted zones only work within specified VPCs.",
       "hint": "Think about AWS's private network isolation construct."
@@ -79,14 +80,14 @@ next: /quiz/aws/05-compute-services
       "instruction": "Drag to arrange from first to last step",
       "items": [
         "User types domain in browser",
+        "Route 53",
         "DNS Resolver checks cache",
         "Query Root DNS Servers",
         "Query TLD DNS Servers",
-        "Route 53 returns IP address",
         "User connects to IP address"
       ],
-      "correctOrder": [0, 1, 2, 3, 4, 5],
-      "explanation": "The correct DNS resolution flow is: User request → Resolver cache check → Root servers → TLD servers → Authoritative DNS (Route 53) → Connection to IP."
+      "correctOrder": [0, 2, 3, 4, 1, 5],
+      "explanation": "The correct DNS resolution flow is: User request → Resolver cache check → Root servers → TLD servers → Authoritative DNS returns IP address (Route 53) → Connection to IP."
     },
     {
       "id": "aws-edge-hybrid-networking-quiz-07",
@@ -132,7 +133,7 @@ next: /quiz/aws/05-compute-services
       "id": "aws-edge-hybrid-networking-quiz-10",
       "type": "flashcard",
       "question": "What is Origin Access Control (OAC) in CloudFront?",
-      "answer": "**Origin Access Control (OAC)** is a CloudFront security feature that restricts S3 bucket access to only allow requests from CloudFront.\n\n**Purpose:** Prevents users from bypassing CloudFront and accessing S3 content directly.\n\n**Implementation:** Configure OAC on CloudFront distribution and update S3 bucket policy to allow only CloudFront access."
+      "answer": "**Origin Access Control (OAC)** is a CloudFront security feature that ensures only CloudFront can access S3 bucket origin.\n\n**Purpose:** Prevents users from bypassing CloudFront and accessing S3 content directly.\n\n**Implementation:** Configure OAC on CloudFront distribution and update S3 bucket policy to allow only CloudFront access."
     },
     {
       "id": "aws-edge-hybrid-networking-quiz-11",
@@ -246,12 +247,12 @@ next: /quiz/aws/05-compute-services
       "instruction": "Order from customer side to AWS side",
       "items": [
         "Corporate Network",
-        "Customer Router at DX Location",
         "Direct Connect Router (AWS equipment)",
-        "Virtual Interface (VIF)",
-        "VPC Resources"
+        "Customer Router at DX Location",
+        "VPC Resources",
+        "Virtual Interface (VIF)"
       ],
-      "correctOrder": [0, 1, 2, 3, 4],
+      "correctOrder": [0, 2, 1, 4, 3],
       "explanation": "The connection path is: Corporate Network → Customer Router (at DX location) → AWS Direct Connect Router → Virtual Interface → VPC Resources."
     },
     {
@@ -288,7 +289,7 @@ next: /quiz/aws/05-compute-services
       "type": "code-completion",
       "question": "Complete the Direct Connect high availability strategy:",
       "instruction": "Fill in the recommended backup connectivity method",
-      "codeTemplate": "On-Premises ─┬─ Direct Connect (Primary) ──┬─ AWS\n             └─ _____ (Backup) ─────────────┘",
+      "codeTemplate": "On-Premises ─┬─ Direct Connect (Primary) ──┬─ AWS\n             └──────── (Backup) ────────────┘",
       "answer": "Site-to-Site VPN",
       "caseSensitive": false,
       "acceptedAnswers": ["Site-to-Site VPN", "VPN", "S2S VPN"],
@@ -343,7 +344,7 @@ next: /quiz/aws/05-compute-services
       "type": "true-false",
       "question": "Route 53 Geolocation Routing and Geoproximity Routing are the same feature with different names.",
       "answer": false,
-      "explanation": "This is **false**. **Geolocation routing** routes based on the user's **geographic location** (continent, country). **Geoproximity routing** routes based on geographic location **with bias adjustments** (+/- values to shift traffic between regions).",
+      "explanation": "This is **false**. They work differently:\n\n- **Geolocation** — rule-based. You explicitly map locations to endpoints. User in Germany → Frankfurt endpoint.\n- **Geoproximity** — distance-based. Routes to the nearest resource automatically. Use **bias** values (+/-) to shift traffic boundaries between regions.",
       "hint": "One allows you to manually adjust traffic distribution."
     },
     {
@@ -363,7 +364,7 @@ next: /quiz/aws/05-compute-services
     {
       "id": "aws-edge-hybrid-networking-quiz-30",
       "type": "multiple-select",
-      "question": "Which AWS Network Firewall capabilities are available?",
+      "question": "Which of the following security features does AWS Network Firewall provide?",
       "options": [
         "Stateful packet inspection",
         "Intrusion prevention (IPS)",

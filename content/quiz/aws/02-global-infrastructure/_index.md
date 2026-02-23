@@ -76,9 +76,9 @@ next: /quiz/aws/03-networking-fundamentals
       "id": "aws-global-infrastructure-quiz-06",
       "type": "fill-blank",
       "question": "What is the typical inter-AZ latency within a Region (in milliseconds)?",
-      "answer": "single-digit",
+      "answer": "single-digit milliseconds",
       "caseSensitive": false,
-      "acceptedAnswers": ["single-digit", "single digit"],
+      "acceptedAnswers": ["single-digit milliseconds", "single digit milliseconds"],
       "explanation": "Typical inter-AZ latency within a Region is single-digit milliseconds. This low latency enables synchronous replication for databases and storage systems.",
       "hint": "Think about the order of magnitude—less than 10ms."
     },
@@ -101,7 +101,7 @@ next: /quiz/aws/03-networking-fundamentals
       "id": "aws-global-infrastructure-quiz-08",
       "type": "flashcard",
       "question": "What does Multi-AZ deployment provide?",
-      "answer": "**High Availability and Fault Tolerance**\n\nDistributing resources across multiple Availability Zones within a Region provides:\n- Protection against AZ-level failures\n- Automatic failover capabilities\n- Continuous operation during infrastructure issues\n- Best practice: use at least 2 AZs for production (3+ preferred)"
+      "answer": "**High Availability and (enables) Fault Tolerance**\n\nDistributing resources across multiple Availability Zones within a Region provides:\n- Protection against AZ-level failures\n- Automatic failover capabilities\n- Continuous operation during infrastructure issues\n- Best practice: use at least 2 AZs for production (3+ preferred)"
     },
     {
       "id": "aws-global-infrastructure-quiz-09",
@@ -158,7 +158,7 @@ next: /quiz/aws/03-networking-fundamentals
     {
       "id": "aws-global-infrastructure-quiz-13",
       "type": "multiple-select",
-      "question": "Which AWS services are truly global in scope?",
+      "question": "Which AWS services are global in scope?",
       "options": [
         "IAM (Identity and Access Management)",
         "EC2 (Elastic Compute Cloud)",

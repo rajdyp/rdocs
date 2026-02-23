@@ -136,11 +136,11 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "instruction": "Drag to arrange in the correct order (first to last)",
       "items": [
         "Internet Gateway",
-        "Network ACL (Subnet Level)",
-        "Security Group (Instance Level)",
-        "EC2 Instance (Optional OS Firewall)"
+        "Security Group",
+        "Network ACL",
+        "EC2 Instance OS Firewall"
       ],
-      "correctOrder": [0, 1, 2, 3],
+      "correctOrder": [0, 2, 1, 3],
       "explanation": "Traffic flows through multiple security layers: Internet Gateway → Network ACL (subnet boundary) → Security Group (instance firewall) → EC2 Instance. This defense-in-depth strategy provides multiple security checkpoints."
     },
     {
@@ -195,7 +195,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "id": "aws-networking-fundamentals-quiz-16",
       "type": "flashcard",
       "question": "What is AWS Transit Gateway and when should you use it?",
-      "answer": "**AWS Transit Gateway** is a central hub that connects VPCs and on-premises networks with transitive routing.\n\n**Key Features:**\n- Hub-and-spoke model (simpler than VPC Peering mesh)\n- Transitive routing (A→TGW→C works)\n- Centralized management\n- Supports thousands of VPCs\n- Inter-region peering available\n- Route tables for network segmentation\n\n**Use When:**\n- Connecting many VPCs (>3-5)\n- Need transitive routing\n- Centralizing on-premises connectivity\n- Requiring network segmentation between environments"
+      "answer": "**AWS Transit Gateway** is a regional network hub that connects multiple VPCs and on-premises networks with transitive routing using a hub-and-spoke model.\n\n**Key Features:**\n- Transitive routing (A→TGW→C works)\n- Centralized management\n- Supports thousands of VPCs\n- Inter-region peering available\n- Route tables for network segmentation\n\n**Use When:**\n- Connecting many VPCs (>3-5)\n- Need transitive routing\n- Centralizing on-premises connectivity\n- Requiring network segmentation between environments"
     },
     {
       "id": "aws-networking-fundamentals-quiz-17",
@@ -271,12 +271,12 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "question": "Arrange these networking components from least granular (broadest scope) to most granular (narrowest scope):",
       "instruction": "Drag to arrange from broadest to narrowest scope",
       "items": [
-        "VPC (Regional)",
-        "Subnet (AZ-specific)",
-        "Security Group (Instance)",
-        "ENI (Network Interface)"
+        "VPC",
+        "Security Group",
+        "Subnet",
+        "ENI"
       ],
-      "correctOrder": [0, 1, 2, 3],
+      "correctOrder": [0, 2, 1, 3],
       "explanation": "The hierarchy from broadest to narrowest: VPC spans an entire region and multiple AZs → Subnet exists in a single AZ → Security Group applies to instances → ENI is the actual network interface attached to an instance."
     },
     {
@@ -294,7 +294,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "options": [
         "Aggregate SUM(bytes) GROUP BY srcaddr",
         "Filter: dstport = 22 AND action = REJECT",
-        "Filter: srcaddr = <suspicious-ip>, COUNT DISTINCT(dstport)",
+        "Filter: srcaddr = {suspicious-ip}, COUNT DISTINCT(dstport)",
         "Filter: action = ACCEPT, GROUP BY protocol"
       ],
       "answer": 2,
@@ -305,7 +305,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "id": "aws-networking-fundamentals-quiz-25",
       "type": "flashcard",
       "question": "Explain the concept of Security Group chaining and its benefits.",
-      "answer": "**Security Group Chaining** is a pattern where Security Groups reference other Security Groups instead of IP addresses.\n\n**Example:**\n- Web tier SG: Outbound to `sg-app` on port 8080\n- App tier SG: Inbound from `sg-web` on port 8080, Outbound to `sg-db` on port 3306\n- DB tier SG: Inbound from `sg-app` on port 3306\n\n**Benefits:**\n- **Dynamic**: Rules automatically apply to all instances with referenced SG\n- **Maintainable**: No need to update IP addresses when instances change\n- **Secure**: Enforces tier-based access control\n- **Scalable**: Works regardless of instance count in each tier\n- **Clear**: Documents architectural relationships"
+      "answer": "**Security Group Chaining** is a pattern where Security Groups reference other Security Groups instead of an IP range.\n\n**Example:**\n- Web tier SG: Outbound to `sg-app` on port 8080\n- App tier SG: Inbound from `sg-web` on port 8080, Outbound to `sg-db` on port 3306\n- DB tier SG: Inbound from `sg-app` on port 3306\n\n**Benefits:**\n- **Dynamic**: Rules automatically apply to all instances with referenced SG\n- **Maintainable**: No need to update IP addresses when instances change\n- **Secure**: Enforces tier-based access control\n- **Scalable**: Works regardless of instance count in each tier\n- **Clear**: Documents architectural relationships"
     },
     {
       "id": "aws-networking-fundamentals-quiz-26",
