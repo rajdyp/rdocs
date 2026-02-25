@@ -580,6 +580,20 @@ prev: /quiz/python/08-working-with-data
       "answer": true,
       "explanation": "True. List comprehensions are optimized internally and typically faster than equivalent for-loops with append(). They're also more Pythonic and readable for simple transformations.",
       "hint": "Python optimizes list comprehensions at the interpreter level."
+    },
+    {
+      "id": "python-log-analysis-comprehensive-49",
+      "type": "mcq",
+      "question": "To sort a dict by its values and get back (key, value) tuples, which expression is correct?",
+      "options": [
+        "sorted(d, key=lambda x: x[1], reverse=True)",
+        "sorted(d.items(), key=lambda x: x[1], reverse=True)",
+        "sorted(d.values(), key=lambda x: x[1], reverse=True)",
+        "sorted(d.keys(), key=lambda x: x[1], reverse=True)"
+      ],
+      "answer": 1,
+      "explanation": "`.items()` returns (key, value) tuples, so `x[1]` correctly accesses the value for sorting and the result contains full (key, value) pairs you can unpack. Sorting `d` directly iterates over keys only — `x[1]` then silently accesses the second character of each key string, giving wrong order and a list of bare strings instead of tuples.",
+      "hint": "Which dict method returns key-value pairs as tuples?"
     }
   ]
 }
