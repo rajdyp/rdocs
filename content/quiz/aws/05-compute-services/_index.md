@@ -75,13 +75,13 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "type": "mcq",
       "question": "Which instance attribute suffix indicates that the instance includes AWS Graviton processors?",
       "options": [
-        "'a' - AMD processors",
-        "'i' - Intel processors",
-        "'g' - AWS Graviton processors",
-        "'d' - Instance store volumes"
+        "'a'",
+        "'i'",
+        "'g'",
+        "'d'"
       ],
       "answer": 2,
-      "explanation": "The 'g' suffix in instance type names (e.g., m5g.large) indicates AWS Graviton processors, which are ARM-based processors designed by AWS.",
+      "explanation": "The 'g' suffix in instance type names (e.g., m5g.large) indicates AWS Graviton processors, which are ARM-based processors designed by AWS. Other suffixes: 'a' = AMD processors, 'i' = Intel processors, 'd' = instance store volumes.",
       "hint": "Think about what letter 'Graviton' starts with."
     },
     {
@@ -89,14 +89,14 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "type": "multiple-select",
       "question": "Which instance families are specifically designed for workloads requiring large amounts of RAM?",
       "options": [
-        "R family (Memory Optimized)",
-        "C family (Compute Optimized)",
-        "X family (Memory Optimized)",
-        "T family (Burstable)",
+        "R family",
+        "C family",
+        "X family",
+        "T family",
         "High Memory u-series"
       ],
       "answers": [0, 2, 4],
-      "explanation": "Memory Optimized instances include the R family, X family, and High Memory u-series, all designed for workloads requiring large amounts of RAM like in-memory databases and big data analytics.",
+      "explanation": "Memory Optimized instances include the R family, X family, and High Memory u-series, all designed for workloads requiring large amounts of RAM like in-memory databases and big data analytics. C family is Compute Optimized; T family is Burstable Performance.",
       "hint": "Look for families specifically mentioned as 'Memory Optimized'."
     },
     {
@@ -105,12 +105,12 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "question": "Arrange these steps in the correct order for selecting an EC2 instance type:",
       "instruction": "Drag to arrange in the correct order",
       "items": [
+        "Use AWS Compute Optimizer",
         "Identify Business Requirements",
         "Analyze Bottlenecks",
-        "Use AWS Compute Optimizer",
         "Right-Size Iteratively"
       ],
-      "correctOrder": [0, 1, 2, 3],
+      "correctOrder": [1, 2, 3, 0],
       "explanation": "The correct workflow is: 1) Identify what the application needs, 2) Analyze where bottlenecks occur (CPU, memory, I/O, GPU), 3) Use AWS Compute Optimizer for ML-based recommendations, 4) Monitor and adjust based on actual usage."
     },
     {
@@ -188,13 +188,13 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "type": "mcq",
       "question": "Which EBS volume type provides the highest IOPS performance?",
       "options": [
-        "General Purpose SSD (gp3) - up to 16,000 IOPS",
-        "General Purpose SSD (gp2) - up to 16,000 IOPS",
-        "Provisioned IOPS SSD (io2 Block Express) - up to 256,000 IOPS",
-        "Throughput Optimized HDD (st1) - up to 500 IOPS"
+        "General Purpose SSD (gp3)",
+        "General Purpose SSD (gp2)",
+        "Provisioned IOPS SSD (io2 Block Express)",
+        "Throughput Optimized HDD (st1)"
       ],
       "answer": 2,
-      "explanation": "Provisioned IOPS SSD (io2 Block Express) provides up to 256,000 IOPS, making it the highest performance option for critical databases and high-performance workloads.",
+      "explanation": "Provisioned IOPS SSD (io2 Block Express) provides up to 256,000 IOPS, making it the highest performance option for critical databases and high-performance workloads. For comparison: gp3 and gp2 offer up to 16,000 IOPS; st1 (HDD) offers up to 500 IOPS.",
       "hint": "Look for 'Provisioned IOPS' and the highest number."
     },
     {
@@ -317,7 +317,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
         "EC2 Instance Savings Plans"
       ],
       "answer": 2,
-      "explanation": "Compute Savings Plans are the most flexible, allowing changes across instance families, regions, and operating systems, while still providing significant savings for committed usage.",
+      "explanation": "Compute Savings Plans are the most flexible, allowing changes across instance families, regions, and operating systems, while still providing significant savings for committed usage. Standard Reserved Instances are locked to a specific instance family and region. Convertible Reserved Instances allow family/OS changes but not region changes. EC2 Instance Savings Plans are flexible on size/OS but locked to a specific family and region.",
       "hint": "The word 'Compute' suggests it's not tied to specific instance configurations."
     },
     {
@@ -354,12 +354,12 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "question": "Arrange these EC2 Image Builder workflow steps in the correct order:",
       "instruction": "Drag to arrange in the correct order",
       "items": [
-        "Image Recipe (Base AMI + Components)",
         "Infrastructure Configuration (Instance type, IAM, VPC)",
+        "Image Recipe (Base AMI + Components)",
         "Build Process (Launch, Apply, Test, Create AMI)",
         "Distribution (Copy to regions, Set permissions)"
       ],
-      "correctOrder": [0, 1, 2, 3],
+      "correctOrder": [1, 0, 2, 3],
       "explanation": "EC2 Image Builder workflow: 1) Define Image Recipe (what to build), 2) Infrastructure Configuration (where/how to build), 3) Build Process (actually build and test), 4) Distribution (deploy to regions/accounts)."
     },
     {
@@ -478,13 +478,13 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "type": "mcq",
       "question": "Which HDD-backed EBS volume type is optimized for frequently accessed, throughput-intensive workloads like big data and data warehouses?",
       "options": [
-        "Cold HDD (sc1)",
-        "Throughput Optimized HDD (st1)",
-        "General Purpose SSD (gp3)",
-        "Provisioned IOPS SSD (io2)"
+        "sc1",
+        "st1",
+        "gp3",
+        "io2"
       ],
       "answer": 1,
-      "explanation": "Throughput Optimized HDD (st1) is designed for frequently accessed, throughput-intensive workloads like big data, data warehouses, and log processing. Cold HDD (sc1) is for infrequent access.",
+      "explanation": "st1 (Throughput Optimized HDD) is designed for frequently accessed, throughput-intensive workloads like big data, data warehouses, and log processing. sc1 (Cold HDD) is for infrequently accessed data; gp3 is General Purpose SSD; io2 is Provisioned IOPS SSD.",
       "hint": "The words 'Throughput Optimized' and 'frequently accessed' match the question."
     },
     {

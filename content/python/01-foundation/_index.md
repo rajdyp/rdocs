@@ -145,6 +145,12 @@ a is None           # Use 'is' (not ==) for None checks
 
 ### Logical Operators
 
+| Operator | Description |
+|----------|-------------|
+| `and` | Returns `True` if **both** operands are true, otherwise `False` |
+| `or` | Returns `True` if **at least one** operand is true, otherwise `False` |
+| `not` | **Reverses** the logical state of the operand |
+
 ```python
 True and True       # True
 True and False      # False
