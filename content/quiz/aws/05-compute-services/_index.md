@@ -346,7 +346,7 @@ next: /quiz/aws/06-load-balancing-and-scaling
       "id": "aws-compute-services-quiz-28",
       "type": "flashcard",
       "question": "When should you use Spot Instances?",
-      "answer": "**Spot Instances are ideal for:**\n- Fault-tolerant workloads\n- Flexible start/end times\n- Batch processing jobs\n- Data analysis\n- Background processing\n- Testing and development\n\n**Avoid Spot Instances for:**\n- Critical production workloads\n- Databases requiring high availability\n- Applications that can't handle interruptions\n\n**Key benefit:** Up to 90% cost savings vs On-Demand"
+      "answer": "**Spot Instances are ideal for:**\n- Fault-tolerant, interruption-resilient workloads\n- Stateless, horizontally scalable workloads\n- Batch jobs and data processing pipelines\n- Kubernetes worker nodes (with termination handling and node draining)\n- ML workloads with checkpointing\n\n**Avoid Spot Instances for:**\n- Stateful workloads and databases\n- Applications that can't handle sudden termination\n\n**Key mechanics:**\n- Capacity may be reclaimed with a 2-minute warning via the EC2 metadata endpoint\n- Workloads must support graceful shutdown, checkpointing, or rapid rescheduling\n- Use mixed instance policies (On-Demand base + Spot)\n- Diversify across instance types and AZs\n- Use capacity-optimized allocation strategy\n\n**Important principle:** Spot is a cost optimization tool — reliability must be designed into the workload.\n\n**Cost benefit:** Up to ~90% savings vs On-Demand"
     },
     {
       "id": "aws-compute-services-quiz-29",

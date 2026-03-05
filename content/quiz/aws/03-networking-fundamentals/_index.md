@@ -229,12 +229,17 @@ next: /quiz/aws/04-edge-and-hybrid-networking
     },
     {
       "id": "aws-networking-fundamentals-quiz-19",
-      "type": "fill-blank",
-      "question": "For NACLs to work with stateless connections, outbound rules must allow ephemeral ports in the range _____ to 65535.",
-      "answer": "1024",
-      "caseSensitive": false,
-      "explanation": "Ephemeral ports (1024-65535) must be allowed in outbound NACL rules to permit return traffic, since NACLs are stateless. The exact range depends on the client OS, but 1024-65535 provides broad compatibility (Linux typically uses 32768-60999, Windows uses 49152-65535).",
-      "hint": "Think about the starting port number for the ephemeral port range."
+      "type": "mcq",
+      "question": "A client sends an HTTP request through a NACL. The inbound rule allows port 80, but the client never receives a response. What is the most likely cause?",
+      "options": [
+        "The security group is blocking return traffic",
+        "The NACL has no outbound rule allowing ephemeral ports",
+        "The route table is misconfigured",
+        "HTTP is not allowed by default in AWS"
+      ],
+      "correct": 1,
+      "explanation": "NACLs are stateless — they do not automatically allow return traffic. Even if inbound port 80 is permitted, the response travels back on an ephemeral port (1024-65535). Without an explicit outbound rule allowing that port range, the response is dropped. Security groups, by contrast, are stateful and handle return traffic automatically.",
+      "hint": "NACLs don't track connection state like security groups do."
     },
     {
       "id": "aws-networking-fundamentals-quiz-20",
@@ -305,7 +310,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "id": "aws-networking-fundamentals-quiz-25",
       "type": "flashcard",
       "question": "Explain the concept of Security Group chaining and its benefits.",
-      "answer": "**Security Group Chaining** is a pattern where Security Groups reference other Security Groups instead of an IP range.\n\n**Example:**\n- Web tier SG: Outbound to `sg-app` on port 8080\n- App tier SG: Inbound from `sg-web` on port 8080, Outbound to `sg-db` on port 3306\n- DB tier SG: Inbound from `sg-app` on port 3306\n\n**Benefits:**\n- **Dynamic**: Rules automatically apply to all instances with referenced SG\n- **Maintainable**: No need to update IP addresses when instances change\n- **Secure**: Enforces tier-based access control\n- **Scalable**: Works regardless of instance count in each tier\n- **Clear**: Documents architectural relationships"
+      "answer": "**Security Group Chaining** is when a Security Group rule references another Security Group as its source or destination instead of a CIDR block, enabling identity-based access control between workloads.\n\n**Example:**\n- Web tier SG: Outbound to `sg-app` on port 8080\n- App tier SG: Inbound from `sg-web` on port 8080, Outbound to `sg-db` on port 3306\n- DB tier SG: Inbound from `sg-app` on port 3306\n\n**Benefits:**\n- **Dynamic**: Rules automatically apply to all instances with referenced SG\n- **Maintainable**: No need to update IP addresses when instances change\n- **Secure**: Enforces tier-based access control\n- **Scalable**: Works regardless of instance count in each tier\n- **Clear**: Documents architectural relationships"
     },
     {
       "id": "aws-networking-fundamentals-quiz-26",
