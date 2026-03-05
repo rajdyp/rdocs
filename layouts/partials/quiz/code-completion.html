@@ -3,7 +3,7 @@
     {{ .instruction | default "Fill in the missing code" | markdownify }}
   </div>
   <div class="code-block-editable">
-    <pre><code class="language-{{ .language | default "python" }}">{{ .codeTemplate }}</code></pre>
+    <pre><code class="language-{{ .language | default "python" }}">{{- .codeTemplate -}}</code></pre>
   </div>
   <div class="code-input-container">
     <label for="code-answer">Your answer:</label>

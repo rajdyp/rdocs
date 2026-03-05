@@ -474,6 +474,7 @@
   color: #d4d4d4 !important;
   font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
   font-size: 0.9rem;
+  padding-inline: 0;
 }
 
 .code-output-container .option-label code {

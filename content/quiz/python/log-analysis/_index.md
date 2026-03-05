@@ -59,6 +59,7 @@ prev: /quiz/python/08-working-with-data
       "type": "fill-blank",
       "question": "What dictionary method should you use to safely access nested JSON fields that might not exist?",
       "answer": "get",
+      "acceptedAnswers": ["get", "get()", "dict.get()"],
       "caseSensitive": false,
       "explanation": "The dict.get() method returns None (or a specified default) if the key doesn't exist, preventing KeyError exceptions. For nested structures, use chained get calls: event.get('obj', {}).get('kind')",
       "hint": "It returns a default value instead of raising an exception."
@@ -107,7 +108,7 @@ prev: /quiz/python/08-working-with-data
       "codeTemplate": "total_latency = sum(latencies)\ncount = len(latencies)\n_____:\n    avg_latency = total_latency / count\nelse:\n    avg_latency = 0",
       "answer": "if count > 0",
       "caseSensitive": false,
-      "acceptedAnswers": ["if count > 0", "if len(latencies) > 0"],
+      "acceptedAnswers": ["if count > 0", "if count > 0:"],
       "explanation": "Always check that the divisor is greater than 0 before dividing to avoid ZeroDivisionError. This is a critical best practice in log analysis."
     },
     {
@@ -336,7 +337,7 @@ prev: /quiz/python/08-working-with-data
     {
       "id": "python-log-analysis-comprehensive-27",
       "type": "flashcard",
-      "question": "What data structure should you use for counting occurrences in log analysis?",
+      "question": "What data structures should you use for counting occurrences in log analysis?",
       "answer": "**Three options with trade-offs:**\n\n**dict with .get()** - Simple counting, minimal overhead\n```python\ncount[item] = count.get(item, 0) + 1\n```\n\n**defaultdict(int)** - Cleaner code, no .get() needed\n```python\ncount[item] += 1\n```\n\n**Counter** - When you need .most_common() or count arithmetic\n\n**Choose based on needs:** Start simple (dict), use defaultdict for cleaner code, use Counter when you need its special features."
     },
     {
@@ -363,7 +364,7 @@ prev: /quiz/python/08-working-with-data
       "question": "Which of these are valid reasons to use the two-pass processing pattern?",
       "options": [
         "Finding duplicate UIDs before reassigning them",
-        "Counting word frequencies in a single pass",
+        "Counting word frequencies",
         "Identifying all issues before fixing them in a configuration file",
         "Processing logs that are already sorted",
         "Building a correction mapping based on entire file analysis"
@@ -594,6 +595,65 @@ prev: /quiz/python/08-working-with-data
       "answer": 1,
       "explanation": "`.items()` returns (key, value) tuples, so `x[1]` correctly accesses the value for sorting and the result contains full (key, value) pairs you can unpack. Sorting `d` directly iterates over keys only — `x[1]` then silently accesses the second character of each key string, giving wrong order and a list of bare strings instead of tuples.",
       "hint": "Which dict method returns key-value pairs as tuples?"
+    },
+    {
+      "id": "python-log-analysis-comprehensive-50",
+      "type": "code-completion",
+      "question": "Fix the code so that `line` prints as `hello  world ` (punctuation replaced with spaces):",
+      "instruction": "Fill in the corrected line",
+      "codeTemplate": "line = 'hello, world.'\npunctuations = ['.', ',']\nfor punctuation in punctuations:\n    _____\nprint(line)  # hello  world ",
+      "answer": "line = line.replace(punctuation, ' ')",
+      "caseSensitive": false,
+      "acceptedAnswers": ["line = line.replace(punctuation, ' ')"],
+      "explanation": "Strings are immutable in Python. str.replace() returns a NEW string — it does not modify the original in place. The result must be reassigned back: `line = line.replace(punctuation, ' ')`. Without reassignment, `line` stays unchanged.",
+      "hint": "Strings are immutable. What do you need to do with the value that replace() returns?"
+    },
+    {
+      "id": "python-log-analysis-comprehensive-51",
+      "type": "code-output",
+      "question": "What will this code print for every possible value of `reason`?",
+      "code": "reason = \"Scheduled\"\nif reason != \"Scheduled\" or reason != \"Killing\":\n    print(\"skip\")\nelse:\n    print(\"keep\")",
+      "language": "python",
+      "options": [
+        "skip",
+        "keep",
+        "Error",
+        "Prints nothing"
+      ],
+      "answer": 0,
+      "explanation": "This condition is ALWAYS True, so it always prints 'skip'. A value cannot equal both 'Scheduled' and 'Killing' at the same time, so it will always be unequal to at least one — making the `or` condition always True. To keep only Scheduled and Killing, use `and`: `if reason != 'Scheduled' and reason != 'Killing': continue`. Even cleaner: `if reason not in {'Scheduled', 'Killing'}: continue`.",
+      "hint": "Can a single value simultaneously equal 'Scheduled' AND equal 'Killing'?"
+    },
+    {
+      "id": "python-log-analysis-comprehensive-52",
+      "type": "code-output",
+      "question": "What happens when this code runs?",
+      "code": "events = {}\npod_name = \"web-pod\"\nevents[pod_name][\"s_event\"] = 10",
+      "language": "python",
+      "options": [
+        "Creates `events['web-pod']` automatically and sets `s_event` to 10",
+        "Raises KeyError on `events[pod_name]`",
+        "Sets `s_event` to 10 but leaves `pod_name` as None",
+        "Silently fails with no output"
+      ],
+      "answer": 1,
+      "explanation": "Python evaluates `events[pod_name]` FIRST before attempting to assign `s_event`. Since 'web-pod' doesn't exist yet, this raises a KeyError immediately. Dictionaries do NOT auto-create parent keys for nested assignment. Always initialize the parent first: `events[pod_name] = {}` then `events[pod_name]['s_event'] = 10`. Or use `events.setdefault(pod_name, {})['s_event'] = 10`.",
+      "hint": "Python must look up `events[pod_name]` before it can assign to `['s_event']`. What happens if the key doesn't exist?"
+    },
+    {
+      "id": "python-log-analysis-comprehensive-53",
+      "type": "code-completion",
+      "question": "This code groups web requests by endpoint and tracks count and total latency. It crashes on the first request. Add the single missing line to fix it:",
+      "instruction": "Fill in the missing initialization line",
+      "codeTemplate": "stats = {}\nfor log in access_logs:\n    ep = log['path']\n    _____\n    stats[ep]['count'] += 1\n    stats[ep]['total_latency'] += log['latency']",
+      "answer": "if ep not in stats: stats[ep] = {'count': 0, 'total_latency': 0}",
+      "caseSensitive": false,
+      "acceptedAnswers": [
+        "if ep not in stats: stats[ep] = {'count': 0, 'total_latency': 0}",
+        "stats.setdefault(ep, {'count': 0, 'total_latency': 0})"
+      ],
+      "explanation": "Before writing into a nested dict, ask: 'Does this parent key exist?' If not, initialize it first. This pattern appears in every group-by operation — HTTP logs, session tracking, metric aggregation. The trigger question is always the same: am I writing into a container that might not exist yet? Two idiomatic fixes: (1) `if key not in d: d[key] = {...}` — explicit and readable. (2) `d.setdefault(key, {...})` — concise one-liner.",
+      "hint": "Before you can do `stats[ep]['count'] += 1`, what must be true about `stats[ep]`?"
     }
   ]
 }

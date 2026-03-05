@@ -87,6 +87,7 @@ next: /quiz/aws/02-global-infrastructure
       "type": "fill-blank",
       "question": "What AWS service is an example of Platform as a Service (PaaS) that automatically handles deployment, capacity provisioning, load balancing, and auto-scaling?",
       "answer": "Elastic Beanstalk",
+      "acceptedAnswers": ["Elastic Beanstalk", "AWS Elastic Beanstalk", "Amazon Elastic Beanstalk"],
       "caseSensitive": false,
       "explanation": "AWS Elastic Beanstalk is a PaaS offering that manages the infrastructure while developers focus on applications and data. AWS Lambda is also mentioned as a PaaS example.",
       "hint": "Think about AWS services that manage the platform layer for you."

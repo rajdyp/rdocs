@@ -160,6 +160,7 @@ next: /quiz/python/07-advanced-functions
       "type": "fill-blank",
       "question": "What factory function would you pass to defaultdict to auto-initialize counters to 0?",
       "answer": "int",
+      "acceptedAnswers": ["int", "defaultdict(int)"],
       "caseSensitive": false,
       "explanation": "Using `defaultdict(int)` initializes missing keys to 0, since `int()` returns 0. This is perfect for counting operations.",
       "hint": "What built-in type returns 0 when called with no arguments?"
@@ -235,7 +236,7 @@ next: /quiz/python/07-advanced-functions
       "type": "true-false",
       "question": "In a multi-file Python application, you should call `logging.basicConfig()` in every module that uses logging.",
       "answer": false,
-      "explanation": "You should call `basicConfig()` ONLY ONCE in your main entry point. In library modules, use `logger = logging.getLogger(__name__)` instead. `basicConfig()` only works the first time it's called.",
+      "explanation": "You should call `basicConfig()` ONLY ONCE in your main entry point. In libraries and modules, use `logger = logging.getLogger(__name__)` instead. `basicConfig()` only works the first time it's called.",
       "hint": "Think about configuration centralization."
     },
     {
@@ -334,6 +335,7 @@ next: /quiz/python/07-advanced-functions
       "type": "fill-blank",
       "question": "What method finds ALL matches of a pattern in a string and returns them as a list?",
       "answer": "re.findall",
+      "acceptedAnswers": ["re.findall", "re.findall()"],
       "caseSensitive": false,
       "explanation": "`re.findall()` returns a list of all matches. For example, `re.findall(r'\\d+', 'a1b2c3')` returns `['1', '2', '3']`.",
       "hint": "Think about the method name that suggests 'all' matches."
@@ -342,11 +344,10 @@ next: /quiz/python/07-advanced-functions
       "id": "python-standard-library-quiz-28",
       "type": "code-completion",
       "question": "Complete the code to extract year, month, and day using named groups:",
-      "instruction": "Fill in the syntax for named groups",
-      "codeTemplate": "import re\npattern = r'(?P<___>\\d{4})-(?P<___>\\d{2})-(?P<___>\\d{2})'\nmatch = re.search(pattern, '2025-01-26')\nprint(match.group('year'))",
-      "answer": "year>\\d{4})-(?P<month>\\d{2})-(?P<day",
+      "instruction": "Fill in the pattern using named group syntax",
+      "codeTemplate": "import re\npattern = ___\nmatch = re.search(pattern, '2025-01-26')\nprint(match.group('year'), match.group('month'), match.group('day'))",
+      "answer": "r'(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2})'",
       "caseSensitive": false,
-      "acceptedAnswers": ["year>\\d{4})-(?P<month>\\d{2})-(?P<day"],
       "explanation": "Named groups use the syntax `(?P<name>...)` where name is the identifier you'll use with `match.group('name')` or `match.groupdict()`."
     },
     {
@@ -398,14 +399,14 @@ next: /quiz/python/07-advanced-functions
         ".txt"
       ],
       "answer": 1,
-      "explanation": "The `.stem` attribute returns the filename without the extension. `.name` would return 'file.txt', `.suffix` would return '.txt'.",
+      "explanation": "The `.stem` attribute returns the filename without the extension. `.name` would return 'file.txt', `.suffix` would return '.txt', `.parent` would return '/home/user'.",
       "hint": "Think about the part of the filename without the extension."
     },
     {
       "id": "python-standard-library-quiz-33",
       "type": "flashcard",
       "question": "What problem does pathlib solve compared to os.path?",
-      "answer": "**Readable, maintainable path operations**\n\n**os.path**: Verbose string manipulation\n```python\nos.path.join(os.path.expanduser('~'), '.config', 'myapp', 'settings.json')\n```\n\n**pathlib**: Clean, chainable, intuitive\n```python\nPath.home() / '.config' / 'myapp' / 'settings.json'\n```\n\nPaths become objects with methods, not strings with functions."
+      "answer": "**Readable, maintainable path operations**\n\n**os.path**: Verbose string manipulation (paths are strings)\n```python\nos.path.join(os.path.expanduser('~'), '.config', 'myapp', 'settings.json')\n```\n\n**pathlib**: Clean, chainable, intuitive (paths are objects)\n```python\nPath.home() / '.config' / 'myapp' / 'settings.json'\n```\n\nPaths become objects with methods, not strings with functions."
     },
     {
       "id": "python-standard-library-quiz-34",
