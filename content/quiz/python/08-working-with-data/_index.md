@@ -224,7 +224,7 @@ next: /quiz/python/log-analysis
       "id": "python-working-with-data-quiz-17",
       "type": "flashcard",
       "question": "What is the mental model for working with JSON in Python?",
-      "answer": "**Decode → Work → Encode**\n\n1. **Decode**: JSON string/file → Python objects (`json.load()` / `json.loads()`)\n2. **Work**: Manipulate using native Python (dicts, lists, etc.)\n3. **Encode**: Python objects → JSON string/file (`json.dump()` / `json.dumps()`)\n\nKey insight: JSON is always a string format. You decode it to Python, work with native objects, then encode back to JSON when needed."
+      "answer": "**Decode → Work → Encode**\n\n```\nJSON text\n    ↓\nDecode (json.load / json.loads)\n    ↓\nPython objects\n    ↓\nWork with dicts/lists\n    ↓\nEncode (json.dump / json.dumps)\n    ↓\nJSON text again\n```\n\nKey insight: JSON is always a string format. You decode it to Python, work with native objects, then encode back to JSON when needed."
     },
     {
       "id": "python-working-with-data-quiz-18",
@@ -289,14 +289,16 @@ next: /quiz/python/log-analysis
       "question": "Arrange these SQLite operations in the correct execution order:",
       "instruction": "Drag to arrange in the correct order",
       "items": [
+        "Configure connection (optional)",
         "Connect to database",
         "Create cursor object",
         "Execute SQL query",
-        "Commit transaction (for writes)",
+        "Fetch results (if SELECT)",
+        "Commit changes (if INSERT/UPDATE/DELETE)",
         "Close connection"
       ],
-      "correctOrder": [0, 1, 2, 3, 4],
-      "explanation": "The correct workflow is: 1) Connect to database, 2) Get cursor, 3) Execute SQL, 4) Commit changes (for INSERT/UPDATE/DELETE), 5) Close connection. Committing before closing ensures changes are persisted."
+      "correctOrder": [1, 0, 2, 3, 4, 5, 6],
+      "explanation": "The correct workflow is: 1) Connect to database, 2) Configure connection optionally (e.g. `row_factory`), 3) Create cursor, 4) Execute SQL, 5) Fetch results (for SELECT), 6) Commit changes (for INSERT/UPDATE/DELETE), 7) Close connection."
     },
     {
       "id": "python-working-with-data-quiz-24",
@@ -315,9 +317,18 @@ next: /quiz/python/log-analysis
     },
     {
       "id": "python-working-with-data-quiz-25",
-      "type": "flashcard",
-      "question": "What is the workflow for making production-ready HTTP requests with the requests library?",
-      "answer": "**Progressive HTTP Request Workflow:**\n\n1. **Choose approach**: Single request (`requests.get()`) vs. Session (multiple requests)\n2. **Build request**: Method + URL + optional params (headers, params, json, data, timeout)\n3. **Handle response**: `response.json()` / `.text` / `.content` + `response.status_code` / `.ok`\n4. **Error handling**: Catch `requests.RequestException` hierarchy (ConnectionError, Timeout, HTTPError)\n5. **Advanced**: Add retry logic (`HTTPAdapter` + `Retry`) and rate limiting (`@limits` decorator)\n\nKey: Always set `timeout`, use Sessions for multiple requests, retry only safe methods, handle three error layers (network, HTTP, JSON)."
+      "type": "drag-drop",
+      "question": "Arrange the steps for making production-ready HTTP requests in the correct order:",
+      "instruction": "Drag to arrange in the correct order",
+      "items": [
+        "Build request (method + URL + params)",
+        "Choose approach (single request vs. Session)",
+        "Handle errors (RequestException hierarchy)",
+        "Handle response (status code + parse body)",
+        "Add retry / rate limiting (optional)"
+      ],
+      "correctOrder": [1, 0, 3, 2, 4],
+      "explanation": "The progressive workflow: 1) Choose between a single `requests.get()` call or a `Session` for multiple requests, 2) Build the request with method, URL, headers, params, and timeout, 3) Handle the response by checking status and parsing body, 4) Catch errors in the `RequestException` hierarchy, 5) Optionally harden with retry logic and rate limiting."
     },
     {
       "id": "python-working-with-data-quiz-26",
@@ -353,8 +364,8 @@ next: /quiz/python/log-analysis
         "13",
         "15"
       ],
-      "answer": 0,
-      "explanation": "`separators=(',', ':')` creates compact JSON with no spaces: `{\"a\":1,\"b\":2}` (9 characters). The default separators `(', ', ': ')` include spaces, producing `{\"a\": 1, \"b\": 2}` (13 characters). Compact format is useful for minimizing file/network size.",
+      "answer": 2,
+      "explanation": "`separators=(',', ':')` creates compact JSON with no spaces: `{\"a\":1,\"b\":2}` — count: `{`, `\"a\"`, `:`, `1`, `,`, `\"b\"`, `:`, `2`, `}` = 13 characters. The default separators `(', ', ': ')` include spaces, producing `{\"a\": 1, \"b\": 2}` (16 characters). Compact format is useful for minimizing file/network size.",
       "hint": "Count the characters in compact JSON: {\"a\":1,\"b\":2}"
     },
     {
@@ -402,6 +413,24 @@ next: /quiz/python/log-analysis
       "answer": true,
       "explanation": "True! `response.json()` is a convenience method that internally calls `json.loads(response.text)`. It parses the JSON string from the response body into a Python dictionary. If the response isn't valid JSON, both will raise `json.JSONDecodeError`.",
       "hint": "Think about what response.json() does under the hood."
+    },
+    {
+      "id": "python-working-with-data-quiz-33",
+      "type": "flashcard",
+      "question": "When should you use `requests.Session` vs. a plain `requests.get()`?",
+      "answer": "- **Single request**: Use `requests.get()` / `requests.post()` etc. directly\n- **Multiple requests to the same host**: Use `requests.Session()` — it reuses the TCP connection and shares headers/cookies/auth across all requests\n\n```python\nimport requests\n\nBASE_URL = \"https://api.example.com\"\nTOKEN = \"my-secret-token\"\n\n# Single request\nresponse = requests.get(f\"{BASE_URL}/status\", timeout=5)\nprint(response.status_code)\n\n# Session (multiple requests)\nwith requests.Session() as session:\n    session.headers.update({\"Authorization\": f\"Bearer {TOKEN}\"})\n\n    r1 = session.get(f\"{BASE_URL}/users\", timeout=5)\n    r2 = session.post(f\"{BASE_URL}/users\", json={\"name\": \"Alice\"}, timeout=5)\n\n    print(r1.json())\n    print(r2.json())\n```"
+    },
+    {
+      "id": "python-working-with-data-quiz-34",
+      "type": "flashcard",
+      "question": "What are the three error layers to handle when using the `requests` library?",
+      "answer": "1. **Network errors** — connection failed, DNS failure, timeout\n   → `requests.ConnectionError`, `requests.Timeout`\n\n2. **HTTP errors** — server returned 4xx / 5xx\n   → `response.raise_for_status()` raises `requests.HTTPError`\n\n3. **JSON parse errors** — response body isn't valid JSON\n   → `json.JSONDecodeError` from `response.json()`\n\nAll network/HTTP errors inherit from `requests.RequestException`."
+    },
+    {
+      "id": "python-working-with-data-quiz-35",
+      "type": "flashcard",
+      "question": "What makes HTTP requests production-ready in Python?",
+      "answer": "- **Always set `timeout`** — prevents hanging indefinitely\n- **Use `Session`** — connection reuse + shared config for multiple requests\n- **Retry only safe methods** — GET, HEAD (not POST/DELETE which aren't idempotent)\n- **Rate limiting** — use `@limits` decorator (ratelimit library) to avoid overwhelming APIs\n\n```python\nimport requests\nfrom requests.adapters import HTTPAdapter\nfrom urllib3.util.retry import Retry\nfrom ratelimit import limits, sleep_and_retry\n\nCALLS_PER_MINUTE = 60\n\n@sleep_and_retry\n@limits(calls=CALLS_PER_MINUTE, period=60)\ndef fetch_data(session, url):\n    response = session.get(url, timeout=5)\n    response.raise_for_status()\n    return response.json()\n\ndef build_session():\n    session = requests.Session()\n    session.headers.update({\"Authorization\": \"Bearer my-token\"})\n\n    retry = Retry(\n        total=3,\n        status_forcelist=[429, 500, 502, 503, 504],\n        allowed_methods=[\"GET\", \"HEAD\"]\n    )\n    adapter = HTTPAdapter(max_retries=retry)\n    session.mount(\"https://\", adapter)\n    return session\n\nwith build_session() as session:\n    data = fetch_data(session, \"https://api.example.com/users\")\n    print(data)\n```"
     }
   ]
 }

@@ -502,6 +502,220 @@ next: /quiz/python/07-advanced-functions
       "answer": false,
       "explanation": "With `exist_ok=True`, no error is raised if the directory exists. `parents=True` creates parent directories as needed. This is a safe, idempotent operation.",
       "hint": "Think about what 'exist_ok' means."
+    },
+    {
+      "id": "python-standard-library-quiz-42",
+      "type": "drag-drop",
+      "question": "Arrange the high-level steps for running an external command with subprocess:",
+      "instruction": "Drag to arrange in the correct order",
+      "items": [
+        "Run: `subprocess.run(cmd, capture_output=True, text=True)`",
+        "Define command as a list: `[\"ls\", \"-l\"]`",
+        "Import `subprocess`",
+        "Access `result.stdout`, `result.stderr`, `result.returncode`",
+        "Handle `subprocess.CalledProcessError` in a try/except"
+      ],
+      "correctOrder": [2, 1, 0, 3, 4],
+      "explanation": "The workflow: import → define command as a list (safer than a string) → run with capture_output=True and text=True → access result attributes → handle errors. Using `check=True` means a non-zero returncode automatically raises CalledProcessError."
+    },
+    {
+      "id": "python-standard-library-quiz-43",
+      "type": "mcq",
+      "question": "What does `subprocess.run()` return?",
+      "options": [
+        "A string containing the command output",
+        "A `CompletedProcess` object with `returncode`, `stdout`, and `stderr`",
+        "An integer exit code",
+        "A tuple of `(stdout, stderr)`"
+      ],
+      "answer": 1,
+      "explanation": "`subprocess.run()` returns a `CompletedProcess` object. You access output via `result.stdout`, errors via `result.stderr`, and the exit code via `result.returncode`. Output is only available if you pass `capture_output=True`.",
+      "hint": "It's an object, not a raw string or integer."
+    },
+    {
+      "id": "python-standard-library-quiz-44",
+      "type": "multiple-select",
+      "question": "Which two `subprocess.run()` parameters do you need to capture command output as Python strings (not bytes)?",
+      "options": [
+        "`capture_output=True`",
+        "`text=True`",
+        "`shell=True`",
+        "`check=True`"
+      ],
+      "answers": [0, 1],
+      "explanation": "`capture_output=True` redirects stdout and stderr so they're stored in the result (otherwise they go directly to the terminal). `text=True` decodes the captured bytes into strings. Without `text=True`, `result.stdout` would be `b'hello\\n'` instead of `'hello\\n'`.",
+      "hint": "One captures the output, the other converts bytes to strings."
+    },
+    {
+      "id": "python-standard-library-quiz-45",
+      "type": "code-output",
+      "question": "What will `result.returncode` print for a successful command?",
+      "code": "import subprocess\nresult = subprocess.run([\"echo\", \"hello\"], capture_output=True, text=True)\nprint(result.returncode)",
+      "language": "python",
+      "options": [
+        "0",
+        "1",
+        "None",
+        "True"
+      ],
+      "answer": 0,
+      "explanation": "A return code of `0` means success in Unix convention. Non-zero values indicate failure — this is the convention that `check=True` relies on to decide whether to raise `CalledProcessError`.",
+      "hint": "Unix convention: 0 = success, non-zero = failure."
+    },
+    {
+      "id": "python-standard-library-quiz-46",
+      "type": "code-completion",
+      "question": "Complete the robust subprocess pattern with proper error handling:",
+      "instruction": "Fill in the missing exception type",
+      "codeTemplate": "import subprocess\ntry:\n    result = subprocess.run(\n        [\"ls\", \"/fake/path\"],\n        capture_output=True,\n        text=True,\n        check=True\n    )\n    print(result.stdout)\nexcept subprocess._____:\n    print(\"Command failed!\")",
+      "answer": "CalledProcessError",
+      "caseSensitive": false,
+      "acceptedAnswers": ["CalledProcessError", "subprocess.CalledProcessError"],
+      "explanation": "`subprocess.CalledProcessError` is raised when `check=True` and the command returns a non-zero exit code. The exception object has `.returncode`, `.cmd`, `.stdout`, and `.stderr` attributes for debugging."
+    },
+    {
+      "id": "python-standard-library-quiz-47",
+      "type": "drag-drop",
+      "question": "Arrange the high-level steps for building a CLI tool with argparse:",
+      "instruction": "Drag to arrange in the correct order",
+      "items": [
+        "Create parser: `ArgumentParser(description='...')`",
+        "Use the values: `args.filename`, `args.verbose`",
+        "Import `argparse`",
+        "Add arguments: positional (`'filename'`) and optional (`'--verbose'`)",
+        "Parse: `args = parser.parse_args()`"
+      ],
+      "correctOrder": [2, 0, 3, 4, 1],
+      "explanation": "The workflow: import → create parser → add arguments (positional args have no '--' prefix, optional args use '--') → parse_args() reads sys.argv and validates inputs → access values via args.*."
+    },
+    {
+      "id": "python-standard-library-quiz-48",
+      "type": "mcq",
+      "question": "In argparse, what distinguishes a positional argument from an optional argument?",
+      "options": [
+        "Positional arguments use a single dash (`-`), optional use double dash (`--`)",
+        "Positional arguments have no `--` prefix and are required by default; optional arguments use `--` and are optional by default",
+        "Positional arguments are defined first; optional arguments are defined last",
+        "There is no difference — only `required=True` matters"
+      ],
+      "answer": 1,
+      "explanation": "Positional arguments (`parser.add_argument('filename')`) are matched by position and required by default. Optional arguments (`parser.add_argument('--output')`) use the `--` prefix and are optional by default. This naming convention is the core design of argparse.",
+      "hint": "Look at whether the argument name starts with `--`."
+    },
+    {
+      "id": "python-standard-library-quiz-49",
+      "type": "code-completion",
+      "question": "Complete the final step to make parsed arguments available:",
+      "instruction": "Fill in the missing method call",
+      "codeTemplate": "import argparse\n\nparser = argparse.ArgumentParser(description='Process files')\nparser.add_argument('filename', help='Input file')\nparser.add_argument('--verbose', action='store_true')\n\nargs = parser._____\nprint(args.filename)",
+      "answer": "parse_args()",
+      "caseSensitive": false,
+      "acceptedAnswers": ["parse_args()", "parse_args"],
+      "explanation": "`parser.parse_args()` reads `sys.argv`, validates inputs against defined arguments, and returns a `Namespace` object. Accessing `args.filename` and `args.verbose` is only possible after this call."
+    },
+    {
+      "id": "python-standard-library-quiz-50",
+      "type": "mcq",
+      "question": "In a multi-file application, why should library modules use `logger = logging.getLogger(__name__)` instead of calling `logging.info()` directly?",
+      "options": [
+        "It creates a separate log file per module",
+        "It's faster than using the root logger",
+        "It identifies which module a log came from and doesn't interfere with the app's centralized configuration",
+        "It allows each module to override the global log level"
+      ],
+      "answer": 2,
+      "explanation": "`logging.getLogger(__name__)` creates a logger named after the module (e.g., `myapp.database`), which identifies the source in log output. Crucially, modules should never call `basicConfig()` — only the entry point does. Module loggers inherit configuration from the root logger set up by `basicConfig()`.",
+      "hint": "Think about where configuration should live and how you'd trace a log back to its source."
+    },
+    {
+      "id": "python-standard-library-quiz-51",
+      "type": "mcq",
+      "question": "Which exception should you specifically catch when a file you're trying to open may not exist?",
+      "options": [
+        "`IOError`",
+        "`FileNotFoundError`",
+        "`OSError`",
+        "`ValueError`"
+      ],
+      "answer": 1,
+      "explanation": "`FileNotFoundError` is the specific exception raised when a file doesn't exist. While `OSError` (and its alias `IOError`) would also catch it as a parent class, catching `FileNotFoundError` specifically makes your intent clear and avoids masking unrelated OS errors.",
+      "hint": "Python 3 has specific exception types for common file errors — prefer the most specific one."
+    },
+    {
+      "id": "python-standard-library-quiz-52",
+      "type": "drag-drop",
+      "question": "Arrange the high-level steps for working with files in Python:",
+      "instruction": "Drag to arrange in the correct order",
+      "items": [
+        "Choose file mode (`r`, `w`, `a`, `r+`)",
+        "Handle errors (`FileNotFoundError`, `PermissionError`)",
+        "Open file: `with open(filename, mode) as f`",
+        "Import required modules (`json`, `tempfile`, etc.)",
+        "Perform read/write operations on the file object"
+      ],
+      "correctOrder": [3, 2, 0, 4, 1],
+      "explanation": "The workflow: import modules → open with `with open()` (ensures cleanup) → pick mode appropriate for your operation → read/write → wrap in try/except for error handling. The `with` statement guarantees the file is closed even if an exception occurs."
+    },
+    {
+      "id": "python-standard-library-quiz-53",
+      "type": "drag-drop",
+      "question": "Arrange the high-level steps for setting up logging in a Python application:",
+      "instruction": "Drag to arrange in the correct order",
+      "items": [
+        "Call `logging.basicConfig()` once at the entry point (set level, format, handlers)",
+        "In library modules, get a module logger: `logger = logging.getLogger(__name__)`",
+        "Import `logging`",
+        "Log messages using the appropriate level (`debug`, `info`, `warning`, `error`, `critical`)",
+        "Use `logging.exception()` inside `except` blocks to capture stack traces"
+      ],
+      "correctOrder": [2, 0, 1, 3, 4],
+      "explanation": "The workflow: import → configure once in main (not in modules) → modules get their own named logger → log at the right level for each message → use exception() (not error()) inside except blocks to automatically include the traceback."
+    },
+    {
+      "id": "python-standard-library-quiz-54",
+      "type": "drag-drop",
+      "question": "Arrange the high-level steps for working with the `os` module:",
+      "instruction": "Drag to arrange in the correct order",
+      "items": [
+        "Inspect contents and check existence (`os.listdir`, `os.path.exists`, `os.path.isfile`)",
+        "Check environment variables (`os.getenv`, `os.environ`)",
+        "Import `os`",
+        "Build paths safely across platforms (`os.path.join`)",
+        "Find or change current location (`os.getcwd`, `os.chdir`)",
+        "Create, rename, or remove files and directories (`mkdir`, `remove`, `replace`)"
+      ],
+      "correctOrder": [2, 1, 4, 0, 3, 5],
+      "explanation": "The workflow: import → check environment (API keys, config) → locate yourself (cwd) → inspect the filesystem → build paths with os.path.join (cross-platform safe) → modify the filesystem. For path operations, prefer pathlib.Path which is more readable and object-oriented."
+    },
+    {
+      "id": "python-standard-library-quiz-55",
+      "type": "drag-drop",
+      "question": "Arrange the high-level steps for working with regex in Python:",
+      "instruction": "Drag to arrange in the correct order",
+      "items": [
+        "Check `if match:` before calling `.group()` to avoid `AttributeError`",
+        "Import `re`",
+        "Choose the right function: `search()`, `match()`, `findall()`, or `sub()`",
+        "Write pattern using raw strings `r'...'` to avoid backslash issues",
+        "Compile with `re.compile()` when reusing the pattern multiple times"
+      ],
+      "correctOrder": [1, 3, 2, 0, 4],
+      "explanation": "The workflow: import → write pattern as raw string (r'...' prevents Python from interpreting backslashes) → choose the right function for your goal → always check if match exists before accessing groups → compile for performance when reusing in loops."
+    },
+    {
+      "id": "python-standard-library-quiz-56",
+      "type": "drag-drop",
+      "question": "Arrange the high-level steps for working with dates and times using `datetime`:",
+      "instruction": "Drag to arrange in the correct order",
+      "items": [
+        "Perform arithmetic using `timedelta` (add or subtract durations)",
+        "Import `datetime`, `timedelta`, and `timezone` as needed",
+        "Format for display with `strftime()` or parse a string with `strptime()`",
+        "Obtain or create a datetime object (`datetime.now()`, `fromisoformat()`, `strptime()`)",
+        "Use `timezone.utc` when timezone-awareness is required"
+      ],
+      "correctOrder": [1, 3, 0, 4, 2],
+      "explanation": "The workflow: import → get/create a datetime object → apply timedelta arithmetic → add timezone info if needed → format for output or storage. Remember: strftime = format datetime TO string, strptime = PARSE string to datetime."
     }
   ]
 }
