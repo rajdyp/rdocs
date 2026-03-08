@@ -1,0 +1,95 @@
+<div id="quiz-data-panel" class="quiz-data-panel">
+  <div class="quiz-data-panel-inner">
+    <span class="quiz-data-panel-label">Performance Data</span>
+    <div class="quiz-data-panel-actions">
+      <button class="quiz-data-btn quiz-data-export-btn" type="button">Export</button>
+      <label class="quiz-data-btn quiz-data-import-label" role="button" tabindex="0">
+        Import
+        <input class="quiz-data-import-input" type="file" accept=".json" aria-label="Import performance data">
+      </label>
+    </div>
+    <span class="quiz-data-panel-status" aria-live="polite"></span>
+  </div>
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'rdocs.quiz.performance.v1';
+  var statusTimeout = null;
+
+  function setStatus(el, message, type) {
+    el.textContent = message;
+    el.className = 'quiz-data-panel-status' + (type ? ' ' + type : '');
+    clearTimeout(statusTimeout);
+    statusTimeout = setTimeout(function() {
+      el.textContent = '';
+      el.className = 'quiz-data-panel-status';
+    }, 4000);
+  }
+
+  function getData() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : { questions: {} };
+    } catch (e) {
+      return { questions: {} };
+    }
+  }
+
+  function saveData(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  var panel = document.getElementById('quiz-data-panel');
+  var statusEl = panel.querySelector('.quiz-data-panel-status');
+
+  panel.querySelector('.quiz-data-export-btn').addEventListener('click', function() {
+    try {
+      var payload = JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), data: getData() });
+      var date = new Date().toISOString().slice(0, 10);
+      var blob = new Blob([payload], { type: 'application/json' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'quiz-performance-' + date + '.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      setStatus(statusEl, 'Exported successfully.', 'success');
+    } catch (e) {
+      setStatus(statusEl, 'Export failed.', 'error');
+    }
+  });
+
+  panel.querySelector('.quiz-data-import-input').addEventListener('change', function(e) {
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      try {
+        var parsed = JSON.parse(ev.target.result);
+        if (!parsed || parsed.version !== 1 || !parsed.data || typeof parsed.data.questions !== 'object') {
+          throw new Error('Unrecognized file format.');
+        }
+        var current = getData();
+        var incoming = parsed.data.questions;
+        var ids = Object.keys(incoming);
+        var merged = 0;
+        ids.forEach(function(id) {
+          if (current.questions[id]) merged++;
+          current.questions[id] = incoming[id];
+        });
+        saveData(current);
+        setStatus(statusEl, 'Imported ' + ids.length + ' questions (' + merged + ' updated).', 'success');
+      } catch (err) {
+        setStatus(statusEl, err.message || 'Import failed.', 'error');
+      }
+      e.target.value = '';
+    };
+    reader.onerror = function() {
+      setStatus(statusEl, 'Could not read file.', 'error');
+      e.target.value = '';
+    };
+    reader.readAsText(file);
+  });
+})();
+</script>
