@@ -30,3 +30,5 @@ toc: false
   {{< card link="linux" title="Linux" icon="terminal" subtitle="System administration, command-line tools, and essential concepts for managing servers and infrastructure." >}}
   {{< card link="python" title="Python" icon="python" subtitle="Programming fundamentals, advanced concepts, and practical applications." >}}
 {{< /cards >}}
+
+{{< quiz-data-panel >}}

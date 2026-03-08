@@ -80,6 +80,45 @@
       const accuracy = entry.correct / entry.attempts;
       return accuracy < 0.5 || entry.streak <= -2;
     }
+
+    exportData() {
+      return JSON.stringify({
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        data: this.data
+      });
+    }
+
+    importData(jsonString, merge = true) {
+      let parsed;
+      try {
+        parsed = JSON.parse(jsonString);
+      } catch (err) {
+        throw new Error('Invalid JSON file.');
+      }
+
+      if (!parsed || parsed.version !== 1 || !parsed.data || typeof parsed.data.questions !== 'object') {
+        throw new Error('Unrecognized file format.');
+      }
+
+      const incoming = parsed.data.questions;
+      const incomingIds = Object.keys(incoming);
+
+      if (merge) {
+        let merged = 0;
+        incomingIds.forEach(id => {
+          const exists = !!this.data.questions[id];
+          this.data.questions[id] = incoming[id];
+          if (exists) merged++;
+        });
+        this.save();
+        return { imported: incomingIds.length, merged };
+      } else {
+        this.data = parsed.data;
+        this.save();
+        return { imported: incomingIds.length, merged: 0 };
+      }
+    }
   }
 
   class Quiz {
