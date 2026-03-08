@@ -205,6 +205,12 @@
       // Keyboard navigation
       document.addEventListener('keydown', (e) => {
         if (this.container.contains(document.activeElement)) {
+          // Stop propagation when typing in an input so theme shortcuts (e.g. '/' for search) don't fire
+          const active = document.activeElement;
+          if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) {
+            e.stopImmediatePropagation();
+            return;
+          }
           if (e.key === 'ArrowLeft' && !prevBtn.disabled) {
             this.previousQuestion();
           } else if (e.key === 'ArrowRight' && !nextBtn.disabled) {
