@@ -237,7 +237,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
         "The route table is misconfigured",
         "HTTP is not allowed by default in AWS"
       ],
-      "correct": 1,
+      "answer": 1,
       "explanation": "NACLs are stateless — they do not automatically allow return traffic. Even if inbound port 80 is permitted, the response travels back on an ephemeral port (1024-65535). Without an explicit outbound rule allowing that port range, the response is dropped. Security groups, by contrast, are stateful and handle return traffic automatically.",
       "hint": "NACLs don't track connection state like security groups do."
     },
