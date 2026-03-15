@@ -292,7 +292,7 @@ next: /quiz/aws/05-compute-services
       "codeTemplate": "On-Premises ─┬─ Direct Connect (Primary) ──┬─ AWS\n             └──────── (Backup) ────────────┘",
       "answer": "Site-to-Site VPN",
       "caseSensitive": false,
-      "acceptedAnswers": ["Site-to-Site VPN", "VPN", "S2S VPN"],
+      "acceptedAnswers": ["Site-to-Site VPN", "VPN", "AWS Site-to-Site VPN"],
       "explanation": "The most **cost-effective redundancy** strategy is combining **Direct Connect (primary)** with **Site-to-Site VPN (backup)**. This provides automatic failover while managing costs better than dual Direct Connect."
     },
     {
@@ -308,7 +308,7 @@ next: /quiz/aws/05-compute-services
       "id": "aws-edge-hybrid-networking-quiz-25",
       "type": "flashcard",
       "question": "What are the benefits and limitations of AWS Direct Connect?",
-      "answer": "**Benefits:**\n• Consistent network performance (low latency, low jitter)\n• Higher bandwidth (up to 100 Gbps)\n• Reduced data transfer costs\n• Private connectivity (not over internet)\n• Supports hybrid cloud architectures\n\n**Limitations:**\n• No encryption by default (need VPN over DX)\n• Longer setup time (weeks to months)\n• Higher cost (port hours + data transfer)\n• Requires presence at Direct Connect location or partner"
+      "answer": "**Benefits:**\n- Consistent network performance (low latency, low jitter)\n- Higher bandwidth (up to 100 Gbps)\n- Reduced data transfer costs\n- Private connectivity (not over internet)\n- Supports hybrid cloud architectures\n\n**Limitations:**\n- No encryption by default (need VPN over DX)\n- Longer setup time (weeks to months)\n- Higher cost (port hours + data transfer)\n- Requires presence at Direct Connect location or partner"
     },
     {
       "id": "aws-edge-hybrid-networking-quiz-26",

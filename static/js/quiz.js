@@ -5,7 +5,7 @@
   class PerformanceStore {
     constructor() {
       this.storageKey = 'rdocs.quiz.performance.v1';
-      this.data = { questions: {} };
+      this.data = { questions: {}, quizSessions: {} };
       this.available = this.checkAvailability();
       this.load();
     }
@@ -29,6 +29,7 @@
           const parsed = JSON.parse(raw);
           if (parsed && typeof parsed === 'object') {
             this.data = parsed;
+            if (!this.data.quizSessions) this.data.quizSessions = {};
           }
         }
       } catch (err) {
@@ -81,6 +82,28 @@
       return accuracy < 0.5 || entry.streak <= -2;
     }
 
+    recordQuizSession(pathname, title, scorePercent, errorPool) {
+      const existing = this.data.quizSessions[pathname] || { attempts: 0, masteredCount: 0 };
+      const masteredCount = scorePercent >= 90 ? (existing.masteredCount || 0) + 1 : 0;
+      this.data.quizSessions[pathname] = {
+        title,
+        attempts: existing.attempts + 1,
+        lastScore: scorePercent,
+        lastAttemptAt: new Date().toISOString(),
+        errorPool,
+        masteredCount
+      };
+      this.save();
+    }
+
+    updateErrorPool(pathname, errorPool) {
+      const existing = this.data.quizSessions[pathname];
+      if (!existing) return;
+      existing.errorPool = errorPool;
+      existing.lastAttemptAt = new Date().toISOString();
+      this.save();
+    }
+
     exportData() {
       return JSON.stringify({
         version: 1,
@@ -111,10 +134,14 @@
           this.data.questions[id] = incoming[id];
           if (exists) merged++;
         });
+        if (parsed.data.quizSessions && typeof parsed.data.quizSessions === 'object') {
+          Object.assign(this.data.quizSessions, parsed.data.quizSessions);
+        }
         this.save();
         return { imported: incomingIds.length, merged };
       } else {
         this.data = parsed.data;
+        if (!this.data.quizSessions) this.data.quizSessions = {};
         this.save();
         return { imported: incomingIds.length, merged: 0 };
       }
@@ -966,6 +993,25 @@
       const percentage = answeredQuestions > 0
         ? Math.round((correct / answeredQuestions) * 100)
         : 0;
+
+      if (answeredQuestions > 0) {
+        if (this.resultsScope !== 'subset') {
+          // Full quiz attempt — update everything
+          const quizTitle = this.data ? (this.data.title || document.title) : document.title;
+          this.performanceStore.recordQuizSession(
+            window.location.pathname,
+            quizTitle,
+            percentage,
+            incorrectIndices.length
+          );
+        } else {
+          // Review session — update error pool + lastAttemptAt only
+          this.performanceStore.updateErrorPool(
+            window.location.pathname,
+            incorrectIndices.length
+          );
+        }
+      }
 
       if (resultsDiv) {
         resultsDiv.style.display = 'block';

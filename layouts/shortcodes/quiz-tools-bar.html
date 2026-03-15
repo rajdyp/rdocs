@@ -1,15 +1,28 @@
-<div id="quiz-data-panel" class="quiz-data-panel">
-  <div class="quiz-data-panel-inner">
-    <span class="quiz-data-panel-label">Performance Data</span>
-    <div class="quiz-data-panel-actions">
-      <button class="quiz-data-btn quiz-data-export-btn" type="button">Export</button>
-      <label class="quiz-data-btn quiz-data-import-label" role="button" tabindex="0">
-        Import
-        <input class="quiz-data-import-input" type="file" accept=".json" aria-label="Import performance data">
-      </label>
+<div class="quiz-tools-bar not-prose">
+
+    {{/* ── Left: Revision Index ── */}}
+    <div class="quiz-tools-ri">
+      <a class="quiz-tools-ri-title" href="{{ "quiz/revision-index/" | relURL }}">
+        <span class="quiz-tools-ri-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6M7 17h4"/><circle cx="18" cy="17" r="2.5"/><path d="M20 19l1.5 1.5"/></svg></span>
+        Revision Index
+      </a>
     </div>
-    <span class="quiz-data-panel-status" aria-live="polite"></span>
-  </div>
+
+    {{/* ── Right: Performance Data ── */}}
+    <div id="quiz-data-panel" class="quiz-tools-data">
+      <div class="quiz-data-panel-inner">
+        <span class="quiz-data-panel-label">Performance Data</span>
+        <div class="quiz-data-panel-actions">
+          <button class="quiz-data-btn quiz-data-export-btn" type="button">Export</button>
+          <label class="quiz-data-btn quiz-data-import-label" role="button" tabindex="0">
+            Import
+            <input class="quiz-data-import-input" type="file" accept=".json" aria-label="Import performance data">
+          </label>
+        </div>
+        <span class="quiz-data-panel-status" aria-live="polite"></span>
+      </div>
+    </div>
+
 </div>
 
 <script>

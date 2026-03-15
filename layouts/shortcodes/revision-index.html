@@ -1,0 +1,167 @@
+{{- $registry := slice -}}
+{{- range where (where .Page.Site.Pages "Kind" "section") "Section" "quiz" -}}
+  {{- $parts := split .RelPermalink "/" -}}
+  {{- /* /rdocs/quiz/<topic>/<section>/ splits to ["","rdocs","quiz","topic","section",""] = 6 parts */ -}}
+  {{- if ge (len $parts) 6 -}}
+    {{- $topic := index $parts 3 -}}
+    {{- $registry = append (dict "title" .Title "path" .RelPermalink "topic" $topic) $registry -}}
+  {{- end -}}
+{{- end -}}
+<script type="application/json" id="revision-index-registry">{{ $registry | jsonify }}</script>
+
+<div id="revision-index" class="ri-container">
+  <div id="ri-table-root"></div>
+  <p id="ri-empty-msg" style="display:none">No quiz data yet. Complete a quiz to see it here.</p>
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'rdocs.quiz.performance.v1';
+
+  function getSessionData() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return {};
+      var parsed = JSON.parse(raw);
+      return (parsed && parsed.quizSessions) ? parsed.quizSessions : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function getLeitnerBox(session) {
+    if (!session) {
+      return { label: 'Not Started', colorClass: 'ri-box-gray', days: null };
+    }
+    var score = session.lastScore;
+    var mastered = session.masteredCount || 0;
+    if (score < 60) {
+      return { label: 'B1 (R)', colorClass: 'ri-box-red', days: 3 };
+    } else if (score < 85) {
+      return { label: 'B2 (V)', colorClass: 'ri-box-orange', days: 7 };
+    } else if (score < 90) {
+      return { label: 'B3 (M)', colorClass: 'ri-box-blue', days: 14 };
+    } else if (mastered < 2) {
+      return { label: 'B3 (1st 90%)', colorClass: 'ri-box-green', days: 14 };
+    } else {
+      return { label: 'B4 (M)', colorClass: 'ri-box-darkgreen', days: 28 };
+    }
+  }
+
+  function getNextReview(session, days) {
+    if (!session || days === null) return { text: '—', extraClass: '' };
+    var last = new Date(session.lastAttemptAt);
+    var next = new Date(last.getTime() + days * 24 * 60 * 60 * 1000);
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var nextDay = new Date(next);
+    nextDay.setHours(0, 0, 0, 0);
+    var diffDays = Math.round((nextDay - today) / (24 * 60 * 60 * 1000));
+    var text = next.toISOString().slice(0, 10);
+    var extraClass = '';
+    if (diffDays < 0) {
+      extraClass = 'ri-overdue';
+    } else if (diffDays === 0) {
+      extraClass = 'ri-due-today';
+    }
+    return { text: text, extraClass: extraClass };
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function renderTable(registry, sessions) {
+    // Group by topic
+    var groups = {};
+    registry.forEach(function(item) {
+      var topic = item.topic || 'other';
+      if (!groups[topic]) groups[topic] = [];
+      groups[topic].push(item);
+    });
+
+    var topics = Object.keys(groups).sort();
+    var html = '';
+
+    topics.forEach(function(topic) {
+      var items = groups[topic];
+      var topicLabel = topic.charAt(0).toUpperCase() + topic.slice(1).replace(/-/g, ' ');
+      html += '<div class="ri-topic-group">';
+      html += '<div class="ri-topic-heading">' + escapeHtml(topicLabel) + '</div>';
+      html += '<table class="ri-table">';
+      html += '<thead><tr>';
+      html += '<th>Quiz</th>';
+      html += '<th>Box / Status</th>';
+      html += '<th>Last Score</th>';
+      html += '<th>Attempts</th>';
+      html += '<th>Error Pool</th>';
+      html += '<th>Frequency</th>';
+      html += '<th>Next Review</th>';
+      html += '</tr></thead>';
+      html += '<tbody>';
+
+      items.forEach(function(item) {
+        var session = sessions[item.path] || null;
+        var box = getLeitnerBox(session);
+        var nextReview = getNextReview(session, box.days);
+        var lastScore = session ? session.lastScore + '%' : '—';
+        var attempts = session ? session.attempts : '—';
+        var errorPool = session ? session.errorPool : '—';
+        var frequency = box.days !== null ? String(box.days).padStart(2, '0') + ' days' : '—';
+
+        html += '<tr>';
+        html += '<td><a href="' + escapeHtml(item.path) + '">' + escapeHtml(item.title) + '</a></td>';
+        html += '<td><span class="ri-box-badge ' + box.colorClass + '">' + escapeHtml(box.label) + '</span></td>';
+        html += '<td>' + escapeHtml(lastScore) + '</td>';
+        html += '<td>' + escapeHtml(String(attempts)) + '</td>';
+        html += '<td>' + escapeHtml(String(errorPool)) + '</td>';
+        html += '<td>' + escapeHtml(frequency) + '</td>';
+        html += '<td class="' + nextReview.extraClass + '">' + escapeHtml(nextReview.text) + '</td>';
+        html += '</tr>';
+      });
+
+      html += '</tbody></table></div>';
+    });
+
+    return html;
+  }
+
+  function init() {
+    var registryEl = document.getElementById('revision-index-registry');
+    var tableRoot = document.getElementById('ri-table-root');
+    var emptyMsg = document.getElementById('ri-empty-msg');
+    if (!registryEl || !tableRoot) return;
+
+    var registry = [];
+    try {
+      var parsed = JSON.parse(registryEl.textContent || '[]');
+      // Hugo double-encodes jsonify output in script tags; unwrap if needed
+      registry = typeof parsed === 'string' ? JSON.parse(parsed) : parsed;
+    } catch (e) {
+      registry = [];
+    }
+
+    var sessions = getSessionData();
+    var hasAnySession = Object.keys(sessions).length > 0;
+
+    if (!hasAnySession) {
+      emptyMsg.style.display = '';
+      tableRoot.innerHTML = '';
+      return;
+    }
+
+    emptyMsg.style.display = 'none';
+    tableRoot.innerHTML = renderTable(registry, sessions);
+  }
+
+  init();
+
+  window.addEventListener('storage', function(e) {
+    if (e.key === STORAGE_KEY) init();
+  });
+})();
+</script>

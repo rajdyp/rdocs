@@ -31,4 +31,4 @@ toc: false
   {{< card link="python" title="Python" icon="python" subtitle="Programming fundamentals, advanced concepts, and practical applications." >}}
 {{< /cards >}}
 
-{{< quiz-data-panel >}}
+{{< quiz-tools-bar >}}
