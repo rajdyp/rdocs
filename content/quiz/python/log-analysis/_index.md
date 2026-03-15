@@ -2,7 +2,7 @@
 title: Log Analysis Quiz
 linkTitle: Log Analysis
 type: docs
-weight: 2
+weight: 9
 prev: /quiz/python/08-working-with-data
 ---
 
