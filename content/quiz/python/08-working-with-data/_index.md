@@ -94,7 +94,7 @@ next: /quiz/python/log-analysis
       "codeTemplate": "cursor.execute(\n    \"SELECT * FROM users WHERE username = ___ AND age > ___\",\n    (username, min_age)\n)",
       "answer": "?, ?",
       "caseSensitive": false,
-      "acceptedAnswers": ["?, ?", "? ?"],
+      "acceptedAnswers": ["?", "?, ?", "? ?"],
       "explanation": "SQLite uses `?` as a placeholder for parameterized queries. This prevents SQL injection by automatically escaping values. Never use f-strings or string concatenation for SQL queries as they create security vulnerabilities.",
       "hint": "It's a single character that acts as a placeholder."
     },
@@ -116,7 +116,7 @@ next: /quiz/python/log-analysis
     {
       "id": "python-working-with-data-quiz-09",
       "type": "drag-drop",
-      "question": "Arrange these steps in the correct order for making a production-ready HTTP request:",
+      "question": "Arrange these steps in the correct order for making a production-ready single HTTP request (`requests.get()`):",
       "instruction": "Drag to arrange from first to last",
       "items": [
         "Create session with retry strategy",
@@ -318,7 +318,7 @@ next: /quiz/python/log-analysis
     {
       "id": "python-working-with-data-quiz-25",
       "type": "drag-drop",
-      "question": "Arrange the steps for making production-ready HTTP requests in the correct order:",
+      "question": "Arrange the high-level workflow steps for designing production-ready HTTP request logic:",
       "instruction": "Drag to arrange in the correct order",
       "items": [
         "Build request (method + URL + params)",
@@ -400,7 +400,7 @@ next: /quiz/python/log-analysis
     {
       "id": "python-working-with-data-quiz-31",
       "type": "fill-blank",
-      "question": "In SQLite, what SQL keyword makes a table creation idempotent (safe to run multiple times)?",
+      "question": "In SQLite, what SQL clause makes a table creation idempotent (safe to run multiple times)?",
       "answer": "IF NOT EXISTS",
       "caseSensitive": false,
       "explanation": "`CREATE TABLE IF NOT EXISTS` only creates the table if it doesn't already exist, making the operation idempotent. Without this, running the CREATE TABLE statement twice raises an error.",

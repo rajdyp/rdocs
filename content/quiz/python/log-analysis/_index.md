@@ -654,6 +654,40 @@ prev: /quiz/python/08-working-with-data
       ],
       "explanation": "Before writing into a nested dict, ask: 'Does this parent key exist?' If not, initialize it first. This pattern appears in every group-by operation — HTTP logs, session tracking, metric aggregation. The trigger question is always the same: am I writing into a container that might not exist yet? Two idiomatic fixes: (1) `if key not in d: d[key] = {...}` — explicit and readable. (2) `d.setdefault(key, {...})` — concise one-liner.",
       "hint": "Before you can do `stats[ep]['count'] += 1`, what must be true about `stats[ep]`?"
+    },
+    {
+      "id": "python-log-analysis-comprehensive-54",
+      "type": "flashcard",
+      "question": "When should you sort log timestamps as strings vs. convert to datetime objects?",
+      "answer": "**String sort is sufficient when:**\n- You only need chronological ordering\n- All timestamps share the same consistent ISO 8601-like format (e.g., `2025-08-12T09:05:00`)\n- Lexicographic order == chronological order ✓\n\n**Convert to datetime when:**\n- You need duration math: `logout_dt - login_dt`\n- You need to add/subtract time: `ts + timedelta(hours=1)`\n- You need to compare across different formats\n\n**Common pattern:**\n```python\n# Step 1 — sort cheaply as strings\nsorted_events = sorted(events, key=lambda e: e['timestamp'])\n\n# Step 2 — convert only for duration calculation\nfrom datetime import datetime\nlogin_dt  = datetime.fromisoformat(login['timestamp'])\nlogout_dt = datetime.fromisoformat(logout['timestamp'])\nsession_duration = logout_dt - login_dt\n```\n\n**Key insight:** Don't pay the cost of datetime conversion unless you need arithmetic."
+    },
+    {
+      "id": "python-log-analysis-comprehensive-55",
+      "type": "mcq",
+      "question": "You want to sort this list of events by timestamp. Which expression is correct?\n\n```python\nevents = [\n  {'timestamp': '2025-08-12T09:10:00', 'user_id': 'B', 'action': 'view_page'},\n  {'timestamp': '2025-08-12T09:05:00', 'user_id': 'B', 'action': 'login'},\n]\n```",
+      "options": [
+        "`sorted(events, key=lambda x: x[0])`",
+        "`sorted(events, key=lambda x: x[1])`",
+        "`sorted(events, key=lambda x: x['timestamp'])`",
+        "`sorted(events.items(), key=lambda x: x[0])`"
+      ],
+      "answer": 2,
+      "explanation": "Each element `x` is a dict, so you access fields by key name: `x['timestamp']`. Index-based access like `x[0]` or `x[1]` would raise a TypeError — dicts aren't indexed by position. `.items()` doesn't apply to a list.",
+      "hint": "What is the type of each element in the list?"
+    },
+    {
+      "id": "python-log-analysis-comprehensive-56",
+      "type": "mcq",
+      "question": "You want to sort this dict by count, highest first. Which expression is correct?\n\n```python\nwarn_reasons = {'BackOff': 2, 'Failed': 2, 'FailedMount': 1, 'Unhealthy': 2}\n```",
+      "options": [
+        "`sorted(warn_reasons, key=lambda x: x['count'], reverse=True)`",
+        "`sorted(warn_reasons.items(), key=lambda x: x[1], reverse=True)`",
+        "`sorted(warn_reasons.items(), key=lambda x: x['count'], reverse=True)`",
+        "`sorted(warn_reasons, key=lambda x: x[1], reverse=True)`"
+      ],
+      "answer": 1,
+      "explanation": "`.items()` produces `(key, value)` tuples like `('BackOff', 2)`. Each `x` in the lambda is a tuple, so `x[1]` is the count. Using `x['count']` would fail — tuples use index access, not key names. Sorting `warn_reasons` directly (without `.items()`) iterates over keys only, so `x[1]` would access the second character of the key string — wrong result.",
+      "hint": "What does `.items()` return, and how do you access a value from a tuple?"
     }
   ]
 }

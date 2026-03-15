@@ -2,7 +2,7 @@
 title: Services Quiz
 linkTitle: Services
 type: docs
-weight: 09
+weight: 9
 prev: /quiz/kubernetes/08-workload-controllers
 next: /quiz/kubernetes/10-ingress
 ---

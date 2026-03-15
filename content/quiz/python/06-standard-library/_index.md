@@ -76,7 +76,7 @@ next: /quiz/python/07-advanced-functions
       "id": "python-standard-library-quiz-06",
       "type": "flashcard",
       "question": "What is the key difference between `json.load()` and `json.loads()`?",
-      "answer": "**`json.load()`** - Reads from a **file object**\n\n**`json.loads()`** - Reads from a **string**\n\nRemember: the 's' in `loads()` stands for 'string'!"
+      "answer": "**`json.load()`** - Reads from a **file object**\n\n**`json.loads()`** - Reads from a **string**\n\nRemember: the 's' in `loads()` stands for 'string'!\n\n**Note:** Both functions convert JSON into Python objects (not just dicts) — JSON objects→`dict`, arrays→`list`, strings→`str`, numbers→`int`/`float`, `true`/`false`→`True`/`False`, `null`→`None`"
     },
     {
       "id": "python-standard-library-quiz-07",
@@ -95,7 +95,7 @@ next: /quiz/python/07-advanced-functions
       "question": "What does `os.path.join('folder', 'subfolder', 'file.txt')` ensure?",
       "options": [
         "The path exists on the filesystem",
-        "The path uses OS-appropriate separators (/ or \\)",
+        "The path uses OS-appropriate separators (/ or \\\\)",
         "The file is created if it doesn't exist",
         "The path is converted to absolute form"
       ],
@@ -284,7 +284,7 @@ next: /quiz/python/07-advanced-functions
       "id": "python-standard-library-quiz-23",
       "type": "flashcard",
       "question": "When should you use the `time` module vs the `datetime` module?",
-      "answer": "**`time` module**: Low-level timestamps\n- Performance measurement\n- Delays (`time.sleep()`)\n- Unix timestamps (seconds since epoch)\n\n**`datetime` module**: High-level date/time\n- Business logic\n- User-facing dates\n- Calendar operations\n- Date arithmetic\n\n**Rule of thumb**: Use `datetime` for most application code, `time` for performance measurement."
+      "answer": "**`time` module**: Low-level time operations\n- Performance measurement (`time.perf_counter()`)\n- Delays and waiting (`time.sleep()`)\n- Unix timestamps (seconds since epoch)\n- System clock access\n\n**`datetime` module**: High-level date/time handling\n- Business logic\n- User-facing timestamps\n- Calendar operations\n- Date/time arithmetic (`timedelta`)\n- Parsing and formatting dates\n\n**Rule of thumb**: Use `datetime` for most application code; use `time` for performance measurement and delays."
     },
     {
       "id": "python-standard-library-quiz-24",
@@ -348,7 +348,7 @@ next: /quiz/python/07-advanced-functions
       "codeTemplate": "import re\npattern = ___\nmatch = re.search(pattern, '2025-01-26')\nprint(match.group('year'), match.group('month'), match.group('day'))",
       "answer": "r'(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2})'",
       "caseSensitive": false,
-      "explanation": "Named groups use the syntax `(?P<name>...)` where name is the identifier you'll use with `match.group('name')` or `match.groupdict()`."
+      "explanation": "Named groups use the syntax `(?P<name>...)` where name is the identifier you'll use with `match.group('name')` or `match.groupdict()`.\n**Answer:** `r'(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2})'`"
     },
     {
       "id": "python-standard-library-quiz-29",
@@ -491,6 +491,7 @@ next: /quiz/python/07-advanced-functions
       "type": "fill-blank",
       "question": "What subprocess parameter should you set to True to automatically raise an exception if a command fails?",
       "answer": "check",
+      "acceptedAnswers": ["check", "check=True"],
       "caseSensitive": false,
       "explanation": "Setting `check=True` in `subprocess.run()` raises `CalledProcessError` if the command returns a non-zero exit code.",
       "hint": "It's a boolean parameter that validates the command succeeded."

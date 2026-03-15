@@ -539,6 +539,55 @@ next: /quiz/python/04-error-handling
       "answer": 0,
       "explanation": "A variable belongs to the scope where it's first **assigned** (not where it's used). This is why `data = data.replace(...)` modifies an outer variable if `data` was assigned outside the loop.",
       "hint": "Think about when Python decides which scope a variable belongs to."
+    },
+    {
+      "id": "python-functions-deep-dive-quiz-43",
+      "type": "code-completion",
+      "question": "Complete the loop so the function iterates over the list passed in:",
+      "instruction": "Fill in the blank — what do you loop over inside the function?",
+      "codeTemplate": "def count_queries(_____):\n    result = {}\n    for item in _____:\n        key = item.strip().lower()\n        result[key] = result.get(key, 0) + 1\n    return result\n\nqueries = ['nike', ' Nike', 'rebook']\nprint(count_queries(queries))",
+      "answer": "items",
+      "caseSensitive": false,
+      "acceptedAnswers": ["items", "data", "lst", "queries", "q"],
+      "explanation": "Both blanks must use the **same name** — whatever you name the parameter in `def count_queries(_____)`, you must loop over that same name inside. The name itself is arbitrary (`items`, `datapoints`, `query_list` — all valid). The actual list (`queries`) only comes in at the **call site**: `count_queries(queries)`. Python then binds your parameter to that list, so inside the function you always use the parameter name, not `queries`.",
+      "hint": "Both blanks are the same word — the parameter name you choose in the definition."
+    },
+    {
+      "id": "python-functions-deep-dive-quiz-44",
+      "type": "code-completion",
+      "question": "Complete the code to call the function with the list:",
+      "instruction": "Fill in the missing function call",
+      "codeTemplate": "def normalize(items):\n    return [item.strip().lower() for item in items]\n\nqueries = [' Nike', ' REBOOK', 'nike']\nprint(__________(queries))",
+      "answer": "normalize",
+      "caseSensitive": false,
+      "acceptedAnswers": ["normalize"],
+      "explanation": "Call the function by name and pass the list: `normalize(queries)`. Wrapping it in `print(...)` prints the result immediately — no need for a separate variable. You could also do `result = normalize(queries)` then `print(result)`, both are valid."
+    },
+    {
+      "id": "python-functions-deep-dive-quiz-45",
+      "type": "mcq",
+      "question": "What is the main reason to wrap code in `if __name__ == \"__main__\":`?",
+      "options": [
+        "It makes the script run faster",
+        "It prevents the code from running when the file is imported as a module",
+        "It is required for Python to recognize the entry point",
+        "It enables the use of global variables inside functions"
+      ],
+      "answer": 1,
+      "explanation": "When a file is **imported**, Python sets `__name__` to the module name, so the guarded block is skipped. When the file is **run directly**, `__name__` equals `\"__main__\"` and the block executes. This lets you write files that are both importable libraries and runnable scripts without unwanted side effects on import.",
+      "hint": "Think about what happens when another script does `import yourfile`."
+    },
+    {
+      "id": "python-functions-deep-dive-quiz-46",
+      "type": "code-completion",
+      "question": "Complete the script by adding the guard block so the main logic only runs when executed directly:",
+      "instruction": "Fill in the blank",
+      "codeTemplate": "def normalize(items):\n    return [item.strip().lower() for item in items]\n\ndef main():\n    queries = [' Nike', ' REBOOK', 'nike']\n    print(normalize(queries))\n\n__________",
+      "answer": "if __name__ == '__main__': main()",
+      "caseSensitive": true,
+      "acceptedAnswers": ["if __name__ == '__main__': main()", "if __name__ == \"__main__\": main()"],
+      "explanation": "Python automatically sets `__name__` to `'__main__'` when you run a file directly (`python script.py`). When the same file is imported by another module, `__name__` is set to the file's module name instead. The full guard block `if __name__ == '__main__': main()` ensures `main()` only runs on direct execution, not on import.",
+      "hint": "The guard block starts with `if __name__ == '__main__':` and calls `main()` inside it."
     }
   ]
 }

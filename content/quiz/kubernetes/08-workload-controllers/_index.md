@@ -2,7 +2,7 @@
 title: Workload Controllers Quiz
 linkTitle: Workload Controllers
 type: docs
-weight: 08
+weight: 8
 prev: /quiz/kubernetes/07-pod-lifecycle
 next: /quiz/kubernetes/09-services
 ---
