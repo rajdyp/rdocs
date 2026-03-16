@@ -688,6 +688,36 @@ prev: /quiz/python/08-working-with-data
       "answer": 1,
       "explanation": "`.items()` produces `(key, value)` tuples like `('BackOff', 2)`. Each `x` in the lambda is a tuple, so `x[1]` is the count. Using `x['count']` would fail — tuples use index access, not key names. Sorting `warn_reasons` directly (without `.items()`) iterates over keys only, so `x[1]` would access the second character of the key string — wrong result.",
       "hint": "What does `.items()` return, and how do you access a value from a tuple?"
+    },
+    {
+      "id": "python-log-analysis-comprehensive-57",
+      "type": "mcq",
+      "question": "Which line correctly resets `login_time` in the dictionary?\n\n```python\nsession_tracker = {'alice': {'login_time': '09:00'}}\nlogin_time = session_tracker['alice']['login_time']\n```",
+      "options": [
+        "login_time = None",
+        "session_tracker['alice']['login_time'] = None",
+        "del login_time",
+        "login_time.clear()"
+      ],
+      "answer": 1,
+      "explanation": "`login_time = session_tracker['alice']['login_time']` copies the string value into a local variable. Reassigning `login_time = None` only changes that local variable — it never writes back to the dictionary. To reset the stored value you must update the dictionary directly: `session_tracker['alice']['login_time'] = None`.",
+      "hint": "A local variable holds a copy of the value. Where must you write to change the dictionary?"
+    },
+    {
+      "id": "python-log-analysis-comprehensive-58",
+      "type": "code-output",
+      "question": "What does `events` contain after this loop finishes?",
+      "code": "events = []\nfor item in ['a', 'b', 'c']:\n    events = events.append(item)\n\nprint(events)",
+      "language": "python",
+      "options": [
+        "['a', 'b', 'c']",
+        "None",
+        "[]",
+        "TypeError"
+      ],
+      "answer": 1,
+      "explanation": "`list.append()` mutates the list in-place and returns `None`. So `events = events.append(item)` first appends `item` to the list, then overwrites `events` with `None`. On the next iteration, `events.append(item)` raises `AttributeError` — but even if it didn't, the result is `None`. The fix is simply `events.append(item)` with no reassignment.",
+      "hint": "What does append() return?"
     }
   ]
 }
