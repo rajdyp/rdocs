@@ -29,4 +29,5 @@ toc: false
   {{< card link="gitops" title="GitOps" icon="gitops" subtitle="Declarative deployment workflows using Git as the single source of truth." >}}
   {{< card link="linux" title="Linux" icon="terminal" subtitle="System administration, command-line tools, and essential concepts for managing servers and infrastructure." >}}
   {{< card link="python" title="Python" icon="python" subtitle="Programming fundamentals, advanced concepts, and practical applications." >}}
+  {{< card link="interview-prep" title="Interview Prep" icon="academic-cap" subtitle="Mental models and frameworks for problem-solving, system design, debugging, and behavioral interviews." >}}
 {{< /cards >}}

@@ -214,7 +214,7 @@ next: /quiz/python/05-oop-fundamentals
       "id": "python-error-handling-quiz-17",
       "type": "flashcard",
       "question": "What is the mental model for when to create a custom context manager?",
-      "answer": "**\"If I do X, must I always undo/cleanup Y — no matter what?\"**\n\nIf yes, create a context manager. The core pattern is **pairing setup with teardown operations that must always run together** — even if an exception occurs.\n\n**Common scenarios:**\n- Temporary state changes (then restore)\n- Resource acquisition/release (files, connections, locks)\n- Transaction-like operations (commit/rollback)\n- Timing/monitoring (start/end)\n- Testing utilities (setup/cleanup)"
+      "answer": "**Decision trigger:** \"If I do X, must I always undo/cleanup Y — no matter what?\"\n\nIf yes, create a context manager.\n\n**Structure:** SETUP → USE → CLEANUP (guaranteed)\n\nThe core pattern is **pairing setup with teardown operations that must always run together** — even if an exception occurs.\n\n**Common scenarios:**\n- Temporary state changes (then restore)\n- Resource acquisition/release (files, connections, locks)\n- Transaction-like operations (commit/rollback)\n- Timing/monitoring (start/end)\n- Testing utilities (setup/cleanup)"
     },
     {
       "id": "python-error-handling-quiz-18",

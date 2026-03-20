@@ -67,7 +67,7 @@ next: /quiz/python/07-advanced-functions
       "id": "python-standard-library-quiz-05",
       "type": "fill-blank",
       "question": "What method converts a JSON file to a Python dictionary?",
-      "answer": "json.load",
+      "answer": "json.load()",
       "caseSensitive": false,
       "explanation": "The `json.load()` method reads from a file object and converts JSON to a Python dict. Note: `json.loads()` works with strings.",
       "hint": "It's a method from the json module that works with file objects."
