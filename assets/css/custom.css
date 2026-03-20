@@ -1448,7 +1448,7 @@
 .ri-box-orange  { background: #ffedd5; color: #c2410c; }
 .ri-box-blue    { background: #dbeafe; color: #1d4ed8; }
 .ri-box-green   { background: #dcfce7; color: #15803d; }
-.ri-box-darkgreen { background: #bbf7d0; color: #065f46; }
+.ri-box-darkgreen { background: #86efac; color: #14532d; }
 
 /* Review date states */
 .ri-overdue   { color: var(--quiz-red, #ef4444); font-weight: 600; }
@@ -1469,7 +1469,7 @@
 .dark .ri-box-orange  { background: #431407; color: #fdba74; }
 .dark .ri-box-blue    { background: #1e3a5f; color: #93c5fd; }
 .dark .ri-box-green   { background: #052e16; color: #86efac; }
-.dark .ri-box-darkgreen { background: #022c22; color: #6ee7b7; }
+.dark .ri-box-darkgreen { background: #064e3b; color: #6ee7b7; }
 
 /* Mobile: collapse table to cards */
 @media (max-width: 640px) {

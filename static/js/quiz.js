@@ -83,6 +83,7 @@
     }
 
     recordQuizSession(pathname, title, scorePercent, errorPool) {
+      this.load();
       const existing = this.data.quizSessions[pathname] || { attempts: 0, masteredCount: 0 };
       const masteredCount = scorePercent >= 90 ? (existing.masteredCount || 0) + 1 : 0;
       this.data.quizSessions[pathname] = {
@@ -97,6 +98,7 @@
     }
 
     updateErrorPool(pathname, errorPool) {
+      this.load();
       const existing = this.data.quizSessions[pathname];
       if (!existing) return;
       existing.errorPool = errorPool;

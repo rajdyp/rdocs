@@ -30,6 +30,12 @@ terraform: >
     <path d="M6 4.8l6 3.5v6.9l-6-3.5zM12 8.3l6-3.5v6.9l-6 3.5zM12 15.2l6-3.4v6.9l-6 3.5z"/>
   </svg>
 
+interview-prep: >
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3L4 7v5c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V7z"/>
+    <path d="M9 12l2 2 4-4"/>
+  </svg>
+
 gitops: >
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
     <path d="M5 9.5l7-7 7 7-7 7z"/>

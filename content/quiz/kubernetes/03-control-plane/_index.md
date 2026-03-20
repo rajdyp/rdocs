@@ -102,7 +102,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "answer": "NoSchedule",
       "caseSensitive": false,
       "acceptedAnswers": ["NoSchedule", "noschedule"],
-      "explanation": "The `NoSchedule` effect prevents new pods from being scheduled on the node unless they have a matching toleration. Other effects include `NoExecute` (evicts existing pods) and `PreferNoSchedule` (soft version)."
+      "explanation": "The `NoSchedule` effect prevents new pods from being scheduled on the node unless they have a matching toleration. Other effects include `NoExecute` (evicts existing pods) and `PreferNoSchedule` (soft version). Syntax: `kubectl taint nodes <node-name> <key>=<value>:<effect>`"
     },
     {
       "id": "kubernetes-control-plane-quiz-09",
@@ -115,7 +115,7 @@ next: /quiz/kubernetes/04-worker-nodes
         "The remaining node can still process writes"
       ],
       "answer": 1,
-      "explanation": "With 2 out of 3 nodes failed, the cluster loses quorum (needs 2, has only 1). The cluster becomes read-only—existing workloads continue running, but no changes can be made. Quorum must be restored to resume write operations.",
+      "explanation": "With 2 out of 3 nodes failed, the cluster loses quorum (needs 2, has only 1). The cluster becomes read-only — existing workloads continue running, but no changes can be made. Quorum must be restored to resume write operations.",
       "hint": "Think about the quorum formula: (N/2) + 1"
     },
     {
@@ -268,7 +268,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "id": "kubernetes-control-plane-quiz-22",
       "type": "flashcard",
       "question": "What are Node Affinity and Pod Affinity/Anti-Affinity?",
-      "answer": "**Node Affinity** places pods based on node labels.\n- `requiredDuringSchedulingIgnoredDuringExecution`: Hard requirement (must match)\n- `preferredDuringSchedulingIgnoredDuringExecution`: Soft preference (best effort)\n\n**Pod Affinity/Anti-Affinity** places pods based on other pods’ labels and where those pods are running.\n- **Affinity**: Schedule near certain pods (e.g., same zone)\n- **Anti-Affinity**: Schedule away from certain pods (e.g., spread replicas)\n\n**Use cases:**\n- Affinity: Co-locate related services for low latency\n- Anti-Affinity: Spread replicas for high availability"
+      "answer": "**Node Affinity** places pods based on node labels (not topology-aware).\n- `requiredDuringSchedulingIgnoredDuringExecution`: Hard requirement (must match)\n- `preferredDuringSchedulingIgnoredDuringExecution`: Soft preference (best effort)\n\n**Pod Affinity/Anti-Affinity** places pods based on other pods’ labels and where those pods are running. It is topology-aware via `topologyKey` (e.g., node, zone).\n- **Affinity**: Schedule near certain pods (e.g., same zone)\n- **Anti-Affinity**: Schedule away from certain pods (e.g., spread replicas)\n\n**Use cases:**\n- Affinity: Co-locate related services for low latency\n- Anti-Affinity: Spread replicas for high availability"
     },
     {
       "id": "kubernetes-control-plane-quiz-23",
@@ -382,7 +382,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "type": "true-false",
       "question": "If etcd experiences total data loss, the cluster can recover by having the controllers and API server rebuild the state from memory.",
       "answer": false,
-      "explanation": "False. etcd is the single source of truth—there is no other persistent storage of cluster state. If etcd experiences total data loss without backups, the cluster is unrecoverable and must be rebuilt from scratch. This highlights the critical importance of regular etcd backups.",
+      "explanation": "False. etcd is the single source of truth — there is no other persistent storage of cluster state. If etcd experiences total data loss without backups, the cluster is unrecoverable and must be rebuilt from scratch. This highlights the critical importance of regular etcd backups.",
       "hint": "Where is cluster state persisted?"
     },
     {

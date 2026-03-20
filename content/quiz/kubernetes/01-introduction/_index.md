@@ -1,6 +1,6 @@
 ---
-title: Introduction Quiz
-linkTitle: Introduction to k8s
+title: Introduction to K8s Quiz
+linkTitle: Introduction to K8s
 type: docs
 weight: 1
 prev: /quiz/kubernetes
@@ -74,7 +74,7 @@ next: /quiz/kubernetes/02-cluster-architecture
       "id": "kubernetes-introduction-quiz-06",
       "type": "flashcard",
       "question": "What is the reconciliation loop in Kubernetes and why is it important?",
-      "answer": "**The Reconciliation Loop** is Kubernetes' core control mechanism that continuously compares the desired state (what you want) with the actual state (current reality) and takes corrective action when they differ.\n\n**Why it's important:**\n\n- Enables self-healing: automatically recovers from failures\n- Maintains desired state: if a pod crashes, Kubernetes restarts it\n- Runs continuously: checks every ~30 seconds\n- Reduces manual intervention: no need to manually fix issues"
+      "answer": "**The Reconciliation Loop** is Kubernetes' core control mechanism where controllers continuously compare the desired state (what you want) with the actual state (current reality) and take corrective actions to reconcile any differences.\n\nControllers watch the cluster state via the API server, detect any drift, and take corrective actions to reconcile the difference.\n\n**Why it's important:**\n\n- Enables self-healing: automatically recovers from failures\n- Maintains desired state: ensures declared configuration is always enforced\n- Runs continuously: checks every ~30 seconds\n- Reduces manual intervention: system corrects itself automatically"
     },
     {
       "id": "kubernetes-introduction-quiz-07",

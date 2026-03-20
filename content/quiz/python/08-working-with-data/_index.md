@@ -68,6 +68,7 @@ next: /quiz/python/log-analysis
       "type": "fill-blank",
       "question": "What parameter should you ALWAYS pass to the `open()` function when writing CSV files to prevent blank rows on Windows?",
       "answer": "newline=''",
+      "acceptedAnswers": ["newline=''", "newline=\"\""],
       "caseSensitive": false,
       "explanation": "The `newline=''` parameter prevents the csv module from writing blank lines between rows on Windows systems. This is a cross-platform best practice when using Python's csv module.",
       "hint": "It's related to line endings and takes an empty string as its value."
