@@ -92,13 +92,13 @@ next: /quiz/kubernetes/12-configuration
       "question": "Arrange these steps in the correct order for the PV-PVC binding process:",
       "instruction": "Drag to arrange from first to last step",
       "items": [
-        "Administrator creates PersistentVolume",
         "User creates PersistentVolumeClaim",
+        "Administrator creates PersistentVolume",
         "Kubernetes matches and binds PVC to PV",
         "Pod references PVC in its volume configuration",
         "Pod can now read/write to persistent storage"
       ],
-      "correctOrder": [0, 1, 2, 3, 4],
+      "correctOrder": [1, 0, 2, 3, 4],
       "explanation": "The PV-PVC workflow: First, an admin provisions a PV. Then, a user requests storage via PVC. Kubernetes automatically binds the PVC to a suitable PV. The pod references the PVC name, and finally the pod can use the storage."
     },
     {
@@ -143,7 +143,7 @@ next: /quiz/kubernetes/12-configuration
         "StorageClass makes storage faster"
       ],
       "answer": 1,
-      "explanation": "StorageClass enables dynamic provisioning - when a PVC references a StorageClass, the provisioner automatically creates a matching PV without manual administrator intervention. This solves the scalability problem of manually pre-creating PVs.",
+      "explanation": "`StorageClass` enables dynamic provisioning - when a PVC references a StorageClass, the provisioner automatically creates a matching PV without manual administrator intervention. This solves the scalability problem of manually pre-creating PVs.",
       "hint": "Think about the word 'dynamic' in dynamic provisioning."
     },
     {
@@ -167,7 +167,7 @@ next: /quiz/kubernetes/12-configuration
       "type": "true-false",
       "question": "When a PVC with reclaimPolicy: Retain is deleted, the underlying PersistentVolume and its data are automatically deleted.",
       "answer": false,
-      "explanation": "With reclaimPolicy: Retain, when a PVC is deleted, the PV is NOT automatically deleted. It enters a 'Released' state and retains the data, allowing administrators to manually reclaim or backup the data. The 'Delete' policy would automatically delete the PV.",
+      "explanation": "With `reclaimPolicy: Retain`, when a PVC is deleted, the PV is NOT automatically deleted. It enters a 'Released' state and retains the data, allowing administrators to manually reclaim or backup the data. **Kubernetes supports three reclaim policies:** (1) `Retain` — PV is kept in 'Released' state after PVC deletion, data preserved, manual cleanup required; (2) `Delete` — PV and its underlying storage asset are automatically deleted when the PVC is deleted; (3) `Recycle` (deprecated) — performs a basic scrub (rm -rf) on the volume and makes it available again for a new claim.",
       "hint": "What does 'Retain' mean in everyday language?"
     },
     {
@@ -183,14 +183,14 @@ next: /quiz/kubernetes/12-configuration
         "After 5 minutes of the PVC being in Pending state"
       ],
       "answer": 2,
-      "explanation": "WaitForFirstConsumer delays volume provisioning until a pod using the PVC is scheduled. This ensures the volume is created in the correct availability zone/region where the pod will run, which is especially important for cloud providers with zone-specific storage.",
+      "explanation": "`WaitForFirstConsumer` delays volume provisioning until a pod using the PVC is scheduled. This ensures the volume is created in the correct availability zone/region where the pod will run, which is especially important for cloud providers with zone-specific storage. **Kubernetes supports two volumeBindingMode options:** (1) `Immediate` — PV is provisioned and bound as soon as the PVC is created, regardless of whether any pod will use it (can cause zone mismatch issues in multi-zone clusters); (2) `WaitForFirstConsumer` — PV provisioning is delayed until a pod using the PVC is scheduled to a node, ensuring the volume is created in the correct zone.",
       "hint": "The keyword is 'FirstConsumer' - think about when the consumer (pod) appears."
     },
     {
       "id": "kubernetes-storage-quiz-15",
       "type": "flashcard",
       "question": "What is CSI (Container Storage Interface) and why is it important?",
-      "answer": "**CSI** is a standard interface that allows storage vendors to write one plugin that works across multiple container orchestrators (Kubernetes, Mesos, etc.).\n\n**Before CSI**: Each storage provider had to write Kubernetes-specific code, tightly coupled to K8s releases.\n\n**After CSI**: Storage providers implement the standard CSI interface. This allows:\n- Decoupling: Storage drivers can update independently of Kubernetes\n- Portability: Same driver works across orchestrators\n- Innovation: Easier for new storage providers to integrate\n\n**Example**: AWS EBS CSI driver (`ebs.csi.aws.com`) can be updated by AWS without waiting for Kubernetes releases."
+      "answer": "**CSI (Container Storage Interface)** is a standardized interface that allows Kubernetes to integrate with different storage systems through external plugins called **CSI drivers**. It decouples storage logic from Kubernetes core, enabling vendors to develop and maintain storage integrations independently without modifying Kubernetes.\n\n**Before CSI**: Storage plugins were built into Kubernetes (in-tree) — required a Kubernetes release to update.\n\n**With CSI**: Storage runs as external drivers (out-of-tree) — can be updated independently, works across orchestrators (Kubernetes, Mesos, etc.).\n\n**Example**: AWS EBS CSI driver (`ebs.csi.aws.com`) can be updated by AWS without waiting for Kubernetes releases."
     },
     {
       "id": "kubernetes-storage-quiz-16",
@@ -226,10 +226,11 @@ next: /quiz/kubernetes/12-configuration
         "nfs.io/nfs",
         "pd.csi.storage.gke.io",
         "local",
-        "disk.csi.azure.com"
+        "disk.csi.azure.com",
+        "rook-ceph.rbd.csi.ceph.com"
       ],
-      "answers": [1, 3],
-      "explanation": "NFS and local provisioners are cloud-agnostic and work in on-premise or multi-cloud environments. AWS EBS, GCP Persistent Disk, and Azure Disk are cloud-specific and tied to their respective platforms.",
+      "answers": [1, 3, 5],
+      "explanation": "`NFS`, `local`, and `Ceph` (via Rook) provisioners are cloud-agnostic and work in on-premise or multi-cloud environments. AWS EBS, GCP Persistent Disk, and Azure Disk are cloud-specific and tied to their respective platforms. Rook-Ceph (`rook-ceph.rbd.csi.ceph.com`) is a popular open-source distributed storage system that runs entirely within Kubernetes and is commonly used for on-premise clusters.",
       "hint": "Which provisioners don't have cloud provider names in them?"
     },
     {
@@ -266,16 +267,16 @@ next: /quiz/kubernetes/12-configuration
       "type": "true-false",
       "question": "A PersistentVolume with accessMode ReadWriteOnce can be mounted by multiple pods as long as they are on the same node.",
       "answer": true,
-      "explanation": "ReadWriteOnce (RWO) means the volume can be mounted as read-write by a single node, not a single pod. Multiple pods on the same node can share a RWO volume. If you need to restrict to a single pod across the entire cluster, use ReadWriteOncePod.",
+      "explanation": "`ReadWriteOnce (RWO)` means the volume can be mounted as read-write by a single node, not a single pod. Multiple pods on the same node can share a RWO volume. If you need to restrict to a single pod across the entire cluster, use `ReadWriteOncePod`.",
       "hint": "RWO is 'once per node', not 'once per pod'."
     },
     {
       "id": "kubernetes-storage-quiz-22",
       "type": "fill-blank",
-      "question": "The ___ policy for a PV determines what happens to the volume when its PVC is deleted.",
-      "answer": "reclaim",
+      "question": "The ___ for a PV determines what happens to the volume when its PVC is deleted.",
+      "answer": "reclaimPolicy",
       "caseSensitive": false,
-      "explanation": "The reclaimPolicy (or reclaim policy) specifies what should happen to a PersistentVolume when the PersistentVolumeClaim bound to it is deleted. Options are Retain, Delete, or Recycle (deprecated).",
+      "explanation": "The `reclaimPolicy` specifies what should happen to a PersistentVolume when the PersistentVolumeClaim bound to it is deleted. Options are `Retain`, `Delete`, or `Recycle` (deprecated).",
       "hint": "It's about 'reclaiming' storage resources."
     },
     {

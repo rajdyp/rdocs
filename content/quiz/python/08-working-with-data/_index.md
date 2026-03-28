@@ -75,15 +75,11 @@ next: /quiz/python/log-analysis
     },
     {
       "id": "python-working-with-data-quiz-06",
-      "type": "mcq",
-      "question": "When making HTTP requests with the `requests` library, what is the purpose of `response.raise_for_status()`?",
-      "options": [
-        "It prints the HTTP status code to the console",
-        "It raises an HTTPError exception if the status code indicates an error (4xx or 5xx)",
-        "It converts the response to JSON format",
-        "It validates the response headers"
-      ],
-      "answer": 1,
+      "type": "fill-blank",
+      "question": "When making HTTP requests with the `requests` library, call ___ to raise an `HTTPError` exception if the status code indicates an error (4xx or 5xx).",
+      "answer": "response.raise_for_status()",
+      "acceptedAnswers": ["response.raise_for_status()", "raise_for_status()"],
+      "caseSensitive": true,
       "explanation": "`response.raise_for_status()` checks if the HTTP status code indicates an error (4xx client errors or 5xx server errors) and raises an `HTTPError` exception if so. This allows you to use try/except for error handling instead of manually checking `status_code`.",
       "hint": "Think about what 'raise' typically means in Python error handling."
     },
@@ -120,14 +116,14 @@ next: /quiz/python/log-analysis
       "question": "Arrange these steps in the correct order for making a production-ready single HTTP request (`requests.get()`):",
       "instruction": "Drag to arrange from first to last",
       "items": [
-        "Create session with retry strategy",
-        "Set authentication headers on session",
-        "Make HTTP request with timeout",
+        "Define URL and query parameters",
+        "Make GET request with timeout",
         "Call raise_for_status() to check for errors",
-        "Parse JSON response"
+        "Parse JSON response",
+        "Handle exceptions with try/except"
       ],
-      "correctOrder": [0, 1, 2, 3, 4],
-      "explanation": "The correct flow is: 1) Set up infrastructure (session with retries), 2) Configure authentication, 3) Make the request (with timeout), 4) Check for HTTP errors, 5) Parse the response. This ensures robustness and proper error handling."
+      "correctOrder": [0, 4, 1, 2, 3],
+      "explanation": "The correct flow is: `1)` Define the URL and any query parameters, `2)` Open a try/except block to handle RequestException errors, `3)` Make the GET request with a timeout to avoid hanging, `4)` Call raise_for_status() to raise an HTTPError on 4xx/5xx responses, `5)` Parse the JSON response body.\n\n```python\nimport requests\n\nurl = \"https://api.example.com\"\n\ntry:\n    response = requests.get(url, timeout=3)\n    response.raise_for_status()\n    data = response.json()\nexcept requests.exceptions.RequestException as e:\n    print(\"Request failed:\", e)\n```"
     },
     {
       "id": "python-working-with-data-quiz-10",

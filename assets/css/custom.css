@@ -781,6 +781,12 @@
   color: var(--quiz-text);
 }
 
+.feedback-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .explanation {
   margin-top: 0.5rem;
   color: var(--quiz-text-muted);

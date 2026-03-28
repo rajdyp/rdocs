@@ -158,3 +158,463 @@ Simple event streaming            → SSE (Server-Sent Events)
 **When to use:** The "A — APIs" step of RESHADED, any "how would you design the API layer?" question.
 
 **Interview tip:** Lead with REST as your default, then justify deviating. "I'd start with REST for broad compatibility. If internal latency becomes a bottleneck between services, I'd switch those calls to gRPC."
+
+## Observability & Alerting Design Framework
+
+A structured approach for answering "how would you monitor and alert on this system?" — common in system design interviews and oncall readiness discussions.
+
+**Quick reference:**
+```
+1. User Experience   Anchor everything to what users actually feel.
+2. SLIs              Pick 2–4 measurable indicators of user experience.
+3. SLOs              Set reliability targets and define error budgets.
+4. Signals           Golden Signals + dimensions (region, endpoint, path).
+5. Instrumentation   Metrics (aggregate), logs (debug), traces (latency).
+6. Alerting          SLO-based burn-rate alerts — page only on user impact.
+7. Failure Modes     Identify likely failure patterns and verify detectability.
+8. Scaling & Cost    Control cardinality, sample traces, tier storage.
+```
+
+**When to use:** Any "design the observability strategy" question, the "D — Deep Dive" or "E — Evaluation" steps of RESHADED, or oncall system design discussions.
+
+**Interview tip:** Lead with user experience, not infrastructure metrics. "I'd start by defining what good looks like for the user, pick a small set of SLIs, attach SLOs, and build alerting around burn-rate violations — not raw thresholds."
+
+---
+
+### Step 1 — User Experience
+
+**Goal:** Anchor everything to what users actually feel, not what is easy to measure.
+
+- Define what "good" looks like for this system
+- Identify the critical user journeys (e.g., checkout, search, feed load)
+
+**Key questions:**
+- What does success look like to the user?
+- What matters most: latency, availability, or data freshness?
+- Are there different user tiers with different expectations (cached vs real-time)?
+
+---
+
+### Step 2 — SLIs (Service Level Indicators)
+
+**Goal:** Choose measurable proxies for user experience.
+
+- Pick 2–4 SLIs maximum — keep it tight and user-facing
+- Avoid infra metrics (CPU, disk) as primary SLIs
+
+**Key questions:**
+- What metric reflects user happiness?
+- How do we distinguish success from failure?
+- Do we need per-region or per-endpoint SLIs?
+
+**Common SLIs:**
+```
+Availability  → % of requests returning a successful response
+Latency       → p95 or p99 response time
+Freshness     → % of responses containing data within an acceptable age
+Error rate    → % of requests resulting in an error
+```
+
+---
+
+### Step 3 — SLOs (Service Level Objectives)
+
+**Goal:** Set reliability targets and define acceptable failure budgets.
+
+- Assign a numeric target to each SLI
+- Define the error budget: how much failure is tolerable in the window
+
+**Key questions:**
+- What is acceptable failure for this system?
+- What is the business tolerance for downtime or degradation?
+- Do critical endpoints need tighter SLOs than others?
+
+**Examples:**
+```
+99.9% availability (allows ~43 min downtime/month)
+99% of requests < 300ms at p95
+95% of responses contain data < 60 seconds old
+```
+
+---
+
+### Step 4 — Signals (Golden Signals + Dimensions)
+
+**Goal:** Break down behavior along dimensions so you can isolate problems quickly.
+
+**Golden Signals:**
+```
+Latency     — How long requests take (split p50 / p95 / p99)
+Errors      — Rate of failed requests
+Traffic     — Request volume (RPS or events/sec)
+Saturation  — Resource pressure (CPU, memory, queue depth)
+```
+
+**Add dimensions — this is the critical step:**
+```
+Region / AZ         — Is degradation localized?
+Endpoint / path     — Is one API route affected?
+Dependency          — Is it the DB, cache, or downstream service?
+Customer segment    — Is one tenant affected?
+Cache vs DB path    — Did a miss spike cause the issue?
+```
+
+> Metrics without dimensions are nearly useless at scale. A single error rate number tells you nothing about where to look.
+
+---
+
+### Step 5 — Instrumentation
+
+**Goal:** Get full visibility across the system using the right tool for each job.
+
+```
+Metrics  → Aggregation and alerting. Track SLIs, golden signals, saturation.
+Logs     → Debugging. Capture error context, request details, stack traces.
+Traces   → Latency breakdown. Show which service or span is the bottleneck.
+```
+
+**Key questions:**
+- Where is latency introduced along the request path?
+- Can I correlate a metric anomaly to a specific trace or log line?
+- Do I have request-level visibility across service boundaries?
+
+---
+
+### Step 6 — Alerting Strategy
+
+**Goal:** Page only when real users are impacted — avoid alert fatigue.
+
+**Use SLO-based burn-rate alerting:**
+- Alert when the error budget is being consumed faster than it can recover
+- Fast burn (1-hour window): urgent — something is actively degrading the SLO
+- Slow burn (6-hour window): warning — gradual erosion that needs attention soon
+
+**Separate alert tiers:**
+```
+Page (on-call wake)    → SLO burn rate exceeded, confirmed user impact
+Ticket (non-urgent)    → Elevated error rate below burn threshold, capacity warning
+Log only               → Transient anomalies, auto-remediated events
+```
+
+**Key questions:**
+- Does this alert reflect actual user pain?
+- Can this be auto-remediated before it requires human intervention?
+- Will this alert fire during normal traffic spikes?
+
+> Alert on SLO violations, not on symptoms. A slow DB query is a symptom — a burn rate alert on latency SLO is user impact.
+
+---
+
+### Step 7 — Failure Modes
+
+**Goal:** Verify your observability can detect the most likely real-world failures.
+
+**Common failure patterns to cover:**
+```
+DB slowdown         → Latency SLI degrades; trace shows slow DB span
+Cache miss spike    → Latency increases; hit ratio metric drops
+Single region down  → Availability SLI drops; sliced by region dimension
+Dependency timeout  → Error rate rises; trace shows timeout on external call
+Traffic surge       → Saturation metric rises; queue depth or CPU climbs
+```
+
+**Key questions:**
+- What happens to my SLIs if the DB slows down?
+- Can I tell the difference between a cache miss spike and a downstream timeout?
+- Does a regional failure show up as a global alert, or a localized one?
+
+---
+
+### Step 8 — Scaling & Cost Controls
+
+**Goal:** Keep telemetry cost and cardinality manageable as the system grows.
+
+**Key levers:**
+```
+Metric cardinality   — Avoid high-cardinality label combinations (e.g., user_id as a label)
+Trace sampling       — Head-based sampling for high volume; tail-based for errors
+Log tiering          — DEBUG logs to cheap storage; ERROR logs to hot storage
+Retention policy     — Short window for raw data; long window for aggregated rollups
+```
+
+**Key questions:**
+- Will adding this label to a metric cause a cardinality explosion?
+- Can I sample 1% of healthy traces and keep 100% of error traces?
+- What is the per-GB cost at 10× current traffic?
+
+---
+
+### Condensed Interview Answer
+
+When asked "how would you design observability for this system?":
+
+> "I'd start by defining the user experience — what does success look like for the user. Then I'd pick 2–3 SLIs like availability and p95 latency, attach SLOs to them, and derive an error budget. For signals, I'd instrument the Golden Signals — latency, errors, traffic, saturation — broken down by region and endpoint so I can isolate failures quickly. Instrumentation would use metrics for aggregation and alerting, logs for debugging, and traces for latency attribution. Alerting would be SLO-based using burn-rate alerts to avoid noise. Finally, I'd think through likely failure modes to validate the observability covers them, and control cardinality and sampling to keep costs reasonable at scale."
+
+## SRE System Design Framework
+
+A reliability-first structure for designing highly available backends. Use this when the question is about building something that must stay up — not just something that works. Complements RESHADED by going deeper on failure modes, cascading-failure controls, and operational safety.
+
+**Quick reference:**
+```
+1. User Experience     What matters most to users?
+2. SLIs / SLOs         How do we measure success?
+3. Request Path        How does traffic flow end to end?
+4. Core Components     What does each layer do and why?
+5. HA Design           How do we survive instance, AZ, and region failures?
+6. Failure Modes       What breaks, what is the blast radius, how do we contain it?
+7. Cascading Failures  Timeouts, retries, circuit breakers, backpressure.
+8. Scaling             How does the system grow safely?
+9. Observability       Metrics, logs, traces, alerting.
+10. Operations         Deploy, rollback, runbooks, game days.
+```
+
+**When to use:** "Design a highly available X" questions, any question where reliability is the core constraint, the "D — Deep Dive" or "E — Evaluation" steps of RESHADED for HA systems.
+
+**Interview tip:** Lead with user experience and SLOs before touching infrastructure. Interviewers want to see that you design for reliability outcomes, not just for components.
+
+---
+
+### Step 1 — User Experience
+
+**Goal:** Anchor the design on what the user actually needs, not on infrastructure first.
+
+- Clarify what the system does
+- Identify whether it is read-heavy, write-heavy, latency-sensitive, availability-sensitive, or freshness-sensitive
+- Define what "good" looks like for the user
+
+**Key questions:**
+- Who are the users?
+- What is the critical path?
+- Is the system mostly reads, writes, or both?
+- What matters most: latency, availability, correctness, freshness, throughput?
+
+> SRE design should start from user-visible reliability, because SLOs and alerting should reflect what customers experience.
+
+---
+
+### Step 2 — SLIs / SLOs
+
+**Goal:** Make reliability measurable before designing the internals.
+
+- Pick 2–4 user-facing SLIs, then define realistic SLOs
+
+**Common SLIs:**
+```
+Availability  → % of requests returning a successful response
+Latency       → p95 or p99 response time
+Freshness     → % of responses containing data within an acceptable age
+Correctness   → % of responses with valid, expected output
+Durability    → if stateful: data loss rate
+```
+
+**Key questions:**
+- What do we measure to know users are happy?
+- What would page the on-call?
+- What can degrade without paging?
+
+> If you cannot define the SLI/SLO, you do not yet know what the system is optimising for.
+
+---
+
+### Step 3 — Request Path
+
+**Goal:** Show the end-to-end flow before diving into components.
+
+- Draw the happy path from user to backend and back
+- Show both cache-hit and cache-miss paths
+
+**Typical flow:**
+```
+User → DNS / GSLB → CDN / LB → API gateway / ingress → service → cache / DB / dependencies
+```
+
+**Key questions:**
+- How does traffic enter?
+- Where is traffic routed globally?
+- Where is TLS terminated?
+- What happens on a cache hit vs cache miss?
+- Where does state live?
+
+> The request path gives the interviewer a map of the system before failure analysis begins.
+
+---
+
+### Step 4 — Core Components
+
+**Goal:** Explain each component by purpose, not by name-dropping.
+
+For each major part, say: why it exists, what problem it solves, and what happens if it fails.
+
+**Key questions:**
+- Why CDN?
+- Why cache?
+- Why service mesh / ingress?
+- Why this datastore?
+- Why multi-region?
+
+```
+Don't say:  "Redis, Istio, NLB."
+Do say:     "Regional cache to absorb read traffic and serve stale data
+             during dependency degradation."
+```
+
+---
+
+### Step 5 — High Availability Design
+
+**Goal:** Show how the system survives common failures at every layer.
+
+**Failure layers to address:**
+```
+Instance / pod failure   → Health checks, restarts, redundant replicas
+Node failure             → Multi-node scheduling, PodDisruptionBudgets
+AZ failure               → Multi-AZ replicas, cross-AZ load balancing
+Region failure           → Multi-region active-active or active-passive failover
+Dependency failure       → Degraded mode, stale serving, fallback paths
+```
+
+**Typical HA controls:**
+- Multi-AZ / multi-region replicas
+- Load balancing with health checks
+- Regional failover via GSLB
+- Read replicas and replicated caches
+- Rolling deploys with readiness gates
+
+---
+
+### Step 6 — Failure Modes
+
+**Goal:** Show how the system behaves when things go wrong — this is the most important SRE step.
+
+For each likely failure, explain: detection, impact, mitigation, and user experience.
+
+**High-signal failure modes:**
+```
+Regional outage          → GSLB reroutes; serves from remaining regions
+Dependency latency spike → Timeout triggers fallback; stale cache served
+Cache miss storm         → DB absorbs load; autoscaling kicks in
+Retry storm              → Circuit breaker opens; upstream protected
+Node exhaustion          → Autoscaler adds capacity; requests queue briefly
+Bad rollout              → Canary SLO alert fires; automated rollback triggered
+Network partition        → Partition-tolerant path serves cached data
+```
+
+**Key questions:**
+- What if one region dies?
+- What if a dependency becomes slow?
+- What if cache is unavailable?
+- What if traffic spikes suddenly?
+- What if a deploy introduces a bad config?
+
+> SRE interviews care more about graceful degradation and blast-radius control than the happy path. Large outages typically come from retry amplification, dependency stress, and cascading failures — not a single component simply going down.
+
+---
+
+### Step 7 — Cascading-Failure Controls
+
+**Goal:** Prevent one degraded dependency from taking down the whole service.
+
+**Key reliability controls:**
+```
+Timeouts          → Every outbound call has a deadline; fail fast, do not hang
+Retries           → Bounded retries with exponential backoff and jitter
+Circuit breakers  → Open after N failures; stop hammering a degraded dependency
+Rate limiting     → Protect the service and its dependencies from overload
+Backpressure      → Signal upstream when the service is at capacity
+Stale serving     → Return cached or degraded responses rather than errors
+```
+
+**Key questions:**
+- What prevents retry storms?
+- What happens when upstream is slow?
+- How do we protect the core path?
+- Can we serve partial or stale results?
+
+> A good design does not just handle failure — it contains failure.
+
+---
+
+### Step 8 — Scaling Strategy
+
+**Goal:** Explain how the system grows safely under both gradual growth and sudden spikes.
+
+**Traffic scaling:**
+```
+HPA / KEDA            → Scale service replicas on RPS, latency, or queue depth
+Cluster autoscaler    → Add nodes as pod demand grows
+CDN + cache           → Absorb read traffic before it hits the service layer
+```
+
+**Data scaling:**
+```
+Read replicas           → Spread read load across multiple DB instances
+Sharding / partitioning → Horizontal data split for write-heavy workloads
+Cache tiering           → Local in-process cache → regional cache → DB
+```
+
+**Key questions:**
+- What scales horizontally?
+- What are the bottlenecks?
+- What does autoscaling key off?
+- What happens during sudden spikes?
+
+---
+
+### Step 9 — Observability
+
+**Goal:** Make the system debuggable and operable from day one.
+
+**Cover all four layers:**
+```
+Metrics  → Golden Signals (latency, errors, traffic, saturation) by region and endpoint
+Logs     → Error context, request details, dependency call outcomes
+Traces   → End-to-end latency attribution across service boundaries
+Alerts   → SLO burn-rate alerts; page on user impact, not raw thresholds
+```
+
+**Key questions:**
+- What are the user-facing golden signals?
+- What dimensions matter: region, endpoint, dependency, status class?
+- What should page vs ticket?
+- How do we avoid alert fatigue?
+
+> SLO-based burn-rate alerting is stronger than threshold alerting because it reflects customer impact and error-budget consumption. See the Observability & Alerting Design Framework for full detail.
+
+---
+
+### Step 10 — Operational Model
+
+**Goal:** Show that the system can be safely run, not just built.
+
+**Deploy safety:**
+```
+Canary rollout     → 1% → 10% → 100% traffic shift with SLO gates at each step
+Automated rollback → Roll back automatically on burn-rate alert during canary
+Feature flags      → Decouple deploy from release; disable at runtime without redeploy
+Config validation  → Validate config schema at deploy time, not at runtime
+```
+
+**Runbooks:**
+- One runbook per high-signal alert, linked directly from the alert
+- Each runbook covers: detection, blast radius, mitigation steps, escalation path
+- Keep runbooks short and action-oriented — they are read under pressure
+
+**Operational hygiene:**
+```
+Game days        → Quarterly failure drills (region failover, dependency kill, traffic spike)
+Chaos testing    → Controlled fault injection in staging or production canary
+Postmortems      → Blameless, focused on system gaps not individuals
+On-call rotation → Team-owned with clear escalation to platform for infra failures
+```
+
+**If pressed for time, say:**
+
+> "I'd use a canary deploy strategy with automated rollback triggered by SLO burn-rate violations. Every alert would link to a runbook covering detection, mitigation, and escalation. We'd run quarterly game days to validate regional failover and dependency-degradation scenarios. On-call rotation is team-owned, with a clear escalation path to the platform team for infrastructure failures."
+
+---
+
+### Condensed Interview Answer
+
+When asked "design a highly available backend for X":
+
+> "I'd start from user experience — what does success look like for the user — then define 2–3 SLIs and attach SLOs so reliability is measurable before we touch infrastructure. I'd sketch the request path first: DNS, GSLB, CDN, API gateway, service, cache, DB. For each component I'd explain its purpose and failure mode, not just its name. HA comes from multi-AZ replicas, regional failover via GSLB, and replicated caches. The most important SRE step is failure mode analysis: what breaks, what is the blast radius, and how does the system degrade gracefully rather than fail hard. I'd add circuit breakers and bounded retries to contain cascading failures. Scaling is HPA on services, sharding on data, and CDN to absorb reads. Observability is golden signals by region and endpoint, with SLO burn-rate alerting. Finally I'd cover the operational model: canary deploys with automated rollback, runbooks linked from alerts, and quarterly game days."

@@ -47,17 +47,21 @@
       <div class="question-feedback" style="display: none;">
         <div class="feedback-correct" style="display: none;">
           <span class="feedback-icon">✓</span>
-          <span class="feedback-text">Correct!</span>
-          {{- if $question.explanation -}}
-          <p class="explanation">{{ $question.explanation | markdownify }}</p>
-          {{- end -}}
+          <div class="feedback-body">
+            <span class="feedback-text">Correct!</span>
+            {{- if $question.explanation -}}
+            <div class="explanation">{{ $question.explanation | markdownify }}</div>
+            {{- end -}}
+          </div>
         </div>
         <div class="feedback-incorrect" style="display: none;">
           <span class="feedback-icon">✗</span>
-          <span class="feedback-text">Incorrect</span>
-          {{- if $question.explanation -}}
-          <p class="explanation">{{ $question.explanation | markdownify }}</p>
-          {{- end -}}
+          <div class="feedback-body">
+            <span class="feedback-text">Incorrect</span>
+            {{- if $question.explanation -}}
+            <div class="explanation">{{ $question.explanation | markdownify }}</div>
+            {{- end -}}
+          </div>
         </div>
       </div>
 
