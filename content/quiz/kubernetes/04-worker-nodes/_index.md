@@ -112,11 +112,11 @@ next: /quiz/kubernetes/05-networking
       "type": "code-completion",
       "question": "Complete the health probe configuration to check if a container is alive:",
       "instruction": "Fill in the probe type",
-      "codeTemplate": "_____Probe:\n  httpGet:\n    path: /healthz\n    port: 8080\n  initialDelaySeconds: 30\n  periodSeconds: 10",
-      "answer": "liveness",
+      "codeTemplate": "_____:\n  httpGet:\n    path: /healthz\n    port: 8080\n  initialDelaySeconds: 30\n  periodSeconds: 10",
+      "answer": "livenessProbe",
       "caseSensitive": false,
-      "acceptedAnswers": ["liveness"],
-      "explanation": "livenessProbe checks if a container is alive. If it fails, kubelet restarts the container. This is different from readinessProbe (can accept traffic?) and startupProbe (has finished starting?)."
+      "acceptedAnswers": ["livenessProbe"],
+      "explanation": "`livenessProbe` checks if a container is alive. If it fails, kubelet restarts the container. This is different from `readinessProbe` (can accept traffic?) and `startupProbe` (has finished starting?)."
     },
     {
       "id": "kubernetes-worker-nodes-quiz-10",
@@ -306,11 +306,11 @@ next: /quiz/kubernetes/05-networking
       "type": "code-completion",
       "question": "Complete the probe that determines if a container should receive traffic from a Service:",
       "instruction": "Fill in the probe type",
-      "codeTemplate": "_____Probe:\n  httpGet:\n    path: /ready\n    port: 8080\n  periodSeconds: 5",
-      "answer": "readiness",
+      "codeTemplate": "_____:\n  httpGet:\n    path: /ready\n    port: 8080\n  periodSeconds: 5",
+      "answer": "readinessProbe",
       "caseSensitive": false,
-      "acceptedAnswers": ["readiness"],
-      "explanation": "readinessProbe determines if a container can accept traffic. When it fails, the pod is removed from Service endpoints. This is different from livenessProbe (restart if fails) and startupProbe (initial startup check)."
+      "acceptedAnswers": ["readinessProbe"],
+      "explanation": "`readinessProbe` determines if a container can accept traffic. When it fails, the pod is removed from Service endpoints. This is different from `livenessProbe` (restart if fails) and `startupProbe` (initial startup check)."
     },
     {
       "id": "kubernetes-worker-nodes-quiz-26",

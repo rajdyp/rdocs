@@ -3,21 +3,221 @@ title: Problem Solving
 weight: 1
 ---
 
-## Troubleshooting Framework
+## Incident Response Framework
 
 Use when something is broken and you need to diagnose it systematically without jumping to conclusions.
 
+**Quick reference:**
 ```
-1.  Confirm    — Reproduce the issue. Verify it is actually happening.
-2.  Scope      — Determine blast radius. Who/what is affected? Since when?
-3.  Locate     — Narrow the fault domain. Which layer or component owns this?
-4.  Mitigate   — Stop the bleeding. Rollback, redirect, or disable as needed.
-5.  Root Cause — Dig until you find the real cause, not just the symptom.
+1. Confirm    — Verify the issue is real, current, and user-impacting.
+2. Scope      — Determine blast radius: who, what, where, since when.
+3. Correlate  — Identify recent changes that could explain the issue.
+4. Stabilize  — Pause risky changes and stop the incident from expanding.
+5. Locate     — Narrow the fault domain using golden signals and dependency tracing.
+6. Mitigate   — Take the fastest safe action to reduce user impact.
+7. Root Cause — Identify both the trigger and the missing safeguard.
+8. Recover    — Confirm the system is truly healthy, not just quieter.
+9. Prevent    — Add fixes, guardrails, and learnings to avoid recurrence.
 ```
 
 **When to use:** Incidents, production bugs, mysterious failures, on-call escalations.
 
 **Interview tip:** Narrate each step out loud. Interviewers want to see your reasoning process, not just the answer.
+
+---
+
+### Step 1 — Confirm
+
+**Goal:** Ensure the issue is real, current, and user-impacting.
+
+- Validate via dashboards (latency, errors, traffic, saturation), alerts, synthetic checks, or user reports
+- Determine if the issue is ongoing, intermittent, or already self-resolved
+- Separate signal from noise — filter out false positives before escalating
+
+**Key questions:**
+- Is this still happening right now?
+- What exactly is degraded: latency, errors, availability, or correctness?
+- Is this real user impact or a noisy signal?
+
+> This is a quick golden signal check to confirm the issue exists. Step 5 uses the same signals analytically to locate the fault domain.
+
+---
+
+### Step 2 — Scope
+
+**Goal:** Understand blast radius and urgency.
+
+- Identify who is affected: one user, one tenant, one region, one AZ, all customers
+- Establish a timeline of when it started
+- Compare healthy vs unhealthy slices to find the boundary
+
+**Scope dimensions:**
+- Region / AZ
+- Service / endpoint
+- Version / deploy group
+- Customer segment
+- Dependency path
+
+**Key questions:**
+- Is this global or isolated?
+- Who is impacted and how severely?
+- When did this begin?
+
+---
+
+### Step 3 — Correlate
+
+**Goal:** Identify recent changes that could explain the issue.
+
+- Check recent deploys (app, infra, config)
+- Check feature flag changes, traffic pattern shifts, dependency updates
+- Check certificate rotations, DNS updates, quota changes
+- Build a timeline: incident start vs change events — look for overlap
+
+**Key questions:**
+- What changed around the time this started?
+- Did this begin right after a deploy or config update?
+- Is the change localized to the affected scope (e.g., only one region)?
+
+> Changes often tell you *why* before you even start locating *where*.
+
+---
+
+### Step 4 — Stabilize
+
+**Goal:** Prevent further impact while investigation continues.
+
+- Pause or roll back recent deploys
+- Freeze config and feature flag changes
+- Isolate affected region or service if needed
+- Page relevant owners and protect system capacity
+
+**Key questions:**
+- Do I need to stop an ongoing rollout?
+- Is the incident still expanding?
+- Can I reduce risk while investigating?
+
+> This step shows interview maturity: in real incidents you do not always wait until root cause before taking action.
+
+---
+
+### Step 5 — Locate
+
+**Goal:** Narrow the fault domain using signals and system behavior.
+
+**Step 1 — Check golden signals:**
+- Latency, Errors, Traffic, Saturation
+
+**Step 2 — Interpret signals:**
+```
+High latency + low CPU  → dependency or network issue
+High CPU                → compute bottleneck
+High error rate         → failing service or downstream
+Traffic drop            → upstream routing or client-side issue
+```
+
+**Step 3 — Isolate by layer (let signals guide you, not the other way around):**
+```
+Edge          — DNS, CDN, GSLB
+Entry         — LB, ingress, API gateway
+Platform      — nodes, kube-proxy, service mesh, networking
+Service       — pods, app instances, queues
+Dependency    — DB, cache, downstream API
+Control plane — deploys, feature flags, certs, config changes
+```
+
+**Step 4 — Use observability:**
+- Metrics → detect the anomaly
+- Logs → find errors and timeouts
+- Traces → identify the slow span
+
+**Key questions:**
+- Where is the time being spent?
+- Where do healthy and unhealthy paths diverge?
+- Is this infra, application, or dependency?
+
+> Signals tell you *where*; the Correlate step tells you *why*.
+
+---
+
+### Step 6 — Mitigate
+
+**Goal:** Reduce user impact with the fastest safe action.
+
+- Roll back or disable the problematic change
+- Shift traffic to healthy regions
+- Scale out the hot component
+- Fail over dependencies
+- Increase cache TTL or disable expensive non-critical features
+- Drain bad nodes
+
+**Key questions:**
+- What is the fastest safe action?
+- Can I reduce impact before I have full root cause?
+- Is this action reversible?
+
+> Target the smallest safe action that buys time. Stabilize is "hold the line"; Mitigate is "repair the damage."
+
+---
+
+### Step 7 — Root Cause
+
+**Goal:** Identify the actual trigger and why the system allowed it.
+
+**Two parts:**
+- **Trigger** — What changed or failed first?
+- **System gap** — Why did this become user impact? Why did safeguards not catch it?
+
+**Key questions:**
+- What was the first bad event?
+- Why did detection or protection mechanisms fail?
+- Was it capacity, config, dependency, rollout, or design weakness?
+
+**Avoid shallow answers:**
+```
+Shallow:  "DB was slow."
+Deep:     "DB was slow because one region had connection pool exhaustion
+           after a cache miss spike caused by config drift."
+```
+
+---
+
+### Step 8 — Recover Fully
+
+**Goal:** Ensure the system is completely healthy, not just quieter.
+
+- Verify all golden signals return to normal baseline
+- Check backlogs, queue depth, retry storms, cache warm-up
+- Confirm replica health across all regions
+- Verify no partial degradation remains hidden
+
+**Key questions:**
+- Are we truly healthy or just temporarily quiet?
+- Is there hidden backlog or delayed impact?
+- Are all regions and replicas healthy?
+
+> Most candidates stop at Mitigate. Explicitly calling out recovery signals operational maturity.
+
+---
+
+### Step 9 — Prevent Recurrence
+
+**Goal:** Reduce the likelihood and impact of similar incidents.
+
+**Short-term (this sprint):**
+- Tune alerting to catch this class of failure earlier (SLO-based preferred)
+- Update runbooks and dashboards
+- Add or improve canary / rollout safety checks
+
+**Long-term (this quarter):**
+- Add circuit breakers, rate limiting, or retry guardrails
+- Strengthen regional isolation and capacity planning
+- Increase observability coverage for the affected path
+
+**Key questions:**
+- What would have detected this earlier?
+- What would have reduced blast radius?
+- What should be automated or enforced by policy?
 
 ## UPER Problem-Solving Framework
 

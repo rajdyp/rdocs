@@ -121,7 +121,7 @@ next: /quiz/kubernetes/11-storage
       "id": "kubernetes-ingress-quiz-09",
       "type": "flashcard",
       "question": "Explain the difference between host-based routing and path-based routing in Ingress. Provide examples.",
-      "answer": "**Host-Based Routing:**\n- Routes based on the hostname (domain) in the request\n- Different domains → different services\n- Example:\n  - api.example.com → api-service\n  - web.example.com → web-service\n  - admin.example.com → admin-service\n- Use case: Multiple applications on different subdomains\n\n**Path-Based Routing:**\n- Routes based on the URL path\n- Same domain, different paths → different services\n- Example:\n  - example.com/api → api-service\n  - example.com/web → web-service\n  - example.com/admin → admin-service\n- Use case: Microservices architecture on single domain\n\n**Hybrid Routing:**\n- Combine both: different hosts + different paths\n- Example: api.example.com/v1 vs api.example.com/v2\n- Maximum flexibility for complex routing needs"
+      "answer": "**Host-Based Routing:**\n- Routes based on the hostname (domain) in the request\n- Different domains → different services\n- Example:\n  - api.example.com → api-service\n  - web.example.com → web-service\n  - admin.example.com → admin-service\n- Use case: Multiple applications on different subdomains\n\n**Path-Based Routing:**\n- Routes based on the URL path\n- Same domain, different paths → different services\n- Example:\n  - example.com/api → api-service\n  - example.com/web → web-service\n  - example.com/admin → admin-service\n- Use case: Microservices architecture on single domain\n\nBoth can be combined in a single Ingress — e.g., route by host first, then by path within that host."
     },
     {
       "id": "kubernetes-ingress-quiz-10",
@@ -280,17 +280,13 @@ next: /quiz/kubernetes/11-storage
     },
     {
       "id": "kubernetes-ingress-quiz-23",
-      "type": "mcq",
-      "question": "What command creates a TLS Secret from certificate files for use with Ingress?",
-      "options": [
-        "kubectl create secret generic my-tls --from-file=tls.crt --from-file=tls.key",
-        "kubectl create secret tls my-tls --cert=tls.crt --key=tls.key",
-        "kubectl create configmap my-tls --from-file=tls.crt --from-file=tls.key",
-        "kubectl apply -f tls-secret.yaml"
-      ],
-      "answer": 1,
+      "type": "fill-blank",
+      "question": "What command creates a TLS Secret named 'my-tls' from certificate files tls.crt and tls.key for use with Ingress?\n_____",
+      "answer": "kubectl create secret tls my-tls --cert=tls.crt --key=tls.key",
+      "caseSensitive": false,
+      "acceptedAnswers": ["kubectl create secret tls my-tls --cert=tls.crt --key=tls.key"],
       "explanation": "The correct command is `kubectl create secret tls <name> --cert=<cert-file> --key=<key-file>`. This creates a Secret with type 'kubernetes.io/tls' containing the properly named keys 'tls.crt' and 'tls.key'.",
-      "hint": "There's a specific 'secret tls' subcommand for TLS certificates."
+      "hint": "There's a specific secret subcommand for TLS certificates."
     },
     {
       "id": "kubernetes-ingress-quiz-24",
@@ -344,7 +340,7 @@ next: /quiz/kubernetes/11-storage
       "id": "kubernetes-ingress-quiz-28",
       "type": "flashcard",
       "question": "What are the key Ingress components and their responsibilities?",
-      "answer": "**Ingress Resource:**\n- Defines routing rules (declarative config)\n- Specifies hosts, paths, and backend services\n- **Role:** What to route\n\n**IngressClass:**\n- Links Ingress Resources to specific Controllers\n- Allows multiple controllers in one cluster\n- **Role:** Which controller handles this Ingress\n\n**Ingress Controller:**\n- Implements the actual routing (runs nginx/ALB/Istio/etc.)\n- Watches Ingress resources and configures load balancer\n- **Role:** How to route (the implementation)\n\n**TLS Secret:**\n- Stores certificates and private keys\n- Referenced by Ingress for HTTPS termination\n- **Role:** Enables secure connections\n\n**Backend Service:**\n- Receives routed traffic from Ingress\n- ClusterIP service that forwards to Pods\n- **Role:** Final destination for requests"
+      "answer": "**Ingress Resource:**\n- Defines routing rules (declarative config)\n- Specifies hosts, paths, and backend services\n- **Role:** What to route\n\n**IngressClass:**\n- Links Ingress Resources to specific Controllers\n- Allows multiple controllers in one cluster\n- **Role:** Which controller handles this Ingress\n\n**Ingress Controller:**\n- Implements the actual routing (runs nginx/ALB/Istio/etc.)\n- Watches Ingress resources and configures load balancer\n- **Role:** How to route (the implementation)\n\n**TLS Secret:**\n- Stores certificates and private keys\n- Referenced by Ingress for HTTPS termination\n- **Role:** Enables secure connections\n\n**Backend Service:**\n- Receives routed traffic from Ingress\n- ClusterIP service that forwards to Pods\n- **Role:** Final destination for requests\n\n---\n\n**[CONTROL PLANE]**\n```\nIngress Resource\n   ↓ (ingressClassName)\nIngressClass\n   ↓ (controller field)\nIngress Controller (control loop)\n   ↓\nGenerates proxy config (NGINX / Envoy)\n```\n\n**[DATA PLANE]**\n```\nExternal Client\n   ↓\nLoadBalancer / NodePort Service\n   ↓\nIngress Controller Pod (NGINX data plane)\n   ↓ (TLS termination + routing)\nClusterIP Service\n   ↓\nPod\n```"
     },
     {
       "id": "kubernetes-ingress-quiz-29",
@@ -374,7 +370,7 @@ next: /quiz/kubernetes/11-storage
       "id": "kubernetes-ingress-quiz-31",
       "type": "flashcard",
       "question": "Explain how to troubleshoot an Ingress that isn't routing traffic correctly. What should you check?",
-      "answer": "**Ingress Troubleshooting Checklist:**\n\n**1. Verify Ingress Status:**\n```bash\nkubectl describe ingress <name>\n# Check: Address assigned? Rules correct? Backends listed?\n```\n\n**2. Verify IngressClass:**\n```bash\nkubectl get ingressclass\n# Does the IngressClass exist?\nkubectl get ingress <name> -o yaml | grep ingressClassName\n# Does Ingress reference the correct IngressClass?\n```\n\n**3. Check Ingress Controller:**\n```bash\nkubectl get pods -n ingress-nginx\n# Is controller running? Check logs for errors\nkubectl logs -n ingress-nginx <controller-pod>\n```\n\n**4. Verify Backend Service:**\n```bash\nkubectl get svc <backend-service>\nkubectl get endpoints <backend-service>\n# Service exists? Has endpoints (pods)?\n```\n\n**5. Check Pods:**\n```bash\nkubectl get pods -l app=<backend>\n# Pods running? Ready?\n```\n\n**6. Test Routing:**\n```bash\ncurl -H \"Host: api.example.com\" http://<ingress-ip>\n# Test host-based routing\ncurl http://<ingress-ip>/api\n# Test path-based routing\n```\n\n**7. Check DNS:**\n```bash\nnslookup api.example.com\n# Does domain resolve to Ingress IP?\n```\n\n**Common Issues:**\n- No Ingress Controller installed\n- IngressClass doesn't exist or wrong ingressClassName\n- Backend Service doesn't exist\n- No pods matching Service selector\n- DNS not pointing to Ingress IP"
+      "answer": "**Mental Model:**\n```\n1. Check DNS                 ← Can the client even reach the Ingress?\n2. Check Ingress Controller  ← Is the implementation running?\n3. Verify IngressClass       ← Is the right controller selected?\n4. Verify Ingress Status     ← Are the rules configured correctly?\n5. Test Routing (curl)       ← Do the Ingress rules route correctly?\n6. Check TLS                 ← Are certificates valid and referenced?\n7. Verify Backend Service    ← Does the destination exist?\n8. Check Pods                ← Are there healthy backends?\n```\n\n---\n\n**Ingress Troubleshooting Checklist:**\n\n**1. Check DNS:**\n```bash\nnslookup api.example.com\n# Does domain resolve to Ingress IP?\n```\n\n**2. Check Ingress Controller:**\n```bash\nkubectl get pods -n ingress-nginx\n# Is controller running? Check logs for errors\nkubectl logs -n ingress-nginx <controller-pod>\n```\n\n**3. Verify IngressClass:**\n```bash\nkubectl get ingressclass\n# Does the IngressClass exist?\nkubectl get ingress <name> -o yaml | grep ingressClassName\n# Does Ingress reference the correct IngressClass?\n```\n\n**4. Verify Ingress Status:**\n```bash\nkubectl describe ingress <name>\n# Check: Address assigned? Rules correct? Backends listed?\n```\n\n**5. Test Routing:**\n```bash\ncurl http://api.example.com\n# Test host-based routing\ncurl http://api.example.com/api\n# Test path-based routing\n```\n\n**6. Check TLS (if using HTTPS):**\n```bash\nkubectl get secret <tls-secret-name>\n# Does the Secret exist?\nkubectl get ingress <name> -o yaml | grep -A2 tls\n# Is it referenced correctly in the Ingress spec?\n```\n\n**7. Verify Backend Service:**\n```bash\nkubectl get svc <backend-service>\nkubectl get endpoints <backend-service>\n# Service exists? Has endpoints (pods)?\n```\n\n**8. Check Pods:**\n```bash\nkubectl get pods -l app=<backend>\n# Pods running? Ready?\n```\n\n**Common Issues:**\n- No Ingress Controller installed\n- IngressClass doesn't exist or wrong ingressClassName\n- Backend Service doesn't exist\n- No pods matching Service selector\n- DNS not pointing to Ingress IP\n- TLS Secret missing or incorrectly referenced"
     },
     {
       "id": "kubernetes-ingress-quiz-32",
