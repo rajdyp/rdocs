@@ -729,6 +729,9 @@
         case 'drag-drop':
           isCorrect = this.checkDragDrop(question, index);
           break;
+        case 'ordered-recall':
+          isCorrect = this.checkOrderedRecall(question, index);
+          break;
       }
 
       const questionId = this.getQuestionId(question, index);
@@ -797,6 +800,9 @@
             break;
           case 'drag-drop':
             isCorrect = this.checkDragDrop(question, index);
+            break;
+          case 'ordered-recall':
+            isCorrect = this.checkOrderedRecall(question, index);
             break;
         }
 
@@ -928,6 +934,38 @@
       });
 
       return isCorrect;
+    }
+
+    checkOrderedRecall(question, index) {
+      const container = question.querySelector('.ordered-recall-container');
+      const caseSensitive = container.dataset.caseSensitive === 'true';
+      const inputs = container.querySelectorAll('.ordered-recall-input');
+      let allCorrect = true;
+
+      inputs.forEach(input => {
+        const canonicalAnswer = input.dataset.answer;
+        const acceptedAnswers = input.dataset.acceptedAnswers.split('|');
+        const revealSpan = input.closest('.ordered-recall-row')
+                               .querySelector('.ordered-recall-reveal');
+        let userAnswer = input.value.trim();
+        let stepCorrect;
+
+        if (caseSensitive) {
+          stepCorrect = acceptedAnswers.some(ans => ans === userAnswer);
+        } else {
+          const lower = userAnswer.toLowerCase();
+          stepCorrect = acceptedAnswers.some(ans => ans.toLowerCase() === lower);
+        }
+
+        input.classList.add(stepCorrect ? 'correct' : 'incorrect');
+        if (!stepCorrect) {
+          allCorrect = false;
+          revealSpan.textContent = canonicalAnswer;
+          revealSpan.classList.add('ordered-recall-reveal-shown');
+        }
+      });
+
+      return allCorrect;
     }
 
     highlightOption(option, isCorrect) {
@@ -1148,6 +1186,16 @@
           input.value = '';
           input.classList.remove('correct', 'incorrect');
           input.disabled = false;
+        });
+
+        question.querySelectorAll('.ordered-recall-input').forEach(input => {
+          input.value = '';
+          input.classList.remove('correct', 'incorrect');
+          input.disabled = false;
+        });
+        question.querySelectorAll('.ordered-recall-reveal').forEach(span => {
+          span.textContent = '';
+          span.classList.remove('ordered-recall-reveal-shown');
         });
 
         // Reset flashcards
