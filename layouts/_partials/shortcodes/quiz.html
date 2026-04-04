@@ -42,6 +42,8 @@
         {{- partial "quiz/drag-drop.html" $question -}}
       {{- else if eq $question.type "code-completion" -}}
         {{- partial "quiz/code-completion.html" $question -}}
+      {{- else if eq $question.type "ordered-recall" -}}
+        {{- partial "quiz/ordered-recall.html" $question -}}
       {{- end -}}
 
       <div class="question-feedback" style="display: none;">

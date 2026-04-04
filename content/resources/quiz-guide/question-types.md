@@ -1,10 +1,10 @@
 ---
 title: "Question Types"
-description: "All 8 quiz question types with examples and properties"
+description: "All 9 quiz question types with examples and properties"
 weight: 2
 ---
 
-Complete reference for all 8 quiz question types.
+Complete reference for all 9 quiz question types.
 
 ### 1. Multiple Choice (MCQ)
 
@@ -216,6 +216,45 @@ Fill in missing code.
 - `acceptedAnswers` (array, optional): Alternative accepted answers
 - `explanation` (string, optional): Shown after submission
 - `hint` (string, optional): Hint button users can click
+
+---
+
+### 9. Ordered Recall
+
+Type each step from memory in the correct sequence.
+
+```json
+{
+  "id": "example-ordered-recall-01",
+  "type": "ordered-recall",
+  "question": "List the TCP three-way handshake steps in order:",
+  "steps": [
+    {"answer": "SYN", "acceptedAnswers": ["SYN", "syn"]},
+    {"answer": "SYN-ACK", "acceptedAnswers": ["SYN-ACK", "syn-ack", "SYNACK", "synack"]},
+    {"answer": "ACK", "acceptedAnswers": ["ACK", "ack"]}
+  ],
+  "caseSensitive": false,
+  "explanation": "The TCP handshake: client sends SYN → server replies SYN-ACK → client replies ACK.",
+  "hint": "Think about the initiation, server response, and final confirmation"
+}
+```
+
+**Properties:**
+- `id` (string, recommended): Unique identifier for stable performance tracking
+- `steps` (array): Ordered list of step objects, each with:
+  - `answer` (string): The canonical correct answer for that step
+  - `acceptedAnswers` (array, optional): Alternative accepted spellings/forms
+- `caseSensitive` (boolean, optional): Default is `false`
+- `explanation` (string, optional): Shown after submission
+- `hint` (string, optional): Hint button users can click
+
+**Behavior:**
+- Each step is a separate text input field, numbered in sequence
+- On submission, incorrect steps reveal the canonical answer inline
+- The whole question is marked correct only when every step is correct
+- On reset, all inputs are cleared and revealed answers are hidden
+
+**When to use:** Great for testing memorization of ordered sequences — protocol steps, lifecycle phases, SDLC stages, acronym expansions (e.g., LEGB, OSI layers).
 
 ---
 

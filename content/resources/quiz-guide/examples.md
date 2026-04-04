@@ -1,6 +1,6 @@
 ---
 title: "Examples"
-description: "Complete quiz example with all 8 question types"
+description: "Complete quiz example with all 9 question types"
 weight: 3
 ---
 
@@ -102,24 +102,17 @@ weight: 3
     },
     {
       "id": "python-complete-09",
-      "type": "mcq",
-      "question": "Which method converts a string to lowercase?",
-      "options": [
-        "`.toLower()`",
-        "`.lowercase()`",
-        "`.lower()`",
-        "`.case('lower')`"
+      "type": "ordered-recall",
+      "question": "List Python's LEGB scope resolution order (4 scopes, outermost last)",
+      "steps": [
+        {"answer": "Local", "acceptedAnswers": ["Local", "local"]},
+        {"answer": "Enclosing", "acceptedAnswers": ["Enclosing", "enclosing"]},
+        {"answer": "Global", "acceptedAnswers": ["Global", "global"]},
+        {"answer": "Built-in", "acceptedAnswers": ["Built-in", "built-in"]}
       ],
-      "answer": 2,
-      "explanation": "The `.lower()` method converts a string to lowercase in Python."
-    },
-    {
-      "id": "python-complete-10",
-      "type": "true-false",
-      "question": "In Python, `0` and `False` are considered equal when compared with `==`.",
-      "answer": true,
-      "explanation": "In Python, `0 == False` evaluates to `True` because `False` is equivalent to 0 in numeric context.",
-      "hint": "Try running `0 == False` in a Python interpreter."
+      "caseSensitive": false,
+      "explanation": "Python resolves variable names using LEGB: **Local** (inside the current function) → **Enclosing** (enclosing function scopes, for closures) → **Global** (module level) → **Built-in** (Python's built-in names like `len`, `print`).",
+      "hint": "Think of the acronym: L-E-G-B"
     }
   ]
 }
@@ -137,5 +130,6 @@ This quiz demonstrates:
 6. **Flashcards** - Self-assessment Q&A cards
 7. **Drag & Drop** - Arrange items in correct order
 8. **Code Completion** - Fill in missing code
+9. **Ordered Recall** - Type each step from memory in sequence
 
 You can create quizzes like this in any markdown file using the `quiz` shortcode!

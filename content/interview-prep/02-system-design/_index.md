@@ -197,7 +197,7 @@ A structured approach for answering "how would you monitor and alert on this sys
 
 ### Step 2 — SLIs (Service Level Indicators)
 
-**Goal:** Choose measurable proxies for user experience.
+**Goal:** Choose measurable indicators for user experience.
 
 - Pick 2–4 SLIs maximum — keep it tight and user-facing
 - Avoid infra metrics (CPU, disk) as primary SLIs
@@ -231,7 +231,7 @@ Error rate    → % of requests resulting in an error
 
 **Examples:**
 ```
-99.9% availability (allows ~43 min downtime/month)
+99.9% availability (allows ~44 min downtime/month)
 99% of requests < 300ms at p95
 95% of responses contain data < 60 seconds old
 ```
@@ -240,7 +240,7 @@ Error rate    → % of requests resulting in an error
 
 ### Step 4 — Signals (Golden Signals + Dimensions)
 
-**Goal:** Break down behavior along dimensions so you can isolate problems quickly.
+**Goal:** SLIs and SLOs are high-level constructs — they tell you *that* something is breaking, not *why*. Collect detailed signals broken down by dimensions so you can isolate problems quickly when an SLO is violated.
 
 **Golden Signals:**
 ```
@@ -250,7 +250,7 @@ Traffic     — Request volume (RPS or events/sec)
 Saturation  — Resource pressure (CPU, memory, queue depth)
 ```
 
-**Add dimensions — this is the critical step:**
+**Break signals down by dimensions — this is the critical step:**
 ```
 Region / AZ         — Is degradation localized?
 Endpoint / path     — Is one API route affected?
@@ -259,13 +259,13 @@ Customer segment    — Is one tenant affected?
 Cache vs DB path    — Did a miss spike cause the issue?
 ```
 
-> Metrics without dimensions are nearly useless at scale. A single error rate number tells you nothing about where to look.
+> Metrics without dimensions are nearly useless at scale. When an SLO fires, a single error rate number tells you nothing about where to look — but error rate by endpoint × dependency narrows it immediately.
 
 ---
 
 ### Step 5 — Instrumentation
 
-**Goal:** Get full visibility across the system using the right tool for each job.
+**Goal:** Instrumentation makes signals actionable — metrics tell you that something is wrong, traces show where it's happening in the request path, and logs provide the detailed context for why.
 
 ```
 Metrics  → Aggregation and alerting. Track SLIs, golden signals, saturation.
@@ -348,7 +348,15 @@ Retention policy     — Short window for raw data; long window for aggregated r
 
 When asked "how would you design observability for this system?":
 
-> "I'd start by defining the user experience — what does success look like for the user. Then I'd pick 2–3 SLIs like availability and p95 latency, attach SLOs to them, and derive an error budget. For signals, I'd instrument the Golden Signals — latency, errors, traffic, saturation — broken down by region and endpoint so I can isolate failures quickly. Instrumentation would use metrics for aggregation and alerting, logs for debugging, and traces for latency attribution. Alerting would be SLO-based using burn-rate alerts to avoid noise. Finally, I'd think through likely failure modes to validate the observability covers them, and control cardinality and sampling to keep costs reasonable at scale."
+> I'd start by defining the user experience and picking a small set of SLIs like availability and latency, then attach SLOs to establish an error budget.
+>
+> Since SLIs only tell us that something is broken, I'd design detailed signals — latency, errors, traffic, and saturation — broken down by dimensions like region, endpoint, and dependency to isolate issues quickly.
+>
+> Instrumentation would use metrics for detection, traces to localize issues in the request path, and logs to provide debugging context, all with consistent tagging for correlation.
+>
+> Alerting would be SLO-based using burn-rate alerts, so we only page on sustained user impact, while lower-severity issues go to tickets.
+>
+> Finally, I'd validate against common failure modes and control cardinality and sampling to ensure the system scales cost-effectively.
 
 ## SRE System Design Framework
 
@@ -617,4 +625,14 @@ On-call rotation → Team-owned with clear escalation to platform for infra fail
 
 When asked "design a highly available backend for X":
 
-> "I'd start from user experience — what does success look like for the user — then define 2–3 SLIs and attach SLOs so reliability is measurable before we touch infrastructure. I'd sketch the request path first: DNS, GSLB, CDN, API gateway, service, cache, DB. For each component I'd explain its purpose and failure mode, not just its name. HA comes from multi-AZ replicas, regional failover via GSLB, and replicated caches. The most important SRE step is failure mode analysis: what breaks, what is the blast radius, and how does the system degrade gracefully rather than fail hard. I'd add circuit breakers and bounded retries to contain cascading failures. Scaling is HPA on services, sharding on data, and CDN to absorb reads. Observability is golden signals by region and endpoint, with SLO burn-rate alerting. Finally I'd cover the operational model: canary deploys with automated rollback, runbooks linked from alerts, and quarterly game days."
+> Before jumping into components, I’d start by defining the user journey or system workflow to understand the critical path, and outline key SLIs/SLOs to anchor what reliability means for this system. That ensures design decisions — like scaling, caching, or failover — are driven by clear goals, rather than a component-first approach.
+>
+> Then I'd sketch the end-to-end request path — starting from entry points like DNS, GSLB, CDN, API gateway, service, cache, and storage — and explain each component in terms of its purpose and failure impact.
+>
+> I'd cover HA explicitly — redundancy across instances and nodes, multi-AZ deployment for zonal failures, and regional failover via GSLB, along with replicated caches and databases to avoid single points of failure.
+>
+> The most important part is failure mode analysis — how the system behaves under dependency failures, regional outages, or traffic spikes, and how we degrade gracefully instead of failing hard. I’d include controls like timeouts, retries with backoff, circuit breakers, and stale serving to prevent cascading failures.
+>
+> From there, I'd cover scaling — HPA for services, sharding for data, CDN to absorb reads — and observability using golden signals broken down by region and endpoint, with SLO-based burn-rate alerting.
+>
+> Finally, I'd touch on the operational model — safe deployments with canaries and automated rollback, runbooks linked from alerts, and game days to ensure the system is operable in practice.

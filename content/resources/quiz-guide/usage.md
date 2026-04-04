@@ -96,7 +96,7 @@ For consistent performance tracking across quiz updates, assign explicit IDs to 
   "type": "mcq",
   "question": "What is Python?",
   "options": ["A snake", "A language", "A framework"],
-  "correct": 1
+  "answer": 1
 }
 ```
 

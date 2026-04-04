@@ -1,0 +1,20 @@
+{{- $q := . -}}
+<div class="ordered-recall-container"
+     data-case-sensitive="{{ if $q.caseSensitive }}true{{ else }}false{{ end }}">
+  {{- range $i, $step := $q.steps -}}
+  {{- $accepted := $step.acceptedAnswers | default (slice $step.answer) -}}
+  <div class="ordered-recall-row">
+    <span class="ordered-recall-step-num">{{ add $i 1 }}</span>
+    <input
+      type="text"
+      class="ordered-recall-input"
+      placeholder="Step {{ add $i 1 }}..."
+      data-step-index="{{ $i }}"
+      data-answer="{{ $step.answer }}"
+      data-accepted-answers="{{ delimit $accepted "|" }}"
+      autocomplete="off"
+      spellcheck="false">
+    <span class="ordered-recall-reveal"></span>
+  </div>
+  {{- end -}}
+</div>
