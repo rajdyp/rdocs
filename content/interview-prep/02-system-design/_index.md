@@ -213,6 +213,7 @@ Availability  → % of requests returning a successful response
 Latency       → p95 or p99 response time
 Freshness     → % of responses containing data within an acceptable age
 Error rate    → % of requests resulting in an error
+Durability    → data loss rate (for stateful systems)
 ```
 
 ---
@@ -411,7 +412,7 @@ A reliability-first structure for designing highly available backends. Use this 
 Availability  → % of requests returning a successful response
 Latency       → p95 or p99 response time
 Freshness     → % of responses containing data within an acceptable age
-Correctness   → % of responses with valid, expected output
+Error rate    → % of requests resulting in an error
 Durability    → if stateful: data loss rate
 ```
 
@@ -465,6 +466,23 @@ Don't say:  "Redis, Istio, NLB."
 Do say:     "Regional cache to absorb read traffic and serve stale data
              during dependency degradation."
 ```
+
+**Common components and their purpose:**
+
+| Component | Purpose | Fails into |
+|---|---|---|
+| CDN | Serve static assets / cached responses from edge nodes close to users; absorb read traffic before it hits origin | Origin absorbs full load; latency spikes for distant users |
+| API Gateway | Single entry point for auth, rate limiting, routing, and protocol translation | All services exposed directly; no centralized policy enforcement |
+| Load Balancer | Distribute traffic across replicas; health-check and drain unhealthy instances | Single replica absorbs all traffic; one crash takes down the service |
+| Cache (Redis / Memcached) | Absorb read-heavy traffic; serve stale data during dependency degradation; reduce DB load | DB absorbs full read load; risk of cache stampede on cold start |
+| Message Queue (Kafka / SQS) | Decouple producers from consumers; buffer spikes; enable async processing and replay | Synchronous coupling; producer blocked when consumer is slow or down |
+| Relational DB (Postgres / MySQL) | Structured data with ACID guarantees; strong consistency; complex joins | Write bottleneck at scale; horizontal sharding adds complexity |
+| NoSQL (DynamoDB / Cassandra) | High-throughput key/value or wide-column access; horizontal scale; tunable consistency | No joins; eventual consistency requires application-level conflict handling |
+| Object Storage (S3 / GCS) | Durable, cheap storage for blobs, backups, and large files | Not suited for low-latency random reads; no in-place updates |
+| Search Index (Elasticsearch) | Full-text and faceted search; offloads complex query patterns from primary DB | Index lag; separate consistency model from source of truth |
+| Service Mesh (Istio / Linkerd) | mTLS, observability, traffic shifting, and retry policies across services without code changes | Loss of cross-service visibility; manual retry/timeout logic in each service |
+| DNS / GSLB | Route users to the nearest healthy region; global failover trigger | Stale DNS TTL delays failover; single-region outage affects all users |
+| Rate Limiter | Protect services from traffic bursts, abuse, and quota overruns | Upstream spikes cascade into latency and errors for all tenants |
 
 ---
 
@@ -596,8 +614,8 @@ Alerts   → SLO burn-rate alerts; page on user impact, not raw thresholds
 
 **Deploy safety:**
 ```
-Canary rollout     → 1% → 10% → 100% traffic shift with SLO gates at each step
-Automated rollback → Roll back automatically on burn-rate alert during canary
+Canary rollout     → 1% → 10% → 100% traffic shift with error rate checks at each step
+Automated rollback → Roll back automatically on error rate spike during canary
 Feature flags      → Decouple deploy from release; disable at runtime without redeploy
 Config validation  → Validate config schema at deploy time, not at runtime
 ```

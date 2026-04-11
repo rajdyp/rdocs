@@ -29,6 +29,7 @@ toc: false
   {{< card link="gitops" title="GitOps" icon="gitops" subtitle="Declarative deployment workflows using Git as the single source of truth." >}}
   {{< card link="linux" title="Linux" icon="terminal" subtitle="System administration, command-line tools, and essential concepts for managing servers and infrastructure." >}}
   {{< card link="python" title="Python" icon="python" subtitle="Programming fundamentals, advanced concepts, and practical applications." >}}
+  {{< card link="interview-prep" title="Interview Prep" icon="interview-prep" subtitle="Ordered recall for incident response, observability design, and SRE system design frameworks." >}}
 {{< /cards >}}
 
 {{< quiz-tools-bar >}}
