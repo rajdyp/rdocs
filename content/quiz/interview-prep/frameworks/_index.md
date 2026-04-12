@@ -14,12 +14,12 @@ prev: /quiz/interview-prep
       "type": "ordered-recall",
       "question": "List the 6 stages of the Request Path typical flow in order:",
       "steps": [
-        {"answer": "User", "acceptedAnswers": ["User", "user", "Client", "client"]},
-        {"answer": "DNS / GSLB", "acceptedAnswers": ["DNS / GSLB", "dns / gslb", "DNS/GSLB", "dns/gslb", "DNS", "dns", "GSLB", "gslb"]},
-        {"answer": "CDN / LB", "acceptedAnswers": ["CDN / LB", "cdn / lb", "CDN/LB", "cdn/lb", "CDN", "cdn", "LB", "lb", "Load Balancer", "load balancer"]},
-        {"answer": "API gateway / ingress", "acceptedAnswers": ["API gateway / ingress", "api gateway / ingress", "API gateway/ingress", "api gateway/ingress", "API gateway", "api gateway", "ingress", "Ingress"]},
-        {"answer": "Service", "acceptedAnswers": ["Service", "service", "App server", "app server"]},
-        {"answer": "Cache / DB / dependencies", "acceptedAnswers": ["Cache / DB / dependencies", "cache / db / dependencies", "Cache/DB/dependencies", "cache/db/dependencies", "Cache", "cache", "DB", "db", "Database", "database", "dependencies", "Dependencies"]}
+        {"acceptedAnswers": ["User", "user", "Users", "users", "Client", "client"]},
+        {"acceptedAnswers": ["DNS / GSLB", "dns / gslb", "DNS/GSLB", "dns/gslb", "DNS", "dns", "GSLB", "gslb"]},
+        {"acceptedAnswers": ["CDN / LB", "cdn / lb", "CDN/LB", "cdn/lb", "CDN", "cdn", "LB", "lb", "Load Balancer", "load balancer"]},
+        {"acceptedAnswers": ["API gateway / ingress", "api gateway / ingress", "API gateway/ingress", "api gateway/ingress"]},
+        {"acceptedAnswers": ["Service", "service", "App server", "app server"]},
+        {"acceptedAnswers": ["Cache / DB / dependencies", "cache / db / dependencies", "Cache/DB/dependencies", "Dependencies / DB / cache", "dependencies / DB / cache", "Dependencies/DB/cache"]}
       ],
       "caseSensitive": false,
       "explanation": "**Request Path — Typical Flow:**\n\n1. **User** — Request originates from the client.\n2. **DNS / GSLB** — DNS resolves the hostname; GSLB routes traffic to the nearest healthy region.\n3. **CDN / LB** — CDN serves cached content at the edge; load balancer distributes traffic across backend instances.\n4. **API gateway / ingress** — TLS is typically terminated here; handles auth, rate limiting, and routing to services.\n5. **Service** — Application logic processes the request.\n6. **Cache / DB / dependencies** — Service reads from cache (hit) or falls through to the database or downstream dependencies (miss).",
@@ -52,22 +52,22 @@ prev: /quiz/interview-prep
       "id": "interview-prep-frameworks-quiz-04",
       "type": "flashcard",
       "question": "List the common failure modes and their mitigations covered in the SRE System Design Framework.",
-      "answer": "| Failure Mode | Mitigation |\n|---|---|\n| **Regional outage** | GSLB reroutes; serves from remaining regions |\n| **Dependency latency spike** | Timeout triggers fallback; stale cache served |\n| **Cache miss storm** | DB absorbs load; autoscaling kicks in |\n| **Retry storm** | Circuit breaker opens; upstream protected |\n| **Node exhaustion** | Autoscaler adds capacity; requests queue briefly |\n| **Bad rollout** | Canary SLO alert fires; automated rollback triggered |\n| **Network partition** | Partition-tolerant path serves cached data |"
+      "answer": "| Failure Mode | Mitigation |\n|---|---|\n| **Regional outage** | GSLB reroutes; serves from remaining regions |\n| **Dependency latency spike** | Timeout triggers fallback; stale cache served |\n| **Cache miss storm** | DB absorbs load; autoscaling kicks in |\n| **Retry storm** | Circuit breaker opens; upstream protected |\n| **Network partition** | Partition-tolerant path serves cached data |"
     },
     {
       "id": "interview-prep-frameworks-quiz-05",
       "type": "ordered-recall",
       "question": "List the 9 steps of the Incident Response Framework in order:",
       "steps": [
-        {"answer": "Confirm", "acceptedAnswers": ["Confirm", "confirm"]},
-        {"answer": "Scope", "acceptedAnswers": ["Scope", "scope"]},
-        {"answer": "Correlate", "acceptedAnswers": ["Correlate", "correlate"]},
-        {"answer": "Stabilize", "acceptedAnswers": ["Stabilize", "stabilize"]},
-        {"answer": "Locate", "acceptedAnswers": ["Locate", "locate"]},
-        {"answer": "Mitigate", "acceptedAnswers": ["Mitigate", "mitigate"]},
-        {"answer": "Root Cause", "acceptedAnswers": ["Root Cause", "root cause", "Root cause"]},
-        {"answer": "Recover", "acceptedAnswers": ["Recover", "recover", "Recover Fully", "recover fully"]},
-        {"answer": "Prevent", "acceptedAnswers": ["Prevent", "prevent"]}
+        {"acceptedAnswers": ["Confirm", "confirm", "Verify", "verify"]},
+        {"acceptedAnswers": ["Scope", "scope"]},
+        {"acceptedAnswers": ["Correlate", "correlate"]},
+        {"acceptedAnswers": ["Stabilize", "stabilize"]},
+        {"acceptedAnswers": ["Locate", "locate"]},
+        {"acceptedAnswers": ["Mitigate", "mitigate"]},
+        {"acceptedAnswers": ["Root Cause", "root cause", "Root cause"]},
+        {"acceptedAnswers": ["Recover", "recover", "Recover Fully", "recover fully"]},
+        {"acceptedAnswers": ["Prevent", "prevent"]}
       ],
       "caseSensitive": false,
       "explanation": "**Incident Response Framework:**\n\n1. **Confirm** — Verify the issue is real, current, and user-impacting.\n2. **Scope** — Determine blast radius: who, what, where, since when.\n3. **Correlate** — Identify recent changes that could explain the issue.\n4. **Stabilize** — Pause risky changes and stop the incident from expanding.\n5. **Locate** — Narrow the fault domain using golden signals and dependency tracing.\n6. **Mitigate** — Take the fastest safe action to reduce user impact.\n7. **Root Cause** — Identify both the trigger and the missing safeguard.\n8. **Recover** — Confirm the system is truly healthy, not just quieter.\n9. **Prevent** — Add fixes, guardrails, and learnings to avoid recurrence.",
@@ -84,10 +84,10 @@ prev: /quiz/interview-prep
       "type": "ordered-recall",
       "question": "List the 4 Golden Signals in order (LETS):",
       "steps": [
-        {"answer": "Latency", "acceptedAnswers": ["Latency", "latency"]},
-        {"answer": "Errors", "acceptedAnswers": ["Errors", "errors", "Error rate", "error rate"]},
-        {"answer": "Traffic", "acceptedAnswers": ["Traffic", "traffic"]},
-        {"answer": "Saturation", "acceptedAnswers": ["Saturation", "saturation"]}
+        {"acceptedAnswers": ["Latency", "latency"]},
+        {"acceptedAnswers": ["Errors", "errors", "Error rate", "error rate"]},
+        {"acceptedAnswers": ["Traffic", "traffic"]},
+        {"acceptedAnswers": ["Saturation", "saturation"]}
       ],
       "caseSensitive": false,
       "explanation": "**4 Golden Signals (LETS):**\n\n1. **Latency** — How long requests take (split p50 / p95 / p99)\n2. **Errors** — Rate of failed requests\n3. **Traffic** — Request volume (RPS or events/sec)\n4. **Saturation** — Resource pressure (CPU, memory, queue depth)\n\nBreak each signal down by dimensions — region, endpoint, dependency, customer segment — so that when an SLO fires, you can isolate *where* the problem is, not just *that* something is wrong.",
@@ -98,16 +98,16 @@ prev: /quiz/interview-prep
       "type": "ordered-recall",
       "question": "List the 10 steps of the SRE System Design Framework in order:",
       "steps": [
-        {"answer": "User Experience", "acceptedAnswers": ["User Experience", "user experience"]},
-        {"answer": "SLIs / SLOs", "acceptedAnswers": ["SLIs / SLOs", "slis / slos", "SLIs/SLOs", "slis/slos", "SLIs SLOs", "slis slos", "SLO", "SLOs", "SLI", "SLIs"]},
-        {"answer": "Request Path", "acceptedAnswers": ["Request Path", "request path"]},
-        {"answer": "Core Components", "acceptedAnswers": ["Core Components", "core components"]},
-        {"answer": "HA Design", "acceptedAnswers": ["HA Design", "ha design", "High Availability Design", "high availability design", "High Availability", "high availability"]},
-        {"answer": "Failure Modes", "acceptedAnswers": ["Failure Modes", "failure modes", "Failure Mode", "failure mode"]},
-        {"answer": "Cascading Failures", "acceptedAnswers": ["Cascading Failures", "cascading failures", "Cascading Failure", "cascading failure", "Cascading-Failure Controls", "cascading-failure controls"]},
-        {"answer": "Scaling", "acceptedAnswers": ["Scaling", "scaling", "Scaling Strategy", "scaling strategy"]},
-        {"answer": "Observability", "acceptedAnswers": ["Observability", "observability"]},
-        {"answer": "Operations", "acceptedAnswers": ["Operations", "operations", "Operational Model", "operational model"]}
+        {"acceptedAnswers": ["User Experience", "user experience", "User Journey", "user journey"]},
+        {"acceptedAnswers": ["SLIs / SLOs", "slis / slos", "SLIs/SLOs", "slis/slos", "SLI / SLO", "sli / slo", "SLI/SLO", "sli/slo"]},
+        {"acceptedAnswers": ["Request Path", "request path"]},
+        {"acceptedAnswers": ["Core Components", "core components"]},
+        {"acceptedAnswers": ["HA Design", "ha design", "High Availability Design", "high availability design", "High Availability", "high availability"]},
+        {"acceptedAnswers": ["Failure Modes", "failure modes", "Failure Mode", "failure mode"]},
+        {"acceptedAnswers": ["Cascading Failures", "cascading failures", "Cascading Failure", "cascading failure", "Cascading-Failure Controls", "cascading-failure controls"]},
+        {"acceptedAnswers": ["Scaling", "scaling", "Scaling Strategy", "scaling strategy"]},
+        {"acceptedAnswers": ["Observability", "observability"]},
+        {"acceptedAnswers": ["Operations", "operations", "Operational Model", "operational model"]}
       ],
       "caseSensitive": false,
       "explanation": "**SRE System Design Framework:**\n\n1. **User Experience** — What matters most to users?\n2. **SLIs / SLOs** — How do we measure success?\n3. **Request Path** — How does traffic flow end to end?\n4. **Core Components** — What does each layer do and why?\n5. **HA Design** — How do we survive instance, AZ, and region failures?\n6. **Failure Modes** — What breaks, what is the blast radius, how do we contain it?\n7. **Cascading Failures** — Timeouts, retries, circuit breakers, backpressure.\n8. **Scaling** — How does the system grow safely?\n9. **Observability** — Metrics, logs, traces, alerting.\n10. **Operations** — Deploy, rollback, runbooks, game days.",
@@ -123,21 +123,21 @@ prev: /quiz/interview-prep
       "id": "interview-prep-frameworks-quiz-10",
       "type": "flashcard",
       "question": "List the 5 failure modes covered in the Observability & Alerting Design Framework.",
-      "answer": "| Failure | Signal |\n|---|---|\n| **DB slowdown** | Latency SLI degrades; trace shows slow DB span |\n| **Cache miss spike** | Latency increases; hit ratio metric drops |\n| **Single region down** | Availability SLI drops; sliced by region dimension |\n| **Dependency timeout** | Error rate rises; trace shows timeout on external call |\n| **Traffic surge** | Saturation metric rises; queue depth or CPU climbs |"
+      "answer": "| Failure | Signal |\n|---|---|\n| **DB slowdown** | Latency SLI degrades; trace shows slow DB span |\n| **Cache miss spike** | Latency increases; hit ratio metric drops |\n| **Region down** | Availability SLI drops; sliced by region dimension |\n| **Dependency timeout** | Error rate rises; trace shows timeout on external call |\n| **Traffic surge** | Saturation metric rises; queue depth or CPU climbs |"
     },
     {
       "id": "interview-prep-frameworks-quiz-11",
       "type": "ordered-recall",
       "question": "List the 8 steps of the Observability & Alerting Design Framework in order:",
       "steps": [
-        {"answer": "User Experience", "acceptedAnswers": ["User Experience", "user experience"]},
-        {"answer": "SLIs", "acceptedAnswers": ["SLIs", "slis", "SLI", "sli"]},
-        {"answer": "SLOs", "acceptedAnswers": ["SLOs", "slos", "SLO", "slo"]},
-        {"answer": "Signals", "acceptedAnswers": ["Signals", "signals"]},
-        {"answer": "Instrumentation", "acceptedAnswers": ["Instrumentation", "instrumentation"]},
-        {"answer": "Alerting", "acceptedAnswers": ["Alerting", "alerting", "Alerting Strategy", "alerting strategy"]},
-        {"answer": "Failure Modes", "acceptedAnswers": ["Failure Modes", "failure modes", "Failure Mode", "failure mode"]},
-        {"answer": "Scaling & Cost", "acceptedAnswers": ["Scaling & Cost", "scaling & cost", "Scaling and Cost", "scaling and cost", "Scaling", "scaling"]}
+        {"acceptedAnswers": ["User Experience", "user experience", "User Journey", "user journey"]},
+        {"acceptedAnswers": ["SLIs", "slis", "SLI", "sli"]},
+        {"acceptedAnswers": ["SLOs", "slos", "SLO", "slo"]},
+        {"acceptedAnswers": ["Signals", "signals", "Signals + Dimensions", "signals + dimensions"]},
+        {"acceptedAnswers": ["Instrumentation", "instrumentation"]},
+        {"acceptedAnswers": ["Alerting", "alerting", "Alerting Strategy", "alerting strategy"]},
+        {"acceptedAnswers": ["Failure Modes", "failure modes", "Failure Mode", "failure mode"]},
+        {"acceptedAnswers": ["Scaling & Cost", "scaling & cost", "Scaling and Cost", "scaling and cost", "Scaling", "scaling"]}
       ],
       "caseSensitive": false,
       "explanation": "**Observability & Alerting Design Framework:**\n\n1. **User Experience** — Anchor everything to what users actually feel.\n2. **SLIs** — Pick 2–4 measurable indicators of user experience.\n3. **SLOs** — Set reliability targets and define error budgets.\n4. **Signals** — Golden Signals + dimensions (region, endpoint, path).\n5. **Instrumentation** — Metrics (aggregate), logs (debug), traces (latency).\n6. **Alerting** — SLO-based burn-rate alerts — page only on user impact.\n7. **Failure Modes** — Identify likely failure patterns and verify detectability.\n8. **Scaling & Cost** — Control cardinality, sample traces, tier storage.",
