@@ -12,17 +12,9 @@ next: /quiz/aws/03-networking-fundamentals
   "questions": [
     {
       "id": "aws-global-infrastructure-quiz-01",
-      "type": "mcq",
-      "question": "What is the primary purpose of AWS Regions being geographically separated?",
-      "options": [
-        "To reduce costs by distributing infrastructure",
-        "To provide disaster recovery and comply with data residency requirements",
-        "To increase the number of available services",
-        "To improve internet speed globally"
-      ],
-      "answer": 1,
-      "explanation": "AWS Regions are geographically separated to provide disaster recovery options, business continuity, and allow compliance with data residency requirements. AWS does not move data between Regions without explicit customer action.",
-      "hint": "Think about regulatory compliance and disaster scenarios."
+      "type": "flashcard",
+      "question": "Why are AWS Regions geographically separated?",
+      "answer": "**Geographic Separation Provides Three Core Benefits:**\n\n- **Disaster recovery**: A failure in one Region does not affect others — protects against natural disasters, power outages, and infrastructure failures\n- **Data residency compliance**: AWS never moves data between Regions without explicit customer action — enables GDPR, data localization law compliance\n- **Business continuity**: Independent, isolated Regions prevent failure cascades across the global infrastructure\n\n*Side effects: pricing varies by Region; new services launch in us-east-1 first, then expand gradually.*"
     },
     {
       "id": "aws-global-infrastructure-quiz-02",
@@ -33,10 +25,11 @@ next: /quiz/aws/03-networking-fundamentals
         "Data sovereignty and compliance requirements",
         "Service availability in the Region",
         "Cost and pricing differences",
-        "The number of Availability Zones"
+        "The number of Availability Zones in the Region",
+        "The total number of edge locations adjacent to the Region"
       ],
       "answers": [0, 1, 2, 3],
-      "explanation": "The five key factors for choosing a Region are: latency/user proximity, data sovereignty/compliance, service availability, cost, and disaster recovery requirements. While the number of AZs matters for architecture, it's not a primary Region selection criterion.",
+      "explanation": "The five key factors for choosing a Region are: latency/user proximity, data sovereignty/compliance, service availability, cost, and disaster recovery requirements. The number of AZs and proximity to edge locations are not primary Region selection criteria — AZ count matters for architecture design within a chosen Region, and edge locations serve CloudFront content delivery, not core application deployment.",
       "hint": "The content lists five specific factors to consider when selecting a Region."
     },
     {
@@ -64,12 +57,12 @@ next: /quiz/aws/03-networking-fundamentals
       "question": "How many data centers does an Availability Zone contain?",
       "options": [
         "Exactly one data center",
-        "Always two data centers",
+        "Two or more data centers",
         "One or more discrete data centers",
         "At least three data centers"
       ],
       "answer": 2,
-      "explanation": "An Availability Zone consists of one or more discrete data centers within an AWS Region. Each AZ has redundant power, networking, and connectivity, and may contain multiple data centers working together.",
+      "explanation": "An Availability Zone consists of one or more discrete data centers within an AWS Region. The minimum is one, but most AZs contain multiple data centers. 'Two or more' is a common near-miss — it applies the redundancy-requires-at-least-two logic incorrectly; the actual minimum per the definition is one.",
       "hint": "The definition mentions 'one or more' data centers."
     },
     {
@@ -78,7 +71,7 @@ next: /quiz/aws/03-networking-fundamentals
       "question": "What is the typical inter-AZ latency within a Region (in milliseconds)?",
       "answer": "single-digit milliseconds",
       "caseSensitive": false,
-      "acceptedAnswers": ["single-digit milliseconds", "single digit milliseconds"],
+      "acceptedAnswers": ["single-digit milliseconds", "single-digit", "single digit milliseconds", "single digit"],
       "explanation": "Typical inter-AZ latency within a Region is single-digit milliseconds. This low latency enables synchronous replication for databases and storage systems.",
       "hint": "Think about the order of magnitude—less than 10ms."
     },
@@ -141,10 +134,10 @@ next: /quiz/aws/03-networking-fundamentals
         "IAM is a regional service with separate configurations per Region",
         "IAM is a global service with no regional dependencies",
         "IAM is a global service but can have regional impact through services like STS",
-        "IAM must be configured separately in each Availability Zone"
+        "IAM is a global service, but each AWS account has a home region where IAM data is primarily stored"
       ],
       "answer": 2,
-      "explanation": "IAM is a global service, but it has regional dependencies. IAM uses AWS STS (Security Token Service) for temporary credentials, which has regional endpoints. If a region hosting STS fails, IAM operations in that region may be affected.",
+      "explanation": "IAM is a global service, but it has regional dependencies. IAM uses AWS STS (Security Token Service) for temporary credentials, which has regional endpoints. If a region hosting STS fails, IAM operations in that region may be affected. IAM does not have a per-account home region — credential data replicates globally. Option A confuses IAM with regional services like EC2; option B misses the STS dependency; option D incorrectly applies the 'home region' concept (used by some other services) to IAM.",
       "hint": "Consider the relationship between IAM and Security Token Service (STS)."
     },
     {
@@ -163,13 +156,13 @@ next: /quiz/aws/03-networking-fundamentals
         "IAM (Identity and Access Management)",
         "EC2 (Elastic Compute Cloud)",
         "Route 53 (DNS Service)",
-        "VPC (Virtual Private Cloud)",
+        "Amazon S3 (Simple Storage Service)",
         "CloudFront (CDN)",
         "RDS (Relational Database Service)"
       ],
       "answers": [0, 2, 4],
-      "explanation": "Global services include IAM, Route 53, CloudFront, and AWS Organizations. Regional services include EC2, VPC, RDS, and DynamoDB (though DynamoDB offers Global Tables for multi-region replication).",
-      "hint": "Global services typically relate to identity, DNS, or content delivery."
+      "explanation": "Global services include IAM, Route 53, CloudFront, and AWS Organizations. Regional services include EC2, RDS, and S3. S3 is a common misconception — because bucket names must be globally unique and buckets are accessible via global URLs, learners often assume S3 is a global service. However, S3 buckets exist in a specific Region and data stays there unless explicitly replicated via Cross-Region Replication.",
+      "hint": "Global services typically relate to identity, DNS, or content delivery — not compute, storage, or databases."
     },
     {
       "id": "aws-global-infrastructure-quiz-14",
@@ -179,10 +172,10 @@ next: /quiz/aws/03-networking-fundamentals
         "1 AZ is sufficient for cost optimization",
         "At least 2 AZs (3+ preferred)",
         "Exactly 3 AZs are required",
-        "All available AZs in the Region must be used"
+        "Running multiple EC2 instances in a single AZ achieves the same fault tolerance as Multi-AZ"
       ],
       "answer": 1,
-      "explanation": "Best practice recommends using at least 2 Availability Zones for production workloads, with 3 or more preferred. This provides high availability and fault tolerance while balancing cost and complexity.",
+      "explanation": "Best practice recommends using at least 2 Availability Zones for production workloads, with 3 or more preferred. Running multiple instances in a single AZ does not achieve the same fault tolerance — a power, network, or physical failure affecting that AZ would take down all instances simultaneously. Fault tolerance requires physical isolation across AZs, not just instance count.",
       "hint": "Think about the minimum needed for redundancy versus the ideal setup."
     },
     {
@@ -228,11 +221,12 @@ next: /quiz/aws/03-networking-fundamentals
         "The function is in the Europe (Ireland) region",
         "The function belongs to account ID 123456789012",
         "The function name is 'my-function'",
-        "The function uses Python runtime"
+        "The function uses Python runtime",
+        "The function's execution role is embedded in the ARN"
       ],
       "answers": [0, 1, 2, 3],
-      "explanation": "From the ARN, you can determine: it's a Lambda function (service: lambda), located in eu-west-1 region, owned by account 123456789012, and named 'my-function'. The runtime language is not part of the ARN—that's a separate configuration attribute.",
-      "hint": "ARNs contain structural information but not runtime configuration details."
+      "explanation": "From the ARN, you can determine: it's a Lambda function (service: lambda), located in eu-west-1 region, owned by account 123456789012, and named 'my-function'. The runtime language and execution role are not part of the ARN — they are separate configuration attributes stored in the function's settings, not encoded in its identifier.",
+      "hint": "ARNs contain structural information (where, what, whose) but not runtime configuration details."
     },
     {
       "id": "aws-global-infrastructure-quiz-19",
@@ -254,26 +248,27 @@ next: /quiz/aws/03-networking-fundamentals
       "question": "Arrange these deployment patterns from least resilient to most resilient:",
       "instruction": "Drag to order by increasing fault tolerance",
       "items": [
-        "Multi-Region with replication",
+        "Multi-Region with Cross-Region Replication",
         "Single Region, Multi-AZ",
-        "Single Region, Single AZ"
+        "Single Region, Single AZ",
+        "Multi-Region without data replication"
       ],
-      "correctOrder": [2, 1, 0],
-      "explanation": "Resilience increases with geographic distribution: Single AZ (single point of failure) → Multi-AZ (protects against AZ failures) → Multi-Region (protects against region-wide failures and provides global redundancy)."
+      "correctOrder": [2, 1, 3, 0],
+      "explanation": "Resilience increases with geographic distribution and data availability: Single AZ (single point of failure) → Multi-AZ (protects against AZ failures, data is local) → Multi-Region without replication (infrastructure exists in multiple regions but data is not replicated, so a region failure means data loss or unavailability) → Multi-Region with Cross-Region Replication (full protection: infrastructure and data survive region-wide failures)."
     },
     {
       "id": "aws-global-infrastructure-quiz-22",
       "type": "mcq",
       "question": "Which architectural pattern provides protection against both AZ failures and region-wide failures?",
       "options": [
-        "Single Region, Single AZ deployment",
+        "Single Region, Multi-AZ with automated Cross-Region backups",
         "Single Region, Multi-AZ deployment with RDS standby",
         "Multi-Region deployment with Cross-Region Replication",
         "Local Zone deployment with parent Region backup"
       ],
       "answer": 2,
-      "explanation": "Multi-Region deployment with replication (CRR, Global Tables, Aurora Global Database) protects against both AZ-level and region-wide failures. Single Region Multi-AZ protects only against AZ failures, while Local Zones don't provide region-level redundancy.",
-      "hint": "Think about what's needed to survive a complete regional outage."
+      "explanation": "Multi-Region deployment with replication (CRR, Global Tables, Aurora Global Database) protects against both AZ-level and region-wide failures. Single Region Multi-AZ protects only against AZ failures. Cross-Region backups (option A) are a tempting near-miss — they provide data durability across regions but require manual failover with significant RTO/RPO, and do not provide automatic failover the way live replication does.",
+      "hint": "Think about what's needed to survive a complete regional outage with automatic failover."
     },
     {
       "id": "aws-global-infrastructure-quiz-23",
@@ -308,11 +303,11 @@ next: /quiz/aws/03-networking-fundamentals
         "DynamoDB with Global Tables",
         "Amazon Aurora with Global Database",
         "IAM with regional endpoints",
-        "EC2 with Auto Scaling groups"
+        "Amazon RDS with Multi-AZ deployment"
       ],
       "answers": [0, 1, 2],
-      "explanation": "S3 (via Cross-Region Replication), DynamoDB (via Global Tables), and Aurora (via Global Database) are regional services with global distribution features. IAM is already global (though it has regional dependencies), and EC2 Auto Scaling groups are regional only.",
-      "hint": "Look for services that explicitly mention cross-region or global capabilities."
+      "explanation": "S3 (via Cross-Region Replication), DynamoDB (via Global Tables), and Aurora (via Global Database) are regional services with explicit global distribution features. IAM is already global (though it has regional STS dependencies, not a global distribution 'feature'). RDS Multi-AZ is a common trap — Multi-AZ means high availability within a single Region across multiple AZs, not global distribution across Regions.",
+      "hint": "Look for services that explicitly mention cross-region or global replication capabilities."
     },
     {
       "id": "aws-global-infrastructure-quiz-26",
@@ -351,11 +346,11 @@ next: /quiz/aws/03-networking-fundamentals
         "Cost optimization",
         "Service availability",
         "Data sovereignty and compliance",
-        "Proximity to US markets"
+        "The Region's compliance certifications (ISO 27001, SOC 2)"
       ],
       "answer": 2,
-      "explanation": "Data sovereignty and compliance is the most critical factor for GDPR. GDPR requires data to remain within specific geographic boundaries (Europe). AWS does not move data between Regions without explicit customer action, so choosing an EU region is essential for GDPR compliance.",
-      "hint": "GDPR is a European regulation about data protection and privacy."
+      "explanation": "Data sovereignty and compliance is the most critical factor for GDPR. GDPR requires data to remain within specific geographic boundaries (Europe) — this is a data residency requirement. AWS does not move data between Regions without explicit customer action, so choosing an EU Region is essential. Option D is a common trap: all AWS Regions hold ISO 27001 and SOC 2 certifications, but those certifications cover security practices, not where data physically resides. GDPR is about residency (which Region), not certification (how secure).",
+      "hint": "GDPR is a European regulation about data protection and privacy — specifically about where data must reside."
     },
     {
       "id": "aws-global-infrastructure-quiz-30",
@@ -375,8 +370,112 @@ next: /quiz/aws/03-networking-fundamentals
       "caseSensitive": true,
       "acceptedAnswers": ["/"],
       "explanation": "S3 object ARNs use a forward slash (/) to separate the bucket name from the object key: arn:aws:s3:::my-bucket/path/to/file.txt. This follows standard path notation."
+    },
+    {
+      "id": "aws-global-infrastructure-quiz-32",
+      "type": "true-false",
+      "question": "An Amazon VPC exists within a single Availability Zone and cannot span multiple AZs within a Region.",
+      "answer": false,
+      "explanation": "False. A VPC is Regional — it spans all Availability Zones in a Region by default. Subnets are AZ-scoped (each subnet lives in exactly one AZ), which is the source of this misconception. Multi-AZ architecture works by creating separate subnets in each AZ inside the same VPC. The VPC is the regional container; the subnet is the AZ-specific boundary.",
+      "hint": "Think about what is AZ-scoped: the VPC itself, or the subnets inside it?"
+    },
+    {
+      "id": "aws-global-infrastructure-quiz-33",
+      "type": "ordered-recall",
+      "question": "List the four steps to start using an AWS Local Zone (first to last)",
+      "steps": [
+        {"answer": "Opt in to the Local Zone", "acceptedAnswers": ["Opt in to the Local Zone", "opt in", "enable the local zone", "opt-in", "opt in to local zone", "enable local zone in account settings"]},
+        {"answer": "Create a subnet in your VPC for the Local Zone", "acceptedAnswers": ["Create a subnet", "create subnet", "create a subnet in vpc", "add subnet to vpc", "create vpc subnet for local zone"]},
+        {"answer": "Launch supported resources in the Local Zone subnet", "acceptedAnswers": ["Launch resources", "launch supported resources", "deploy resources", "launch ec2 instances", "launch resources in subnet"]},
+        {"answer": "Configure routing for local traffic", "acceptedAnswers": ["Configure routing", "set up routing", "configure routing for local traffic", "update route table", "configure route table"]}
+      ],
+      "caseSensitive": false,
+      "explanation": "Local Zones require explicit opt-in before any resources can be deployed: (1) opt in via account settings, (2) create a subnet in your existing VPC associated with the Local Zone, (3) launch supported compute/storage resources in that subnet, (4) configure routing so end-user traffic is directed to the Local Zone. Unlike standard AZs, Local Zones are not automatically available — skipping step 1 means the Local Zone doesn't appear as an option when creating subnets.",
+      "hint": "Start with account-level enablement before any network or compute steps."
+    },
+    {
+      "id": "aws-global-infrastructure-quiz-34",
+      "type": "mcq",
+      "question": "What is the difference between these two IAM Resource values in an S3 policy: `arn:aws:s3:::my-bucket/*` vs `arn:aws:s3:::my-bucket*`?",
+      "options": [
+        "They are equivalent — both grant access to all objects inside my-bucket",
+        "`/*` grants access to objects inside my-bucket only; `*` matches any bucket whose name starts with 'my-bucket'",
+        "`/*` grants access to the bucket and all objects; `*` grants access to objects only",
+        "`/*` is valid for object-level actions; `*` is required for bucket-level actions like s3:ListBucket"
+      ],
+      "answer": 1,
+      "explanation": "ARN wildcards apply to the literal string. `arn:aws:s3:::my-bucket/*` matches only object keys inside the bucket named exactly 'my-bucket' — the `/*` is part of the S3 key path. `arn:aws:s3:::my-bucket*` applies the wildcard to the bucket name itself, matching my-bucket, my-bucket-prod, my-bucket-dev, and any other bucket whose name starts with 'my-bucket'. This is a common IAM misconfiguration: a developer intending to scope permissions to one bucket accidentally grants access to all similarly-named buckets across the account.",
+      "hint": "The wildcard position determines what part of the ARN string it expands — the bucket name or the object key path."
+    },
+    {
+      "id": "aws-global-infrastructure-quiz-35",
+      "type": "true-false",
+      "question": "An EC2 Amazon Machine Image (AMI) created in us-east-1 can be launched directly in eu-west-1 without any additional steps.",
+      "answer": false,
+      "explanation": "False. AMIs are Region-specific. To use an AMI in a different Region, you must first copy it to the target Region using the 'Copy AMI' action — this creates a new AMI with a different AMI ID in the destination Region. A common point of confusion: AWS Marketplace AMIs appear to be globally available, but under the hood AWS provides a per-region copy when you subscribe — you cannot take a us-east-1 AMI ID and use it directly as a launch parameter in eu-west-1.",
+      "hint": "Think about what happens when you try to specify a us-east-1 AMI ID in an eu-west-1 launch template."
+    },
+    {
+      "id": "aws-global-infrastructure-quiz-36",
+      "type": "multiple-select",
+      "question": "Which AWS services are typically available in Local Zones?",
+      "options": [
+        "Amazon EC2",
+        "Amazon EBS",
+        "Amazon RDS",
+        "Amazon VPC",
+        "AWS Lambda",
+        "Elastic Load Balancing (ELB)",
+        "Amazon S3"
+      ],
+      "answers": [0, 1, 3, 5],
+      "explanation": "Local Zones provide a subset of AWS services focused on compute and networking close to end users: EC2 (compute), EBS (block storage), VPC (networking), ELB (load balancing), and FSx (file storage). RDS and Lambda are not available in Local Zones — managed databases and serverless compute require the full Region infrastructure. S3 is also not available directly in Local Zones; applications in Local Zones access S3 through the parent Region over the private backbone. The limited service set is why Local Zones are suited for latency-sensitive compute workloads, not full-stack deployments.",
+      "hint": "Local Zones support compute, block storage, and networking — not managed databases or serverless."
+    },
+    {
+      "id": "aws-global-infrastructure-quiz-37",
+      "type": "mcq",
+      "question": "Your application has an RDS primary database in us-east-1. You want European users to experience lower read latency without modifying your write path. What should you configure?",
+      "options": [
+        "RDS Multi-AZ in us-east-1 with the standby configured to serve reads from a European AZ",
+        "A cross-region Read Replica in eu-west-1",
+        "A second RDS Multi-AZ cluster in eu-west-1 with manual data synchronization",
+        "DynamoDB Global Tables to replace RDS for global read distribution"
+      ],
+      "answer": 1,
+      "explanation": "Cross-region Read Replicas replicate asynchronously from the primary to a replica in another Region, letting European users query eu-west-1 at local latency while writes still go to us-east-1. Option A is the most common trap: Multi-AZ standby instances cannot serve reads — they exist solely for automatic failover. More fundamentally, AZs are within a single Region, so there is no such thing as a 'European AZ' inside us-east-1. Option C creates an isolated cluster with no automatic replication. Option D swaps the database technology entirely, which is out of scope.",
+      "hint": "Multi-AZ is for fault tolerance within one Region; cross-region read scaling is a different feature entirely."
+    },
+    {
+      "id": "aws-global-infrastructure-quiz-38",
+      "type": "code-output",
+      "question": "What does this S3 bucket policy grant?",
+      "code": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [{\n    \"Effect\": \"Allow\",\n    \"Principal\": {\n      \"AWS\": \"arn:aws:iam::987654321098:role/DataProcessingRole\"\n    },\n    \"Action\": \"s3:GetObject\",\n    \"Resource\": \"arn:aws:s3:::shared-data-bucket/*\"\n  }]\n}",
+      "language": "json",
+      "options": [
+        "Allows any IAM role named DataProcessingRole across all AWS accounts to read objects",
+        "Allows the DataProcessingRole in account 987654321098 to read all objects in shared-data-bucket",
+        "Allows account 987654321098 full administrative access to shared-data-bucket",
+        "Allows any principal in account 987654321098 to read from shared-data-bucket"
+      ],
+      "answer": 1,
+      "explanation": "The Principal ARN `arn:aws:iam::987654321098:role/DataProcessingRole` precisely identifies one specific role in one specific account — the 12-digit account ID makes it unambiguous. The Action is s3:GetObject (read-only) and `/*` scopes it to all objects in the bucket. Option A is wrong because IAM role names are not globally unique — without the account ID, the same role name could exist in thousands of accounts; the account ID in the ARN removes that ambiguity. Option C confuses the specific Action (GetObject) with full access. Option D confuses a specific role ARN with a whole-account principal, which would be `arn:aws:iam::987654321098:root`.",
+      "hint": "The Principal ARN contains both an account ID and a specific role — both matter for what is granted."
+    },
+    {
+      "id": "aws-global-infrastructure-quiz-39",
+      "type": "mcq",
+      "question": "Your RDS instance has Multi-AZ enabled with a synchronous standby in AZ-B. The primary in AZ-A experiences a complete failure. What happens next?",
+      "options": [
+        "The database becomes unavailable until AZ-A recovers; the standby serves read-only traffic during the outage",
+        "AWS automatically promotes the AZ-B standby to primary, typically completing within 60-120 seconds",
+        "You must manually trigger failover via the RDS console before the standby becomes writable",
+        "Both the primary and standby fail simultaneously because they share the same underlying network within the Region"
+      ],
+      "answer": 1,
+      "explanation": "RDS Multi-AZ failover is automatic and requires no manual action — AWS detects the primary failure and promotes the synchronous standby within roughly 60-120 seconds, after which your DNS endpoint resolves to the new primary. Option A describes the most common Multi-AZ misconception: the standby is not a read replica and serves no traffic during normal operation. It exists purely as a hot standby for failover; if you want read scaling, you need a Read Replica. Option C is wrong — manual failover exists as an option but is not required for automatic recovery. Option D confuses AZ-level isolation: each AZ has independent networking; an AZ-A failure does not cascade to AZ-B, which is the entire design goal of Multi-AZ.",
+      "hint": "The key word in 'Multi-AZ' is automatic — what does that mean for the DBA during an outage?"
     }
   ]
 }
 {{< /quiz >}}
-
