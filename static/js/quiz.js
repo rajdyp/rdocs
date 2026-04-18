@@ -348,9 +348,19 @@
       const flipBtns = question.querySelectorAll('.flashcard-flip-btn');
       const selfCheckBtns = question.querySelectorAll('.self-check-btn');
 
+      const syncHeight = () => {
+        const activeFace = flashcard.classList.contains('flipped')
+          ? flashcard.querySelector('.flashcard-back')
+          : flashcard.querySelector('.flashcard-front');
+        flashcard.style.minHeight = activeFace.scrollHeight + 'px';
+      };
+
+      flashcard._syncHeight = syncHeight;
+
       flipBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           flashcard.classList.toggle('flipped');
+          syncHeight();
         });
       });
 
@@ -613,6 +623,9 @@
         q.style.display = i === baseIndex ? 'block' : 'none';
       });
 
+      const flashcard = questions[baseIndex]?.querySelector('.flashcard');
+      if (flashcard?._syncHeight) flashcard._syncHeight();
+
       this.currentQuestionIndex = baseIndex;
       this.currentVisibleIndex = visibleIndex;
       this.updateNavigation();
@@ -624,6 +637,10 @@
       questions.forEach((q, i) => {
         q.style.display = i === index ? 'block' : 'none';
       });
+
+      const flashcard = questions[index]?.querySelector('.flashcard');
+      if (flashcard?._syncHeight) flashcard._syncHeight();
+
       this.currentQuestionIndex = index;
       this.currentVisibleIndex = this.visibleQuestionIndices.indexOf(index);
       this.updateNavigation();
