@@ -14,7 +14,7 @@ next: /quiz/aws/03-networking-fundamentals
       "id": "aws-global-infrastructure-quiz-01",
       "type": "flashcard",
       "question": "Why are AWS Regions geographically separated?",
-      "answer": "**Geographic Separation Provides Three Core Benefits:**\n\n- **Disaster recovery**: A failure in one Region does not affect others — protects against natural disasters, power outages, and infrastructure failures\n- **Data residency compliance**: AWS never moves data between Regions without explicit customer action — enables GDPR, data localization law compliance\n- **Business continuity**: Independent, isolated Regions prevent failure cascades across the global infrastructure\n\n*Side effects: pricing varies by Region; new services launch in us-east-1 first, then expand gradually.*"
+      "answer": "**Geographic Separation Provides Three Core Benefits:**\n\n- **Fault isolation and disaster recovery**: A failure in one Region does not affect others — protects against natural disasters, power outages, and infrastructure failures\n- **Reduced latency**: Serving users from a nearby Region minimizes round-trip time and improves application performance\n- **Data residency and compliance**: Enables GDPR and data localization law compliance — AWS never moves data between Regions without explicit customer action"
     },
     {
       "id": "aws-global-infrastructure-quiz-02",
