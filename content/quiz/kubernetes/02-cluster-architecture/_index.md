@@ -18,10 +18,10 @@ next: /quiz/kubernetes/03-control-plane
         "Control Plane & Worker Nodes",
         "Master & Slave",
         "API Server & kubelet",
-        "etcd & Pods"
+        "Nodes & Pods"
       ],
       "answer": 0,
-      "explanation": "A Kubernetes cluster consists of two main parts: the **Control Plane** (the 'brain' that manages the cluster) and **Worker Nodes** (the 'muscle' that runs application workloads).",
+      "explanation": "A Kubernetes cluster has two main parts: the **Control Plane** (the 'brain' that makes all scheduling and management decisions) and **Worker Nodes** (the 'muscle' that runs application containers). A common mistake is naming sub-components like API Server or kubelet — those exist *within* these two layers, not as the layers themselves.",
       "hint": "Think about management vs execution layers."
     },
     {
@@ -32,10 +32,10 @@ next: /quiz/kubernetes/03-control-plane
         "kube-controller-manager",
         "kube-scheduler",
         "kubelet",
-        "kube-proxy"
+        "cloud-controller-manager"
       ],
       "answer": 1,
-      "explanation": "The **kube-scheduler** is responsible for assigning pods to nodes. It watches for newly created pods that have no node assigned and selects a node for them to run on.",
+      "explanation": "The **kube-scheduler** watches for newly created pods with no assigned node and selects the best node based on resource availability, affinity rules, and other constraints. A common confusion: **kube-controller-manager** reconciles desired state to actual state (e.g., ensuring 3 replicas exist) but doesn't decide *where* to place pods — that's strictly the scheduler's job.",
       "hint": "The name gives away its primary function."
     },
     {
@@ -52,7 +52,7 @@ next: /quiz/kubernetes/03-control-plane
       "question": "The _____ component stores all cluster data as a distributed key-value store.",
       "answer": "etcd",
       "caseSensitive": false,
-      "explanation": "**etcd** is the distributed key-value store that stores all cluster data. It is the single source of truth for the cluster state.",
+      "explanation": "**etcd** is the single source of truth for all cluster state — every object (pods, services, configs, secrets) is persisted here, and nowhere else. This is why backing up etcd is critical for disaster recovery: if etcd is lost without a backup, the entire cluster state is unrecoverable.",
       "hint": "It's a four-letter word and acts as the cluster's database."
     },
     {
@@ -66,7 +66,7 @@ next: /quiz/kubernetes/03-control-plane
         "kube-node-lease"
       ],
       "answer": 1,
-      "explanation": "The **kube-system** namespace contains Kubernetes system components including CoreDNS, kube-proxy, CNI plugins, and metrics-server.",
+      "explanation": "**kube-system** is reserved for Kubernetes system components that must be present for the cluster to function. Keeping them in their own namespace prevents accidental modification by users. The **default** namespace is where resources land when no namespace is specified — it's intentionally kept separate from system components.",
       "hint": "It has 'system' in the name."
     },
     {
@@ -82,7 +82,7 @@ next: /quiz/kubernetes/03-control-plane
         "kube-controller-manager"
       ],
       "answers": [0, 2, 4, 5],
-      "explanation": "Control Plane components include: **kube-api-server**, **kube-scheduler**, **etcd**, and **kube-controller-manager**. The kubelet and kube-proxy are Worker Node components.",
+      "explanation": "**kube-api-server**, **kube-scheduler**, **etcd**, and **kube-controller-manager** run on control plane nodes. **kubelet** and **kube-proxy** run on every worker node — kubelet receives pod assignments and kube-proxy maintains service routing rules. A common mistake is placing kube-proxy in the control plane because 'proxy' sounds like infrastructure.",
       "hint": "Worker nodes run pods; control plane manages the cluster."
     },
     {
@@ -99,7 +99,7 @@ next: /quiz/kubernetes/03-control-plane
         "Secrets"
       ],
       "answers": [0, 2, 4, 6],
-      "explanation": "Namespace-scoped resources include: **Pods**, **Services**, **Deployments**, and **Secrets**. Cluster-scoped resources include Nodes, PersistentVolumes, and StorageClasses.",
+      "explanation": "**Pods**, **Services**, **Deployments**, and **Secrets** are namespace-scoped — they belong to a team or environment's namespace. **Nodes**, **PersistentVolumes**, and **StorageClasses** are cluster-scoped because they represent physical infrastructure shared across all namespaces. The PV/PVC split is a classic trap: *PersistentVolumeClaims* are namespace-scoped, but the *PersistentVolumes* they bind to are cluster-scoped.",
       "hint": "Think about resources that belong to specific teams or projects."
     },
     {
@@ -162,12 +162,12 @@ next: /quiz/kubernetes/03-control-plane
         "kubelet starts containers"
       ],
       "correctOrder": [0, 1, 2, 4, 3, 5],
-      "explanation": "The correct workflow is: User submits → kubectl sends to API Server → API Server validates & stores in etcd → Deployment Controller creates ReplicaSet → Scheduler assigns Pods to Nodes → kubelet starts containers."
+      "explanation": "The correct workflow is: User submits → kubectl sends to API Server → API Server validates & stores in etcd → Deployment Controller creates ReplicaSet → Scheduler assigns Pods to Nodes → kubelet starts containers. The **Deployment Controller must create the ReplicaSet (and the ReplicaSet Controller creates the Pod objects) before the Scheduler can act** — you can't schedule pods that don't exist yet as API objects."
     },
     {
       "id": "kubernetes-architecture-quiz-13",
       "type": "mcq",
-      "question": "A pod in the 'app' namespace needs to connect to a service called 'postgres' in the 'database' namespace. Which DNS name should it use?",
+      "question": "A pod in the 'app' namespace needs to connect to a service called 'postgres' in the 'database' namespace. What is the **fully qualified DNS name** (FQDN) it should use?",
       "options": [
         "postgres",
         "postgres.database",
@@ -175,7 +175,7 @@ next: /quiz/kubernetes/03-control-plane
         "database.postgres"
       ],
       "answer": 2,
-      "explanation": "For cross-namespace service access, use the fully qualified DNS name: `<service-name>.<namespace-name>.svc.cluster.local`. In this case: `postgres.database.svc.cluster.local`. You can also use the short form `postgres.database`.",
+      "explanation": "The **fully qualified DNS name** format is `<service-name>.<namespace>.svc.cluster.local`. In this case: `postgres.database.svc.cluster.local`. The shorter `postgres.database` also works for cross-namespace access, but the FQDN is preferred in production configs because it's explicit and works regardless of DNS search domain configuration.",
       "hint": "Format: `<service-name>.<namespace-name>.svc.cluster.local`"
     },
     {
@@ -198,7 +198,7 @@ next: /quiz/kubernetes/03-control-plane
         "Regulatory compliance requirements"
       ],
       "answers": [1, 2, 4],
-      "explanation": "Use separate clusters for: **strict security requirements**, **different Kubernetes versions**, and **regulatory compliance**. Different teams and resource organization can be handled with namespaces.",
+      "explanation": "Use separate clusters for **strict security requirements** (namespaces share nodes and network — they are not real isolation boundaries), **different Kubernetes versions** (impossible within a single cluster), and **regulatory compliance** (may require physical infrastructure separation). Different teams and resource organization are exactly what namespaces are designed for — creating separate clusters for these would waste resources and add operational overhead.",
       "hint": "When do namespaces become insufficient?"
     },
     {
@@ -210,7 +210,7 @@ next: /quiz/kubernetes/03-control-plane
       "answer": "hard",
       "caseSensitive": false,
       "acceptedAnswers": ["hard"],
-      "explanation": "The **hard** field in a ResourceQuota spec defines the maximum resource limits that can be consumed in a namespace."
+      "explanation": "The **hard** field sets absolute maximum limits — any request that would exceed a hard limit is immediately rejected by the admission controller. There is no 'soft' limit in ResourceQuota; the name reflects that these limits are enforced without exception. Compare this to LimitRange, which sets per-container defaults and bounds rather than per-namespace totals."
     },
     {
       "id": "kubernetes-architecture-quiz-17",
@@ -230,7 +230,7 @@ next: /quiz/kubernetes/03-control-plane
       "id": "kubernetes-architecture-quiz-18",
       "type": "flashcard",
       "question": "What is the primary difference between stacked and external etcd deployment?",
-      "answer": "**Stacked etcd** runs on the same nodes as control plane components, making it simpler but less resilient.\n\n**External etcd** uses a dedicated cluster separate from control plane nodes, providing better isolation and resilience but with more complexity to manage."
+      "answer": "**Stacked etcd** (common default): etcd runs on the same nodes as control plane components\n- Simpler setup and operations\n- Fewer machines required\n- Less resilient: a node failure takes down both control plane components *and* etcd together\n\n**External etcd** (better HA): dedicated etcd cluster separate from control plane nodes\n- Control plane failures don't affect etcd data\n- Independent scaling of each tier\n- More complex to manage and more machines required"
     },
     {
       "id": "kubernetes-architecture-quiz-19",
@@ -264,7 +264,7 @@ next: /quiz/kubernetes/03-control-plane
         "3",
         "4",
         "5",
-        "7"
+        "6"
       ],
       "answer": 2,
       "explanation": "You need **5 nodes**. With 5 nodes, quorum is (5/2)+1 = 3. If 2 nodes fail, you still have 3 healthy nodes, which meets the quorum requirement.",
@@ -279,10 +279,10 @@ next: /quiz/kubernetes/03-control-plane
         "CoreDNS",
         "kube-proxy",
         "Ingress Controller",
-        "Metrics Server"
+        "Network Policy Controller"
       ],
       "answers": [0, 2],
-      "explanation": "**CNI Plugin** (for pod networking) and **kube-proxy** (for service networking) are required. CoreDNS is highly recommended but technically optional. Ingress Controller and Metrics Server are optional add-ons.",
+      "explanation": "**CNI Plugin** (provides pod IP addresses and routing) and **kube-proxy** (maintains iptables/ipvs rules for Service routing) are required. **CoreDNS** is highly recommended for service discovery but pods can technically communicate by IP without it. **Ingress Controller** is only needed for HTTP/HTTPS routing rules. **Network Policy Controller** enforces network policies but pods route traffic fine without one — policies just won't be enforced.",
       "hint": "What's needed for basic pod-to-pod and service communication?"
     },
     {
@@ -298,7 +298,7 @@ next: /quiz/kubernetes/03-control-plane
         "User sees pod list"
       ],
       "correctOrder": [0, 2, 3, 1, 4],
-      "explanation": "The flow is: kubectl authenticates → API Server queries etcd → etcd returns data → API Server responds → User sees results. All cluster operations flow through the API Server."
+      "explanation": "The flow is: kubectl authenticates → API Server queries etcd → etcd returns data → API Server sends response → User sees results. **Authentication happens first** because the API server rejects any request before verifying identity. Every read operation goes through etcd via the API server — there is no in-memory cache in the standard control path, which is why API server latency scales directly with etcd performance."
     },
     {
       "id": "kubernetes-architecture-quiz-24",
@@ -306,7 +306,7 @@ next: /quiz/kubernetes/03-control-plane
       "question": "The control plane component that handles cloud provider integration (like load balancers and storage) is called _____.",
       "answer": "cloud-controller-manager",
       "caseSensitive": false,
-      "explanation": "The **cloud-controller-manager** is an optional component that integrates with cloud provider APIs to manage cloud-specific features like load balancers, storage volumes, and routes.",
+      "explanation": "The **cloud-controller-manager** decouples cloud-specific logic from core Kubernetes, allowing each cloud provider to implement their own controllers without patching the core codebase. It manages cloud resources like load balancers (for Services of type LoadBalancer), storage volumes, and routes — things that differ across AWS, GCP, and Azure. It is **optional** in on-premises clusters that have no cloud integrations.",
       "hint": "It has 'cloud' and 'controller' in its name."
     },
     {
@@ -319,16 +319,12 @@ next: /quiz/kubernetes/03-control-plane
     },
     {
       "id": "kubernetes-architecture-quiz-26",
-      "type": "mcq",
-      "question": "Which component is described as the 'front-end for the control plane'?",
-      "options": [
-        "kube-scheduler",
-        "kube-controller-manager",
-        "kube-api-server",
-        "etcd"
-      ],
-      "answer": 2,
-      "explanation": "The **kube-api-server** is the front-end for the control plane. It exposes the Kubernetes API and handles all cluster operations—all communication goes through it.",
+      "type": "fill-blank",
+      "question": "The _____ is the 'front-end for the control plane' that all other components and users must communicate through.",
+      "answer": "kube-api-server",
+      "caseSensitive": false,
+      "acceptedAnswers": ["kube-api-server", "api-server", "api server", "kube-apiserver"],
+      "explanation": "The **kube-api-server** is the sole entry point for all cluster operations. Every request — from kubectl, from internal controllers, from kubelets — is authenticated, authorized, and processed through the API server before being committed to etcd. No component reads from or writes to etcd directly.",
       "hint": "It's the component that all other components and users interact with."
     },
     {
@@ -348,7 +344,7 @@ next: /quiz/kubernetes/03-control-plane
         "Use only 'kube-system' for production"
       ],
       "answer": 2,
-      "explanation": "Best practice is to **avoid using the 'default' namespace for production workloads**. Instead, create dedicated namespaces for different environments (dev, staging, prod) or teams.",
+      "explanation": "Using the **default** namespace in production is an anti-pattern: there is no access control isolation (any user can see and modify all resources), no resource quotas scoped to a team, and `kubectl get pods` returns all pods making operational visibility poor. Dedicated namespaces let you apply RBAC, ResourceQuotas, and LimitRanges per team or environment.",
       "hint": "Organization and separation are key in production."
     },
     {
@@ -365,8 +361,111 @@ next: /quiz/kubernetes/03-control-plane
       "question": "The component on each worker node that maintains network rules for service routing is called _____.",
       "answer": "kube-proxy",
       "caseSensitive": false,
-      "explanation": "**kube-proxy** is the network proxy that runs on each worker node. It maintains network rules for service routing and enables pod-to-service communication.",
+      "explanation": "**kube-proxy** implements Kubernetes Service abstraction on each node. When you create a Service, kube-proxy watches the API server for endpoint changes and updates iptables or ipvs rules so traffic to a Service's ClusterIP is routed to healthy pods. If kube-proxy fails on a node, new services and endpoint changes stop taking effect on that node — existing connections may persist until they break, but no new routing updates are applied.",
       "hint": "It has 'proxy' in its name and handles networking."
+    },
+    {
+      "id": "kubernetes-architecture-quiz-31",
+      "type": "mcq",
+      "question": "What happens when kube-scheduler fails in a Kubernetes cluster?",
+      "options": [
+        "All running pods stop immediately",
+        "New pods remain in Pending state, but running pods continue normally",
+        "No new cluster changes are possible, but workloads keep running",
+        "Failed pods are not replaced and self-healing stops"
+      ],
+      "answer": 1,
+      "explanation": "When kube-scheduler fails, **existing pods keep running** unaffected — the scheduler does not manage running pods, only assigns new ones to nodes. New pods get created as API objects but remain in **Pending** state indefinitely because no component is available to assign them a node. Common mix-up: 'No new changes possible' describes **kube-api-server** failure; 'self-healing stops' describes **kube-controller-manager** failure. The scheduler only handles placement, not detection of failures.",
+      "hint": "The scheduler's only job is assigning pods to nodes — it doesn't control what's already running."
+    },
+    {
+      "id": "kubernetes-architecture-quiz-32",
+      "type": "mcq",
+      "question": "A Deployment is running 3 replicas. Two pods crash, but no replacement pods are created — not even in Pending state. Which component has most likely failed?",
+      "options": [
+        "kube-scheduler",
+        "kube-controller-manager",
+        "kubelet",
+        "kube-proxy"
+      ],
+      "answer": 1,
+      "explanation": "The **kube-controller-manager** hosts the ReplicaSet controller, which detects discrepancies between desired state (3 replicas) and actual state (1 running) and creates new pod objects. If no pod objects are being created at all (not even in Pending), the controller-manager has failed. **kube-scheduler** failure would leave new pods stuck in Pending — the pods would at least exist as API objects. **kubelet** failure affects only one node and would not prevent cluster-wide pod replacement. **kube-proxy** only handles service routing rules.",
+      "hint": "What component detects that fewer replicas exist than desired and creates new pod objects to compensate?"
+    },
+    {
+      "id": "kubernetes-architecture-quiz-33",
+      "type": "code-completion",
+      "question": "Complete the LimitRange to set the default CPU limit applied to containers when no resource limits are specified:",
+      "instruction": "Fill in the missing field name",
+      "codeTemplate": "spec:\n  limits:\n  - type: Container\n    _____:\n      cpu: 500m\n      memory: 512Mi\n    defaultRequest:\n      cpu: 100m\n      memory: 128Mi",
+      "answer": "default",
+      "caseSensitive": false,
+      "acceptedAnswers": ["default"],
+      "explanation": "The **default** field sets the **limits** automatically applied to a container when none are specified. The **defaultRequest** field sets the **requests** applied when none are specified. These are commonly confused: `default` → limits; `defaultRequest` → requests. If neither is set and a ResourceQuota enforces limits, a pod without explicit limits is rejected. The `max` and `min` fields are bounds — they reject pods outside the allowed range rather than applying defaults."
+    },
+    {
+      "id": "kubernetes-architecture-quiz-34",
+      "type": "true-false",
+      "question": "The kube-public namespace is readable only by authenticated users.",
+      "answer": false,
+      "explanation": "False! **kube-public** is intentionally readable by **all users, including unauthenticated ones**. Its purpose is to expose cluster information that needs to be publicly accessible — typically a ConfigMap with cluster metadata used during cluster bootstrapping. The name 'public' is the giveaway. This is a security consideration: never store sensitive data in kube-public. Both **kube-system** (system components) and **kube-node-lease** (heartbeat objects) require authentication.",
+      "hint": "The name of the namespace describes its access policy."
+    },
+    {
+      "id": "kubernetes-architecture-quiz-35",
+      "type": "fill-blank",
+      "question": "The _____ namespace contains Lease objects that worker nodes use to report heartbeats to the control plane.",
+      "answer": "kube-node-lease",
+      "caseSensitive": false,
+      "acceptedAnswers": ["kube-node-lease"],
+      "explanation": "**kube-node-lease** holds a Lease object for each node. The kubelet renews its node's Lease on each heartbeat cycle. The control plane uses lease expiry to detect node health — a missed renewal triggers the node condition to change to NotReady. This dedicated namespace was introduced to reduce API server load: before Lease objects existed, kubelet heartbeats required updating the Node object directly, which caused write contention under high node counts.",
+      "hint": "The namespace name combines 'kube' with the purpose: tracking node leases."
+    },
+    {
+      "id": "kubernetes-architecture-quiz-36",
+      "type": "mcq",
+      "question": "A worker node's container runtime (containerd) crashes. What is the IMMEDIATE impact on that node?",
+      "options": [
+        "All existing containers stop immediately",
+        "Existing containers keep running, but new containers cannot start",
+        "kubelet automatically restarts containerd and resumes normal operation",
+        "The node is immediately marked NotReady and all pods are evicted"
+      ],
+      "answer": 1,
+      "explanation": "**Existing containers keep running** because containerd uses a per-container shim process (`containerd-shim`) that is independent from the main containerd daemon. Running containers are owned by these shim processes, not containerd itself, so they survive a containerd crash. **New containers cannot start** because container creation requires the runtime daemon. The node is eventually marked NotReady as kubelet loses its ability to report status, but this is not immediate — it happens after the heartbeat timeout expires.",
+      "hint": "Think about what actually owns the running container process vs what manages container lifecycle."
+    },
+    {
+      "id": "kubernetes-architecture-quiz-37",
+      "type": "fill-blank",
+      "question": "In a highly available Kubernetes control plane with 3 API server instances, a _____ is required in front of them so that kubectl and other components use a single stable endpoint.",
+      "answer": "load balancer",
+      "caseSensitive": false,
+      "acceptedAnswers": ["load balancer", "load-balancer", "loadbalancer"],
+      "explanation": "A **load balancer** sits in front of multiple API server instances in an HA control plane. Without it, clients (kubectl, kubelets, controllers) would be hardcoded to a single API server — defeating the purpose of running multiple instances. The load balancer provides one stable endpoint while distributing traffic and routing around failed instances. In cloud environments this is typically a cloud load balancer (ELB, GCP LB); on-premises setups often use HAProxy or keepalived.",
+      "hint": "What distributes traffic across multiple servers and provides a single stable endpoint?"
+    },
+    {
+      "id": "kubernetes-architecture-quiz-38",
+      "type": "true-false",
+      "question": "A ClusterRole can only be bound at the cluster scope — it cannot grant permissions within a specific namespace.",
+      "answer": false,
+      "explanation": "False! A **ClusterRole can be bound within a namespace** by pairing it with a **RoleBinding** (not a ClusterRoleBinding). When a RoleBinding references a ClusterRole, it grants those permissions only within the RoleBinding's namespace. This is useful for defining standard permission templates once (e.g., a 'pod-reader' ClusterRole) and reusing them across namespaces without duplicating Role objects. The scope of the permission grant is determined by the **Binding type**: ClusterRoleBinding = cluster-wide, RoleBinding = namespace-scoped, regardless of whether the role is a Role or ClusterRole.",
+      "hint": "The binding type — RoleBinding vs ClusterRoleBinding — determines the scope, not the role type itself."
+    },
+    {
+      "id": "kubernetes-architecture-quiz-39",
+      "type": "mcq",
+      "question": "You configure a HorizontalPodAutoscaler (HPA) targeting CPU utilization, but pods never scale. No errors are visible in the Deployment. Which missing add-on is the most likely cause?",
+      "options": [
+        "CoreDNS",
+        "Ingress Controller",
+        "Metrics Server",
+        "Network Policy Controller"
+      ],
+      "answer": 2,
+      "explanation": "**Metrics Server** provides the resource metrics API that HPA queries to read current CPU and memory utilization. Without it, the HPA controller cannot retrieve utilization data and silently fails to scale — the HPA status shows 'unable to get metrics' but no Deployment error appears. **CoreDNS** enables service discovery but does not supply resource metrics. **Ingress Controller** handles HTTP routing. **Network Policy Controller** enforces traffic rules. Metrics Server is frequently overlooked because it is not installed by default in many Kubernetes distributions.",
+      "hint": "HPA needs to read live CPU/memory usage — what add-on component provides that data?"
     }
   ]
 }
