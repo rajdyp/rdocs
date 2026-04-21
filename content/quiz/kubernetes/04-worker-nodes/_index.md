@@ -13,16 +13,16 @@ next: /quiz/kubernetes/05-networking
     {
       "id": "kubernetes-worker-nodes-quiz-01",
       "type": "mcq",
-      "question": "What is the primary role of kubelet in a Kubernetes worker node?",
+      "question": "A pod is scheduled to a worker node but its containers are repeatedly crash-looping. Which component detects the failures, triggers restarts according to the pod's restart policy, and reports the pod status back to the API server?",
       "options": [
-        "It routes network traffic between services and pods",
-        "It manages pod lifecycle and ensures containers are running as specified",
-        "It stores container images and manages image pulls",
-        "It creates iptables rules for service routing"
+        "kube-proxy, because it monitors pod health across the node and redirects traffic when pods fail",
+        "kubelet, because it manages pod lifecycle and ensures containers are running as specified",
+        "The container runtime, because it self-heals containers when they exit unexpectedly",
+        "The node controller, because it monitors worker nodes and restarts failed containers"
       ],
       "answer": 1,
-      "explanation": "kubelet is the node-level agent responsible for managing pod lifecycle—ensuring containers are running and healthy according to pod specifications received from the API server.",
-      "hint": "Think about which component directly interacts with containers on the node."
+      "explanation": "kubelet is the node agent responsible for the full pod lifecycle — it calls the container runtime to start containers and runs health probes. When a liveness probe fails or a container exits, kubelet applies the pod's restart policy and triggers a new container start. kube-proxy (A) only configures network rules for service routing; it never monitors container health. The container runtime (C) executes containers but doesn't independently decide when to restart them — kubelet drives that decision. The node controller (D) monitors node health from the control plane but doesn't directly restart individual containers.",
+      "hint": "Think about which component directly watches pod specs and bridges the scheduler's assignment with container execution."
     },
     {
       "id": "kubernetes-worker-nodes-quiz-02",
@@ -69,7 +69,7 @@ next: /quiz/kubernetes/05-networking
       "question": "kubelet uses _____ (control groups) to enforce resource requests and limits on containers.",
       "answer": "cgroups",
       "caseSensitive": false,
-      "explanation": "cgroups (control groups) is a Linux kernel feature that kubelet uses to limit and monitor resource usage (CPU, memory) of containers.",
+      "explanation": "Linux cgroups (control groups) are kernel-level resource namespaces that enforce hard limits on container resource usage. kubelet writes to a pod's cgroup hierarchy during startup, translating `limits.memory: 512Mi` in the pod spec into a kernel enforcement boundary. Without cgroups, a container could freely consume all CPU and memory on the node, starving other pods. Think of resource requests as a scheduling reservation and limits as a hard ceiling enforced by the kernel at runtime.",
       "hint": "It's a Linux kernel feature abbreviated as a single word."
     },
     {
@@ -105,7 +105,7 @@ next: /quiz/kubernetes/05-networking
       "id": "kubernetes-worker-nodes-quiz-08",
       "type": "flashcard",
       "question": "What is the Container Runtime Interface (CRI)?",
-      "answer": "**Container Runtime Interface (CRI)**\n\nA standardized gRPC API that allows Kubernetes (specifically kubelet) to work with different container runtimes (containerd, CRI-O, etc.) without being tied to a specific implementation. It abstracts image management, container lifecycle, and execution operations."
+      "answer": "**Container Runtime Interface (CRI)**\n\nStandard gRPC API that lets kubelet work with any container runtime without code changes.\n\n- **Purpose**: decouple kubelet from specific runtime implementations\n- **Protocol**: gRPC — runtime runs as a separate process that kubelet calls\n- **What it abstracts**: image pulls, container lifecycle, execution, log streaming\n- **Common runtimes**: containerd (default in most distros), CRI-O (K8s-native)\n- **Key benefit**: swap runtimes (e.g., containerd → CRI-O) without modifying kubelet"
     },
     {
       "id": "kubernetes-worker-nodes-quiz-09",
@@ -162,7 +162,7 @@ next: /quiz/kubernetes/05-networking
       "options": [
         "Guaranteed → Burstable → BestEffort",
         "BestEffort → Burstable → Guaranteed",
-        "Randomly based on pod age",
+        "BestEffort → Guaranteed → Burstable",
         "Based on pod priority class only"
       ],
       "answer": 1,
@@ -173,7 +173,7 @@ next: /quiz/kubernetes/05-networking
       "id": "kubernetes-worker-nodes-quiz-14",
       "type": "flashcard",
       "question": "Why is the Service ClusterIP called a 'virtual IP'?",
-      "answer": "**Virtual IP (VIP)**\n\nThe Service ClusterIP doesn't exist on any network interface in the cluster. It's not assigned to any device. Instead, it's a placeholder IP that kube-proxy uses to create iptables/IPVS rules. When packets are sent to this IP, kernel rules intercept and rewrite them to real pod IPs. The ClusterIP exists only in routing rules, not as an actual network address."
+      "answer": "**Virtual IP (VIP) — Service ClusterIP**\n\nA Service ClusterIP is a fictional IP that exists only in iptables/IPVS rules — not on any actual network interface.\n\n- **Not assigned to**: any pod, node interface, kube-proxy process, or Service object itself\n- **Lives in**: iptables/IPVS rules created by kube-proxy on each node\n- **How traffic works**: packet to VIP → kernel netfilter matches rule → DNAT rewrites destination to real pod IP\n- **Why it's virtual**: Linux netfilter intercepts and rewrites the packet before it ever leaves the node network stack\n- **Mental model**: a 'catch rule' that hijacks packets destined for the ClusterIP and redirects them to a real pod"
     },
     {
       "id": "kubernetes-worker-nodes-quiz-15",
@@ -211,9 +211,9 @@ next: /quiz/kubernetes/05-networking
       "type": "mcq",
       "question": "What is the primary advantage of kube-proxy's IPVS mode over iptables mode?",
       "options": [
-        "IPVS works on older kernel versions",
+        "IPVS eliminates the need for kube-proxy, routing traffic directly in the kernel without a controller",
         "IPVS provides O(1) lookup time and better performance at scale",
-        "IPVS is simpler to configure and debug",
+        "IPVS mode is enabled by default in Kubernetes because it outperforms iptables in all cases",
         "IPVS supports more service types"
       ],
       "answer": 1,
@@ -348,11 +348,11 @@ next: /quiz/kubernetes/05-networking
         "Pulling container images from registries",
         "Running liveness and readiness probes",
         "Creating and managing container namespaces (PID, network, mount)",
-        "Deciding which node to schedule pods on",
+        "Reporting pod status and container metrics directly to the API server",
         "Providing container logs to kubelet"
       ],
       "answers": [0, 2, 4],
-      "explanation": "The container runtime handles image management, creates/manages container namespaces and cgroups, and provides logs. kubelet runs probes and reports results. Scheduling is the scheduler's job.",
+      "explanation": "The container runtime handles image management, creates/manages container namespaces and cgroups, and provides logs. kubelet runs probes and reports pod status to the API server (the runtime reports container state to kubelet, not directly to the API server). Scheduling is the scheduler's job.",
       "hint": "Focus on low-level container operations vs orchestration tasks."
     },
     {
@@ -368,6 +368,100 @@ next: /quiz/kubernetes/05-networking
       "answer": 1,
       "explanation": "Service ClusterIPs are virtual IPs (VIPs) that don't exist on any actual network interface. They're used by kube-proxy to create routing rules. When packets arrive destined for a ClusterIP, kernel rules intercept and rewrite them to real pod IPs via DNAT.",
       "hint": "Think about the concept of 'virtual' IP and where routing actually happens."
+    },
+    {
+      "id": "kubernetes-worker-nodes-quiz-31",
+      "type": "true-false",
+      "question": "After a startupProbe succeeds once, it continues running on each periodSeconds interval alongside liveness and readiness probes.",
+      "answer": false,
+      "explanation": "startupProbe is a one-shot gate, not a continuous monitor. Its sole job is to disable liveness and readiness probes until the application finishes initializing — protecting slow-starting containers from premature restarts. Once it succeeds, it permanently stops firing for that container's lifetime. kubelet then hands off to livenessProbe (restart if alive-check fails) and readinessProbe (traffic gating). The common misconception is treating all three probes as continuous background loops — startupProbe is the odd one out.",
+      "hint": "Think about what 'startup' implies about when this probe's job is done."
+    },
+    {
+      "id": "kubernetes-worker-nodes-quiz-32",
+      "type": "true-false",
+      "question": "A single centralized kube-proxy instance manages iptables/IPVS rules across all nodes in the cluster.",
+      "answer": false,
+      "explanation": "kube-proxy runs as a DaemonSet — one instance per node. Each independently watches the API server for Service and Endpoint changes, then maintains its own local iptables/IPVS rules. This per-node design is what makes routing efficient: when a packet arrives at a node, the kernel applies local rules without contacting any other node or central process. A centralized proxy would be a single point of failure and a bottleneck; the distributed model means kube-proxy failure on one node only affects routing updates on that node.",
+      "hint": "Think about how Kubernetes typically deploys node-level agents."
+    },
+    {
+      "id": "kubernetes-worker-nodes-quiz-33",
+      "type": "mcq",
+      "question": "kube-proxy on a node crashes and is not restarted. Which of the following best describes the immediate impact on that node?",
+      "options": [
+        "All Service-to-pod traffic on the node immediately stops, because kube-proxy forwards every packet",
+        "Existing Service routing continues working, but rule updates (new pods added, old pods removed, Services changed) are no longer applied to that node",
+        "All pods on the node are evicted and rescheduled to nodes with a healthy kube-proxy",
+        "CoreDNS stops resolving Service names for pods on that node until kube-proxy restarts"
+      ],
+      "answer": 1,
+      "explanation": "kube-proxy writes rules into the kernel and then exits the packet path entirely — the kernel applies those rules independently. If kube-proxy crashes, the existing iptables/IPVS rules remain intact and traffic continues flowing normally. The damage is staleness: new pod additions, pod terminations, and Service updates won't be reflected on that node's rules until kube-proxy recovers. Option A reflects the misconception that kube-proxy actively forwards packets (it doesn't — it's a rule creator, not a proxy in the traditional sense). Option C describes node failure eviction, not kube-proxy failure. Option D conflates kube-proxy with CoreDNS — DNS resolution is entirely separate.",
+      "hint": "Recall which component actually processes packets versus which component writes rules and then steps aside."
+    },
+    {
+      "id": "kubernetes-worker-nodes-quiz-34",
+      "type": "fill-blank",
+      "question": "kubelet sends heartbeats to the API server every _____ seconds by default.",
+      "answer": "10",
+      "caseSensitive": false,
+      "explanation": "kubelet sends node status heartbeats every 10 seconds by default. The node-monitor-grace-period is ~40 seconds, meaning the node is marked NotReady after roughly 4 consecutive missed heartbeats. This interval isn't arbitrary — it's tuned to tolerate brief network blips without triggering false NotReady events while still detecting genuine failures quickly. Understanding the heartbeat rate helps reason about the ~40s/~5m thresholds for NotReady and pod eviction.",
+      "hint": "The node-monitor-grace-period is ~40 seconds — how many missed beats does that represent?"
+    },
+    {
+      "id": "kubernetes-worker-nodes-quiz-35",
+      "type": "multiple-select",
+      "question": "Which of the following are valid eviction signals that kubelet monitors when a node is under resource pressure?",
+      "options": [
+        "memory.available",
+        "cpu.available",
+        "nodefs.available",
+        "imagefs.available",
+        "network.available",
+        "pid.available"
+      ],
+      "answers": [0, 2, 3, 5],
+      "explanation": "kubelet monitors four eviction signal categories: memory.available (available RAM), nodefs.available (disk space for volumes and pod logs), imagefs.available (disk space for container images and layers), and pid.available (process ID exhaustion). CPU pressure is notably absent — when CPU is saturated, throttling handles it via cgroups without evicting pods. Network pressure is managed at a different layer and doesn't trigger eviction. Configuring eviction thresholds for nonexistent signals like cpu.available silently has no effect.",
+      "hint": "CPU handles pressure through throttling, not eviction. Which resource types can be genuinely 'full'?"
+    },
+    {
+      "id": "kubernetes-worker-nodes-quiz-36",
+      "type": "true-false",
+      "question": "In modern Kubernetes clusters (1.21+), kube-proxy exclusively watches Endpoints objects to determine which pod IPs to include in routing rules.",
+      "answer": false,
+      "explanation": "Starting in Kubernetes 1.21, kube-proxy defaults to watching EndpointSlice objects rather than Endpoints. EndpointSlices shard large backend lists into smaller objects (default max: 100 endpoints per slice). When a single pod is added or removed, only the affected slice is updated — instead of retransmitting the entire endpoints list. Endpoints still exist for backward compatibility, but modern kube-proxy uses EndpointSlices for scalability. This matters when debugging: a Service may appear correct in Endpoints but routing can still be stale if the matching EndpointSlice is inconsistent.",
+      "hint": "Think about what 'slices' implies about how endpoints are partitioned at scale."
+    },
+    {
+      "id": "kubernetes-worker-nodes-quiz-37",
+      "type": "true-false",
+      "question": "Starting from Kubernetes 1.24, Docker Engine can be used directly as the container runtime without any additional adapter.",
+      "answer": false,
+      "explanation": "Docker Engine doesn't implement the CRI (Container Runtime Interface) natively. Kubernetes previously supported it via dockershim — a built-in CRI-to-Docker translation layer — but this was deprecated in 1.20 and removed entirely in 1.24. After 1.24, clusters that need Docker Engine must use cri-dockerd, a separate adapter maintained outside the Kubernetes project. Most clusters migrated to containerd or CRI-O, which implement CRI natively. Ignoring this when upgrading to 1.24+ causes container startup to fail immediately since kubelet can no longer communicate with Docker.",
+      "hint": "Docker doesn't natively implement the interface kubelet uses to talk to runtimes."
+    },
+    {
+      "id": "kubernetes-worker-nodes-quiz-38",
+      "type": "fill-blank",
+      "question": "kubelet uses _____ (three-letter acronym) plugins to mount volumes and manage storage for pods.",
+      "answer": "CSI",
+      "caseSensitive": false,
+      "explanation": "CSI (Container Storage Interface) is the standardized API through which kubelet interacts with storage plugins — analogous to CRI for container runtimes and CNI for networking. CSI plugins handle volume mounting, lifecycle management, and storage driver interaction, keeping kubelet decoupled from any specific storage implementation. The three interfaces — CRI, CNI, CSI — are kubelet's extension points for compute, networking, and storage respectively. When a pod mounts a PersistentVolumeClaim, kubelet calls the appropriate CSI driver to attach and mount the underlying storage.",
+      "hint": "It forms a trio with CRI and CNI — think about what the 'S' stands for."
+    },
+    {
+      "id": "kubernetes-worker-nodes-quiz-39",
+      "type": "mcq",
+      "question": "After a node has been NotReady for approximately 5 minutes, how does the Node Controller trigger eviction of the pods running on that node?",
+      "options": [
+        "It sends delete requests directly to the failed node's kubelet, which terminates the pods",
+        "It contacts the container runtime on the failed node via CRI to stop all containers",
+        "It adds a NoExecute taint to the node, causing pods without a matching toleration to be evicted",
+        "It marks all pods as Failed and the scheduler immediately reschedules them onto healthy nodes"
+      ],
+      "answer": 2,
+      "explanation": "The Node Controller applies a `node.kubernetes.io/not-ready:NoExecute` taint (or `unreachable:NoExecute`) to the failed node. Pods without a matching toleration are automatically removed via the taint eviction mechanism. This design is elegant: the Node Controller only needs to set a taint — it doesn't need to know which pods are running or enumerate them individually. Each pod's own tolerations determine whether it gets evicted. Option A is wrong because kubelet on a failed node is unreachable — that's why the taint mechanism exists. Option B is wrong because the control plane doesn't speak CRI directly; that's kubelet's job. Option D is wrong because pods enter Terminating state (not Failed), and it's the pod's controller (ReplicaSet, Deployment) — not the scheduler — that creates replacements.",
+      "hint": "Think about the taint/toleration mechanism and why it's well-suited for a node the control plane can't directly reach."
     }
   ]
 }

@@ -12,17 +12,11 @@ next: /quiz/python/03-functions-deep-dive
   "questions": [
     {
       "id": "python-building-blocks-quiz-01",
-      "type": "mcq",
-      "question": "Which data structure allows duplicate values but has immutable keys?",
-      "options": [
-        "List",
-        "Set",
-        "Dictionary",
-        "Tuple"
-      ],
-      "answer": 2,
-      "explanation": "Dictionaries allow duplicate **values** but require **unique, immutable (hashable) keys**. Lists and tuples allow duplicates but don't have keys. Sets don't allow duplicates at all.",
-      "hint": "Think about key-value pairs and which part must be unique."
+      "type": "true-false",
+      "question": "Dictionary keys can hold any Python object, including lists and other dictionaries.",
+      "answer": false,
+      "explanation": "Dictionary keys must be **hashable** (immutable). Lists and dicts are mutable and therefore unhashable — using one as a key raises `TypeError`. Values, on the other hand, can be any Python object, including lists and nested dicts.",
+      "hint": "Can you use a list as a dictionary key? Try it."
     },
     {
       "id": "python-building-blocks-quiz-02",
@@ -49,11 +43,12 @@ next: /quiz/python/03-functions-deep-dive
         "Checking membership in a list: `x in list`",
         "Appending to a list: `list.append(x)`",
         "Dictionary key lookup: `dict[key]`",
-        "Set membership test: `x in set`"
+        "Set membership test: `x in set`",
+        "Removing the first element: `list.pop(0)`"
       ],
       "answers": [0, 2, 3, 4],
-      "explanation": "O(1) operations: list indexing, list.append(), dict access, and set membership. List membership (`x in list`) is O(n) because it requires linear search.",
-      "hint": "Which operations require searching through all elements?"
+      "explanation": "O(1) operations: list indexing, list.append(), dict access, and set membership. List membership (`x in list`) is O(n) because it requires linear search. `list.pop(0)` is also O(n) — removing from the front shifts every remaining element.",
+      "hint": "Which operations require searching through or shifting all elements?"
     },
     {
       "id": "python-building-blocks-quiz-04",
@@ -90,11 +85,11 @@ next: /quiz/python/03-functions-deep-dive
       "options": [
         "\"HaHaHa\"",
         "\"Ha3\"",
-        "9",
+        "\"Ha Ha Ha\"",
         "TypeError"
       ],
       "answer": 0,
-      "explanation": "The `*` operator with strings performs repetition, concatenating the string with itself n times. \"Ha\" * 3 = \"HaHaHa\".",
+      "explanation": "The `*` operator with strings performs repetition, concatenating the string with itself n times. \"Ha\" * 3 = \"HaHaHa\". No spaces are inserted between copies.",
       "hint": "String repetition is a built-in operation in Python."
     },
     {
@@ -128,10 +123,11 @@ next: /quiz/python/03-functions-deep-dive
         "You can include an `if` condition to filter elements",
         "You can nest multiple comprehensions",
         "List comprehensions can only iterate over lists",
-        "List comprehensions always create new lists in memory"
+        "List comprehensions always create new lists in memory",
+        "List comprehensions evaluate lazily and don't create a list until needed"
       ],
       "answers": [0, 1, 2, 4],
-      "explanation": "Options 1, 2, 3, and 5 are true. The false statement is option 4: list comprehensions work with **any iterable** (not just lists). They are faster than loops, support filtering with `if`, can be nested, and always create new lists in memory.",
+      "explanation": "Options 1, 2, 3, and 5 are true. Option 4 is false: list comprehensions work with **any iterable**. Option 6 is also false: list comprehensions eagerly create a new list immediately — if you want lazy evaluation, use a **generator expression** `(x for x in ...)` instead.",
       "hint": "Think about what 'comprehension' means and what iterables are."
     },
     {
@@ -206,10 +202,10 @@ next: /quiz/python/03-functions-deep-dive
         "None",
         "KeyError",
         "\"N/A\"",
-        "Empty string"
+        "The key 'email' is inserted into the dict with value 'N/A'"
       ],
       "answer": 2,
-      "explanation": "The `.get(key, default)` method returns the default value ('N/A') if the key doesn't exist. Without a default, it returns None. It never raises KeyError.",
+      "explanation": "The `.get(key, default)` method returns the default value ('N/A') if the key doesn't exist — and **does not modify the dictionary**. Without a default, it returns None. It never raises KeyError. To also insert the default, use `.setdefault()` instead.",
       "hint": "The second argument to .get() is the default value."
     },
     {
@@ -287,12 +283,12 @@ next: /quiz/python/03-functions-deep-dive
       "question": "What happens when you try to add a duplicate element to a set?",
       "options": [
         "It raises a ValueError",
-        "It creates a list with duplicates",
+        "It raises a TypeError because sets only accept hashable elements",
         "Nothing—the set ignores duplicates silently",
         "It overwrites the existing element"
       ],
       "answer": 2,
-      "explanation": "Sets automatically enforce uniqueness. Adding a duplicate element is simply ignored—no error, no change. The set remains unchanged.",
+      "explanation": "Sets automatically enforce uniqueness. Adding a duplicate element is simply ignored—no error, no change. The set remains unchanged. (TypeError is what you get for adding an *unhashable* element like a list, not a duplicate.)",
       "hint": "Sets are defined as collections of unique elements."
     },
     {
@@ -371,12 +367,12 @@ next: /quiz/python/03-functions-deep-dive
       "question": "What does `map()` return in Python 3?",
       "options": [
         "A list",
-        "A tuple",
+        "A generator object",
         "An iterator (map object)",
         "A generator function"
       ],
       "answer": 2,
-      "explanation": "`map()` returns an iterator (lazy evaluation), not a list. You need to convert it with `list()` or consume it in a loop to get the actual values.",
+      "explanation": "`map()` returns an **iterator** (a map object), not a list. This is similar to a generator in that it uses lazy evaluation, but it is its own distinct type. You need to convert it with `list()` or consume it in a loop to get the actual values.",
       "hint": "Think about lazy evaluation and memory efficiency."
     },
     {
@@ -451,10 +447,11 @@ next: /quiz/python/03-functions-deep-dive
         "The default starting index is 0",
         "You can specify a custom starting index with the `start` parameter",
         "It modifies the original iterable",
-        "It works with any iterable, not just lists"
+        "It works with any iterable, not just lists",
+        "enumerate() requires the iterable to support integer indexing"
       ],
       "answers": [0, 1, 2, 4],
-      "explanation": "`enumerate()` returns (index, value) tuples, starts at 0 by default, supports custom start index, and works with any iterable. It does NOT modify the original—it returns a new iterator.",
+      "explanation": "`enumerate()` returns (index, value) tuples, starts at 0 by default, supports custom start index, and works with any iterable — including strings, generators, and files. It does NOT modify the original, and does NOT require the iterable to support indexing.",
       "hint": "enumerate() is a non-destructive iterator function."
     },
     {
@@ -515,10 +512,10 @@ next: /quiz/python/03-functions-deep-dive
         "When you need lazy evaluation",
         "When you want more readable code with filtering",
         "When working with infinite sequences",
-        "Never—map() is always better"
+        "When you already have a named function to apply (e.g., `str.upper`)"
       ],
       "answer": 1,
-      "explanation": "List comprehensions are more Pythonic and readable, especially when combining mapping and filtering. `map()` is better for lazy evaluation or when you already have a named function. Example: `[x**2 for x in nums if x > 0]` is clearer than `list(map(lambda x: x**2, filter(lambda x: x > 0, nums)))`.",
+      "explanation": "List comprehensions are more Pythonic and readable, especially when combining mapping and filtering. `map()` is often cleaner when you already have a named function — `map(str.upper, names)` vs `[str.upper(n) for n in names]`. For lazy evaluation or infinite sequences, `map()` (or a generator expression) is the right choice.",
       "hint": "Consider readability and the Zen of Python."
     },
     {
@@ -539,17 +536,16 @@ next: /quiz/python/03-functions-deep-dive
     },
     {
       "id": "python-building-blocks-quiz-45",
-      "type": "drag-drop",
-      "question": "Arrange these operations from fastest to slowest time complexity for large lists:",
-      "instruction": "Drag to order by speed (fastest to slowest)",
-      "items": [
+      "type": "multiple-select",
+      "question": "Which of these list operations run in O(1) time for large lists?",
+      "options": [
         "list.append(x)",
         "list[i] = x",
         "list.insert(0, x)",
         "x in list"
       ],
-      "correctOrder": [0, 1, 2, 3],
-      "explanation": "O(1): append() and index assignment. O(n): insert(0) shifts all elements, membership test searches linearly. Order: append ≈ indexing (both O(1)), then insert(0), then membership (both O(n)).",
+      "answers": [0, 1],
+      "explanation": "list.append(x) — O(1) amortized: adds to the end with no shifting. list[i] = x — O(1): direct index access, no traversal. list.insert(0, x) — O(n): every existing element must shift right by one. x in list — O(n): Python scans from the first element until it finds a match or exhausts the list.",
       "hint": "Check the time complexity tables in the notes."
     },
     {
@@ -565,13 +561,13 @@ next: /quiz/python/03-functions-deep-dive
       "type": "mcq",
       "question": "Why should you avoid modifying a list while iterating over it?",
       "options": [
-        "It's against Python syntax rules",
+        "It raises a RuntimeError: 'list changed size during iteration'",
         "It can cause the iterator to skip elements or raise errors",
         "It makes the code run slower",
         "Lists become immutable during iteration"
       ],
       "answer": 1,
-      "explanation": "Modifying a list during iteration can cause unpredictable behavior—skipping elements, processing the same element twice, or index errors. Instead, iterate over a copy (`for item in list[:]`) or use comprehension.",
+      "explanation": "Python does NOT automatically detect or block list modification during iteration. The iterator simply tracks an internal index; when elements are removed, that index jumps over items silently. The result is skipped elements or wrong output — no RuntimeError is raised. (Note: dicts and sets *do* raise RuntimeError for this; lists do not.)",
       "hint": "Think about what happens when you remove an element that the iterator is pointing to."
     },
     {
@@ -611,12 +607,12 @@ next: /quiz/python/03-functions-deep-dive
       "question": "Given:\n```python\nstudents = {\n    \"student1\": {\"name\": \"Alice\", \"age\": 16, \"classes\": [\"Math\", \"Physics\"]},\n    \"student2\": {\"name\": \"Bob\",   \"age\": 17, \"classes\": [\"Chemistry\", \"Biology\"]}\n}\n```\nWhich expression accesses `\"Math\"`?",
       "options": [
         "`students[\"student1\"][\"classes\"][1]`",
-        "`students[\"student1\"][0]`",
+        "`students[\"student1\"][\"classes\"][\"Math\"]`",
         "`students[\"student1\"][\"classes\"][0]`",
         "`students[\"classes\"][\"student1\"][0]`"
       ],
       "answer": 2,
-      "explanation": "Nested access works left to right: `students[\"student1\"]` → Alice's dict → `[\"classes\"]` → the list `[\"Math\", \"Physics\"]` → `[0]` → first element `\"Math\"`. Option 1 gets `\"Physics\"` (index 1). Options 2 and 4 use the wrong key order.",
+      "explanation": "Nested access works left to right: `students[\"student1\"]` → Alice's dict → `[\"classes\"]` → the list `[\"Math\", \"Physics\"]` → `[0]` → first element `\"Math\"`. Option 1 gets `\"Physics\"` (index 1). Option 2 tries to index a list with a string key, raising TypeError. Option 4 uses the wrong key order.",
       "hint": "Follow the chain: dict → nested dict → list → index."
     },
     {
@@ -654,8 +650,158 @@ next: /quiz/python/03-functions-deep-dive
       "answer": 1,
       "explanation": "Option 2 is correct: initialize the entry **only on first encounter** inside the loop. Option 1 fails because `pod` isn't known before the loop. Option 3 resets the dict on every log line, wiping previously recorded timestamps for that pod. Option 4 calls `.get()` which returns a temporary `{}` that gets discarded — the assignment never reaches `pod_events`.",
       "hint": "The init should happen once per pod, not once per log line."
+    },
+    {
+      "id": "python-building-blocks-quiz-55",
+      "type": "code-output",
+      "question": "What does this print?",
+      "code": "s = \"Python\"\nprint(s[::-1])",
+      "language": "python",
+      "options": [
+        "\"nohtyP\"",
+        "\"Python\"",
+        "\"Pto\"",
+        "\"nhtoy\""
+      ],
+      "answer": 0,
+      "explanation": "The slice `[::-1]` uses step -1, which traverses the string from end to start. \"Python\" reversed is \"nohtyP\". This is the idiomatic Python way to reverse any sequence — works on lists and tuples too.",
+      "hint": "A negative step means you move backwards through the sequence."
+    },
+    {
+      "id": "python-building-blocks-quiz-56",
+      "type": "code-output",
+      "question": "What does this print?",
+      "code": "name = \"Alice\"\nscore = 95.5\nprint(f\"{name} scored {score:.2f}\")",
+      "language": "python",
+      "options": [
+        "\"Alice scored 95.5\"",
+        "\"Alice scored 95.50\"",
+        "\"{name} scored {score:.2f}\"",
+        "\"Alice scored 95.55\""
+      ],
+      "answer": 1,
+      "explanation": "f-strings evaluate expressions inside `{}` at runtime. `{score:.2f}` formats the float with exactly 2 decimal places, so 95.5 becomes `\"95.50\"` — the trailing zero is always included. Without a format spec, `{score}` would produce `\"95.5\"`.",
+      "hint": "The `.2f` format spec means 'fixed-point notation, 2 decimal places'."
+    },
+    {
+      "id": "python-building-blocks-quiz-57",
+      "type": "true-false",
+      "question": "`\"hello\".find(\"x\")` returns `None` when the substring is not found.",
+      "answer": false,
+      "explanation": "`.find()` returns **-1** (not None) when the substring isn't found. This allows safe checks like `if s.find('x') != -1`. In contrast, `.index()` raises `ValueError` for a missing substring. Neither method returns None — that's a common mix-up with `.get()` on dicts.",
+      "hint": "What integer sentinel value signals 'not found' in many C-style functions?"
+    },
+    {
+      "id": "python-building-blocks-quiz-58",
+      "type": "code-output",
+      "question": "What does this print?",
+      "code": "s = \"  hello   world  \"\nprint(len(s.split()))",
+      "language": "python",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "18"
+      ],
+      "answer": 1,
+      "explanation": "Called with no argument, `.split()` splits on **any whitespace** and automatically discards the empty strings that leading, trailing, and consecutive spaces would produce. `\"  hello   world  \".split()` → `['hello', 'world']` — length 2. By contrast, `.split(' ')` with an explicit space would give `['', '', 'hello', '', '', 'world', '', '']` — length 8.",
+      "hint": "The no-argument form of .split() collapses all whitespace runs into a single split."
+    },
+    {
+      "id": "python-building-blocks-quiz-59",
+      "type": "fill-blank",
+      "question": "What set method returns elements in either set A or B, but **not** in both (equivalent to the `^` operator)?",
+      "answer": "symmetric_difference",
+      "caseSensitive": false,
+      "explanation": "`.symmetric_difference(other)` returns elements that belong to exactly one of the two sets. Example: `{1, 2, 3}.symmetric_difference({2, 3, 4})` = `{1, 4}`. The operator shorthand is `^`. Contrast with difference (`-`), which is directional: `a - b` gives elements in `a` not in `b`, while symmetric difference goes both ways.",
+      "hint": "Think of it as the set equivalent of XOR — elements exclusive to one side."
+    },
+    {
+      "id": "python-building-blocks-quiz-60",
+      "type": "true-false",
+      "question": "A lambda function can contain multiple statements separated by semicolons.",
+      "answer": false,
+      "explanation": "Lambda functions are restricted to a **single expression** — no statements, no assignments, no loops, no `return` keyword. The expression's value is automatically returned. `lambda x: x**2` is valid; `lambda x: y = x**2; y` is a SyntaxError. If you need multiple steps, use a regular `def` function.",
+      "hint": "Lambda is designed to be an expression, not a function body."
+    },
+    {
+      "id": "python-building-blocks-quiz-61",
+      "type": "true-false",
+      "question": "`s = {}` creates an empty set.",
+      "answer": false,
+      "explanation": "`{}` creates an **empty dictionary**, not a set. The `{}` syntax was used for dicts before sets got their own literal form. To create an empty set, you must use `set()`. Non-empty set literals work fine — `{1, 2, 3}` is a set — but `{}` is **always** a dict. This is a common silent bug when you expect set uniqueness behavior.",
+      "hint": "What does `type({})` return? Try it."
+    },
+    {
+      "id": "python-building-blocks-quiz-62",
+      "type": "code-output",
+      "question": "What does this print?",
+      "code": "a = [1, 2, 3]\nb = a\nb.append(4)\nprint(len(a))",
+      "language": "python",
+      "options": [
+        "3",
+        "4",
+        "Error",
+        "None"
+      ],
+      "answer": 1,
+      "explanation": "`b = a` creates a **reference** to the same list object — not a copy. Both `a` and `b` point to the same memory. Appending to `b` modifies the shared list, so `a` has 4 elements too. To create an independent copy, use `a[:]`, `a.copy()`, or `list(a)`. This is the same gotcha as the mutable default argument — Python never implicitly copies objects.",
+      "hint": "Is b a new list, or just another name for the same list?"
+    },
+    {
+      "id": "python-building-blocks-quiz-63",
+      "type": "true-false",
+      "question": "`max([])` raises a `ValueError`.",
+      "answer": true,
+      "explanation": "Calling `max()` or `min()` on an **empty iterable** raises `ValueError: max() arg is an empty sequence`. This surprises many developers because `sum([])` returns 0 and `len([])` returns 0 without errors. To guard against empty input, pass a default: `max([], default=0)` returns 0 instead of raising.",
+      "hint": "What can max() report when there are no elements to compare?"
+    },
+    {
+      "id": "python-building-blocks-quiz-64",
+      "type": "code-output",
+      "question": "What does this print?",
+      "code": "items = [\"a\", \"b\", \"a\", \"c\", \"a\"]\ncounts = {}\nfor item in items:\n    counts[item] = counts.get(item, 0) + 1\nprint(counts[\"a\"])",
+      "language": "python",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "KeyError"
+      ],
+      "answer": 2,
+      "explanation": "Tracing 'a' encounters: first — `counts.get('a', 0)` returns 0 (missing), sets `counts['a'] = 1`; second — returns 1, sets 2; third — returns 2, sets 3. The pattern `counts.get(key, 0) + 1` is the idiomatic one-liner for frequency counting: it handles the 'first occurrence' case without a pre-check or `setdefault`.",
+      "hint": "Trace counts['a'] after each iteration where item == 'a'."
+    },
+    {
+      "id": "python-building-blocks-quiz-65",
+      "type": "mcq",
+      "question": "Which expression safely retrieves `config[\"db\"][\"timeout\"]` and returns `30` if either `\"db\"` or `\"timeout\"` is missing?",
+      "options": [
+        "`config[\"db\"][\"timeout\"] or 30`",
+        "`config.get(\"db\").get(\"timeout\", 30)`",
+        "`config.get(\"db\", {}).get(\"timeout\", 30)`",
+        "`config.get(\"db\", {\"timeout\": 30}).get(\"timeout\")`"
+      ],
+      "answer": 2,
+      "explanation": "Option C is correct. `config.get(\"db\", {})` returns an empty dict if `\"db\"` is missing, giving the chained `.get(\"timeout\", 30)` a safe target. Option B fails with `AttributeError` when `\"db\"` is absent — `None` has no `.get()`. Option A raises `KeyError` if `\"db\"` doesn't exist at all. Option D works but is misleading — burying the default inside the first `.get()` obscures intent and is easy to mis-read.",
+      "hint": "If .get('db') returns None, what happens when you call .get('timeout') on None?"
+    },
+    {
+      "id": "python-building-blocks-quiz-66",
+      "type": "code-output",
+      "question": "What does this print?",
+      "code": "scores = {\"Alice\": 85, \"Bob\": 92, \"Charlie\": 78}\ntop = sorted(scores.items(), key=lambda x: x[1], reverse=True)[0]\nprint(top[0])",
+      "language": "python",
+      "options": [
+        "\"Alice\"",
+        "\"Bob\"",
+        "\"Charlie\"",
+        "92"
+      ],
+      "answer": 1,
+      "explanation": "`scores.items()` yields `[('Alice', 85), ('Bob', 92), ('Charlie', 78)]`. Sorting by `x[1]` (the score) descending gives `[('Bob', 92), ('Alice', 85), ('Charlie', 78)]`. `[0]` selects the first tuple `('Bob', 92)`, then `[0]` on that tuple yields the **key** `'Bob'` — not the score 92. This is the idiomatic pattern for 'find the key with the highest value'.",
+      "hint": "After sorting, [0] is the top entry. What is top[0] vs top[1] on a (key, value) tuple?"
     }
   ]
 }
 {{< /quiz >}}
-

@@ -17,7 +17,7 @@ next: /quiz/python/02-building-blocks
       "options": [
         "Only `b` contains `[1, 2, 3, 4]`, `a` remains `[1, 2, 3]`",
         "Both `a` and `b` contain `[1, 2, 3, 4]`",
-        "Python raises a `ReferenceError`",
+        "Both `a` and `b` contain `[1, 2, 3, 4]`, but they become separate objects after `append` triggers a copy-on-write",
         "Only `a` contains `[1, 2, 3, 4]`, `b` remains `[1, 2, 3]`"
       ],
       "answer": 1,
@@ -34,10 +34,11 @@ next: /quiz/python/02-building-blocks
         "`\"\"`",
         "`None`",
         "`False`",
-        "`{}`"
+        "`{}`",
+        "`\"0\"`"
       ],
       "answers": [0, 2, 3, 4, 5],
-      "explanation": "Falsy values in Python include: numeric zero (`0`, `0.0`, `0j`), empty sequences (`\"\"`, `[]`, `()`, `{}`), `None`, and `False`. Note that `[0]` is a non-empty list containing one element, so it's truthy.",
+      "explanation": "Falsy values in Python include: numeric zero (`0`, `0.0`, `0j`), empty sequences (`\"\"`, `[]`, `()`, `{}`), `None`, and `False`. Note that `[0]` is a non-empty list containing one element, so it's truthy. Similarly, `\"0\"` (the string containing the character zero) is truthy because it is a non-empty string — only the empty string `\"\"` is falsy.",
       "hint": "Empty containers are falsy, but containers with items (even if those items are falsy) are truthy."
     },
     {
@@ -132,7 +133,7 @@ next: /quiz/python/02-building-blocks
       "type": "mcq",
       "question": "What is the time complexity of this code?\n\n```python\nfor i in range(n):\n    for j in range(n):\n        print(i, j)\n```",
       "options": [
-        "O(1)",
+        "O(log n)",
         "O(n)",
         "O(n log n)",
         "O(n²)"
@@ -193,9 +194,9 @@ next: /quiz/python/02-building-blocks
       "type": "mcq",
       "question": "What is the problem with using `timeout = seconds or 30` when `seconds` can legitimately be `0`?",
       "options": [
-        "It will cause a `TypeError`",
+        "The problem only occurs when `seconds` is `None`, not when it is `0`",
         "It will set `timeout` to `30` when `seconds` is `0`, even though `0` is a valid value",
-        "It will set `timeout` to `None`",
+        "It will always return `seconds` unchanged because `or` only applies the default when `seconds` is `None`",
         "There is no problem with this code"
       ],
       "answer": 1,
@@ -249,10 +250,10 @@ next: /quiz/python/02-building-blocks
         "O(1) - Constant",
         "O(log n) - Logarithmic",
         "O(n) - Linear",
-        "O(n²) - Quadratic"
+        "O(n log n) - Linearithmic"
       ],
       "answer": 0,
-      "explanation": "Dictionary lookup in Python uses hash tables, providing O(1) average-case lookup time. This makes dictionaries much faster than lists for membership testing when you have many elements.",
+      "explanation": "Dictionary lookup in Python uses hash tables, providing O(1) average-case lookup time. This makes dictionaries much faster than lists for membership testing when you have many elements. O(log n) would apply to sorted-tree data structures (like a balanced BST), not hash tables.",
       "hint": "Dictionaries use hashing for direct access."
     },
     {
@@ -402,6 +403,163 @@ next: /quiz/python/02-building-blocks
       "answer": 1,
       "explanation": "Only option B matches the intent. Options A and C are identical after Python applies precedence: since `and` binds tighter than `or`, `reason == 'Scheduled' and s_time is None or ts < s_time` is parsed as `(reason == 'Scheduled' and s_time is None) or ts < s_time`. This causes the condition to fire whenever `ts < s_time`, regardless of `reason`. Explicit parentheses around the `or` subexpression are required.",
       "hint": "`and` has higher precedence than `or`—it groups first, just like `*` before `+`."
+    },
+    {
+      "id": "python-foundation-34",
+      "type": "code-output",
+      "question": "Predict the output:",
+      "code": "print(15 / 4)\nprint(15 // 4)",
+      "language": "python",
+      "options": [
+        "`3.75` then `3`",
+        "`3` then `3`",
+        "`3.75` then `3.75`",
+        "`4` then `3`"
+      ],
+      "answer": 0,
+      "explanation": "In Python 3, `/` (true division) **always returns a float**, even when dividing two integers: `15 / 4 = 3.75`. The `//` operator is floor division — it rounds down to the nearest integer: `15 // 4 = 3`. This differs from Python 2, where `15 / 4` returned `3`. A common bug: expecting an integer from `/` and getting unexpected decimal results in downstream calculations.",
+      "hint": "Python 3 changed how `/` works compared to Python 2 — it no longer truncates."
+    },
+    {
+      "id": "python-foundation-35",
+      "type": "mcq",
+      "question": "Which of the following is the correct Python ternary (conditional) expression syntax?",
+      "options": [
+        "`status = \"adult\" if age >= 18 else \"minor\"`",
+        "`status = age >= 18 ? \"adult\" : \"minor\"`",
+        "`status = if age >= 18: \"adult\" else: \"minor\"`",
+        "`status = \"adult\" when age >= 18 else \"minor\"`"
+      ],
+      "answer": 0,
+      "explanation": "Python's ternary expression uses `value_if_true if condition else value_if_false`. Option B is C/JavaScript ternary syntax (`?:`), which Python does not support. Option C uses statement syntax (with colons) inside an expression context, which is a `SyntaxError`. Option D uses `when`, which is not a Python keyword. Only option A is valid Python.",
+      "hint": "Python reads like English — the condition comes after the value it guards."
+    },
+    {
+      "id": "python-foundation-36",
+      "type": "true-false",
+      "question": "The expression `name = user_input or 'Anonymous'` will set `name` to `'Anonymous'` when `user_input` is an empty string `\"\"`, even if an empty string was intentional.",
+      "answer": true,
+      "explanation": "Empty string `\"\"` is falsy in Python, so `\"\" or 'Anonymous'` evaluates to `'Anonymous'` — the exact same mechanism as `0 or 30` returning `30`. Both `0` and `\"\"` are falsy, so the `or` default pattern silently replaces them. The fix is an explicit `None` check: `name = 'Anonymous' if user_input is None else user_input`, which substitutes only when the value is truly absent.",
+      "hint": "Empty string and numeric zero share the same falsy behavior with `or` defaults."
+    },
+    {
+      "id": "python-foundation-37",
+      "type": "code-output",
+      "question": "Predict the output:",
+      "code": "count = 0\nfor i in range(5):\n    if i == 2:\n        pass\n    count += 1\nprint(count)",
+      "language": "python",
+      "options": [
+        "`4`",
+        "`5`",
+        "`3`",
+        "`2`"
+      ],
+      "answer": 1,
+      "explanation": "`pass` is a true no-op — it does absolutely nothing, and execution falls through to the next statement. When `i == 2`, `pass` executes (doing nothing), then `count += 1` still runs. All 5 iterations increment `count`, giving `5`. If `continue` were used instead, it would **skip** `count += 1` for `i == 2`, giving `4`. The critical distinction: `pass` fills syntactic space; `continue` redirects control flow.",
+      "hint": "`pass` does nothing at all — it's a placeholder, not a loop control statement."
+    },
+    {
+      "id": "python-foundation-38",
+      "type": "multiple-select",
+      "question": "Which of the following are valid ways to iterate over `d = {'name': 'Alice', 'age': 30}`?",
+      "options": [
+        "`for key in d:` — iterates over keys",
+        "`for value in d.values():` — iterates over values",
+        "`for key, value in d.items():` — iterates over key-value pairs",
+        "`for key, value in d:` — unpacks each entry directly from the dict",
+        "`for value in d.keys():` — iterates over values using the keys method"
+      ],
+      "answers": [0, 1, 2],
+      "explanation": "Iterating a dict directly (`for x in d`) yields its **keys** only, not key-value pairs — so `for key, value in d` fails with `ValueError: too many values to unpack`. `d.keys()` returns keys, not values, making option E semantically wrong (it yields keys while the variable is named `value`). The three correct patterns: `for key in d:` (keys), `for value in d.values():` (values), `for key, value in d.items():` (both).",
+      "hint": "Iterating a dict directly yields only keys — you need `.items()` for key-value pairs."
+    },
+    {
+      "id": "python-foundation-39",
+      "type": "true-false",
+      "question": "In Python's `match-case` statement, execution automatically falls through from a matched `case` to the next one, similar to `switch` in C or Java.",
+      "answer": false,
+      "explanation": "Unlike C/Java `switch`, Python's `match-case` does **not** fall through. Only the first matching `case` executes, then control exits the match block entirely. In C, you need explicit `break` to prevent fall-through; in Python, there is no fall-through at all — each case is fully isolated. This makes Python's structural pattern matching safer by default.",
+      "hint": "Python's match-case was designed to avoid the fall-through footgun present in C-style switch statements."
+    },
+    {
+      "id": "python-foundation-40",
+      "type": "mcq",
+      "question": "What does `'age' in {'name': 'Alice', 'age': 30}` return?",
+      "options": [
+        "`True` — `in` checks dictionary keys by default",
+        "`False` — `in` checks dictionary values, and `'age'` is not a value",
+        "`30` — `in` returns the value associated with the matched key",
+        "`True` — but this only works because the key happens to be a string"
+      ],
+      "answer": 0,
+      "explanation": "The `in` operator on a dictionary tests **keys**, not values. `'age' in d` is equivalent to `'age' in d.keys()`. To check values, use `30 in d.values()`. To check a key-value pair, use `('age', 30) in d.items()`. This is intentional: key lookup is O(1) via hashing; scanning values would require an O(n) sweep.",
+      "hint": "Think about what `for x in d` iterates over — that's what `in` also checks."
+    },
+    {
+      "id": "python-foundation-41",
+      "type": "mcq",
+      "question": "In a `match-case` statement, what does `case _:` do?",
+      "options": [
+        "Matches any value that didn't match a previous case — acts as a catch-all default",
+        "Matches only the Python singleton `None` — it's the null wildcard",
+        "Raises a `SyntaxError` if the variable `_` was not defined before the `match` block",
+        "Matches all falsy values: `None`, `0`, `\"\"`, `[]`, `False`, `{}`"
+      ],
+      "answer": 0,
+      "explanation": "`case _:` is the **wildcard pattern** — it matches anything and is equivalent to the `else` in an `if-elif-else` chain. Unlike `case x:` (which captures the matched value into variable `x`), `_` discards the matched value and doesn't bind it. The wildcard doesn't require `_` to be defined beforehand — it's pattern syntax, not a variable lookup. It must be the last case, or Python raises `SyntaxError` for unreachable patterns after it.",
+      "hint": "The `_` convention means 'anything I don't care about' — same as in tuple unpacking like `a, _ = (1, 2)`."
+    },
+    {
+      "id": "python-foundation-42",
+      "type": "code-output",
+      "question": "What does this code print?",
+      "code": "count = 3\nwhile count > 0:\n    print(count, end=' ')\n    count -= 1",
+      "language": "python",
+      "options": [
+        "`3 2 1`",
+        "`3 2 1 0`",
+        "`2 1 0`",
+        "`0 1 2 3`"
+      ],
+      "answer": 0,
+      "explanation": "The loop runs while `count > 0`. Starting at 3: prints `3`, decrements to 2 → prints `2`, decrements to 1 → prints `1`, decrements to 0 → condition `0 > 0` is `False`, loop exits. The value `0` is **never printed** because the condition is evaluated before each iteration, not after. Option B is a common off-by-one mistake from thinking the check happens after the body.",
+      "hint": "The `while` condition is evaluated before the loop body — if it's false, the body doesn't run at all."
+    },
+    {
+      "id": "python-foundation-43",
+      "type": "mcq",
+      "question": "Which of these two functions has O(n) space complexity?\n\n```python\n# Function A\ndef sum_list(arr):\n    total = 0\n    for num in arr:\n        total += num\n    return total\n\n# Function B\ndef double_list(arr):\n    result = []\n    for num in arr:\n        result.append(num * 2)\n    return result\n```",
+      "options": [
+        "Function A — it iterates over all n elements, so it uses O(n) memory",
+        "Function B — it creates a new list that grows proportionally with the input size",
+        "Both A and B — any function that processes an n-element list uses O(n) space",
+        "Neither — both use the same memory since they share the input list"
+      ],
+      "answer": 1,
+      "explanation": "Space complexity measures **extra memory allocated inside the function**, not the input itself. Function A allocates only one variable (`total`) regardless of input size — that's O(1) extra space. Function B builds a new `result` list that grows to n elements — that's O(n) extra space. The input array doesn't count toward either function's space complexity; it was already in memory before the function ran.",
+      "hint": "Count only the memory the function itself creates, not what it receives as a parameter."
+    },
+    {
+      "id": "python-foundation-44",
+      "type": "true-false",
+      "question": "Quick Sort's worst-case time complexity is O(n²) and can be triggered by an already-sorted input when the first element is always chosen as the pivot.",
+      "answer": true,
+      "explanation": "Quick Sort picks a pivot and partitions around it. When the input is already sorted and you always pick the first element as pivot, every partition is maximally unbalanced: one side gets 0 elements, the other gets n−1. This forces n levels of recursion instead of log n, giving O(n²) total work. This is why Python's built-in `sorted()` uses Timsort (O(n log n) worst case) rather than naive Quick Sort, and why knowing your data's shape matters when choosing a sort algorithm.",
+      "hint": "Think about what happens when the pivot is always the smallest element in the remaining array."
+    },
+    {
+      "id": "python-foundation-45",
+      "type": "mcq",
+      "question": "You have a `blocklist` (a list) with 100,000 items. For each of 50,000 `urls`, you check `if url in blocklist`. What is the total time complexity of all 50,000 checks, and what is the simplest fix?",
+      "options": [
+        "O(n²) total — each `in` on a list is O(n); converting `blocklist` to a `set` reduces all 50,000 checks to O(n) total",
+        "O(n) total — Python's `in` operator is internally optimized to O(1) for any sequence",
+        "O(n log n) total — Python sorts the list internally before searching",
+        "O(n²) total — the only fix is to implement binary search, reducing it to O(n log n)"
+      ],
+      "answer": 0,
+      "explanation": "Membership testing (`in`) on a **list** is O(n) — Python scans each element sequentially. Doing 50,000 O(n) checks gives O(n × n) = O(n²) total. Converting to a **set** uses a hash table, making each `in` check O(1) average case. The one-time conversion cost is O(n), so all 50,000 checks together cost O(n) total — a dramatic improvement. Binary search (option D) would give O(n log n) but requires keeping the list sorted; using a set is both simpler and faster.",
+      "hint": "What data structure provides O(1) membership testing, similar to dict key lookup?"
     }
   ]
 }
