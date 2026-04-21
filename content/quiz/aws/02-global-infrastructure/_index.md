@@ -94,7 +94,8 @@ next: /quiz/aws/03-networking-fundamentals
       "id": "aws-global-infrastructure-quiz-08",
       "type": "flashcard",
       "question": "What does Multi-AZ deployment provide?",
-      "answer": "**High Availability and (enables) Fault Tolerance**\n\nDistributing resources across multiple Availability Zones within a Region provides:\n- Protection against AZ-level failures\n- Automatic failover capabilities\n- Continuous operation during infrastructure issues\n- Best practice: use at least 2 AZs for production (3+ preferred)"
+      "answer": "**High Availability and Fault Tolerance**",
+      "explanation": "Multi-AZ deployment provides high availability by distributing compute and data across multiple isolated Availability Zones. This enables fault tolerance through redundancy, load balancing, and automatic failover, ensuring the system continues to operate even if an entire AZ goes down."
     },
     {
       "id": "aws-global-infrastructure-quiz-09",
@@ -145,7 +146,7 @@ next: /quiz/aws/03-networking-fundamentals
       "type": "true-false",
       "question": "Amazon S3 bucket names must be globally unique, but the data in buckets is always stored regionally.",
       "answer": true,
-      "explanation": "True. S3 bucket names are globally unique (cannot be reused across accounts), but buckets exist in a specific Region and objects remain in that Region unless Cross-Region Replication (CRR) is configured.",
+      "explanation": "True. S3 bucket names are globally unique (cannot be reused across accounts), but buckets exist in a specific Region and objects remain in that Region unless Cross-Region Replication (CRR) is configured. Note: With the new account-regional namespace feature, users no longer need to manually ensure global uniqueness, as AWS appends account and region identifiers to guarantee it. However, bucket names remain globally unique under the hood.",
       "hint": "Think about the difference between naming and storage location."
     },
     {

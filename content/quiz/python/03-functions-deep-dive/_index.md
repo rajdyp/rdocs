@@ -190,22 +190,26 @@ next: /quiz/python/04-error-handling
         "Generators create values on demand (lazy evaluation)",
         "Generator expressions use parentheses `()` instead of brackets `[]`",
         "Generators are more memory-efficient than list comprehensions for large datasets",
-        "Once a generator is exhausted, you can reset it by calling `next()` again"
+        "Once a generator is exhausted, you can reset it by calling `next()` again",
+        "Generator objects support random access with indexing (e.g., `gen[2]`)"
       ],
       "answers": [0, 1, 2],
-      "explanation": "Statements 1, 2, and 3 are true. However, once a generator is exhausted, it stays exhausted—you need to create a new generator to start over.",
+      "explanation": "Statements 1, 2, and 3 are true. Once a generator is exhausted, it stays exhausted — you need to create a new generator to start over. Generators also don't support indexing; they are forward-only iterators.",
       "hint": "Think about what happens after a generator has yielded all its values."
     },
     {
       "id": "python-functions-deep-dive-quiz-15",
-      "type": "code-completion",
-      "question": "Complete the code to make this a tail-recursive function:",
-      "instruction": "Fill in the missing function name",
-      "codeTemplate": "def factorial_tail(n, acc=1):\n    if n <= 1:\n        return acc\n    return _____(n - 1, n * acc)",
-      "answer": "factorial_tail",
-      "caseSensitive": false,
-      "acceptedAnswers": ["factorial_tail"],
-      "explanation": "Tail recursion occurs when the recursive call is the last operation. The function must call itself with updated parameters."
+      "type": "mcq",
+      "question": "In the tail-recursive `factorial_tail(n, acc=1)`, what is the role of the `acc` (accumulator) parameter?",
+      "options": [
+        "It carries the running product forward so no pending multiplications remain on the call stack",
+        "It counts how many recursive calls have been made so far",
+        "It caches previously computed factorials to avoid redundant work",
+        "It allows the function to be called with one argument instead of two"
+      ],
+      "answer": 0,
+      "explanation": "The accumulator carries the computed result forward with each call. Unlike regular recursion — which must wait for `factorial(n-1)` to return before multiplying — tail recursion does all the work *before* the next call, so no pending operations pile up on the stack. Note: Python doesn't optimize this away, but the pattern is fundamental in languages that do.",
+      "hint": "Think about what `n * acc` computes and where that result goes next."
     },
     {
       "id": "python-functions-deep-dive-quiz-16",
@@ -213,12 +217,12 @@ next: /quiz/python/04-error-handling
       "question": "What is the main difference between `return` and `yield` in a function?",
       "options": [
         "`return` exits the function permanently; `yield` pauses and can resume",
-        "`yield` is faster than `return`",
+        "A generator function cannot contain a `return` statement — only `yield` is allowed",
         "`return` can only return one value; `yield` can return multiple",
         "`yield` stores values in memory; `return` doesn't"
       ],
       "answer": 0,
-      "explanation": "`return` exits the function completely and loses all local state. `yield` pauses the function, preserving its state, and can resume execution when called again.",
+      "explanation": "`return` exits the function completely and loses all local state. `yield` pauses the function, preserving its state, and can resume execution when called again. Generators *can* contain `return` — it just raises `StopIteration` to signal the sequence is done (as shown in Q13).",
       "hint": "Think about whether you can continue execution after the statement."
     },
     {
@@ -250,13 +254,13 @@ next: /quiz/python/04-error-handling
       "type": "mcq",
       "question": "Why should you avoid mutable default parameters like `def append_to(item, lst=[])`?",
       "options": [
-        "It causes a syntax error",
+        "A new default list is created fresh on each call that omits the argument",
         "The default list is created once and shared across all function calls",
         "Mutable defaults are slower than immutable defaults",
-        "Python doesn't allow mutable types as defaults"
+        "Python automatically resets the default list to `[]` after each function call"
       ],
       "answer": 1,
-      "explanation": "The default list `[]` is created once when the function is defined, not each time it's called. All calls share the same list object, leading to unexpected behavior.",
+      "explanation": "The default list `[]` is created once when the function is defined, not each time it's called. All calls share the same list object, leading to unexpected behavior. The fix: use `None` as the default and create a new list inside the function body.",
       "hint": "Think about when the default value is created."
     },
     {
@@ -314,17 +318,12 @@ next: /quiz/python/04-error-handling
     },
     {
       "id": "python-functions-deep-dive-quiz-25",
-      "type": "mcq",
-      "question": "What is the default recursion depth limit in Python?",
-      "options": [
-        "100",
-        "500",
-        "1000",
-        "Unlimited"
-      ],
-      "answer": 2,
-      "explanation": "Python's default recursion limit is typically 1000. You can check it with `sys.getrecursionlimit()` and change it with `sys.setrecursionlimit()`.",
-      "hint": "It's mentioned in the 'Recursion Limit' section."
+      "type": "fill-blank",
+      "question": "What is Python's default recursion depth limit?",
+      "answer": "1000",
+      "caseSensitive": false,
+      "explanation": "Python's default recursion limit is 1000 (check with `sys.getrecursionlimit()`; change with `sys.setrecursionlimit()`). When exceeded, Python raises `RecursionError`.",
+      "hint": "It can be checked with `sys.getrecursionlimit()`."
     },
     {
       "id": "python-functions-deep-dive-quiz-26",
@@ -355,13 +354,13 @@ next: /quiz/python/04-error-handling
       "type": "mcq",
       "question": "What decorator can be used to automatically cache recursive function results?",
       "options": [
-        "`@staticmethod`",
+        "`@cached_property`",
         "`@lru_cache`",
-        "`@property`",
+        "`@functools.wraps`",
         "`@memoize`"
       ],
       "answer": 1,
-      "explanation": "The `@lru_cache` decorator from `functools` automatically caches function results, making recursive functions like Fibonacci much faster by avoiding redundant calculations.",
+      "explanation": "The `@lru_cache` decorator from `functools` automatically caches function results, making recursive functions like Fibonacci much faster by avoiding redundant calculations. `@cached_property` caches class property values (not arbitrary functions). `@functools.wraps` preserves a wrapped function's metadata when writing decorators. `@memoize` describes the concept but isn't in the standard library.",
       "hint": "It's imported from the functools module."
     },
     {
@@ -445,7 +444,7 @@ next: /quiz/python/04-error-handling
       "id": "python-functions-deep-dive-quiz-35",
       "type": "flashcard",
       "question": "What is memoization in the context of recursive functions?",
-      "answer": "**Memoization** is an optimization technique that caches the results of expensive function calls.\n\nWhen a recursive function is called with the same arguments again, it returns the cached result instead of recalculating.\n\nThis dramatically improves performance for recursive algorithms like Fibonacci that have overlapping subproblems."
+      "answer": "**Memoization** caches function results so repeated calls with the same arguments return instantly.\n\n- **Problem:** Naive recursion recalculates the same inputs exponentially — `fib(40)` makes 331M+ calls\n- **Solution:** Store results in a dict; return the cached value on repeat calls — reduces O(2ⁿ) to O(n)\n- **Built-in:** `@lru_cache` from `functools` handles caching automatically\n- **When to use:** Recursive functions with overlapping subproblems (Fibonacci, dynamic programming)"
     },
     {
       "id": "python-functions-deep-dive-quiz-36",
@@ -534,7 +533,7 @@ next: /quiz/python/04-error-handling
         "In the scope where it's first assigned",
         "In the scope where it's first used/read",
         "In the innermost loop or function where it appears",
-        "Always in the global scope unless marked local"
+        "In whichever scope first references the variable, whether reading or writing it"
       ],
       "answer": 0,
       "explanation": "A variable belongs to the scope where it's first **assigned** (not where it's used). This is why `data = data.replace(...)` modifies an outer variable if `data` was assigned outside the loop.",
@@ -588,8 +587,107 @@ next: /quiz/python/04-error-handling
       "acceptedAnswers": ["if __name__ == '__main__': main()", "if __name__ == \"__main__\": main()"],
       "explanation": "Python automatically sets `__name__` to `'__main__'` when you run a file directly (`python script.py`). When the same file is imported by another module, `__name__` is set to the file's module name instead. The full guard block `if __name__ == '__main__': main()` ensures `main()` only runs on direct execution, not on import.",
       "hint": "The guard block starts with `if __name__ == '__main__':` and calls `main()` inside it."
+    },
+    {
+      "id": "python-functions-deep-dive-quiz-47",
+      "type": "true-false",
+      "question": "`**kwargs` collects keyword arguments into a list of `(key, value)` tuples, similar to how `*args` collects positional arguments into a tuple.",
+      "answer": false,
+      "explanation": "`**kwargs` is a **dict**, not a list. While `*args` packs positional arguments into a tuple (accessed by index), `**kwargs` packs keyword arguments into a dictionary (accessed by key or iterated with `.items()`). The analogy breaks: `args` → tuple, `kwargs` → dict. Confusing the two leads to bugs like writing `for key, value in kwargs` when you need `for key, value in kwargs.items()`.",
+      "hint": "Think about how you access each: by position (args) vs by name (kwargs)."
+    },
+    {
+      "id": "python-functions-deep-dive-quiz-48",
+      "type": "code-output",
+      "question": "What happens when you run this code?",
+      "code": "def describe_pet(animal, name, age=1):\n    return f\"{animal} named {name}, age {age}\"\n\nprint(describe_pet(name=\"Buddy\", \"dog\"))",
+      "language": "python",
+      "options": [
+        "`dog named Buddy, age 1`",
+        "`Buddy named dog, age 1`",
+        "`SyntaxError`",
+        "`None`"
+      ],
+      "answer": 2,
+      "explanation": "Python raises a **SyntaxError** at parse time — before any code runs. The rule: once you use a keyword argument in a call, all following arguments must also be keyword arguments. `\"dog\"` is a positional argument appearing after the keyword argument `name=\"Buddy\"`, which Python forbids. This is detected statically, not at runtime.",
+      "hint": "Think about the rule for mixing positional and keyword arguments in a function call."
+    },
+    {
+      "id": "python-functions-deep-dive-quiz-49",
+      "type": "code-output",
+      "question": "What will this code print?",
+      "code": "def make_adder(n):\n    def add(x):\n        return x + n\n    return add\n\nadd5 = make_adder(5)\nprint(add5(10))",
+      "language": "python",
+      "options": [
+        "`Error: 'n' is not defined in local scope`",
+        "`15`",
+        "`Error: nonlocal required to access outer variable`",
+        "`5`"
+      ],
+      "answer": 1,
+      "explanation": "`nonlocal` is only required when you **assign to** (modify) an outer variable. Reading `n` inside `add()` is perfectly valid — Python's LEGB rule searches the enclosing scope automatically, creating a closure. The error would appear only if `add()` tried `n += 1` without `nonlocal n`. Reading outer variables is free; writing them requires the keyword.",
+      "hint": "Does this code assign to `n` or just read it?"
+    },
+    {
+      "id": "python-functions-deep-dive-quiz-50",
+      "type": "mcq",
+      "question": "What happens when a recursive function has **no base case**?",
+      "options": [
+        "The function returns `None` after its first call completes",
+        "Python raises a `RecursionError` when the call stack exceeds the limit",
+        "Python automatically stops the recursion after 10 calls",
+        "The function runs forever until the OS kills the process"
+      ],
+      "answer": 1,
+      "explanation": "Without a base case, the function calls itself indefinitely. Python protects against this with a recursion limit (default ~1000 calls) and raises `RecursionError: maximum recursion depth exceeded` when it is hit. Python does NOT run forever — it enforces a hard cap. Option 4 confuses Python with languages that lack this guard. Option 1 is wrong because the function never returns — it keeps diving deeper until the limit is hit.",
+      "hint": "Python has a built-in mechanism that prevents truly infinite recursion."
+    },
+    {
+      "id": "python-functions-deep-dive-quiz-51",
+      "type": "mcq",
+      "question": "Which of the following is a **pure function**?",
+      "options": [
+        "`def add_to_total(n): global total; total += n; return total`",
+        "`def add(a, b): return a + b`",
+        "`def greet(name): print(f'Hello {name}'); return name`",
+        "`def get_count(): return len(shared_list)`"
+      ],
+      "answer": 1,
+      "explanation": "A **pure function** always returns the same output for the same inputs and has **no side effects**. `add(a, b)` is pure: same arguments always produce the same result, and nothing external is touched. Option A modifies a global variable (side effect). Option C calls `print()` — a side effect even though it also returns a value. Option D reads `shared_list` — if that list changes between calls, the output changes, making it impure (output depends on hidden state).",
+      "hint": "Pure function: same inputs → same output, zero external changes."
+    },
+    {
+      "id": "python-functions-deep-dive-quiz-52",
+      "type": "code-output",
+      "question": "What will this code print?",
+      "code": "def make_adders():\n    adders = []\n    for i in range(3):\n        adders.append(lambda x: x + i)\n    return adders\n\nadd0, add1, add2 = make_adders()\nprint(add0(10))",
+      "language": "python",
+      "options": [
+        "`10`",
+        "`11`",
+        "`12`",
+        "`Error`"
+      ],
+      "answer": 2,
+      "explanation": "This is the classic **closure-in-loop** bug. Each lambda closes over the **variable** `i`, not its value at creation time. After the loop finishes, `i=2` for all three functions — they all share the same `i`. So `add0(10)` computes `10 + 2 = 12`, not `10 + 0`. Fix: use a default argument to snapshot the current value: `lambda x, i=i: x + i`.",
+      "hint": "Closures capture variables by reference, not by value — what is `i` after the loop ends?"
+    },
+    {
+      "id": "python-functions-deep-dive-quiz-53",
+      "type": "code-output",
+      "question": "What will this code print?",
+      "code": "def accumulator():\n    total = 0\n    while True:\n        value = yield total\n        if value is not None:\n            total += value\n\ngen = accumulator()\nnext(gen)\nprint(gen.send(10))\nprint(gen.send(5))",
+      "language": "python",
+      "options": [
+        "`0` then `10`",
+        "`10` then `15`",
+        "`10` then `5`",
+        "`Error: cannot send a value to a generator`"
+      ],
+      "answer": 1,
+      "explanation": "`.send(value)` resumes the generator and delivers the value as the result of the `yield` expression. `next(gen)` primes the generator — runs to the first `yield`, returning 0 (discarded). `gen.send(10)` sets `value=10`, adds to total (total→10), resumes to the next `yield`, returning 10. `gen.send(5)` sets `value=5`, adds to total (total→15), returns 15. Unlike `next()` which sends `None`, `.send()` enables two-way communication with a running generator.",
+      "hint": "Each `.send()` delivers a value INTO the generator and receives the next yielded value OUT."
     }
   ]
 }
 {{< /quiz >}}
-

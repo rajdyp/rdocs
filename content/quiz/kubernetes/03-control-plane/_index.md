@@ -179,14 +179,14 @@ next: /quiz/kubernetes/04-worker-nodes
       "question": "Arrange the complete flow of pod creation in the correct order:",
       "instruction": "Order these steps from when a user creates a pod to when it's running",
       "items": [
-        "kubectl creates pod request",
         "API server authenticates & validates",
-        "Pod stored in etcd (nodeName=null)",
-        "Scheduler detects and assigns node",
         "kubelet starts container",
-        "Controller verifies desired state"
+        "kubectl creates pod request",
+        "Controller verifies desired state",
+        "Pod stored in etcd (nodeName=null)",
+        "Scheduler detects and assigns node"
       ],
-      "correctOrder": [0, 1, 2, 3, 4, 5],
+      "correctOrder": [2, 0, 4, 5, 1, 3],
       "explanation": "The complete flow: 1) User sends create request, 2) API server processes it (auth, authz, validation), 3) Pod saved to etcd without node assignment, 4) Scheduler watches, selects node, and binds pod, 5) kubelet on assigned node pulls image and starts container, 6) Controller monitors to ensure state is maintained."
     },
     {
@@ -268,7 +268,7 @@ next: /quiz/kubernetes/04-worker-nodes
       "id": "kubernetes-control-plane-quiz-22",
       "type": "flashcard",
       "question": "What are Node Affinity and Pod Affinity/Anti-Affinity?",
-      "answer": "**Node Affinity** places pods based on node labels (not topology-aware).\n- `requiredDuringSchedulingIgnoredDuringExecution`: Hard requirement (must match)\n- `preferredDuringSchedulingIgnoredDuringExecution`: Soft preference (best effort)\n\n**Pod Affinity/Anti-Affinity** places pods based on other pods’ labels and where those pods are running. It is topology-aware via `topologyKey` (e.g., node, zone).\n- **Affinity**: Schedule near certain pods (e.g., same zone)\n- **Anti-Affinity**: Schedule away from certain pods (e.g., spread replicas)\n\n**Use cases:**\n- Affinity: Co-locate related services for low latency\n- Anti-Affinity: Spread replicas for high availability"
+      "answer": "**Node Affinity** — places pods on nodes matching labels; not topology-aware\n- `required...`: hard constraint; pod stays Pending if no node matches\n- `preferred...`: soft preference; scheduler tries but won't block scheduling\n\n**Pod Affinity / Anti-Affinity** — topology-aware placement relative to other pods\n- `topologyKey` defines scope (e.g., `hostname` for node-level, `zone` for zone-level)\n- **Affinity**: co-locate pods near matching pods (e.g., same zone for low latency)\n- **Anti-Affinity**: spread pods away from matching pods (e.g., across nodes for HA)"
     },
     {
       "id": "kubernetes-control-plane-quiz-23",
@@ -278,10 +278,10 @@ next: /quiz/kubernetes/04-worker-nodes
         "Odd numbers provide better performance",
         "Even numbers cannot form a quorum",
         "Odd numbers are more cost-effective with same fault tolerance as the next even number",
-        "Even numbers have security vulnerabilities"
+        "Even numbers create split-brain risk since equal partitions can both claim leadership"
       ],
       "answer": 2,
-      "explanation": "Odd numbers are recommended because they provide the same fault tolerance as the next even number. For example, both 3 and 4 nodes can tolerate 1 failure (need quorum of 2 and 3 respectively). Since you get no additional fault tolerance with 4 nodes vs 3, the 4th node is wasted. Odd numbers are more efficient.",
+      "explanation": "Odd numbers are recommended because they provide the same fault tolerance as the next even number. For example, both 3 and 4 nodes can tolerate 1 failure (need quorum of 2 and 3 respectively). Since you get no additional fault tolerance with 4 nodes vs 3, the 4th node is wasted. Even numbers do NOT create split-brain risk—Raft's quorum requirement blocks writes on both sides of an equal partition, preventing conflicting writes. The reason to prefer odd numbers is purely cost efficiency.",
       "hint": "Compare the fault tolerance of 3 vs 4 nodes, or 5 vs 6 nodes."
     },
     {
@@ -309,12 +309,17 @@ next: /quiz/kubernetes/04-worker-nodes
     },
     {
       "id": "kubernetes-control-plane-quiz-26",
-      "type": "fill-blank",
-      "question": "The cloud-controller-manager includes a Service Controller that creates, updates, and deletes cloud _______ for LoadBalancer type services.",
-      "answer": "load balancers",
-      "caseSensitive": false,
-      "explanation": "The Service Controller within cloud-controller-manager manages cloud load balancers (like AWS ELB/NLB, GCP Load Balancer, Azure Load Balancer) for Kubernetes Services of type LoadBalancer. It automatically provisions and configures these cloud resources.",
-      "hint": "What cloud resource distributes traffic across multiple backends?"
+      "type": "mcq",
+      "question": "A Kubernetes Service of type LoadBalancer is created on an AWS cluster. Which component provisions the corresponding AWS load balancer?",
+      "options": [
+        "kube-controller-manager via its Service Account Controller",
+        "cloud-controller-manager via its Service Controller",
+        "kube-api-server by calling the AWS API directly",
+        "kube-scheduler via cloud affinity rules"
+      ],
+      "answer": 1,
+      "explanation": "The cloud-controller-manager's Service Controller provisions and manages cloud-specific load balancers (like AWS ELB/NLB, GCP Load Balancer, Azure Load Balancer) for Services of type LoadBalancer. The kube-controller-manager handles cloud-agnostic resources; cloud-specific integrations are handled by cloud-controller-manager to keep provider logic out of the core Kubernetes codebase.",
+      "hint": "Which component handles cloud provider-specific operations?"
     },
     {
       "id": "kubernetes-control-plane-quiz-27",
@@ -338,33 +343,33 @@ next: /quiz/kubernetes/04-worker-nodes
       "question": "Order these etcd cluster sizes from LEAST to MOST fault-tolerant:",
       "instruction": "Arrange by number of node failures each can tolerate",
       "items": [
-        "1 node (tolerates 0 failures)",
-        "3 nodes (tolerates 1 failure)",
-        "5 nodes (tolerates 2 failures)",
-        "7 nodes (tolerates 3 failures)"
+        "5 nodes",
+        "1 node",
+        "7 nodes",
+        "3 nodes"
       ],
-      "correctOrder": [0, 1, 2, 3],
+      "correctOrder": [1, 3, 0, 2],
       "explanation": "Fault tolerance increases with cluster size: 1-node clusters cannot tolerate any failures, 3-node clusters tolerate 1 failure, 5-node clusters tolerate 2 failures, and 7-node clusters tolerate 3 failures. The pattern follows: tolerated failures = (N-1)/2."
     },
     {
       "id": "kubernetes-control-plane-quiz-29",
       "type": "flashcard",
       "question": "What is the difference between Admission Controllers (mutating vs validating)?",
-      "answer": "**Mutating Admission Controllers** modify requests before they're persisted.\n- Run FIRST in admission pipeline\n- Examples: Add default values, inject labels, add sidecars\n- Can change the resource definition\n\n**Validating Admission Controllers** validate requests without modifying them.\n- Run AFTER mutating controllers\n- Examples: Enforce policies, check quotas, validate custom rules\n- Can only accept or reject requests\n\n**Pipeline:** Request → Mutating → Validating → Validation → etcd\n\n**Example:** A mutating webhook might inject an Istio sidecar, then a validating webhook ensures the pod doesn't exceed namespace resource quotas."
+      "answer": "**Mutating Admission Controllers** — modify requests before persistence; run FIRST\n- Inject sidecars, set defaults, add labels\n- Can change the resource definition\n\n**Validating Admission Controllers** — validate without modifying; run AFTER mutating\n- Enforce policies, check quotas, apply custom rules\n- Can only accept or reject\n\n**Pipeline:** Request → Mutating → Validating → Validation → etcd\n\n**Example:** Mutating injects Istio sidecar; Validating blocks pod if namespace quota exceeded."
     },
     {
       "id": "kubernetes-control-plane-quiz-30",
       "type": "mcq",
-      "question": "What is the PRIMARY role of the Endpoints Controller?",
+      "question": "A new pod passes its readiness probe and joins a Deployment's ReplicaSet. Which component updates the Endpoints object so the Service begins routing traffic to it?",
       "options": [
-        "Create external load balancers for services",
-        "Assign IP addresses to pods",
-        "Populate Endpoints objects that link Services to Pods",
-        "Monitor endpoint health and restart failed containers"
+        "kube-scheduler, which tracks pod placement across nodes",
+        "kubelet, which reports the pod's Ready status to the API server",
+        "Endpoints Controller, which populates Endpoints objects when pod readiness changes",
+        "Node Controller, which monitors pod health on the node"
       ],
       "answer": 2,
-      "explanation": "The Endpoints Controller populates Endpoints objects, which maintain the mapping between Services and the Pods that back them. When pods are created/deleted or their readiness changes, the Endpoints Controller updates the corresponding Endpoints object so traffic is routed correctly.",
-      "hint": "Think about how Services know which Pods to send traffic to."
+      "explanation": "The Endpoints Controller watches for pods whose readiness changes and updates the corresponding Endpoints objects accordingly. Services route traffic to pods by reading these Endpoints objects, so the Endpoints Controller is the bridge between pod lifecycle and Service-level traffic routing. kubelet reports Ready status upstream, but the Endpoints Controller is what acts on that signal to update routing.",
+      "hint": "Think about how a Service discovers which pods are ready to receive traffic."
     },
     {
       "id": "kubernetes-control-plane-quiz-31",
@@ -391,15 +396,113 @@ next: /quiz/kubernetes/04-worker-nodes
       "question": "Which of the following are responsibilities of the cloud-controller-manager? Select all that apply.",
       "options": [
         "Update node addresses from cloud provider",
-        "Schedule pods to nodes",
+        "Manage TLS certificates for ingress controllers",
         "Create and manage cloud load balancers",
-        "Store cluster state in etcd",
+        "Configure cluster autoscaling policies",
         "Remove failed nodes from the cluster",
         "Manage persistent cloud volumes"
       ],
       "answers": [0, 2, 4, 5],
-      "explanation": "The cloud-controller-manager handles cloud-specific operations: updating node addresses, creating load balancers for LoadBalancer-type services, removing failed nodes, and managing cloud volumes (attach/detach). It does NOT schedule pods (that's the scheduler) or directly interact with etcd (only API server does that).",
-      "hint": "Focus on responsibilities that are specific to cloud infrastructure."
+      "explanation": "The cloud-controller-manager handles cloud-specific operations: updating node addresses, creating load balancers for LoadBalancer-type services, removing failed nodes, and managing cloud volumes (attach/detach). TLS certificate management is handled by separate tools like cert-manager, not cloud-controller-manager. Cluster autoscaling is handled by Cluster Autoscaler, a separate component that runs independently.",
+      "hint": "Focus on responsibilities that are specific to cloud infrastructure integration."
+    },
+    {
+      "id": "kubernetes-control-plane-quiz-34",
+      "type": "fill-blank",
+      "question": "Complete the etcdctl command to restore a cluster from a snapshot backup: `ETCDCTL_API=3 etcdctl snapshot _____ snapshot.db`",
+      "answer": "restore",
+      "caseSensitive": false,
+      "acceptedAnswers": ["restore"],
+      "explanation": "The `etcdctl snapshot restore` command restores an etcd database from a backup file. While `snapshot save` creates the backup, `snapshot restore` is the recovery operation — after restoring, etcd must be restarted pointing to the new data directory. Together, save and restore form the critical backup/recovery workflow that protects against total cluster data loss.",
+      "hint": "Think about the opposite of 'save'."
+    },
+    {
+      "id": "kubernetes-control-plane-quiz-35",
+      "type": "mcq",
+      "question": "A developer creates a new namespace `dev-team`. Without any additional configuration, which component ensures a default service account is automatically available in that namespace?",
+      "options": [
+        "kube-api-server, which creates default resources when persisting a new namespace",
+        "Service Account Controller in kube-controller-manager",
+        "kubelet, which provisions the service account when the first pod is scheduled",
+        "Namespace Controller, which manages all child resources within a namespace"
+      ],
+      "answer": 1,
+      "explanation": "The Service Account Controller (part of kube-controller-manager) watches for new namespaces and automatically creates a `default` service account in each one. This is reconciliation loop behavior — the controller continuously ensures every namespace has a default SA. The API server handles validation and storage but does not create child resources; the Namespace Controller manages namespace lifecycle (cleanup on deletion), not resource provisioning within namespaces.",
+      "hint": "Which component runs reconciliation loops to maintain desired state?"
+    },
+    {
+      "id": "kubernetes-control-plane-quiz-36",
+      "type": "mcq",
+      "question": "Which sub-controller of the cloud-controller-manager configures network routes in cloud infrastructure so that pods on different nodes can communicate directly using their pod IPs?",
+      "options": [
+        "Service Controller",
+        "Node Controller",
+        "Route Controller",
+        "Volume Controller"
+      ],
+      "answer": 2,
+      "explanation": "The Route Controller sets up routes in the cloud provider's network so pod IPs are reachable across nodes — without these routes, pods on different nodes cannot communicate. This is distinct from the Service Controller (which creates cloud load balancers for LoadBalancer-type Services) and the Volume Controller (which handles persistent disk attach/detach). The Route Controller is the networking plumbing that makes the pod network function on cloud providers.",
+      "hint": "Think about which controller manages network *paths* between nodes."
+    },
+    {
+      "id": "kubernetes-control-plane-quiz-37",
+      "type": "true-false",
+      "question": "A pod is running on a node that matched its `requiredDuringSchedulingIgnoredDuringExecution` node affinity rule. If the node's matching label is later removed, the pod will be evicted.",
+      "answer": false,
+      "explanation": "False. The `IgnoredDuringExecution` suffix means the affinity rule is enforced only at scheduling time — once a pod is running, label changes on the node do NOT trigger eviction. The `required` part gates whether the pod can be initially scheduled, but confers no ongoing enforcement. If you need eviction when conditions change, you would use taints/tolerations with `NoExecute` effect instead, which do apply to running pods.",
+      "hint": "Focus on the second half of the field name: 'IgnoredDuringExecution'."
+    },
+    {
+      "id": "kubernetes-control-plane-quiz-38",
+      "type": "mcq",
+      "question": "A high-priority pod cannot be scheduled because no node has sufficient CPU. The scheduler finds one node where evicting two lower-priority pods would free enough resources. What does the scheduler do?",
+      "options": [
+        "Keeps the high-priority pod in Pending state until capacity is organically freed",
+        "Evicts the lower-priority pods and schedules the high-priority pod on that node",
+        "Reduces the resource requests of lower-priority pods to make room",
+        "Migrates the lower-priority pods to other nodes, then schedules the high-priority pod"
+      ],
+      "answer": 1,
+      "explanation": "Pod preemption: when a higher-priority pod cannot be scheduled, the scheduler can evict (delete) lower-priority pods to free resources. The evicted pods may reschedule elsewhere if capacity allows, but there is no guarantee — the scheduler does not first find a destination for them. This is why Priority Classes matter in production: a misconfigured high-priority workload can forcibly displace running pods across the cluster.",
+      "hint": "Kubernetes has a mechanism specifically for this scenario called 'preemption'."
+    },
+    {
+      "id": "kubernetes-control-plane-quiz-39",
+      "type": "code-output",
+      "question": "Given the etcd cluster status below, what state is the cluster in?",
+      "code": "# 5-node etcd cluster status:\n# Node1: UP   ✅\n# Node2: DOWN ❌\n# Node3: DOWN ❌\n# Node4: DOWN ❌\n# Node5: UP   ✅\n\n# Quorum formula: (N/2) + 1\n# For 5 nodes: quorum = 3\n# Nodes currently available: 2",
+      "language": "bash",
+      "options": [
+        "Fully operational — 2 out of 5 nodes is sufficient for a 5-node cluster",
+        "Read-only — quorum is lost, writes are blocked but existing data is preserved",
+        "Crashed — all data is lost and the cluster must be rebuilt from scratch",
+        "Degraded but writable — the leader node handles writes alone"
+      ],
+      "answer": 1,
+      "explanation": "With only 2 of 5 nodes available (below the required quorum of 3), the cluster loses quorum and becomes read-only. Raft intentionally blocks all writes rather than risk split-brain inconsistency — this is correct, safe behavior, not a crash. Existing data is fully preserved; unlike total data loss, quorum loss is recoverable by bringing nodes back online. The cluster resumes write operations automatically once quorum (≥3 nodes) is restored.",
+      "hint": "Quorum requires (N/2)+1 nodes. Count how many are available versus required."
+    },
+    {
+      "id": "kubernetes-control-plane-quiz-40",
+      "type": "true-false",
+      "question": "During the binding phase of pod scheduling, the kube-scheduler writes the pod's `nodeName` field directly to etcd.",
+      "answer": false,
+      "explanation": "False. The kube-scheduler never communicates directly with etcd. During binding, the scheduler sends a Binding API request to the kube-api-server, which then updates etcd. This enforces the invariant that only the API server has direct etcd access — bypassing it would skip authentication, authorization, and admission control. Every control plane component (scheduler, controller-manager) exclusively uses the API server as its gateway to read and write cluster state.",
+      "hint": "Which is the *only* component allowed to talk to etcd directly?"
+    },
+    {
+      "id": "kubernetes-control-plane-quiz-41",
+      "type": "mcq",
+      "question": "Both kube-controller-manager and cloud-controller-manager contain a component called 'Node Controller'. What distinguishes their specific responsibilities?",
+      "options": [
+        "kube-controller-manager's Node Controller handles cloud node deletion; cloud-controller-manager's Node Controller marks nodes as NotReady",
+        "kube-controller-manager's Node Controller monitors node health and marks nodes as NotReady; cloud-controller-manager's Node Controller checks whether nodes still exist in the cloud provider",
+        "kube-controller-manager's Node Controller applies to bare-metal only; cloud-controller-manager's Node Controller applies to cloud clusters only",
+        "They perform identical functions — the cloud-controller-manager's version overrides the kube-controller-manager's when running on a cloud provider"
+      ],
+      "answer": 1,
+      "explanation": "They share a name but have different scopes. The kube-controller-manager's Node Controller is cloud-agnostic: it monitors node heartbeats, updates node conditions, and marks nodes NotReady when they stop responding. The cloud-controller-manager's Node Controller is cloud-aware: it queries the cloud provider's API to confirm whether a VM instance still exists — if the cloud deleted the VM, it removes the Kubernetes Node object. Both run in parallel on cloud clusters, each handling their own responsibility.",
+      "hint": "One tracks Kubernetes health signals; the other queries the cloud provider's API."
     }
   ]
 }

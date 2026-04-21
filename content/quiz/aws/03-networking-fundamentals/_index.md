@@ -26,18 +26,12 @@ next: /quiz/aws/04-edge-and-hybrid-networking
     },
     {
       "id": "aws-networking-fundamentals-quiz-02",
-      "type": "multiple-select",
-      "question": "Which IP addresses are reserved by AWS in a subnet with CIDR block `10.0.0.0/24`?",
-      "options": [
-        "`10.0.0.0` - Network address",
-        "`10.0.0.1` - VPC router",
-        "`10.0.0.2` - DNS server",
-        "`10.0.0.3` - Reserved for future use",
-        "`10.0.0.255` - Broadcast address"
-      ],
-      "answers": [0, 1, 2, 3, 4],
-      "explanation": "AWS reserves 5 IP addresses in every subnet: the network address (.0), VPC router (.1), DNS server (.2), one for future use (.3), and broadcast address (.255). This leaves 251 usable IPs in a /24 subnet.",
-      "hint": "AWS always reserves exactly 5 IP addresses in each subnet."
+      "type": "fill-blank",
+      "question": "How many IP addresses does AWS reserve in every subnet?",
+      "answer": "5",
+      "caseSensitive": false,
+      "explanation": "AWS reserves exactly 5 IP addresses in every subnet: `.0` (network address), `.1` (VPC router), `.2` (DNS server — VPC base + 2), `.3` (reserved for future use), and `.255` (broadcast address). In a `/24` subnet this leaves 251 usable addresses.",
+      "hint": "These reserved addresses serve routing, DNS, and administrative purposes."
     },
     {
       "id": "aws-networking-fundamentals-quiz-03",
@@ -52,14 +46,14 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "type": "mcq",
       "question": "What is the primary difference between a public subnet and a private subnet?",
       "options": [
-        "Public subnets have more IP addresses than private subnets",
+        "Public subnets automatically assign public IP addresses to all instances",
         "Public subnets have a route to an Internet Gateway in their route table",
         "Private subnets cannot communicate with other subnets in the VPC",
         "Public subnets are always in different Availability Zones"
       ],
       "answer": 1,
-      "explanation": "A public subnet is defined by having a route to an Internet Gateway (0.0.0.0/0 → IGW) in its route table. Private subnets lack this direct route to the IGW, instead using NAT Gateways for outbound internet access.",
-      "hint": "Focus on routing configuration, not size or location."
+      "explanation": "A public subnet is defined by having a route to an Internet Gateway (`0.0.0.0/0 → IGW`) in its route table. Auto-assigning public IPs is a common setting on public subnets but is not what defines them — a subnet without the IGW route is still private regardless of IP assignment settings.",
+      "hint": "Focus on routing configuration, not IP assignment settings or location."
     },
     {
       "id": "aws-networking-fundamentals-quiz-05",
@@ -101,10 +95,12 @@ next: /quiz/aws/04-edge-and-hybrid-networking
         "Route table entry: `0.0.0.0/0` → IGW",
         "Public IP address or Elastic IP assigned to instance",
         "Security Group allows desired traffic",
-        "Network ACL allows traffic"
+        "Network ACL allows traffic",
+        "VPC endpoint configured for routing internet-bound traffic",
+        "Elastic IP must be used — auto-assigned public IPs are insufficient"
       ],
       "answers": [0, 1, 2, 3, 4],
-      "explanation": "All five requirements must be met: (1) IGW attached to VPC, (2) route to IGW in subnet's route table, (3) public IP on instance, (4) Security Group allowing traffic, and (5) NACL allowing traffic on required ports including ephemeral ports.",
+      "explanation": "All five requirements must be met: (1) IGW attached to VPC, (2) route to IGW in subnet's route table, (3) a public IP on the instance — auto-assigned and Elastic IP are both valid, (4) Security Group allowing traffic, and (5) NACL allowing traffic including ephemeral ports (1024–65535) for responses. VPC endpoints are for private AWS service access, not general internet routing.",
       "hint": "Internet access requires multiple layers to be configured correctly."
     },
     {
@@ -122,11 +118,11 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "options": [
         "Instance level (ENI)",
         "Subnet level",
-        "VPC level",
+        "VPC level, applying to all subnets automatically",
         "Availability Zone level"
       ],
       "answer": 1,
-      "explanation": "NACLs are applied at the subnet level, affecting all instances within that subnet. This is different from Security Groups which are applied at the instance level (ENI). Each subnet must be associated with exactly one NACL.",
+      "explanation": "NACLs are applied at the subnet level, affecting all instances within that subnet. Although NACLs are created and managed within the VPC, each NACL must be explicitly associated with specific subnets — they do not automatically apply to all subnets. Each subnet has exactly one NACL; Security Groups apply at the instance (ENI) level.",
       "hint": "NACLs provide a boundary defense for a specific network segment."
     },
     {
@@ -163,11 +159,12 @@ next: /quiz/aws/04-edge-and-hybrid-networking
         "Captures network traffic metadata (source, destination, ports)",
         "Can be sent to CloudWatch Logs or S3",
         "Shows whether traffic was accepted or rejected",
-        "Can be created at VPC, subnet, or ENI level"
+        "Can be created at VPC, subnet, or ENI level",
+        "Can actively block or drop traffic in real time"
       ],
       "answers": [1, 2, 3, 4],
-      "explanation": "VPC Flow Logs capture metadata only (not packet contents), including source/destination IPs, ports, protocol, and accept/reject status. They can be sent to CloudWatch, S3, or Kinesis and can be scoped to VPC, subnet, or individual network interfaces.",
-      "hint": "Flow Logs are for metadata analysis, not deep packet inspection."
+      "explanation": "VPC Flow Logs capture metadata only (not packet contents), including source/destination IPs, ports, protocol, and accept/reject status. They can be sent to CloudWatch, S3, or Kinesis and can be scoped to VPC, subnet, or individual network interfaces. Flow Logs are read-only — they record traffic but cannot block it. Use Security Groups or NACLs for traffic blocking.",
+      "hint": "Flow Logs are for metadata analysis, not deep packet inspection or traffic control."
     },
     {
       "id": "aws-networking-fundamentals-quiz-14",
@@ -195,7 +192,7 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "id": "aws-networking-fundamentals-quiz-16",
       "type": "flashcard",
       "question": "What is AWS Transit Gateway and when should you use it?",
-      "answer": "**AWS Transit Gateway** is a regional network hub that connects multiple VPCs and on-premises networks with transitive routing using a hub-and-spoke model.\n\n**Key Features:**\n- Transitive routing (A→TGW→C works)\n- Centralized management\n- Supports thousands of VPCs\n- Inter-region peering available\n- Route tables for network segmentation\n\n**Use When:**\n- Connecting many VPCs (>3-5)\n- Need transitive routing\n- Centralizing on-premises connectivity\n- Requiring network segmentation between environments"
+      "answer": "**AWS Transit Gateway** is a regional hub that enables transitive routing between VPCs and on-premises networks using a hub-and-spoke model.\n\n**Key Features:**\n- Transitive routing: A → TGW → C works (VPC Peering does not)\n- Scales to thousands of VPCs; centralized management\n- Route tables enable network segmentation (prod/dev isolation)\n- Inter-region peering and Direct Connect integration\n\n**Use when:** connecting 3+ VPCs, need transitive routing, or centralizing on-premises connectivity"
     },
     {
       "id": "aws-networking-fundamentals-quiz-17",
@@ -235,10 +232,10 @@ next: /quiz/aws/04-edge-and-hybrid-networking
         "The security group is blocking return traffic",
         "The NACL has no outbound rule allowing ephemeral ports",
         "The route table is misconfigured",
-        "HTTP is not allowed by default in AWS"
+        "The server's OS firewall is blocking outbound responses"
       ],
       "answer": 1,
-      "explanation": "NACLs are stateless — they do not automatically allow return traffic. Even if inbound port 80 is permitted, the response travels back on an ephemeral port (1024-65535). Without an explicit outbound rule allowing that port range, the response is dropped. Security groups, by contrast, are stateful and handle return traffic automatically.",
+      "explanation": "NACLs are stateless — they do not automatically allow return traffic. Even if inbound port 80 is permitted, the response travels back on an ephemeral port (1024-65535). Without an explicit outbound rule allowing that port range, the response is dropped. Security Groups, by contrast, are stateful and handle return traffic automatically. An OS firewall could also block responses, but a missing NACL outbound rule is the most common cause of this specific symptom.",
       "hint": "NACLs don't track connection state like security groups do."
     },
     {
@@ -332,10 +329,11 @@ next: /quiz/aws/04-edge-and-hybrid-networking
         "Security Groups apply at instance level, NACLs apply at subnet level",
         "Security Groups support only ALLOW rules, NACLs support both ALLOW and DENY",
         "Security Groups evaluate all rules, NACLs evaluate rules in order",
-        "Security Groups are mandatory, NACLs are optional"
+        "Security Groups are mandatory, NACLs are optional",
+        "NACLs are evaluated after Security Groups when traffic arrives at a subnet"
       ],
       "answers": [0, 1, 2, 3],
-      "explanation": "All four differences are correct: (1) SGs are stateful (auto-allow return), NACLs are stateless, (2) SGs at instance level, NACLs at subnet level, (3) SGs only ALLOW rules, NACLs have both ALLOW/DENY, (4) SGs evaluate all rules, NACLs use first-match. Both are actually mandatory but you can use defaults.",
+      "explanation": "All four differences are correct: (1) SGs are stateful (auto-allow return), NACLs are stateless, (2) SGs at instance level, NACLs at subnet level, (3) SGs only ALLOW rules, NACLs have both ALLOW/DENY, (4) SGs evaluate all rules, NACLs use first-match. NACLs are evaluated BEFORE Security Groups — traffic hits the subnet boundary (NACL) first, then reaches the instance (SG). Both security controls are applied but the order matters for troubleshooting.",
       "hint": "Focus on statefulness, scope, rule types, and evaluation logic."
     },
     {
@@ -346,11 +344,11 @@ next: /quiz/aws/04-edge-and-hybrid-networking
         "Public subnets for easy access",
         "Private subnets to prevent direct internet access",
         "Public subnets in one AZ, private in another",
-        "No subnet needed, databases are region-level resources"
+        "Public subnets with strict Security Group rules allowing only application tier traffic"
       ],
       "answer": 1,
-      "explanation": "Database tiers should always be in private subnets to prevent direct internet access. They should only be accessible from the application tier via security group rules. This follows the principle of least privilege and defense in depth.",
-      "hint": "Think about security best practices for sensitive data."
+      "explanation": "Database tiers should always be in private subnets to prevent direct internet access. Restricting access via Security Group rules is necessary but not sufficient — placing databases in public subnets exposes them to the internet even if the SG is locked down. Private subnets provide defense in depth by ensuring there is no route from the internet to the database, regardless of Security Group configuration.",
+      "hint": "Think about security best practices for sensitive data — SG restrictions alone are not sufficient."
     },
     {
       "id": "aws-networking-fundamentals-quiz-29",
@@ -382,6 +380,91 @@ next: /quiz/aws/04-edge-and-hybrid-networking
       "answer": 1,
       "explanation": "NAT Gateways are highly available within an AZ but do not automatically fail over across AZs. If the NAT Gateway in AZ-A fails, instances in that AZ lose internet access. This is why the best practice is to create separate NAT Gateways in each AZ with AZ-specific route tables.",
       "hint": "NAT Gateways provide HA within an AZ, not across AZs."
+    },
+    {
+      "id": "aws-networking-fundamentals-quiz-32",
+      "type": "fill-blank",
+      "question": "What type of public IP address must be allocated and associated with a NAT Gateway at creation time?",
+      "answer": "Elastic IP",
+      "caseSensitive": false,
+      "explanation": "A NAT Gateway requires an Elastic IP (EIP) at creation time — this becomes its fixed public IP for all outbound traffic from the private subnet. Unlike auto-assigned public IPs that change when an instance restarts, an EIP is static and stays allocated to your account until you release it. You must pre-allocate the EIP before creating the NAT Gateway; you cannot attach one after the fact.",
+      "hint": "This AWS-managed static public IP persists until explicitly released from your account."
+    },
+    {
+      "id": "aws-networking-fundamentals-quiz-33",
+      "type": "true-false",
+      "question": "A newly created custom NACL denies all inbound and outbound traffic until explicit rules are added.",
+      "answer": true,
+      "explanation": "A new custom NACL starts with only the default deny-all rule (`*`) — all traffic is blocked until you add explicit ALLOW rules. This is the opposite of the default NACL (auto-created with the VPC), which includes a rule 100 ALLOW-all entry and permits all traffic. Confusing these two is a common operational mistake: associating a brand-new custom NACL with a subnet immediately cuts off all connectivity to instances in that subnet.",
+      "hint": "The 'default NACL' (VPC-created) and 'a new custom NACL' (user-created) have different initial configurations."
+    },
+    {
+      "id": "aws-networking-fundamentals-quiz-34",
+      "type": "true-false",
+      "question": "You can create a VPC Peering connection between two VPCs that have overlapping CIDR blocks.",
+      "answer": false,
+      "explanation": "VPC Peering requires non-overlapping CIDR blocks between the peered VPCs. AWS routes traffic based on destination IP, which is impossible to do unambiguously if two peered VPCs share the same IP range. This constraint applies to the entire VPC CIDR — even if you only intend to route between specific non-overlapping subnets. Plan your VPC IP address space carefully upfront, because CIDR conflicts block peering entirely.",
+      "hint": "AWS needs to distinguish traffic by destination IP — what happens if two VPCs share the same IP range?"
+    },
+    {
+      "id": "aws-networking-fundamentals-quiz-35",
+      "type": "multiple-select",
+      "question": "Which statements are true about the AWS default VPC?",
+      "options": [
+        "Uses the CIDR block `172.31.0.0/16`",
+        "Has an Internet Gateway attached by default",
+        "Includes a default subnet in each Availability Zone",
+        "The default NACL denies all traffic until rules are added",
+        "The default Security Group allows all inbound traffic from any IP address",
+        "Is automatically created in every AWS Region for every account"
+      ],
+      "answers": [0, 1, 2, 5],
+      "explanation": "The default VPC uses `172.31.0.0/16`, comes with an IGW pre-attached, has a public subnet in each AZ, and is auto-created per Region per account. Two common wrong assumptions: (1) the default NACL actually starts with ALLOW-all rules (unlike a new custom NACL which starts deny-all); (2) the default Security Group allows inbound only from instances sharing the same SG — not from any IP. The default VPC is convenient for testing, but custom VPCs are recommended for production.",
+      "hint": "Focus on what AWS pre-configures versus what must be set up manually, and watch for the NACL and Security Group default behaviors."
+    },
+    {
+      "id": "aws-networking-fundamentals-quiz-36",
+      "type": "code-output",
+      "question": "An EC2 instance sends a packet destined for `10.0.1.50`. Which route is selected?",
+      "code": "Route Table:\nDestination        Target\n---------------------------------\n10.0.0.0/16       local\n10.0.1.0/24       tgw-0abc123456\n0.0.0.0/0         igw-0def789012",
+      "language": "text",
+      "options": [
+        "`10.0.0.0/16` → `local`",
+        "`10.0.1.0/24` → `tgw-0abc123456`",
+        "`0.0.0.0/0` → `igw-0def789012`",
+        "No route matches — packet is dropped"
+      ],
+      "answer": 1,
+      "explanation": "AWS route tables use **longest prefix match**: the most specific (narrowest) route wins. The destination `10.0.1.50` matches both `10.0.0.0/16` (/16, broader) and `10.0.1.0/24` (/24, more specific). Because `/24` is a narrower match, `10.0.1.0/24 → tgw-0abc123456` is selected over the local route. This is why you can override the default local route for specific subnets by adding a more specific route — specificity always beats rule order.",
+      "hint": "Which CIDR prefix is the narrowest (most specific) match for the destination IP?"
+    },
+    {
+      "id": "aws-networking-fundamentals-quiz-37",
+      "type": "mcq",
+      "question": "A VPC Peering connection between VPC-A (`10.0.0.0/16`) and VPC-B (`10.1.0.0/16`) shows status **Active**. EC2 instances in VPC-A still cannot reach VPC-B. What is the most likely cause?",
+      "options": [
+        "The peering connection must reach `Provisioned` status before routing works",
+        "Neither VPC's route table has an entry pointing to the peering connection",
+        "Security Groups in different VPCs cannot reference each other by group ID",
+        "VPC Peering requires a Transit Gateway attachment to enable actual data transfer"
+      ],
+      "answer": 1,
+      "explanation": "An Active peering status means the connection is established — but traffic will not flow until both VPCs have explicit route table entries pointing to the peering connection. VPC-A's route table needs `10.1.0.0/16 → pcx-xxxxx` and VPC-B's needs `10.0.0.0/16 → pcx-xxxxx`. Forgetting to add these routes on one or both sides is the most common cause of 'Active but broken' peering. Security Groups can reference SGs from peered VPCs (same region). VPC Peering and Transit Gateway are alternative solutions — peering does not require TGW.",
+      "hint": "An active peering connection establishes the link, but something else must tell each VPC where to send packets."
+    },
+    {
+      "id": "aws-networking-fundamentals-quiz-38",
+      "type": "mcq",
+      "question": "Which statement correctly describes the key architectural difference between a Gateway Endpoint and an Interface Endpoint?",
+      "options": [
+        "A Gateway Endpoint creates an ENI with a private IP in your subnet; an Interface Endpoint modifies the route table",
+        "A Gateway Endpoint adds a route using a managed prefix list to your route table; an Interface Endpoint creates an ENI with a private IP",
+        "Gateway Endpoints require a security group; Interface Endpoints use bucket policies instead",
+        "Gateway Endpoints support any AWS service; Interface Endpoints are limited to S3 and DynamoDB"
+      ],
+      "answer": 1,
+      "explanation": "Gateway Endpoints (only S3 and DynamoDB) work by inserting a route into your route table using a managed prefix list (`pl-xxxxx → vpce-gateway`) — no ENI is created, no security group is needed, and there are no hourly charges. Interface Endpoints create an actual ENI in your subnet with a private IP, require a security group, incur hourly per-AZ charges, and support most AWS services plus third-party SaaS via PrivateLink. A common trap: trying to attach a security group to a Gateway Endpoint fails because no ENI exists — use S3 bucket policies or DynamoDB resource policies for access control instead.",
+      "hint": "One type changes your routing table; the other puts a network interface directly in your subnet."
     }
   ]
 }
