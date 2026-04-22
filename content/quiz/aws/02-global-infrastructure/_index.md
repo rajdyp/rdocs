@@ -216,7 +216,7 @@ next: /quiz/aws/03-networking-fundamentals
     {
       "id": "aws-global-infrastructure-quiz-18",
       "type": "multiple-select",
-      "question": "What information can you extract from this ARN: arn:aws:lambda:eu-west-1:123456789012:function:my-function",
+      "question": "What information can you extract from this ARN: `arn:aws:lambda:eu-west-1:123456789012:function:my-function`",
       "options": [
         "The resource is a Lambda function",
         "The function is in the Europe (Ireland) region",
@@ -328,7 +328,7 @@ next: /quiz/aws/03-networking-fundamentals
       "id": "aws-global-infrastructure-quiz-27",
       "type": "flashcard",
       "question": "What are best practices for using Availability Zones?",
-      "answer": "**AZ Best Practices:**\n\n1. Deploy resources across **multiple AZs** for high availability\n2. Use **at least 2 AZs** for production (3+ preferred)\n3. **Design for AZ failure**—applications should gracefully handle outages\n4. **Leverage AZ-aware services** (ELB, RDS Multi-AZ, Auto Scaling)\n5. **Monitor AZ health** and balance traffic appropriately"
+      "answer": "**AZ Best Practices:**\n\n1. Deploy resources across **multiple AZs** for high availability\n2. **Design for AZ failure**—applications should gracefully handle outages\n3. Use **at least 2 AZs** for production (3+ preferred)\n4. **Distribute workloads evenly** across AZs (avoid single-AZ dependency)\n5. Use **load balancing and health checks** for failover\n6. **Replicate stateful services** across AZs\n7. Prefer **stateless services** and use Auto Scaling"
     },
     {
       "id": "aws-global-infrastructure-quiz-28",
