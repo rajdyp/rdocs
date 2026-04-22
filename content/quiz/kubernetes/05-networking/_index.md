@@ -22,7 +22,7 @@ next: /quiz/kubernetes/06-pods
         "Services must use NAT to reach backend pods"
       ],
       "answers": [0, 1, 2],
-      "explanation": "The Kubernetes network model requires: (1) all pods can communicate without NAT, (2) all nodes can communicate with all pods without NAT, and (3) a pod's IP is consistent from all perspectives. Containers within a pod share the same IP, and Services use ClusterIPs (not NAT directly).",
+      "explanation": "The Kubernetes network model mandates a flat network because NAT would make a pod's IP look different to external observers than it does to itself — breaking distributed systems (service meshes, distributed tracing, peer-based auth) that rely on stable, consistent peer addresses. The consistent-IP rule is what makes client-side IP logging and access control reliable cluster-wide. Wrong answers addressed: containers in a pod share one IP address (different ports, not different IPs); and while kube-proxy does use DNAT internally for Service routing, that is an implementation detail — not a fundamental model requirement.",
       "hint": "Think about the flat network model that Kubernetes implements."
     },
     {
@@ -83,7 +83,7 @@ next: /quiz/kubernetes/06-pods
         "Traffic must go through the CNI overlay network (VXLAN)",
         "Traffic is handled locally within the node by the CNI plugin",
         "kube-proxy iptables rules handle same-node pod communication",
-        "Traffic requires cross-node routing to complete"
+        "Traffic exits the node via eth0 and re-enters to reach the destination pod"
       ],
       "answer": 1,
       "explanation": "Same-node pod-to-pod communication is handled locally within the node by the CNI plugin. The exact mechanism depends on the CNI implementation: bridge-based CNIs (like Flannel) use a bridge (e.g., cni0), while others like Calico use IP routing, and Cilium uses eBPF. Regardless of the implementation, same-node traffic doesn't need to leave the node or use overlay networks.",
@@ -100,7 +100,7 @@ next: /quiz/kubernetes/06-pods
         "Via kube-proxy routing rules"
       ],
       "answer": 1,
-      "explanation": "Containers within the same pod share a network namespace, which means they can communicate using localhost (127.0.0.1). They share the same IP address but use different ports. This is one of the four types of communication in Kubernetes.",
+      "explanation": "Containers in a pod share a single network namespace — the same IP stack, routing table, and loopback interface. Because there is only one loopback interface per namespace, 127.0.0.1 reaches any port on any container in the same pod. A common mistake is trying to use the pod's own IP (e.g., 10.244.1.5) for intra-pod calls; this technically works but routes through the veth pair unnecessarily. Unlike pod-to-pod traffic (which must cross a veth pair and the host routing layer), intra-pod traffic never leaves the network namespace.",
       "hint": "Containers in a pod share more than just storage—they share networking too."
     },
     {
@@ -181,7 +181,7 @@ next: /quiz/kubernetes/06-pods
       "question": "In the DNS format `<service-name>.<namespace>.svc.<cluster-domain>`, what is the default value for cluster-domain?",
       "answer": "cluster.local",
       "caseSensitive": false,
-      "explanation": "The default cluster domain is 'cluster.local', resulting in FQDNs like 'my-service.default.svc.cluster.local'. This is configurable but rarely changed. Pods can use short forms within the same namespace (just 'my-service') thanks to the search domains in /etc/resolv.conf.",
+      "explanation": "The default cluster domain 'cluster.local' seeds every pod's /etc/resolv.conf search domains (e.g., 'search default.svc.cluster.local') — so a short name like 'my-service' expands correctly to 'my-service.default.svc.cluster.local'. If the cluster domain were changed mid-life, those search domain expansions would silently fail for every pod in the cluster until their resolv.conf was rebuilt. In multi-cluster setups, each cluster gets a unique domain (e.g., 'cluster-east.local') specifically to prevent accidental cross-cluster name resolution.",
       "hint": "Look at the Service DNS Format examples."
     },
     {
@@ -283,7 +283,7 @@ next: /quiz/kubernetes/06-pods
         "Flannel uses iptables while Calico uses IPVS",
         "Flannel uses overlay networks (VXLAN) while Calico uses L3 routing with BGP",
         "Flannel supports Network Policies while Calico does not",
-        "Flannel assigns pod IPs while Calico does not"
+        "Flannel uses BGP routing while Calico uses VXLAN overlay networking"
       ],
       "answer": 1,
       "explanation": "The key architectural difference is that Flannel typically uses overlay networks (VXLAN or host-gw modes) to create a virtual network on top of the existing infrastructure, while Calico uses L3 routing with BGP to route pod traffic at the network layer. Both assign pod IPs, but their routing mechanisms differ significantly. Calico also supports Network Policies while Flannel does not.",
@@ -313,6 +313,116 @@ next: /quiz/kubernetes/06-pods
       "correctOrder": [0, 2, 1, 3, 4, 5],
       "explanation": "Network traffic flows outward from the pod: starts in the pod's isolated network namespace (eth0) → through veth pair → emerges in host namespace (vethXXXX) → processed by the CNI routing layer (cni0 bridge for bridge-based CNIs, IP routing for Calico, or eBPF for Cilium) → routes through host's eth0 interface → reaches external network or other nodes. This architecture allows pods to be isolated yet connected.",
       "hint": "Follow the Pod Network Architecture diagram from inside a pod to outside the node."
+    },
+    {
+      "id": "kubernetes-networking-quiz-26",
+      "type": "mcq",
+      "question": "According to the Kubernetes IP assignment model, which component is responsible for assigning ClusterIP addresses to Services when they are created?",
+      "options": [
+        "kube-proxy",
+        "CNI plugin",
+        "kube-api-server",
+        "CoreDNS"
+      ],
+      "answer": 2,
+      "explanation": "The kube-api-server assigns ClusterIP addresses to Services from the Service CIDR range (default 10.96.0.0/12, configurable via --service-cluster-ip-range). This is distinct from pod IP assignment, which is the CNI plugin's job. kube-proxy's role begins after the ClusterIP already exists — it creates iptables/IPVS rules so traffic to that ClusterIP gets DNAT'd to actual pod IPs. CoreDNS then maps service names to those ClusterIPs for DNS resolution. Three separate components, three separate roles in the IP lifecycle.",
+      "hint": "Look at the IP Address Assignment table — each row has a different 'Assigned By' entry."
+    },
+    {
+      "id": "kubernetes-networking-quiz-27",
+      "type": "true-false",
+      "question": "kube-proxy only installs iptables/IPVS rules for a Service on the nodes where that Service's backend pods are currently running.",
+      "answer": false,
+      "explanation": "kube-proxy installs Service routing rules on every node in the cluster, not just nodes hosting backend pods. This is necessary because any pod on any node must be able to reach any Service without knowing in advance where the backends are scheduled. If kube-proxy only installed rules on backend nodes, a pod on Node 1 sending traffic to a ClusterIP whose backends are all on Node 2 would have no iptables rule to perform the DNAT — the packet would reach the default gateway with no match and be dropped. The 'every node' design is what makes ClusterIPs universally reachable cluster-wide.",
+      "hint": "Review step 2 of the ClusterIP Lifecycle diagram — which nodes does kube-proxy create rules on?"
+    },
+    {
+      "id": "kubernetes-networking-quiz-28",
+      "type": "true-false",
+      "question": "A pod in the 'monitoring' namespace can reach a service named 'database' in the 'data' namespace using just the short name 'database'.",
+      "answer": false,
+      "explanation": "Short DNS names only resolve within the same namespace. A pod's /etc/resolv.conf includes search domains starting with its own namespace: 'search monitoring.svc.cluster.local svc.cluster.local cluster.local'. So 'database' expands to 'database.monitoring.svc.cluster.local' — which doesn't exist in the 'data' namespace. To reach a service in a different namespace, include the target namespace: 'database.data' (which search domains expand to 'database.data.svc.cluster.local') or use the full FQDN 'database.data.svc.cluster.local'. This namespace-scoping is a common source of 'name not found' bugs when microservices are split across namespaces.",
+      "hint": "Look at the first search domain entry in a pod's /etc/resolv.conf — which namespace appears there?"
+    },
+    {
+      "id": "kubernetes-networking-quiz-29",
+      "type": "mcq",
+      "question": "A Kubernetes cluster uses Flannel as its CNI plugin. A developer applies a NetworkPolicy intended to block all ingress traffic to the 'backend' pods. What actually happens?",
+      "options": [
+        "The NetworkPolicy is stored in Kubernetes but not enforced — all ingress traffic to 'backend' pods continues unrestricted",
+        "kube-proxy enforces the NetworkPolicy rules, blocking the specified ingress traffic",
+        "The API server rejects the NetworkPolicy at admission because Flannel does not support network policies",
+        "The NetworkPolicy is enforced for new connections but existing connections remain unaffected"
+      ],
+      "answer": 0,
+      "explanation": "Flannel does not support Network Policy enforcement. When you apply a NetworkPolicy, Kubernetes stores the object in etcd and acknowledges the request — but no component enforces it. Network Policy enforcement is entirely the CNI plugin's responsibility, and Flannel simply ignores NetworkPolicy objects. The result is a silent security failure: the developer believes traffic is blocked, but all ingress flows freely. This is why production security-focused clusters use Calico, Cilium, or Weave Net. The API server has no mechanism to validate whether the installed CNI supports network policies — it accepts any valid NetworkPolicy manifest regardless of CNI capabilities.",
+      "hint": "Which CNI plugins are listed as supporting network policy enforcement in the Popular CNI Plugins table?"
+    },
+    {
+      "id": "kubernetes-networking-quiz-30",
+      "type": "multiple-select",
+      "question": "Pod A (10.244.1.5) on Node 1 sends a request to Service ClusterIP 10.96.100.50. kube-proxy selects backend Pod B (10.244.2.20) on Node 2. Which of the following statements about this traffic flow are correct?",
+      "options": [
+        "The destination IP is rewritten from 10.96.100.50 to 10.244.2.20 by kernel netfilter on Node 1, before the packet leaves Node 1",
+        "CoreDNS intercepts the packet and rewrites the destination to Pod B's IP address",
+        "kube-proxy on Node 2 performs the DNAT when the packet arrives from Node 1",
+        "After DNAT, the CNI plugin routes the packet from Node 1 to Node 2 using its configured routing mechanism",
+        "The ClusterIP 10.96.100.50 exists as a virtual network interface on Node 1 that captures the outgoing packet"
+      ],
+      "answers": [0, 3],
+      "explanation": "DNAT happens on Node 1 (option A) and CNI handles the cross-node routing afterward (option D). The kernel netfilter rules installed by kube-proxy intercept the packet on Node 1, rewrite the destination to 10.244.2.20, and then CNI routes the now-real-IP packet to Node 2. Wrong answers: CoreDNS (option B) resolves service names to ClusterIPs via DNS queries before the connection is made — it never touches data packets in flight. kube-proxy on Node 2 (option C) doesn't process the incoming packet because the destination is already the real pod IP by the time it arrives; normal routing delivers it. ClusterIPs (option E) are virtual and exist only as iptables match rules, not as actual network interfaces on any node.",
+      "hint": "At which node does the DNAT transformation occur, and which component moves the packet between nodes?"
+    },
+    {
+      "id": "kubernetes-networking-quiz-31",
+      "type": "multiple-select",
+      "question": "A pod is running in the 'frontend' namespace. The service 'api' exists in the 'backend' namespace. Which of the following DNS names will correctly resolve to that service?",
+      "options": [
+        "api",
+        "api.backend",
+        "api.backend.svc",
+        "api.backend.svc.cluster.local",
+        "api.svc.backend.cluster.local"
+      ],
+      "answers": [1, 2, 3],
+      "explanation": "Three forms work; the bare short name and the mangled FQDN do not. 'api' (option A) fails because search domains prepend the pod's own namespace first — 'api' expands to 'api.frontend.svc.cluster.local', which doesn't exist. 'api.backend' (option B) works: search domains expand it to 'api.backend.svc.cluster.local'. 'api.backend.svc' (option C) works for the same reason, expanding via search domains to 'api.backend.svc.cluster.local'. 'api.backend.svc.cluster.local' (option D) is the full FQDN and resolves directly. 'api.svc.backend.cluster.local' (option E) has namespace and 'svc' in the wrong order — the correct format is always service.namespace.svc.cluster-domain.",
+      "hint": "The correct DNS format is service-name.namespace.svc.cluster-domain. Which options match or expand to this?"
+    },
+    {
+      "id": "kubernetes-networking-quiz-32",
+      "type": "ordered-recall",
+      "question": "Name the 4 types of network communication in a Kubernetes cluster, ordered from most local (within a pod) to most external (traffic arriving from outside the cluster).",
+      "steps": [
+        {"answer": "Container-to-Container", "acceptedAnswers": ["Container-to-Container", "container-to-container", "Container to Container", "container to container"]},
+        {"answer": "Pod-to-Pod", "acceptedAnswers": ["Pod-to-Pod", "pod-to-pod", "Pod to Pod", "pod to pod"]},
+        {"answer": "Pod-to-Service", "acceptedAnswers": ["Pod-to-Service", "pod-to-service", "Pod to Service", "pod to service"]},
+        {"answer": "External-to-Service", "acceptedAnswers": ["External-to-Service", "external-to-service", "External to Service", "external to service"]}
+      ],
+      "caseSensitive": false,
+      "explanation": "The four types progress from most isolated to most external: Container-to-Container (within the same pod via localhost — traffic never leaves the network namespace) → Pod-to-Pod (direct IP communication via CNI, within or across nodes) → Pod-to-Service (pod connects to a virtual ClusterIP; kube-proxy DNAT's to a backend pod) → External-to-Service (LoadBalancer or NodePort exposes the cluster; traffic traverses DNAT twice before reaching a pod). Each step adds another layer of indirection and involves a different set of Kubernetes components.",
+      "hint": "Think from the innermost scope (inside a single pod) outward to traffic arriving from the public internet."
+    },
+    {
+      "id": "kubernetes-networking-quiz-33",
+      "type": "mcq",
+      "question": "A pod in the 'production' namespace has this /etc/resolv.conf:\n\n```\nnameserver 10.96.0.10\nsearch production.svc.cluster.local svc.cluster.local cluster.local\noptions ndots:5\n```\n\nThe pod makes a DNS query for 'api.external.company.com'. What is the FIRST DNS query actually sent to CoreDNS?",
+      "options": [
+        "api.external.company.com",
+        "api.external.company.com.production.svc.cluster.local",
+        "api.external.company.com.svc.cluster.local",
+        "api.external.company.com.cluster.local"
+      ],
+      "answer": 1,
+      "explanation": "The name 'api.external.company.com' contains 3 dots. With ndots:5, any name with fewer than 5 dots triggers search domain expansion FIRST before trying the name as-is. The resolver prepends each search domain in order, so the first query becomes 'api.external.company.com.production.svc.cluster.local' — which CoreDNS returns NXDOMAIN for. Only after all three search domains fail does the resolver try 'api.external.company.com' as-is. This is why external DNS lookups from Kubernetes pods incur 3–4 extra NXDOMAIN round trips before resolving: each cluster search domain is tried and fails first. This latency overhead is why some teams tune ndots to a lower value for latency-sensitive external calls.",
+      "hint": "Count the dots in 'api.external.company.com', then apply the ndots:5 rule to decide whether search domains or the raw name goes first."
+    },
+    {
+      "id": "kubernetes-networking-quiz-34",
+      "type": "true-false",
+      "question": "In a cluster using Calico as the CNI plugin, cross-node pod-to-pod traffic is encapsulated in VXLAN tunnels by default.",
+      "answer": false,
+      "explanation": "Calico's default routing mode is pure Layer 3 routing using the Linux routing table and BGP (Border Gateway Protocol) — no VXLAN encapsulation. Calico peers nodes via BGP, distributing pod CIDR routes so each node can route directly to remote pods without any tunnel overhead. VXLAN is available in Calico as an optional mode (useful when BGP is blocked at the network layer, such as in some cloud provider environments), but it is not the default. Flannel, by contrast, defaults to VXLAN overlay networking. The confusion arises because both CNIs support VXLAN as a capability, but Calico's defining characteristic is 'L3 routing with BGP', not overlay networking.",
+      "hint": "Look at the Features column for Calico in the Popular CNI Plugins table — what routing mechanism is listed?"
     }
   ]
 }
