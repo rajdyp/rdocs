@@ -10,6 +10,18 @@
 <script type="application/json" id="revision-index-registry">{{ $registry | jsonify }}</script>
 
 <div id="revision-index" class="ri-container">
+  <div class="ri-review-summary">
+    <div>
+      <div class="ri-review-eyebrow">Today’s Review Queue</div>
+      <div class="ri-review-title"><span id="ri-review-total">0</span> due questions across <span id="ri-review-quizzes">0</span> quizzes</div>
+      <div class="ri-review-meta">
+        <span><span id="ri-review-errors">0</span> overdue errors</span>
+        <span><span id="ri-review-weak">0</span> weak</span>
+        <span><span id="ri-review-maintenance">0</span> maintenance</span>
+      </div>
+    </div>
+    <a class="ri-review-link" href="{{ "quiz/review/" | relURL }}">Start Review</a>
+  </div>
   <div id="ri-table-root"></div>
   <p id="ri-empty-msg" style="display:none">No quiz data yet. Complete a quiz to see it here.</p>
 </div>
@@ -27,6 +39,34 @@
     } catch (e) {
       return {};
     }
+  }
+
+  function getQuestionData() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return {};
+      var parsed = JSON.parse(raw);
+      return (parsed && parsed.questions) ? parsed.questions : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function isWeak(entry) {
+    if (!entry || entry.attempts < 2) return false;
+    var accuracy = entry.correct / entry.attempts;
+    return accuracy < 0.5 || entry.streak <= -2;
+  }
+
+  function todayKey() {
+    var date = new Date();
+    date.setHours(0, 0, 0, 0);
+    return date.toISOString().slice(0, 10);
+  }
+
+  function getUnresolvedIds(session) {
+    if (!session) return [];
+    return Array.isArray(session.unresolvedQuestionIds) ? session.unresolvedQuestionIds : [];
   }
 
   function getLeitnerBox(session) {
@@ -50,7 +90,7 @@
 
   function getNextReview(session, days) {
     if (!session || days === null) return { text: '—', extraClass: '' };
-    var last = new Date(session.lastAttemptAt);
+    var last = new Date(session.lastFullAttemptAt || session.lastAttemptAt);
     var next = new Date(last.getTime() + days * 24 * 60 * 60 * 1000);
     var today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -65,6 +105,50 @@
       extraClass = 'ri-due-today';
     }
     return { text: text, extraClass: extraClass };
+  }
+
+  function updateReviewSummary(sessions, questions) {
+    var unresolved = {};
+    var errorCount = 0;
+    var quizPaths = {};
+
+    Object.keys(sessions).forEach(function(pathname) {
+      var ids = getUnresolvedIds(sessions[pathname]);
+      if (!ids.length && sessions[pathname].errorPool) {
+        errorCount += Number(sessions[pathname].errorPool || 0);
+        quizPaths[pathname] = true;
+        return;
+      }
+      ids.forEach(function(id) {
+        unresolved[id] = true;
+        errorCount += 1;
+        quizPaths[pathname] = true;
+      });
+    });
+
+    var weakCount = 0;
+    var maintenanceCount = 0;
+    var today = todayKey();
+    Object.keys(questions).forEach(function(id) {
+      var entry = questions[id];
+      if (unresolved[id]) return;
+      if (isWeak(entry)) {
+        weakCount += 1;
+        if (entry.quizPath) quizPaths[entry.quizPath] = true;
+        return;
+      }
+      if (entry && entry.lastResult === 'correct' && entry.nextReviewAt && entry.nextReviewAt <= today) {
+        maintenanceCount += 1;
+        if (entry.quizPath) quizPaths[entry.quizPath] = true;
+      }
+    });
+
+    var total = errorCount + weakCount + maintenanceCount;
+    document.getElementById('ri-review-total').textContent = total;
+    document.getElementById('ri-review-quizzes').textContent = Object.keys(quizPaths).length;
+    document.getElementById('ri-review-errors').textContent = errorCount;
+    document.getElementById('ri-review-weak').textContent = weakCount;
+    document.getElementById('ri-review-maintenance').textContent = maintenanceCount;
   }
 
   function escapeHtml(str) {
@@ -110,7 +194,8 @@
         var nextReview = getNextReview(session, box.days);
         var lastScore = session ? session.lastScore + '%' : '—';
         var attempts = session ? session.attempts : '—';
-        var errorPool = session ? session.errorPool : '—';
+        var unresolvedIds = getUnresolvedIds(session);
+        var errorPool = session ? (unresolvedIds.length || session.errorPool || 0) : '—';
         var frequency = box.days !== null ? String(box.days).padStart(2, '0') + ' days' : '—';
 
         html += '<tr>';
@@ -146,7 +231,9 @@
     }
 
     var sessions = getSessionData();
+    var questions = getQuestionData();
     var hasAnySession = Object.keys(sessions).length > 0;
+    updateReviewSummary(sessions, questions);
 
     if (!hasAnySession) {
       emptyMsg.style.display = '';

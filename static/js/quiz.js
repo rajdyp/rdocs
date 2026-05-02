@@ -30,11 +30,27 @@
           if (parsed && typeof parsed === 'object') {
             this.data = parsed;
             if (!this.data.quizSessions) this.data.quizSessions = {};
+            if (!this.data.questions) this.data.questions = {};
+            this.migrateData();
           }
         }
       } catch (err) {
-        this.data = { questions: {} };
+        this.data = { questions: {}, quizSessions: {} };
       }
+    }
+
+    migrateData() {
+      Object.keys(this.data.quizSessions || {}).forEach(pathname => {
+        const session = this.data.quizSessions[pathname];
+        if (!session || typeof session !== 'object') return;
+        if (!session.lastFullAttemptAt && session.lastAttemptAt) {
+          session.lastFullAttemptAt = session.lastAttemptAt;
+        }
+        if (!Array.isArray(session.unresolvedQuestionIds)) {
+          session.unresolvedQuestionIds = [];
+        }
+        session.errorPool = session.unresolvedQuestionIds.length || Number(session.errorPool || 0);
+      });
     }
 
     save() {
@@ -50,7 +66,23 @@
       return this.data.questions[questionId];
     }
 
-    record(questionId, isCorrect) {
+    addDays(days) {
+      const date = new Date();
+      date.setHours(0, 0, 0, 0);
+      date.setDate(date.getDate() + days);
+      return date.toISOString().slice(0, 10);
+    }
+
+    getMaintenanceInterval(entry, isCorrect) {
+      if (!isCorrect) return 0;
+      const streak = entry.streak || 0;
+      if (streak <= 1) return 3;
+      if (streak === 2) return 7;
+      if (streak === 3) return 14;
+      return 30;
+    }
+
+    record(questionId, isCorrect, metadata = {}) {
       const now = new Date().toISOString();
       const entry = this.data.questions[questionId] || {
         attempts: 0,
@@ -70,6 +102,15 @@
         entry.lastResult = 'incorrect';
       }
       entry.lastAttemptAt = now;
+      if (metadata.quizPath) entry.quizPath = metadata.quizPath;
+      if (metadata.quizTitle) entry.quizTitle = metadata.quizTitle;
+      if (metadata.topic) entry.topic = metadata.topic;
+      if (metadata.questionIndex !== undefined) entry.questionIndex = metadata.questionIndex;
+
+      const intervalDays = this.getMaintenanceInterval(entry, isCorrect);
+      entry.intervalDays = intervalDays;
+      entry.nextReviewAt = this.addDays(intervalDays);
+      entry.reviewLane = isCorrect ? 'maintenance' : 'overdue-error';
 
       this.data.questions[questionId] = entry;
       this.save();
@@ -82,18 +123,66 @@
       return accuracy < 0.5 || entry.streak <= -2;
     }
 
-    recordQuizSession(pathname, title, scorePercent, errorPool) {
+    getSession(pathname) {
+      this.load();
+      return this.data.quizSessions[pathname];
+    }
+
+    ensureSession(pathname, title = '') {
+      this.load();
+      const existing = this.data.quizSessions[pathname] || {};
+      if (!Array.isArray(existing.unresolvedQuestionIds)) {
+        existing.unresolvedQuestionIds = [];
+      }
+      if (title && !existing.title) existing.title = title;
+      existing.errorPool = existing.unresolvedQuestionIds.length || Number(existing.errorPool || 0);
+      this.data.quizSessions[pathname] = existing;
+      return existing;
+    }
+
+    recordQuizSession(pathname, title, scorePercent, unresolvedQuestionIds = []) {
       this.load();
       const existing = this.data.quizSessions[pathname] || { attempts: 0, masteredCount: 0 };
       const masteredCount = scorePercent >= 90 ? (existing.masteredCount || 0) + 1 : 0;
+      const uniqueUnresolved = Array.from(new Set(unresolvedQuestionIds));
       this.data.quizSessions[pathname] = {
         title,
         attempts: existing.attempts + 1,
         lastScore: scorePercent,
-        lastAttemptAt: new Date().toISOString(),
-        errorPool,
+        lastAttemptAt: existing.lastAttemptAt,
+        lastFullAttemptAt: new Date().toISOString(),
+        lastReviewAt: existing.lastReviewAt,
+        errorPool: uniqueUnresolved.length,
+        unresolvedQuestionIds: uniqueUnresolved,
         masteredCount
       };
+      this.save();
+    }
+
+    setUnresolvedPool(pathname, questionIds, title = '') {
+      this.load();
+      const existing = this.ensureSession(pathname, title);
+      existing.unresolvedQuestionIds = Array.from(new Set(questionIds));
+      existing.errorPool = existing.unresolvedQuestionIds.length;
+      existing.lastReviewAt = new Date().toISOString();
+      this.save();
+    }
+
+    resolveQuestion(pathname, questionId, title = '') {
+      const existing = this.ensureSession(pathname, title);
+      existing.unresolvedQuestionIds = existing.unresolvedQuestionIds.filter(id => id !== questionId);
+      existing.errorPool = existing.unresolvedQuestionIds.length;
+      existing.lastReviewAt = new Date().toISOString();
+      this.save();
+    }
+
+    keepQuestionUnresolved(pathname, questionId, title = '') {
+      const existing = this.ensureSession(pathname, title);
+      if (!existing.unresolvedQuestionIds.includes(questionId)) {
+        existing.unresolvedQuestionIds.push(questionId);
+      }
+      existing.errorPool = existing.unresolvedQuestionIds.length;
+      existing.lastReviewAt = new Date().toISOString();
       this.save();
     }
 
@@ -102,7 +191,7 @@
       const existing = this.data.quizSessions[pathname];
       if (!existing) return;
       existing.errorPool = errorPool;
-      existing.lastAttemptAt = new Date().toISOString();
+      existing.lastReviewAt = new Date().toISOString();
       this.save();
     }
 
@@ -139,11 +228,14 @@
         if (parsed.data.quizSessions && typeof parsed.data.quizSessions === 'object') {
           Object.assign(this.data.quizSessions, parsed.data.quizSessions);
         }
+        this.migrateData();
         this.save();
         return { imported: incomingIds.length, merged };
       } else {
         this.data = parsed.data;
         if (!this.data.quizSessions) this.data.quizSessions = {};
+        if (!this.data.questions) this.data.questions = {};
+        this.migrateData();
         this.save();
         return { imported: incomingIds.length, merged: 0 };
       }
@@ -155,6 +247,10 @@
       this.container = container;
       this.quizId = container.dataset.quizId;
       this.data = this.loadQuizData();
+      this.quizPath = container.dataset.quizPath || window.location.pathname;
+      this.quizTitle = container.dataset.quizTitle || (this.data ? (this.data.title || document.title) : document.title);
+      this.topic = container.dataset.topic || '';
+      this.reviewKind = container.dataset.reviewKind || '';
       this.userAnswers = new Map();
       this.submittedQuestions = new Set();
       this.currentQuestionIndex = 0;
@@ -466,6 +562,18 @@
       return question.dataset.questionId || `${this.quizId}-${index}`;
     }
 
+    getQuestionQuizPath(question) {
+      return question.dataset.sourceQuizPath || this.quizPath || window.location.pathname;
+    }
+
+    getQuestionQuizTitle(question) {
+      return question.dataset.sourceQuizTitle || this.quizTitle || document.title;
+    }
+
+    getQuestionTopic(question) {
+      return question.dataset.sourceTopic || this.topic || '';
+    }
+
     refreshWeakIndicators() {
       const questions = this.getQuestionElements();
       questions.forEach((question, index) => {
@@ -552,10 +660,15 @@
     getPastIncorrectIndices() {
       const questions = this.getQuestionElements();
       const incorrectIndices = [];
+      const session = this.performanceStore.getSession(this.quizPath);
+      const unresolvedIds = session && Array.isArray(session.unresolvedQuestionIds)
+        ? session.unresolvedQuestionIds
+        : [];
+
       questions.forEach((question, index) => {
         const questionId = this.getQuestionId(question, index);
         const entry = this.performanceStore.get(questionId);
-        if (entry && entry.lastResult === 'incorrect') {
+        if (unresolvedIds.includes(questionId) || (!unresolvedIds.length && entry && entry.lastResult === 'incorrect')) {
           incorrectIndices.push(index);
         }
       });
@@ -752,7 +865,22 @@
       }
 
       const questionId = this.getQuestionId(question, index);
-      this.performanceStore.record(questionId, isCorrect);
+      const quizPath = this.getQuestionQuizPath(question);
+      const quizTitle = this.getQuestionQuizTitle(question);
+      this.performanceStore.record(questionId, isCorrect, {
+        quizPath,
+        quizTitle,
+        topic: this.getQuestionTopic(question),
+        questionIndex: Number(question.dataset.sourceQuestionIndex || question.dataset.questionIndex || index)
+      });
+
+      if (this.resultsScope === 'subset' || this.reviewKind) {
+        if (isCorrect) {
+          this.performanceStore.resolveQuestion(quizPath, questionId, quizTitle);
+        } else {
+          this.performanceStore.keepQuestionUnresolved(quizPath, questionId, quizTitle);
+        }
+      }
       this.refreshWeakIndicators();
       this.updatePastReviewButton();
 
@@ -1016,6 +1144,7 @@
       let incorrect = 0;
       let skipped = 0;
       const incorrectIndices = [];
+      const incorrectQuestionIds = [];
 
       indices.forEach((index) => {
         const question = questions[index];
@@ -1024,6 +1153,7 @@
         } else if (question.classList.contains('answered-incorrect')) {
           incorrect++;
           incorrectIndices.push(index);
+          incorrectQuestionIds.push(this.getQuestionId(question, index));
         } else {
           skipped++;
         }
@@ -1054,19 +1184,14 @@
       if (answeredQuestions > 0) {
         if (this.resultsScope !== 'subset') {
           // Full quiz attempt — update everything
-          const quizTitle = this.data ? (this.data.title || document.title) : document.title;
           this.performanceStore.recordQuizSession(
-            window.location.pathname,
-            quizTitle,
+            this.quizPath,
+            this.quizTitle,
             percentage,
-            incorrectIndices.length
+            incorrectQuestionIds
           );
         } else {
-          // Review session — update error pool + lastAttemptAt only
-          this.performanceStore.updateErrorPool(
-            window.location.pathname,
-            incorrectIndices.length
-          );
+          // Review sessions update unresolved pools at individual answer time.
         }
       }
 
@@ -1279,10 +1404,21 @@
   }
 
   // Initialize all quizzes on page load
+  function initContainer(container) {
+    if (!container || container._rdocsQuizInstance) return container?._rdocsQuizInstance || null;
+    container._rdocsQuizInstance = new Quiz(container);
+    return container._rdocsQuizInstance;
+  }
+
+  window.RDocsQuiz = {
+    initContainer,
+    PerformanceStore
+  };
+
   function initQuizzes() {
     const quizContainers = document.querySelectorAll('.quiz-container');
     quizContainers.forEach(container => {
-      new Quiz(container);
+      initContainer(container);
     });
   }
 

@@ -1,0 +1,255 @@
+{{- $registry := slice -}}
+{{- range where (where .Page.Site.Pages "Kind" "section") "Section" "quiz" -}}
+  {{- $parts := split .RelPermalink "/" -}}
+  {{- if ge (len $parts) 6 -}}
+    {{- $slug := index $parts 3 -}}
+    {{- if and (ne $slug "revision-index") (ne $slug "review") -}}
+      {{- $topic := index $parts 3 -}}
+      {{- $registry = append (dict "title" .Title "path" .RelPermalink "topic" $topic) $registry -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+<script type="application/json" id="daily-review-registry">{{ $registry | jsonify }}</script>
+
+<div id="daily-review" class="dr-container">
+  <div class="dr-summary" aria-live="polite">
+    <div class="dr-summary-item">
+      <span class="dr-summary-label">Overdue Errors</span>
+      <span class="dr-summary-value" data-dr-count="overdue-error">0</span>
+    </div>
+    <div class="dr-summary-item">
+      <span class="dr-summary-label">Weak Questions</span>
+      <span class="dr-summary-value" data-dr-count="weak">0</span>
+    </div>
+    <div class="dr-summary-item">
+      <span class="dr-summary-label">Maintenance</span>
+      <span class="dr-summary-value" data-dr-count="maintenance">0</span>
+    </div>
+    <div class="dr-summary-item dr-summary-total">
+      <span class="dr-summary-label">Total Due</span>
+      <span class="dr-summary-value" data-dr-count="total">0</span>
+    </div>
+  </div>
+
+  <div id="daily-review-status" class="dr-status">Loading review queue...</div>
+  <div id="daily-review-root"></div>
+</div>
+
+<script>
+(function() {
+  var root = document.getElementById('daily-review-root');
+  var statusEl = document.getElementById('daily-review-status');
+  var registryEl = document.getElementById('daily-review-registry');
+  if (!root || !registryEl) return;
+
+  function parseRegistry() {
+    try {
+      var parsed = JSON.parse(registryEl.textContent || '[]');
+      return typeof parsed === 'string' ? JSON.parse(parsed) : parsed;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function setStatus(message) {
+    if (statusEl) statusEl.textContent = message;
+  }
+
+  function setCount(name, value) {
+    var el = document.querySelector('[data-dr-count="' + name + '"]');
+    if (el) el.textContent = value;
+  }
+
+  function normalizePath(path) {
+    try {
+      return new URL(path, window.location.origin).pathname;
+    } catch (e) {
+      return path;
+    }
+  }
+
+  function todayKey() {
+    var date = new Date();
+    date.setHours(0, 0, 0, 0);
+    return date.toISOString().slice(0, 10);
+  }
+
+  function isDue(entry) {
+    return entry && entry.nextReviewAt && entry.nextReviewAt <= todayKey();
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function getLane(store, sessions, quizPath, questionId) {
+    var session = sessions[quizPath] || {};
+    var unresolved = Array.isArray(session.unresolvedQuestionIds)
+      ? session.unresolvedQuestionIds
+      : [];
+    var entry = store.get(questionId);
+    var legacyUnresolved = !unresolved.length && entry && entry.lastResult === 'incorrect';
+
+    if (unresolved.indexOf(questionId) !== -1 || legacyUnresolved) {
+      return 'overdue-error';
+    }
+    if (store.isWeak(questionId)) {
+      return 'weak';
+    }
+    if (entry && entry.lastResult === 'correct' && isDue(entry)) {
+      return 'maintenance';
+    }
+    return '';
+  }
+
+  function laneLabel(lane) {
+    if (lane === 'overdue-error') return 'Overdue Error';
+    if (lane === 'weak') return 'Weak Question';
+    return 'Maintenance';
+  }
+
+  function rewriteInputNames(question, suffix) {
+    question.querySelectorAll('input[name]').forEach(function(input) {
+      input.name = input.name + '-' + suffix;
+    });
+  }
+
+  function addSourceLabel(question, item, lane) {
+    var header = question.querySelector('.question-header');
+    if (!header) return;
+    var source = document.createElement('div');
+    source.className = 'dr-question-source';
+    source.innerHTML =
+      '<span class="dr-lane dr-lane-' + escapeHtml(lane) + '">' + escapeHtml(laneLabel(lane)) + '</span>' +
+      '<a href="' + escapeHtml(item.path) + '">' + escapeHtml(item.title) + '</a>';
+    header.appendChild(source);
+  }
+
+  async function fetchQuiz(item) {
+    var response = await fetch(item.path, { credentials: 'same-origin' });
+    if (!response.ok) throw new Error('Could not load ' + item.path);
+    var html = await response.text();
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.querySelector('.quiz-container');
+  }
+
+  function renderMixedQuiz(items) {
+    var questions = items.map(function(item, index) {
+      var question = item.question.cloneNode(true);
+      question.dataset.sourceQuizPath = item.quizPath;
+      question.dataset.sourceQuizTitle = item.quizTitle;
+      question.dataset.sourceTopic = item.topic;
+      question.dataset.sourceQuestionIndex = item.sourceQuestionIndex;
+      question.dataset.questionIndex = index;
+      question.style.display = index === 0 ? 'block' : 'none';
+      rewriteInputNames(question, 'daily-review-' + index);
+      addSourceLabel(question, item, item.lane);
+      return question.outerHTML;
+    }).join('');
+
+    root.innerHTML =
+      '<div class="quiz-container dr-quiz" id="daily-review-quiz" data-quiz-id="daily-review-quiz" data-review-kind="mixed-daily" data-quiz-title="Daily Review" data-quiz-path="' + escapeHtml(window.location.pathname) + '">' +
+        '<div class="quiz-header"><h3>Daily Review</h3><p class="quiz-description">Mixed review from overdue errors, weak questions, and maintenance.</p></div>' +
+        '<div class="quiz-progress"><div class="quiz-progress-main"><span class="progress-text">Question <span class="current-question">1</span> of <span class="total-questions">' + items.length + '</span></span><span class="answered-count">(<span class="answered-number">0</span> answered)</span></div></div>' +
+        '<div class="quiz-content">' + questions + '</div>' +
+        '<div class="quiz-navigation"><button class="quiz-prev-btn" type="button" disabled>← Previous</button><button class="quiz-next-btn" type="button">Next →</button></div>' +
+        '<div class="quiz-footer"><button class="quiz-reset-btn" type="button" style="display: none;">Reset Quiz</button></div>' +
+        '<div class="quiz-results" style="display: none;"><h4>Review Results</h4><div class="results-summary"><div class="results-card"><div class="result-label">Score</div><div class="result-value score-fraction"><span class="correct-count">0</span>/<span class="total-count">0</span></div></div><div class="results-card"><div class="result-label">Accuracy</div><div class="result-value score-value">0%</div></div><div class="results-card"><div class="result-label">Right</div><div class="result-value right-count">0</div><div class="result-label">Wrong</div><button class="result-value wrong-count" type="button" aria-label="Copy incorrect questions list">0</button><div class="incorrect-copy-status" aria-live="polite"></div><div class="result-label">Skipped</div><div class="result-value skipped-count">0</div></div></div><button class="quiz-review-incorrect-btn" type="button" style="display: none;">Review Incorrect Questions</button></div>' +
+      '</div>';
+
+    if (window.RDocsQuiz && window.RDocsQuiz.initContainer) {
+      window.RDocsQuiz.initContainer(root.querySelector('.quiz-container'));
+    }
+  }
+
+  async function init() {
+    if (!window.RDocsQuiz || !window.RDocsQuiz.PerformanceStore) {
+      setStatus('Quiz runtime is not available.');
+      return;
+    }
+
+    var store = new window.RDocsQuiz.PerformanceStore();
+    var registry = parseRegistry();
+    var sessions = store.data.quizSessions || {};
+    var dueItems = [];
+    var seen = {};
+    var rebuiltPools = {};
+    var counts = { 'overdue-error': 0, weak: 0, maintenance: 0 };
+
+    for (var i = 0; i < registry.length; i++) {
+      var item = registry[i];
+      var quizPath = normalizePath(item.path);
+      try {
+        var quiz = await fetchQuiz(item);
+        if (!quiz) continue;
+        var quizTitle = quiz.dataset.quizTitle || item.title;
+        quiz.querySelectorAll('.quiz-question').forEach(function(question, sourceIndex) {
+          var questionId = question.dataset.questionId;
+          if (!questionId || seen[questionId]) return;
+          var lane = getLane(store, sessions, quizPath, questionId);
+          if (!lane) return;
+          if (lane === 'overdue-error') {
+            var session = sessions[quizPath] || {};
+            var unresolvedIds = Array.isArray(session.unresolvedQuestionIds) ? session.unresolvedQuestionIds : [];
+            if (unresolvedIds.indexOf(questionId) === -1) {
+              if (!rebuiltPools[quizPath]) rebuiltPools[quizPath] = { title: item.title, ids: [] };
+              rebuiltPools[quizPath].ids.push(questionId);
+            }
+          }
+          seen[questionId] = true;
+          counts[lane] += 1;
+          dueItems.push({
+            lane: lane,
+            question: question,
+            quizPath: quizPath,
+            quizTitle: quizTitle,
+            title: item.title,
+            topic: item.topic,
+            path: item.path,
+            sourceQuestionIndex: sourceIndex
+          });
+        });
+      } catch (e) {
+        // Keep loading the remaining quiz pages.
+      }
+    }
+
+    Object.keys(rebuiltPools).forEach(function(pathname) {
+      var existing = sessions[pathname] || {};
+      var existingIds = Array.isArray(existing.unresolvedQuestionIds) ? existing.unresolvedQuestionIds : [];
+      var ids = existingIds.concat(rebuiltPools[pathname].ids);
+      store.setUnresolvedPool(pathname, ids, rebuiltPools[pathname].title);
+    });
+
+    dueItems.sort(function(a, b) {
+      var order = { 'overdue-error': 0, weak: 1, maintenance: 2 };
+      return order[a.lane] - order[b.lane] || a.topic.localeCompare(b.topic) || a.title.localeCompare(b.title);
+    });
+
+    setCount('overdue-error', counts['overdue-error']);
+    setCount('weak', counts.weak);
+    setCount('maintenance', counts.maintenance);
+    setCount('total', dueItems.length);
+
+    if (!dueItems.length) {
+      setStatus('No daily review due. Check the Revision Index for full quiz retakes.');
+      root.innerHTML = '<p class="dr-empty"><a href="../revision-index/">Open Revision Index</a></p>';
+      return;
+    }
+
+    setStatus('');
+    renderMixedQuiz(dueItems);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>

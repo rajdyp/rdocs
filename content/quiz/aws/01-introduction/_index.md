@@ -14,7 +14,7 @@ next: /quiz/aws/02-global-infrastructure
       "id": "aws-introduction-quiz-01",
       "type": "flashcard",
       "question": "What is the fundamental definition of cloud computing?",
-      "answer": "On-demand delivery of IT resources over the internet with pay-as-you-go pricing."
+      "answer": "On-demand delivery of IT resources over the internet with pay-as-you-go pricing.\n\n- Resources provisioned automatically, without requiring human interaction with the provider\n- Pay only for what you consume — no upfront capital expenditure (CapEx shifts to OpEx)\n- Access via standard network mechanisms from any device or location\n- Underlying hardware, data centers, and physical infrastructure managed by the cloud provider\n- Contrast with traditional IT: buying, owning, and maintaining physical servers and data centers"
     },
     {
       "id": "aws-introduction-quiz-02",
@@ -54,10 +54,10 @@ next: /quiz/aws/02-global-infrastructure
         "Applications and Data only",
         "Applications, Data, Runtime, Middleware, and OS",
         "Applications, Data, Runtime, Middleware, OS, and Virtualization",
-        "Applications, Data, and Runtime only"
+        "Applications, Data, Runtime, and OS only"
       ],
       "answer": 1,
-      "explanation": "With Amazon EC2 (IaaS), the customer manages Applications, Data, Runtime, Middleware, and OS. AWS handles Virtualization, Servers, Storage, and Networking. A common mistake is thinking customers also manage the virtualization layer — but the hypervisor is AWS's responsibility. EC2 gives you an OS and above; everything below belongs to AWS. 'Applications and Data only' describes PaaS, where the provider also manages Runtime and Middleware.",
+      "explanation": "With Amazon EC2 (IaaS), the customer manages Applications, Data, Runtime, Middleware, and OS. AWS handles Virtualization, Servers, Storage, and Networking. A common mistake is thinking customers also manage the virtualization layer — but the hypervisor is AWS's responsibility. EC2 gives you an OS and above; everything below belongs to AWS. 'Applications and Data only' describes PaaS, where the provider also manages Runtime and Middleware. 'Applications, Data, Runtime, and OS only' is incomplete — it omits Middleware, the layer between the runtime and the OS, which remains the customer's responsibility in IaaS.",
       "hint": "EC2 is IaaS — you manage the operating system and everything that runs on it."
     },
     {
@@ -145,12 +145,12 @@ next: /quiz/aws/02-global-infrastructure
         "Patching the underlying host OS on managed services like RDS",
         "Data encryption at rest and in transit",
         "Network configuration and firewall rules",
-        "Physical network hardware maintenance between data centers",
+        "Maintaining the underlying infrastructure and availability of the IAM authentication service",
         "Application security and patching",
         "Securing the virtualization software layer beneath EC2 instances"
       ],
       "answers": [1, 2, 4],
-      "explanation": "Customers are responsible for data encryption, network configuration and firewall rules, and application security and patching (Security IN the Cloud). The wrong options are all AWS responsibilities: managed services like RDS handle host OS patching (AWS managed service operations); physical network hardware is AWS infrastructure; the virtualization layer beneath EC2 belongs to AWS, not the EC2 customer. For IaaS, the customer's responsibility starts at the OS — not below it.",
+      "explanation": "Customers are responsible for data encryption, network configuration and firewall rules, and application security and patching (Security IN the Cloud). The wrong options are all AWS responsibilities: managed services like RDS handle host OS patching; the IAM service infrastructure itself — authentication engines, service APIs, global replication — is maintained entirely by AWS (customers configure IAM policies and users, but they do not operate the IAM service); the virtualization layer beneath EC2 belongs to AWS, not the EC2 customer. For IaaS, the customer's responsibility starts at the OS — not below it.",
       "hint": "Focus on what happens 'in' the cloud that customers control, not the cloud infrastructure itself."
     },
     {
@@ -166,14 +166,14 @@ next: /quiz/aws/02-global-infrastructure
       "type": "mcq",
       "question": "A startup wants to experiment with machine learning without large capital expenditure and needs to deploy quickly. Which AWS benefit is most relevant to this scenario?",
       "options": [
-        "Security and compliance certifications",
+        "Cost Efficiency and no upfront infrastructure investment",
         "Agility and Speed with no upfront investment",
         "Global infrastructure for low latency",
         "Managed service operations"
       ],
       "answer": 1,
-      "explanation": "Agility and Speed, combined with no upfront infrastructure investment, allows startups to experiment and deploy resources in minutes without large capital expenditure. This directly addresses their needs.",
-      "hint": "What matters most for a startup: fast deployment or geographical distribution?"
+      "explanation": "Agility and Speed is the correct answer because the scenario emphasizes speed of deployment and experimentation. 'Cost Efficiency' (option A) is a plausible trap — the scenario mentions avoiding large capital expenditure, which does partially map to Cost Efficiency. The distinction: Cost Efficiency is about long-term unit cost reduction and economies of scale; Agility and Speed is specifically about deploying resources in minutes and experimenting without friction. The startup's need to 'deploy quickly and experiment' maps directly to Agility, not to pricing optimization over time.",
+      "hint": "The scenario emphasizes speed of deployment and experimentation — which benefit is about time-to-market rather than pricing?"
     },
     {
       "id": "aws-introduction-quiz-15",
@@ -234,11 +234,11 @@ next: /quiz/aws/02-global-infrastructure
         "Resources owned and operated by third-party cloud service providers",
         "Cloud infrastructure used exclusively by a single organization",
         "Can be hosted on-premises or by a third party",
-        "Delivered over the public internet",
+        "Requires the organization to own and maintain its physical data center hardware",
         "Provides greater control and security"
       ],
       "answers": [1, 2, 4],
-      "explanation": "Private Cloud is characterized by exclusive use by a single organization, can be hosted on-premises or by a third party, and provides greater control and security compared to public cloud.",
+      "explanation": "Private Cloud is characterized by exclusive use by a single organization, can be hosted on-premises or by a third party, and provides greater control and security. A common misconception is that Private Cloud requires the organization to own its hardware — the notes explicitly state it can be hosted by a third party (e.g., a managed hosting provider that runs infrastructure exclusively for you). Ownership is not the defining characteristic; exclusive use by a single organization is. 'Resources owned and operated by third-party CSPs' describes Public Cloud, where infrastructure is shared across many tenants.",
       "hint": "Focus on exclusivity, control, and security aspects."
     },
     {
