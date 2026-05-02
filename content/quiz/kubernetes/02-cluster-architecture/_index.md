@@ -466,6 +466,12 @@ next: /quiz/kubernetes/03-control-plane
       "answer": 2,
       "explanation": "**Metrics Server** provides the resource metrics API that HPA queries to read current CPU and memory utilization. Without it, the HPA controller cannot retrieve utilization data and silently fails to scale — the HPA status shows 'unable to get metrics' but no Deployment error appears. **CoreDNS** enables service discovery but does not supply resource metrics. **Ingress Controller** handles HTTP routing. **Network Policy Controller** enforces traffic rules. Metrics Server is frequently overlooked because it is not installed by default in many Kubernetes distributions.",
       "hint": "HPA needs to read live CPU/memory usage — what add-on component provides that data?"
+    },
+    {
+      "id": "kubernetes-architecture-quiz-40",
+      "type": "flashcard",
+      "question": "What is the fundamental difference between LimitRange and ResourceQuota?",
+      "answer": "**LimitRange** — per-container (or per-pod) defaults and bounds:\n- Sets default requests/limits injected when none are specified\n- Enforces min/max per individual container or pod\n- Does NOT limit namespace totals\n\n**ResourceQuota** — namespace-wide totals:\n- Caps the aggregate CPU, memory, and object counts across an entire namespace\n- Pod creation is rejected when adding it would exceed the quota\n- Does NOT set per-container defaults or bounds\n\n**Key distinction:** LimitRange governs *individual containers*; ResourceQuota governs *the namespace as a whole*."
     }
   ]
 }

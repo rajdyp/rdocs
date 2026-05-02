@@ -38,14 +38,14 @@ prev: /quiz/interview-prep
       "options": [
         "Availability — % of requests returning a successful response",
         "Latency — p95 or p99 response time",
-        "CPU utilisation — average CPU % across all pods",
+        "CPU utilization — average CPU % across all pods",
         "Freshness — % of responses containing data within an acceptable age",
         "Error rate — % of requests resulting in an error",
         "Disk I/O — read/write throughput per node",
         "Durability — data loss rate (for stateful systems)"
       ],
       "answers": [0, 1, 3, 4, 6],
-      "explanation": "**Common user-facing SLIs:**\n\n- **Availability** — % of requests returning a successful response\n- **Latency** — p95 or p99 response time\n- **Freshness** — % of responses containing data within an acceptable age\n- **Error rate** — % of requests resulting in an error\n- **Durability** — data loss rate (stateful systems only)\n\nCPU utilisation and Disk I/O are infrastructure metrics — they are useful for debugging and capacity planning but should not be primary SLIs because they don't directly reflect what users experience.",
+      "explanation": "**Common user-facing SLIs:**\n\n- **Availability** — % of requests returning a successful response\n- **Latency** — p95 or p99 response time\n- **Freshness** — % of responses containing data within an acceptable age\n- **Error rate** — % of requests resulting in an error\n- **Durability** — data loss rate (stateful systems only)\n\nCPU utilization and Disk I/O are infrastructure metrics — they are useful for debugging and capacity planning but should not be primary SLIs because they don't directly reflect what users experience.",
       "hint": "SLIs should reflect what users actually feel — not what is easy to measure at the infrastructure layer."
     },
     {
@@ -76,8 +76,8 @@ prev: /quiz/interview-prep
     {
       "id": "interview-prep-frameworks-quiz-06",
       "type": "flashcard",
-      "question": "What are the traffic and data scaling strategies covered in the Scaling Strategy step of the SRE System Design Framework.",
-      "answer": "**Traffic scaling:**\n\n| Strategy | Purpose |\n|---|---|\n| **HPA / KEDA** | Scale service replicas on RPS, latency, or queue depth |\n| **Cluster autoscaler** | Add nodes as pod demand grows |\n| **CDN + cache** | Absorb read traffic before it hits the service layer |\n\n**Data scaling:**\n\n| Strategy | Purpose |\n|---|---|\n| **Read replicas** | Spread read load across multiple DB instances |\n| **Sharding / partitioning** | Horizontal data split for write-heavy workloads |\n| **Cache tiering** | Local in-process cache → regional cache → DB |"
+      "question": "What are the traffic and data scaling strategies covered in the Scaling Strategy step of the SRE System Design Framework?",
+      "answer": "**Traffic scaling:**\n\n| Strategy | Purpose |\n|---|---|\n| **HPA / KEDA** | Scale service replicas on RPS, latency, or queue depth |\n| **CA (ASG / Karpenter)** | Add nodes as pod demand grows |\n| **CDN + cache** | Absorb read traffic before it hits the service layer |\n\n**Data scaling:**\n\n| Strategy | Purpose |\n|---|---|\n| **Read replicas** | Spread read load across multiple DB instances |\n| **Sharding / partitioning** | Horizontal data split for write-heavy workloads |\n| **Cache tiering** | Local in-process cache → regional cache → DB |"
     },
     {
       "id": "interview-prep-frameworks-quiz-07",
