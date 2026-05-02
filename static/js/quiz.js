@@ -73,9 +73,16 @@
       return date.toISOString().slice(0, 10);
     }
 
-    getMaintenanceInterval(entry, isCorrect) {
+    getMaintenanceInterval(entry, isCorrect, confidenceRating = 'good') {
       if (!isCorrect) return 0;
+      if (confidenceRating === 'hard') return 1;
       const streak = entry.streak || 0;
+      if (confidenceRating === 'easy') {
+        if (streak <= 1) return 7;
+        if (streak === 2) return 14;
+        if (streak === 3) return 30;
+        return 60;
+      }
       if (streak <= 1) return 3;
       if (streak === 2) return 7;
       if (streak === 3) return 14;
@@ -84,6 +91,9 @@
 
     record(questionId, isCorrect, metadata = {}) {
       const now = new Date().toISOString();
+      const confidenceRating = isCorrect
+        ? (metadata.confidenceRating || 'good')
+        : '';
       const entry = this.data.questions[questionId] || {
         attempts: 0,
         correct: 0,
@@ -106,14 +116,36 @@
       if (metadata.quizTitle) entry.quizTitle = metadata.quizTitle;
       if (metadata.topic) entry.topic = metadata.topic;
       if (metadata.questionIndex !== undefined) entry.questionIndex = metadata.questionIndex;
+      if (isCorrect) {
+        entry.confidenceRating = confidenceRating;
+        delete entry.confidenceRatedAt;
+      } else {
+        delete entry.confidenceRating;
+        delete entry.confidenceRatedAt;
+      }
 
-      const intervalDays = this.getMaintenanceInterval(entry, isCorrect);
+      const intervalDays = this.getMaintenanceInterval(entry, isCorrect, confidenceRating);
       entry.intervalDays = intervalDays;
       entry.nextReviewAt = this.addDays(intervalDays);
       entry.reviewLane = isCorrect ? 'maintenance' : 'overdue-error';
 
       this.data.questions[questionId] = entry;
       this.save();
+    }
+
+    rateCorrectQuestion(questionId, confidenceRating) {
+      const entry = this.data.questions[questionId];
+      if (!entry || entry.lastResult !== 'correct') return null;
+      const rating = ['hard', 'good', 'easy'].includes(confidenceRating)
+        ? confidenceRating
+        : 'good';
+      entry.confidenceRating = rating;
+      entry.confidenceRatedAt = new Date().toISOString();
+      entry.intervalDays = this.getMaintenanceInterval(entry, true, rating);
+      entry.nextReviewAt = this.addDays(entry.intervalDays);
+      entry.reviewLane = 'maintenance';
+      this.save();
+      return entry;
     }
 
     isWeak(questionId) {
@@ -607,6 +639,9 @@
         if (incorrectFeedback) incorrectFeedback.style.display = 'none';
       }
 
+      const confidence = question.querySelector('.confidence-rating');
+      if (confidence) confidence.remove();
+
       question.querySelectorAll('.quiz-option').forEach(opt => {
         opt.classList.remove('correct', 'incorrect');
       });
@@ -884,7 +919,7 @@
       this.refreshWeakIndicators();
       this.updatePastReviewButton();
 
-      this.showFeedback(question, isCorrect);
+      this.showFeedback(question, isCorrect, index);
       this.submittedQuestions.add(index);
       this.lockQuestion(question);
 
@@ -951,7 +986,7 @@
             break;
         }
 
-        this.showFeedback(question, isCorrect);
+        this.showFeedback(question, isCorrect, index);
 
         if (isCorrect) {
           this.results.correct++;
@@ -1117,22 +1152,58 @@
       option.classList.add(isCorrect ? 'correct' : 'incorrect');
     }
 
-    showFeedback(question, isCorrect) {
+    showFeedback(question, isCorrect, index) {
       const feedback = question.querySelector('.question-feedback');
       const correctFeedback = question.querySelector('.feedback-correct');
       const incorrectFeedback = question.querySelector('.feedback-incorrect');
 
       if (feedback) {
         feedback.style.display = 'block';
+        const existingConfidence = feedback.querySelector('.confidence-rating');
+        if (existingConfidence) existingConfidence.remove();
 
         if (isCorrect && correctFeedback) {
           correctFeedback.style.display = 'flex';
           question.classList.add('answered-correct');
+          this.showConfidenceRating(question, index);
         } else if (!isCorrect && incorrectFeedback) {
           incorrectFeedback.style.display = 'flex';
           question.classList.add('answered-incorrect');
         }
       }
+    }
+
+    showConfidenceRating(question, index) {
+      const questionId = this.getQuestionId(question, index);
+      const actions = question.querySelector('.question-actions');
+      if (!actions) return;
+      const rating = document.createElement('div');
+      rating.className = 'confidence-rating';
+      rating.setAttribute('aria-label', 'Rate answer confidence');
+      rating.innerHTML = `
+        <span class="confidence-rating-label">Confidence</span>
+        <div class="confidence-rating-actions">
+          <button class="confidence-rating-btn confidence-hard" type="button" data-confidence-rating="hard">Hard</button>
+          <button class="confidence-rating-btn confidence-good selected" type="button" data-confidence-rating="good">Good</button>
+          <button class="confidence-rating-btn confidence-easy" type="button" data-confidence-rating="easy">Easy</button>
+        </div>
+      `;
+
+      rating.querySelectorAll('.confidence-rating-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const selectedRating = btn.dataset.confidenceRating || 'good';
+          const entry = this.performanceStore.rateCorrectQuestion(questionId, selectedRating);
+          if (!entry) return;
+          rating.querySelectorAll('.confidence-rating-btn').forEach(other => {
+            other.classList.toggle('selected', other === btn);
+            other.disabled = true;
+          });
+          rating.dataset.selectedRating = selectedRating;
+          rating.title = `Next review: ${entry.nextReviewAt}`;
+        });
+      });
+
+      actions.appendChild(rating);
     }
 
     showFinalResults() {
@@ -1312,6 +1383,9 @@
           if (correctFeedback) correctFeedback.style.display = 'none';
           if (incorrectFeedback) incorrectFeedback.style.display = 'none';
         }
+
+        const confidence = question.querySelector('.confidence-rating');
+        if (confidence) confidence.remove();
 
         // Reset options
         question.querySelectorAll('.quiz-option').forEach(opt => {

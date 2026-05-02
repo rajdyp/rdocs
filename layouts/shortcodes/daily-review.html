@@ -102,6 +102,7 @@
       return 'weak';
     }
     if (entry && entry.lastResult === 'correct' && isDue(entry)) {
+      if (entry.confidenceRating === 'hard') return 'hard-maintenance';
       return 'maintenance';
     }
     return '';
@@ -110,6 +111,7 @@
   function laneLabel(lane) {
     if (lane === 'overdue-error') return 'Overdue Error';
     if (lane === 'weak') return 'Weak Question';
+    if (lane === 'hard-maintenance') return 'Maintenance (Hard)';
     return 'Maintenance';
   }
 
@@ -154,7 +156,7 @@
 
     root.innerHTML =
       '<div class="quiz-container dr-quiz" id="daily-review-quiz" data-quiz-id="daily-review-quiz" data-review-kind="mixed-daily" data-quiz-title="Daily Review" data-quiz-path="' + escapeHtml(window.location.pathname) + '">' +
-        '<div class="quiz-header"><h3>Daily Review</h3><p class="quiz-description">Mixed review from overdue errors, weak questions, and maintenance.</p></div>' +
+        '<div class="quiz-header"><p class="quiz-description">Mixed review from overdue errors, weak questions, and maintenance.</p></div>' +
         '<div class="quiz-progress"><div class="quiz-progress-main"><span class="progress-text">Question <span class="current-question">1</span> of <span class="total-questions">' + items.length + '</span></span><span class="answered-count">(<span class="answered-number">0</span> answered)</span></div></div>' +
         '<div class="quiz-content">' + questions + '</div>' +
         '<div class="quiz-navigation"><button class="quiz-prev-btn" type="button" disabled>← Previous</button><button class="quiz-next-btn" type="button">Next →</button></div>' +
@@ -179,7 +181,7 @@
     var dueItems = [];
     var seen = {};
     var rebuiltPools = {};
-    var counts = { 'overdue-error': 0, weak: 0, maintenance: 0 };
+    var counts = { 'overdue-error': 0, weak: 0, 'hard-maintenance': 0, maintenance: 0 };
 
     for (var i = 0; i < registry.length; i++) {
       var item = registry[i];
@@ -227,13 +229,13 @@
     });
 
     dueItems.sort(function(a, b) {
-      var order = { 'overdue-error': 0, weak: 1, maintenance: 2 };
+      var order = { 'overdue-error': 0, weak: 1, 'hard-maintenance': 2, maintenance: 3 };
       return order[a.lane] - order[b.lane] || a.topic.localeCompare(b.topic) || a.title.localeCompare(b.title);
     });
 
     setCount('overdue-error', counts['overdue-error']);
     setCount('weak', counts.weak);
-    setCount('maintenance', counts.maintenance);
+    setCount('maintenance', counts['hard-maintenance'] + counts.maintenance);
     setCount('total', dueItems.length);
 
     if (!dueItems.length) {
