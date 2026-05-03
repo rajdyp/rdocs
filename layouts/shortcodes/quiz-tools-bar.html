@@ -11,16 +11,18 @@
     {{/* ── Right: Performance Data ── */}}
     <div id="quiz-data-panel" class="quiz-tools-data">
       <div class="quiz-data-panel-inner">
-        <span class="quiz-data-panel-label">Performance Data</span>
-        <div class="quiz-data-panel-actions">
-          <button class="quiz-data-btn quiz-sync-signin-btn" type="button">Sign in with Google</button>
-          <button class="quiz-data-btn quiz-sync-now-btn" type="button" hidden>Sync now</button>
-          <button class="quiz-data-btn quiz-sync-signout-btn" type="button" hidden>Sign out</button>
-          <button class="quiz-data-btn quiz-data-export-btn" type="button">Export</button>
-          <label class="quiz-data-btn quiz-data-import-label" role="button" tabindex="0">
-            Import
-            <input class="quiz-data-import-input" type="file" accept=".json" aria-label="Import performance data">
-          </label>
+        <div class="quiz-data-panel-controls">
+          <span class="quiz-data-panel-label">Performance Data</span>
+          <div class="quiz-data-panel-actions">
+            <button class="quiz-data-btn quiz-sync-signin-btn" type="button">Sign in with Google</button>
+            <button class="quiz-data-btn quiz-sync-now-btn" type="button" hidden>Sync now</button>
+            <button class="quiz-data-btn quiz-sync-signout-btn" type="button" hidden>Sign out</button>
+            <button class="quiz-data-btn quiz-data-export-btn" type="button">Export</button>
+            <label class="quiz-data-btn quiz-data-import-label" role="button" tabindex="0">
+              Import
+              <input class="quiz-data-import-input" type="file" accept=".json" aria-label="Import performance data">
+            </label>
+          </div>
         </div>
         <span class="quiz-data-panel-status" aria-live="polite"></span>
       </div>
