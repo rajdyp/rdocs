@@ -9,13 +9,17 @@ sidebar:
   open: true
 ---
 
-A comprehensive interactive quiz system for Hugo documentation sites with 9 question types, automatic scoring, performance tracking, and intelligent review features.
+A comprehensive interactive quiz system for Hugo documentation sites with 9 question types, per-question feedback, performance tracking, confidence-based review scheduling, and daily review features.
 
 **Features:**
 - 9 Question Types
-- Performance Tracking
-- Smart Review
+- Per-question Submit and Feedback
+- Performance Tracking in localStorage
+- Revision Index
+- Daily Review Queue
+- Confidence Ratings
 - Weak Question Detection
+- Import/Export Performance Data
 - Dark Mode
 - Hints & Explanations
 - Mobile Responsive

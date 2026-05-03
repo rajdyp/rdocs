@@ -131,7 +131,7 @@ next: /quiz/aws/05-compute-services
       "id": "aws-edge-hybrid-networking-quiz-10",
       "type": "flashcard",
       "question": "What is Origin Access Control (OAC) in CloudFront?",
-      "answer": "**Origin Access Control (OAC)** is a CloudFront security feature that ensures only CloudFront can access S3 bucket origin.\n\n**Purpose:** Prevents users from bypassing CloudFront and accessing S3 content directly.\n\n**Implementation:** Configure OAC on CloudFront distribution and update S3 bucket policy to allow only CloudFront access."
+      "answer": "**Origin Access Control (OAC)** is a CloudFront security feature that ensures only CloudFront can access an S3 bucket by using SigV4 signed requests, preventing users from bypassing CloudFront and accessing S3 directly.\n\nIt replaces the older OAI model (CloudFront-specific identity) and uses IAM-based policies for more secure and flexible access control.\n\n```\nUser → CloudFront → (signed request) → S3\n              ❌ direct user blocked\n```"
     },
     {
       "id": "aws-edge-hybrid-networking-quiz-11",
@@ -292,7 +292,7 @@ next: /quiz/aws/05-compute-services
       "codeTemplate": "On-Premises ─┬─ Direct Connect (Primary) ──┬─ AWS\n             └──────── (Backup) ────────────┘",
       "answer": "Site-to-Site VPN",
       "caseSensitive": false,
-      "acceptedAnswers": ["Site-to-Site VPN", "VPN", "AWS Site-to-Site VPN"],
+      "acceptedAnswers": ["Site-to-Site VPN", "AWS Site-to-Site VPN"],
       "explanation": "The most **cost-effective redundancy** strategy is combining **Direct Connect (primary)** with **Site-to-Site VPN (backup)**. This provides automatic failover while managing costs better than dual Direct Connect."
     },
     {

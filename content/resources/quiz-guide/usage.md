@@ -17,6 +17,7 @@ Add a quiz to any markdown file using the `quiz` shortcode:
   "description": "Optional description",
   "questions": [
     {
+      "id": "my-quiz-01",
       "type": "mcq",
       "question": "What is 2 + 2?",
       "options": ["3", "4", "5"],
@@ -30,21 +31,30 @@ Add a quiz to any markdown file using the `quiz` shortcode:
 
 ## Quiz Structure
 
-### Required Fields
+### Top-Level Fields
 
 ```json
 {
-  "title": "Quiz Title",        // Quiz title (optional, defaults to "Quiz")
-  "description": "...",          // Quiz description (optional)
-  "questions": [                 // Array of question objects
-    // Question objects here
+  "title": "Quiz Title",
+  "description": "Optional description",
+  "questions": [
+    {
+      "id": "example-01",
+      "type": "mcq",
+      "question": "Question text",
+      "options": ["A", "B"],
+      "answer": 0
+    }
   ]
 }
 ```
 
+Only `questions` is required at the top level. `title` defaults to `Quiz`, and `description` is optional.
+
 ### Question Object
 
 Every question must have:
+- `id` - Stable question identifier for performance tracking and review queues
 - `type` - Question type (mcq, multiple-select, true-false, etc.)
 - `question` - The question text (supports markdown)
 
@@ -53,6 +63,18 @@ Optional fields:
 - `hint` - Toggleable hint for the user
 
 Type-specific fields vary (see [Question Types](question-types) reference).
+
+## User Flow
+
+Quizzes are answered one question at a time.
+
+1. The user answers the visible question and clicks **Submit Answer**.
+2. The question locks, feedback appears, and the result is stored.
+3. Correct answers show a confidence selector: **Hard**, **Good**, or **Easy**.
+4. The user moves with **Previous** and **Next**. On the last visible question, **Next** changes to **View Results**.
+5. Results show score, accuracy, right, wrong, and skipped counts.
+
+Skipped questions are not counted in the accuracy percentage. Accuracy is calculated from answered questions only.
 
 ## Performance Tracking
 
@@ -66,6 +88,9 @@ For each question, the system records:
 - **Streak**: Current correct/incorrect streak
 - **Last Result**: Whether your last attempt was correct or incorrect
 - **Last Attempt**: Timestamp of your most recent attempt
+- **Quiz Metadata**: Quiz path, title, topic, and question index
+- **Review Scheduling**: `intervalDays`, `nextReviewAt`, and review lane
+- **Confidence Rating**: `hard`, `good`, or `easy` for correct answers
 
 ### Weak Question Detection
 
@@ -79,12 +104,50 @@ This helps you identify topics that need more practice.
 ### Review Modes
 
 #### Review Incorrect Questions
-After viewing quiz results, click **"Review Incorrect Questions"** to practice only the questions you missed in the current attempt. This is perfect for immediate reinforcement.
+After viewing quiz results, click **Review Incorrect Questions** to practice only the questions you missed in the current attempt. This is immediate reinforcement for the current run.
 
 #### Review Past Incorrect
-Click **"Review Past Incorrect"** in the progress bar to practice questions you've struggled with historically across all sessions. The button shows the count of historically incorrect questions and is disabled if none exist.
+Click **Review Past Incorrect** in the progress bar to practice unresolved questions from previous full attempts. The button shows the count and is disabled if there is no unresolved error pool.
 
-When in review mode, click **"Show All Questions"** to return to the full quiz.
+When in review mode, click **Show All Questions** to return to the full quiz.
+
+#### Daily Review
+The Daily Review page at `/quiz/review/` builds a mixed review from:
+
+- Overdue errors: unresolved questions from prior full attempts
+- Weak questions: questions with low accuracy or repeated misses
+- Maintenance: previously correct questions whose `nextReviewAt` date is due
+
+Daily Review fetches quiz pages from the quiz registry, clones due question markup, labels the source quiz, and reuses the normal quiz runtime. Correct answers remove questions from the unresolved pool; incorrect answers keep them there.
+
+#### Revision Index
+The Revision Index at `/quiz/revision-index/` summarizes full-quiz history by topic and quiz. It shows the last score, attempt count, error pool, Leitner-style box/status, frequency, next review date, and a summary of today's due review queue.
+
+Only full quiz attempts increment the quiz-level attempt count. Error-only and daily review sessions update unresolved questions individually.
+
+### Confidence Ratings
+
+Correct answers show a confidence selector:
+
+- **Hard**: review tomorrow
+- **Good**: normal maintenance schedule
+- **Easy**: longer maintenance schedule
+
+If the user does not choose a rating, the default is **Good**. Rating a correct answer updates `nextReviewAt` immediately and disables the rating buttons for that question.
+
+Maintenance intervals are based on the current correct streak:
+
+| Rating | Streak 1 | Streak 2 | Streak 3 | Streak 4+ |
+|--------|----------|----------|----------|-----------|
+| Hard | 1 day | 1 day | 1 day | 1 day |
+| Good | 3 days | 7 days | 14 days | 30 days |
+| Easy | 7 days | 14 days | 30 days | 60 days |
+
+Incorrect answers are immediately due again and enter the overdue error lane.
+
+### Performance Data Import/Export
+
+The Quiz Center includes a Performance Data panel. **Export** downloads a JSON file containing question stats and quiz sessions. **Import** merges a compatible export into localStorage, updating matching question IDs and merging quiz session data.
 
 ### Question IDs for Stable Tracking
 
@@ -101,6 +164,17 @@ For consistent performance tracking across quiz updates, assign explicit IDs to 
 ```
 
 Without explicit IDs, the system uses `quizId-index` as a fallback, which can shift if you reorder questions.
+
+## Results and Error Lists
+
+Results include:
+
+- Score fraction: correct / visible questions
+- Accuracy: correct / answered questions
+- Right, wrong, and skipped counts
+- A copyable wrong-count button that copies a list such as `Q2, Q5`
+
+The copied wrong list uses question numbers from the original quiz order, which is useful when quickly fixing or reviewing missed items.
 
 ## Features
 

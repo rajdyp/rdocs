@@ -6,6 +6,18 @@ weight: 2
 
 Complete reference for all 9 quiz question types.
 
+## Common Fields and Behavior
+
+Every question type supports:
+
+- `id` (string, recommended): stable identifier used for performance history and review queues
+- `type` (string, required): one of the 9 supported types
+- `question` (string, required): question prompt, rendered with markdown
+- `explanation` (string, optional): shown after a submitted answer
+- `hint` (string, optional): rendered behind a Show Hint button
+
+Each question is submitted independently with **Submit Answer**. Submitted questions lock, show feedback, and update localStorage. Correct submissions also show a **Hard / Good / Easy** confidence rating control used to schedule maintenance review.
+
 ### 1. Multiple Choice (MCQ)
 
 Single correct answer from multiple options.
@@ -154,6 +166,7 @@ Flip card with question on front, answer on back. Self-assessed.
 - `answer` (string): Back of the card (supports markdown)
 
 **Note:** Flashcards use self-assessment. Users click "Yes" or "No" to indicate if they got it right.
+The chosen self-assessment is submitted with the normal **Submit Answer** button.
 
 ---
 
@@ -211,6 +224,7 @@ Fill in missing code.
 - `id` (string, recommended): Unique identifier for stable performance tracking
 - `instruction` (string, optional): Instructions for the user
 - `codeTemplate` (string): Code with blank (use `___` for the blank)
+- `language` (string, optional): Language class for syntax highlighting; defaults to `python`
 - `answer` (string): The correct answer
 - `caseSensitive` (boolean, optional): Default is `false`
 - `acceptedAnswers` (array, optional): Alternative accepted answers
@@ -241,12 +255,12 @@ Type each step from memory in the correct sequence.
 
 **Properties:**
 - `id` (string, recommended): Unique identifier for stable performance tracking
-- `steps` (array): Ordered list of step objects, each with:
-  - `answer` (string): The canonical correct answer for that step
-  - `acceptedAnswers` (array, optional): Alternative accepted spellings/forms
+- `steps` (array): Ordered list of step objects
 - `caseSensitive` (boolean, optional): Default is `false`
 - `explanation` (string, optional): Shown after submission
 - `hint` (string, optional): Hint button users can click
+
+Each step object requires `answer` and may include `acceptedAnswers` for alternate spellings or forms.
 
 **Behavior:**
 - Each step is a separate text input field, numbered in sequence
@@ -310,18 +324,20 @@ The quiz system automatically tracks your performance on each question:
 - **Attempts, Correct/Incorrect counts, Streak**
 - **Weak Question Detection**: Questions with <50% accuracy or negative streak ≤ -2 are highlighted
 - **Review Modes**: Practice incorrect questions from the current or past attempts
+- **Review Scheduling**: Correct answers are scheduled for maintenance based on streak and confidence rating
 
 ### Automatic Scoring
 The quiz automatically calculates and displays:
-- Percentage score
-- Number of correct answers
-- Total questions
+- Score fraction
+- Accuracy percentage based on answered questions
+- Right, wrong, and skipped counts
 
 ### Visual Feedback
 - Correct answers highlighted in green
 - Incorrect answers highlighted in red
 - Weak questions marked with amber left border
 - Explanations shown after submission
+- Correct answers show confidence rating buttons
 
 ### Hints
 Add optional hints to any question:
@@ -403,4 +419,4 @@ The quiz system uses CSS custom properties for easy theming. Override these in y
 
 ## Examples
 
-See the [Complete Quiz Example](/python/log-analysis/quiz-example) for a working demonstration of all question types.
+See [Examples](examples) for a working demonstration of all question types.
