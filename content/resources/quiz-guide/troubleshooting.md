@@ -21,7 +21,7 @@ Common issues and their solutions.
 
 ## JavaScript Not Working
 
-**Problem:** Submit button or hints don't respond
+**Problem:** Submit Answer, navigation, confidence buttons, review buttons, or hints don't respond
 
 **Solutions:**
 1. Verify JavaScript file exists: `static/js/quiz.js`
@@ -44,6 +44,11 @@ Uncaught ReferenceError: Quiz is not defined
 Cannot read property 'querySelector' of null
 ```
 → Quiz container not found. Check quiz ID is unique
+
+```
+Quiz runtime is not available.
+```
+→ Daily Review loaded before `quiz.js` or `window.RDocsQuiz` is unavailable. Check the script loader and hard refresh.
 
 ## Styling Issues
 
@@ -126,6 +131,59 @@ unexpected character ',' after object key:value pair
 - Check `correctOrder` array matches `items` indices
 - Ensure indices are in correct sequence
 
+**Ordered Recall:**
+- Ensure each step has an `answer`
+- Use `acceptedAnswers` for alternate spelling, punctuation, or casing
+- Remember the full question is correct only when every step is correct
+
+## Review and Progress Issues
+
+**Problem:** Review Past Incorrect is disabled
+
+**Solutions:**
+1. Complete a full quiz attempt with at least one incorrect answer
+2. Verify questions have stable `id` values
+3. Check localStorage for the `rdocs.quiz.performance.v1` key
+4. Use Performance Data export to inspect whether `quizSessions` contains `unresolvedQuestionIds`
+
+**Problem:** Daily Review is empty but you expected questions
+
+**Solutions:**
+1. Confirm the question is either unresolved, weak, or due for maintenance
+2. Confirm correct answers have `nextReviewAt` less than or equal to today's date
+3. Open the Revision Index and check the review summary counts
+4. Verify quiz pages are reachable from the browser; Daily Review fetches quiz pages client-side
+5. Hard refresh after changing quiz IDs or moving quiz pages
+
+**Problem:** A missed question does not leave the daily review queue
+
+**Expected behavior:** Incorrect review answers remain unresolved. The question leaves the unresolved pool only after it is answered correctly in a review session or after a full quiz attempt no longer misses it.
+
+**Problem:** Revision Index does not show an attempt
+
+**Expected behavior:** Only full quiz attempts update quiz-level session attempts. Current-incorrect review, past-incorrect review, and Daily Review update question history and unresolved pools but do not increment full quiz attempts.
+
+**Problem:** Confidence buttons disappeared
+
+**Expected behavior:** Confidence controls appear only after a correct submission. After the user selects Hard, Good, or Easy, the buttons are disabled for that submitted question. Resetting the quiz or retrying the question creates a fresh control after another correct submission.
+
+## Performance Data Import/Export
+
+**Problem:** Import fails with "Unrecognized file format"
+
+**Solutions:**
+1. Import only files exported by the Performance Data panel
+2. Verify the JSON has `version: 1`
+3. Verify the payload contains `data.questions`
+4. If editing by hand, keep `quizSessions` as an object, not an array
+
+**Problem:** Imported data does not match expected quizzes
+
+**Solutions:**
+1. Check that question IDs are unchanged between the exported data and current quiz files
+2. Confirm quiz paths still match if pages were moved
+3. Export current data before importing so you can compare the merged payload
+
 ## Hextra Theme Specific
 
 For the Hextra theme, the quiz system requires:
@@ -140,6 +198,11 @@ For the Hextra theme, the quiz system requires:
 
 3. **Partial Implementation**
    - Must be in `layouts/_partials/shortcodes/quiz.html`
+
+4. **Quiz Center Tools**
+   - `layouts/shortcodes/quiz-tools-bar.html` provides the Revision Index link and Performance Data import/export
+   - `layouts/shortcodes/revision-index.html` powers `/quiz/revision-index/`
+   - `layouts/shortcodes/daily-review.html` powers `/quiz/review/`
 
 ## Performance Issues
 
@@ -160,6 +223,7 @@ For the Hextra theme, the quiz system requires:
 2. Check touch events work for drag-drop
 3. Verify button sizes are touch-friendly (min 44x44px)
 4. Test on actual mobile devices, not just emulators
+5. For drag-drop, verify touch reordering works after the page is fully loaded
 
 ## Debugging Tips
 
@@ -173,14 +237,22 @@ Open with F12, check for:
 Verify these files load:
 - `quiz.js` (JavaScript)
 - `custom.css` (CSS with quiz styles)
+- Quiz pages fetched by Daily Review
 
 ### 3. Elements Tab
 Inspect quiz HTML:
 - Check quiz container has correct ID
 - Verify question elements have correct data attributes
 - Ensure JSON script tag is present
+- Confirm submitted questions receive `answered-correct`, `answered-incorrect`, and `locked` classes
 
-### 4. Hugo Build Logs
+### 4. localStorage
+Inspect Application -> Local Storage and check `rdocs.quiz.performance.v1`:
+- `questions` should contain per-question stats
+- `quizSessions` should contain per-quiz attempts and unresolved pools
+- Due maintenance questions should have `nextReviewAt`
+
+### 5. Hugo Build Logs
 Run with verbose logging:
 ```bash
 hugo --logLevel debug
@@ -208,6 +280,8 @@ Look for:
 - [ ] CSS file includes quiz styles
 - [ ] Browser console shows no errors
 - [ ] Network tab shows all resources load
+- [ ] localStorage is available in the browser
+- [ ] Question IDs are stable and unique
 - [ ] Hard refresh browser (Ctrl+Shift+R)
 - [ ] Hugo server restarted
 - [ ] Cache cleared (Hugo and browser)

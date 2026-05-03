@@ -6,6 +6,8 @@ weight: 3
 
 {{< quiz id="python-complete-quiz" >}}
 {
+  "title": "Python Complete Quiz",
+  "description": "A compact example that exercises every supported question type.",
   "questions": [
     {
       "id": "python-complete-01",
@@ -131,5 +133,9 @@ This quiz demonstrates:
 7. **Drag & Drop** - Arrange items in correct order
 8. **Code Completion** - Fill in missing code
 9. **Ordered Recall** - Type each step from memory in sequence
+
+After each question, click **Submit Answer** to lock the response and show feedback. Correct answers show the **Hard / Good / Easy** confidence selector, which controls when the question appears in Daily Review.
+
+The final results panel shows score, accuracy, right, wrong, and skipped counts. The wrong count can be clicked to copy the missed question numbers.
 
 You can create quizzes like this in any markdown file using the `quiz` shortcode!
