@@ -8,7 +8,7 @@
       this.storageKey = 'rdocs.quiz.performance.v1';
       this.data = { questions: {}, quizSessions: {} };
       this.available = this.checkAvailability();
-      this.firebaseConfig = window.RDocsFirebaseConfig || null;
+      this.firebaseConfig = this.normalizeFirebaseConfig(window.RDocsFirebaseConfig || null);
       this.firebaseReady = false;
       this.auth = null;
       this.db = null;
@@ -62,6 +62,17 @@
       if (!normalized.questions || typeof normalized.questions !== 'object') {
         normalized.questions = {};
       }
+      return normalized;
+    }
+
+    normalizeFirebaseConfig(config) {
+      if (!config || typeof config !== 'object') return null;
+      const normalized = {};
+      Object.keys(config).forEach(key => {
+        normalized[key] = typeof config[key] === 'string'
+          ? config[key].replace(/^"+|"+$/g, '')
+          : config[key];
+      });
       return normalized;
     }
 
