@@ -4,10 +4,27 @@
 
   class PerformanceStore {
     constructor() {
+      if (PerformanceStore.shared) return PerformanceStore.shared;
       this.storageKey = 'rdocs.quiz.performance.v1';
       this.data = { questions: {}, quizSessions: {} };
       this.available = this.checkAvailability();
+      this.firebaseConfig = window.RDocsFirebaseConfig || null;
+      this.firebaseReady = false;
+      this.auth = null;
+      this.db = null;
+      this.user = null;
+      this.cloudSaveTimer = null;
+      this.cloudSaveInFlight = false;
+      this.pendingCloudSave = false;
+      this.status = {
+        state: 'local',
+        message: 'Stored locally',
+        user: null,
+        firebaseEnabled: false
+      };
       this.load();
+      this.initFirebase();
+      PerformanceStore.shared = this;
     }
 
     checkAvailability() {
@@ -28,9 +45,7 @@
         if (raw) {
           const parsed = JSON.parse(raw);
           if (parsed && typeof parsed === 'object') {
-            this.data = parsed;
-            if (!this.data.quizSessions) this.data.quizSessions = {};
-            if (!this.data.questions) this.data.questions = {};
+            this.data = this.normalizeData(parsed);
             this.migrateData();
           }
         }
@@ -39,9 +54,20 @@
       }
     }
 
-    migrateData() {
-      Object.keys(this.data.quizSessions || {}).forEach(pathname => {
-        const session = this.data.quizSessions[pathname];
+    normalizeData(data) {
+      const normalized = (data && typeof data === 'object') ? data : {};
+      if (!normalized.quizSessions || typeof normalized.quizSessions !== 'object') {
+        normalized.quizSessions = {};
+      }
+      if (!normalized.questions || typeof normalized.questions !== 'object') {
+        normalized.questions = {};
+      }
+      return normalized;
+    }
+
+    migrateData(data = this.data) {
+      Object.keys(data.quizSessions || {}).forEach(pathname => {
+        const session = data.quizSessions[pathname];
         if (!session || typeof session !== 'object') return;
         if (!session.lastFullAttemptAt && session.lastAttemptAt) {
           session.lastFullAttemptAt = session.lastAttemptAt;
@@ -53,13 +79,211 @@
       });
     }
 
-    save() {
-      if (!this.available) return;
-      try {
-        localStorage.setItem(this.storageKey, JSON.stringify(this.data));
-      } catch (err) {
-        // Ignore storage write failures.
+    save(options = {}) {
+      const sync = options.sync !== false;
+      this.migrateData();
+      if (this.available) {
+        try {
+          localStorage.setItem(this.storageKey, JSON.stringify(this.data));
+        } catch (err) {
+          // Ignore storage write failures.
+        }
       }
+      this.emitStoreChange();
+      if (sync) this.queueCloudSave();
+    }
+
+    emitStoreChange() {
+      try {
+        window.dispatchEvent(new CustomEvent('rdocsquiz:storechange', {
+          detail: { data: this.data }
+        }));
+      } catch (err) {
+        // Ignore event failures in older browsers.
+      }
+    }
+
+    emitSyncStatus(message, state = this.status.state) {
+      this.status = {
+        state,
+        message,
+        user: this.user ? {
+          uid: this.user.uid,
+          email: this.user.email || '',
+          displayName: this.user.displayName || ''
+        } : null,
+        firebaseEnabled: this.firebaseReady
+      };
+      try {
+        window.dispatchEvent(new CustomEvent('rdocsquiz:syncstatus', {
+          detail: this.status
+        }));
+      } catch (err) {
+        // Ignore event failures in older browsers.
+      }
+    }
+
+    initFirebase() {
+      if (!this.firebaseConfig || !this.firebaseConfig.projectId || !window.firebase) {
+        this.emitSyncStatus('Stored locally', 'local');
+        return;
+      }
+
+      try {
+        const app = window.firebase.apps && window.firebase.apps.length
+          ? window.firebase.app()
+          : window.firebase.initializeApp(this.firebaseConfig);
+        this.auth = app.auth();
+        this.db = app.firestore();
+        this.firebaseReady = true;
+        this.emitSyncStatus('Sign in to sync', 'signed-out');
+        this.auth.onAuthStateChanged(user => {
+          this.user = user || null;
+          if (this.user) {
+            this.syncFromCloud();
+          } else {
+            this.emitSyncStatus('Signed out. Stored locally.', 'signed-out');
+          }
+        });
+      } catch (err) {
+        this.firebaseReady = false;
+        this.emitSyncStatus('Firebase unavailable. Stored locally.', 'error');
+      }
+    }
+
+    signIn() {
+      if (!this.firebaseReady || !this.auth || !window.firebase) {
+        this.emitSyncStatus('Firebase is not configured.', 'error');
+        return Promise.reject(new Error('Firebase is not configured.'));
+      }
+      const provider = new window.firebase.auth.GoogleAuthProvider();
+      this.emitSyncStatus('Opening Google sign-in...', 'syncing');
+      return this.auth.signInWithPopup(provider);
+    }
+
+    signOut() {
+      if (!this.auth) return Promise.resolve();
+      return this.auth.signOut();
+    }
+
+    syncNow() {
+      if (!this.user) {
+        this.emitSyncStatus('Sign in to sync.', 'signed-out');
+        return Promise.resolve();
+      }
+      return this.syncFromCloud();
+    }
+
+    getStatus() {
+      return this.status;
+    }
+
+    getCloudDocRef() {
+      if (!this.db || !this.user) return null;
+      return this.db.collection('quizProgress').doc(this.user.uid);
+    }
+
+    async syncFromCloud() {
+      const docRef = this.getCloudDocRef();
+      if (!docRef) return;
+
+      this.emitSyncStatus('Syncing...', 'syncing');
+      try {
+        const snapshot = await docRef.get();
+        const cloudData = snapshot.exists ? snapshot.data() : null;
+        this.data = this.mergeData(this.data, cloudData);
+        this.migrateData();
+        this.save({ sync: false });
+        await this.saveCloud();
+        this.emitSyncStatus('Synced', 'synced');
+      } catch (err) {
+        this.emitSyncStatus('Sync failed. Stored locally.', 'error');
+      }
+    }
+
+    queueCloudSave() {
+      if (!this.firebaseReady) return;
+      if (!this.user) {
+        this.emitSyncStatus('Stored locally. Sign in to sync.', 'signed-out');
+        return;
+      }
+      this.pendingCloudSave = true;
+      clearTimeout(this.cloudSaveTimer);
+      this.cloudSaveTimer = setTimeout(() => {
+        this.saveCloud();
+      }, 500);
+    }
+
+    async saveCloud() {
+      const docRef = this.getCloudDocRef();
+      if (!docRef) return;
+      if (this.cloudSaveInFlight) return;
+
+      this.cloudSaveInFlight = true;
+      this.pendingCloudSave = false;
+      this.emitSyncStatus('Syncing...', 'syncing');
+
+      try {
+        await docRef.set({
+          version: 1,
+          updatedAt: new Date().toISOString(),
+          questions: this.data.questions || {},
+          quizSessions: this.data.quizSessions || {}
+        }, { merge: true });
+        this.emitSyncStatus('Synced', 'synced');
+      } catch (err) {
+        this.pendingCloudSave = true;
+        this.emitSyncStatus('Sync failed. Stored locally.', 'error');
+      } finally {
+        this.cloudSaveInFlight = false;
+        if (this.pendingCloudSave) this.queueCloudSave();
+      }
+    }
+
+    mergeData(localData, cloudEnvelope) {
+      const local = this.normalizeData(localData || {});
+      const cloud = this.normalizeData((cloudEnvelope && cloudEnvelope.data) ? cloudEnvelope.data : (cloudEnvelope || {}));
+      const merged = { questions: {}, quizSessions: {} };
+
+      Object.keys(local.questions || {}).forEach(id => {
+        merged.questions[id] = local.questions[id];
+      });
+      Object.keys(cloud.questions || {}).forEach(id => {
+        const localEntry = merged.questions[id];
+        const cloudEntry = cloud.questions[id];
+        if (!localEntry || this.timestampValue(cloudEntry?.lastAttemptAt) >= this.timestampValue(localEntry?.lastAttemptAt)) {
+          merged.questions[id] = cloudEntry;
+        }
+      });
+
+      Object.keys(local.quizSessions || {}).forEach(pathname => {
+        merged.quizSessions[pathname] = local.quizSessions[pathname];
+      });
+      Object.keys(cloud.quizSessions || {}).forEach(pathname => {
+        const localSession = merged.quizSessions[pathname];
+        const cloudSession = cloud.quizSessions[pathname];
+        if (!localSession || this.sessionTimestamp(cloudSession) >= this.sessionTimestamp(localSession)) {
+          merged.quizSessions[pathname] = cloudSession;
+        }
+      });
+
+      this.migrateData(merged);
+      return merged;
+    }
+
+    timestampValue(value) {
+      if (!value) return 0;
+      const time = new Date(value).getTime();
+      return Number.isFinite(time) ? time : 0;
+    }
+
+    sessionTimestamp(session) {
+      if (!session) return 0;
+      return Math.max(
+        this.timestampValue(session.lastFullAttemptAt),
+        this.timestampValue(session.lastReviewAt),
+        this.timestampValue(session.lastAttemptAt)
+      );
     }
 
     get(questionId) {
@@ -264,9 +488,7 @@
         this.save();
         return { imported: incomingIds.length, merged };
       } else {
-        this.data = parsed.data;
-        if (!this.data.quizSessions) this.data.quizSessions = {};
-        if (!this.data.questions) this.data.questions = {};
+        this.data = this.normalizeData(parsed.data);
         this.migrateData();
         this.save();
         return { imported: incomingIds.length, merged: 0 };
@@ -294,6 +516,10 @@
       this.totalQuestions = 0;
       this.lastIncorrectIndices = [];
       this.performanceStore = new PerformanceStore();
+      this.handleStoreChange = () => {
+        this.refreshWeakIndicators();
+        this.updatePastReviewButton();
+      };
       this.results = {
         total: 0,
         correct: 0,
@@ -318,6 +544,7 @@
       this.refreshWeakIndicators();
       this.updatePastReviewButton();
       this.applyReviewFilter('all', { skipAlert: true });
+      window.addEventListener('rdocsquiz:storechange', this.handleStoreChange);
     }
 
     bindEvents() {
@@ -1486,7 +1713,10 @@
 
   window.RDocsQuiz = {
     initContainer,
-    PerformanceStore
+    PerformanceStore,
+    getStore() {
+      return new PerformanceStore();
+    }
   };
 
   function initQuizzes() {

@@ -50,6 +50,14 @@ menu:
 params:
   description: Personal study notes on DevOps, Cloud, and Development topics
 
+  firebase:
+    apiKey: "AIzaSyDqvomEmt33K3Uo0PbKV2vBHwCX0zHrMPY"
+    authDomain: "rquiz-system.firebaseapp.com"
+    projectId: "rquiz-system"
+    storageBucket: "rquiz-system.firebasestorage.app"
+    messagingSenderId: "687325409180"
+    appId: "1:687325409180:web:332bea80368a60c040e259"
+
   navbar:
     displayTitle: true
     displayLogo: false

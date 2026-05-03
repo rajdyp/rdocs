@@ -28,28 +28,14 @@
 
 <script>
 (function() {
-  var STORAGE_KEY = 'rdocs.quiz.performance.v1';
+  var store = null;
 
   function getSessionData() {
-    try {
-      var raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return {};
-      var parsed = JSON.parse(raw);
-      return (parsed && parsed.quizSessions) ? parsed.quizSessions : {};
-    } catch (e) {
-      return {};
-    }
+    return store && store.data && store.data.quizSessions ? store.data.quizSessions : {};
   }
 
   function getQuestionData() {
-    try {
-      var raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return {};
-      var parsed = JSON.parse(raw);
-      return (parsed && parsed.questions) ? parsed.questions : {};
-    } catch (e) {
-      return {};
-    }
+    return store && store.data && store.data.questions ? store.data.questions : {};
   }
 
   function isWeak(entry) {
@@ -245,10 +231,28 @@
     tableRoot.innerHTML = renderTable(registry, sessions);
   }
 
-  init();
+  function whenRuntimeReady(callback) {
+    function run() {
+      if (!window.RDocsQuiz || !window.RDocsQuiz.getStore) return;
+      store = window.RDocsQuiz.getStore();
+      callback();
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run);
+    } else {
+      run();
+    }
+  }
 
-  window.addEventListener('storage', function(e) {
-    if (e.key === STORAGE_KEY) init();
+  whenRuntimeReady(function() {
+    init();
+    window.addEventListener('rdocsquiz:storechange', init);
+    window.addEventListener('storage', function(e) {
+      if (e.key === store.storageKey) {
+        store.load();
+        init();
+      }
+    });
   });
 })();
 </script>

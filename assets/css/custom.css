@@ -1458,7 +1458,7 @@
 }
 
 .quiz-tools-data .quiz-data-panel-inner {
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 }
 
 .quiz-tools-data .quiz-data-panel-label {
@@ -1466,7 +1466,7 @@
 }
 
 .quiz-tools-data .quiz-data-panel-actions {
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 }
 
 .dark .quiz-tools-data {
@@ -1477,6 +1477,16 @@
 @media (max-width: 400px) {
   .quiz-tools-bar {
     flex-direction: column;
+  }
+}
+
+@media (max-width: 760px) {
+  .quiz-tools-bar {
+    flex-direction: column;
+  }
+
+  .quiz-tools-data .quiz-data-panel-actions {
+    width: 100%;
   }
 }
 

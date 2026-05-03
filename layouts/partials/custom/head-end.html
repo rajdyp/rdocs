@@ -1,2 +1,19 @@
 <!-- Quiz System JavaScript -->
+{{- with .Site.Params.firebase -}}
+  {{- if .projectId -}}
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script>
+  window.RDocsFirebaseConfig = {
+    apiKey: {{ .apiKey | default "" | jsonify }},
+    authDomain: {{ .authDomain | default "" | jsonify }},
+    projectId: {{ .projectId | default "" | jsonify }},
+    storageBucket: {{ .storageBucket | default "" | jsonify }},
+    messagingSenderId: {{ .messagingSenderId | default "" | jsonify }},
+    appId: {{ .appId | default "" | jsonify }}
+  };
+</script>
+  {{- end -}}
+{{- end -}}
 <script src="{{ "js/quiz.js" | relURL }}" defer></script>

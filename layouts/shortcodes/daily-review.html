@@ -253,5 +253,11 @@
   } else {
     init();
   }
+
+  var refreshTimer = null;
+  window.addEventListener('rdocsquiz:storechange', function() {
+    clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(init, 250);
+  });
 })();
 </script>
