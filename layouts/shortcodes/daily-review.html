@@ -254,10 +254,10 @@
     init();
   }
 
-  var refreshTimer = null;
-  window.addEventListener('rdocsquiz:storechange', function() {
-    clearTimeout(refreshTimer);
-    refreshTimer = setTimeout(init, 250);
+  window.addEventListener('storage', function(e) {
+    if (window.RDocsQuiz && window.RDocsQuiz.getStore && e.key === window.RDocsQuiz.getStore().storageKey) {
+      init();
+    }
   });
 })();
 </script>
